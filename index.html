@@ -46,6 +46,7 @@
         <button onclick="getResponse(2)">2. Ενημέρωση για λεωφορείο</button><br>
         <button onclick="getResponse(3)">3. Φαγητό ημέρας</button><br>
         <button onclick="getResponse(4)">4. Απευθείας σύνδεση</button><br>
+        <button onclick="openYouTube()"> 5. Μυστικό κουμπί</button>
         <div class="response" id="response"></div>
     </div>
 
@@ -69,6 +70,11 @@
             .then(response => response.json())
             .then(data => console.log('Message sent:', data))
             .catch(error => console.error('Error:', error));
+        }
+
+        function openYouTube() {
+            const youtubeUrl = "https://www.youtube.com/watch?v=qAt9zuazUls;
+            window.open(youtubeUrl, "_blank"); // Ανοίγει τον σύνδεσμο σε νέα καρτέλα
         }
 
         // Διαχείριση των επιλογών του χρήστη
@@ -131,6 +137,9 @@
                     sendTelegramMessage(message);
                     alert("Το αίτημα στάλθηκε.");
                     break;
+
+                case 5: 
+                    openYoutube();
 
                 default:
                     document.getElementById("response").innerText = "❗ Προσπάθησε πάλι...";
