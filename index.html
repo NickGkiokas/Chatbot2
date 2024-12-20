@@ -51,21 +51,15 @@
     </div>
 
     <script>
-        // Βοηθητική συνάρτηση για αποστολή μηνύματος στο Telegram
         function sendTelegramMessage(message) {
-            const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE'; // Βάλε το δικό σου bot token
-            const chatID = '7336951445';    // Βάλε το δικό σου chat ID
+            const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
+            const chatID = '7336951445';
             const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
             fetch(url, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: chatID,
-                    text: message
-                })
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: chatID, text: message })
             })
             .then(response => response.json())
             .then(data => console.log('Message sent:', data))
@@ -73,11 +67,10 @@
         }
 
         function openYouTube() {
-            const youtubeUrl = "https://www.youtube.com/watch?v=qAt9zuazUls;
+            const youtubeUrl = "https://www.youtube.com/watch?v=qAt9zuazUls";
             window.open(youtubeUrl, "_blank"); // Ανοίγει τον σύνδεσμο σε νέα καρτέλα
         }
 
-        // Διαχείριση των επιλογών του χρήστη
         function getResponse(choice) {
             const now = new Date();
             const timestamp = now.toLocaleString('el-GR', { 
@@ -105,7 +98,7 @@
                     }
                     message = `Η Όμορφη του Άργους ζήτησε να μάθει πότε περνάει το λεωφορείο:\n🚌 ${busTime}\n📅 Ημερομηνία: ${timestamp}`;
                     sendTelegramMessage(message);
-                    alert("Το αίτημα για το λεωφορείο στάλθηκε. Θα ενημερωθείς για το πότε περνάει.");
+                    alert("Το αίτημα για το λεωφορείο στάλθηκε.");
                     break;
 
                 case 3:
@@ -116,21 +109,8 @@
                     }
                     message = `Η Όμορφη του Άργους ενημέρωσε για το φαγητό:\n🍽️ Φαγητό: ${food}\n📅 Ημερομηνία: ${timestamp}`;
                     sendTelegramMessage(message);
-                    alert("Η ενημέρωση για το φαγητό στάλθηκε. Θα πρέπει να στείλεις και φωτογραφία.");
+                    alert("Η ενημέρωση για το φαγητό στάλθηκε.");
                     break;
-
-                    /*
-                    case 4:
-                    const punishmentReason = prompt("Πες τον λόγο που είσαι εδώ:");
-                    if (!punishmentReason) {
-                        alert("Πρέπει να γράψεις κάτι!");
-                        return;
-                    }
-                    message = `Η Όμορφη του Άργους έγραψε τον λόγο τιμωρίας:\n"${punishmentReason}"\n📅 Ημερομηνία: ${timestamp}`;
-                    sendTelegramMessage(message);
-                    alert("Οκ, συνεχίζουμε!");
-                    // Εδώ θα μπορούσες να προσθέσεις τον τροχό ή άλλη λογική
-                    break; */
 
                 case 4:
                     message = `Η Όμορφη του Άργους ζήτησε απευθείας σύνδεση.\n📅 Ημερομηνία: ${timestamp}`;
@@ -138,8 +118,8 @@
                     alert("Το αίτημα στάλθηκε.");
                     break;
 
-                case 5: 
-                    openYouΤube();
+                case 5:
+                    openYouTube();
                     break;
 
                 default:
