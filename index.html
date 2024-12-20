@@ -45,8 +45,7 @@
         <button onclick="getResponse(1)">1. Ενημέρωση ότι γύρισα</button><br>
         <button onclick="getResponse(2)">2. Ενημέρωση για λεωφορείο</button><br>
         <button onclick="getResponse(3)">3. Φαγητό ημέρας</button><br>
-        <button onclick="getResponse(4)">4. Τιμωρία</button><br>
-        <button onclick="getResponse(5)">5. Απευθείας σύνδεση</button><br>
+        <button onclick="getResponse(4)">4. Απευθείας σύνδεση</button><br>
         <div class="response" id="response"></div>
     </div>
 
@@ -87,7 +86,7 @@
 
             switch (choice) {
                 case 1:
-                    message = `Η Όμορφη του Άργους ενημέρωσε: "Γύρισα σπίτι".\n📅 Ημερομηνία: ${timestamp}`;
+                    message = `Η Όμορφη του Άργους ενημέρωσε: "Γύρις; κύριε".\n📅 Ημερομηνία: ${timestamp}`;
                     sendTelegramMessage(message);
                     alert("Η ενημέρωση στάλθηκε επιτυχώς.");
                     break;
@@ -109,12 +108,13 @@
                         alert("Δεν μπορείς να αφήσεις το πεδίο κενό!");
                         return;
                     }
-                    message = `Ο Μπόμπος ενημέρωσε για το φαγητό:\n🍽️ Φαγητό: ${food}\n📅 Ημερομηνία: ${timestamp}`;
+                    message = `Η Όμορφη του Άργους ενημέρωσε για το φαγητό:\n🍽️ Φαγητό: ${food}\n📅 Ημερομηνία: ${timestamp}`;
                     sendTelegramMessage(message);
                     alert("Η ενημέρωση για το φαγητό στάλθηκε. Θα πρέπει να στείλεις και φωτογραφία");
                     break;
 
-                case 4:
+                    /*
+                    case 4:
                     const punishmentReason = prompt("Πες τον λόγο που είσαι εδώ:");
                     if (!punishmentReason) {
                         alert("Πρέπει να γράψεις κάτι!");
@@ -124,9 +124,9 @@
                     sendTelegramMessage(message);
                     alert("Οκ, συνεχίζουμε!");
                     // Εδώ θα μπορούσες να προσθέσεις τον τροχό ή άλλη λογική
-                    break;
+                    break; */
 
-                case 5:
+                case 4:
                     message = `Η Όμορφη του Άργους ζήτησε απευθείας σύνδεση.\n📅 Ημερομηνία: ${timestamp}`;
                     sendTelegramMessage(message);
                     alert("Το αίτημα στάλθηκε.");
