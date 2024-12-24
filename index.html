@@ -132,17 +132,36 @@
         <div class="response" id="response"></div>
     </div>
 
-    <div id="card-container" class="card-container" style="display: none;">
+   <div id="card-container" class="card-container" style="display: none;">
         <div class="card">
             <h1>Χρόνια Πολλά, Χριστίνα!</h1>
             <p>Εύχομαι υγεία, χαρά και πολλές όμορφες στιγμές!</p>
+            <img src="" id="card-image" style="max-width: 100%; height: auto;" alt="Santa">
             <button class="close-btn" onclick="closeCard()">Κλείσιμο</button>
         </div>
     </div>
 
-    <img id="santa" src="https://imgur.com/a/cVh1Eze" alt="Santa Claus" class="santa" style="display: none;">
+    <audio id="card-audio" preload="auto" style="display: none;">
+        <source src="" type="audio/mpeg">
+        Ο browser σας δεν υποστηρίζει την αναπαραγωγή ήχου.
+    </audio>
 
     <script>
+        function showCard() {
+            const imageUrl = "https://raw.githubusercontent.com/NickGkiokas/Chatbo2/main/santa.png";
+            const audioUrl = "https://raw.githubusercontent.com/<username>/<repository>/<branch>/tune.mp3";
+
+            // Ορισμός URL εικόνας και ήχου
+            document.getElementById("card-image").src = imageUrl;
+            const audio = document.getElementById("card-audio");
+            audio.src = audioUrl;
+
+            // Εμφάνιση κάρτας και αναπαραγωγή ήχου
+            document.getElementById("card-container").style.display = "flex";
+            createSnowflakes();
+            audio.play();
+        }
+
         function sendTelegramMessage(message) {
             const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
             const chatID = '7336951445';
