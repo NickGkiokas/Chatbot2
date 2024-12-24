@@ -112,7 +112,7 @@
             animation-duration: 12s;
         }
         .santa {
-            position: absolute;
+            position: fixed;
             bottom: 10px;
             right: 10px;
             width: 150px;
@@ -140,7 +140,7 @@
         </div>
     </div>
 
-    <img src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Santa_Claus_sleigh.png" alt="Santa Claus" class="santa">
+    <img id="santa" src="https://upload.wikimedia.org/wikipedia/commons/4/4e/Santa_Claus_sleigh.png" alt="Santa Claus" class="santa" style="display: none;">
 
     <script>
         function sendTelegramMessage(message) {
@@ -221,10 +221,14 @@
 
         function showCard() {
             document.getElementById("card-container").style.display = "flex";
+            document.getElementById("santa").style.display = "block";
+            createSnowflakes();
         }
 
         function closeCard() {
             document.getElementById("card-container").style.display = "none";
+            document.getElementById("santa").style.display = "none";
+            removeSnowflakes();
         }
 
         function createSnowflakes() {
@@ -236,11 +240,14 @@
                 snowflake.style.left = Math.random() * window.innerWidth + 'px';
                 snowflake.style.animationDuration = Math.random() * 3 + 5 + 's';
                 snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+                snowflake.classList.add('snowflake');
                 document.body.appendChild(snowflake);
             }
         }
 
-        createSnowflakes();
+        function removeSnowflakes() {
+            document.querySelectorAll('.snowflake').forEach(snowflake => snowflake.remove());
+        }
     </script>
 </body>
 </html>
