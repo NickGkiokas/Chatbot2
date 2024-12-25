@@ -37,6 +37,48 @@
             margin-top: 20px;
             font-size: 18px;
         }
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .login-box {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.8);
+            animation: popIn 0.5s ease;
+        }
+        .login-box input {
+            margin: 10px;
+            padding: 10px;
+            width: 80%;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .login-box button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-box button:hover {
+            background-color: #0056b3;
+        }
+        
         .card-container {
             position: fixed;
             top: 0;
@@ -120,15 +162,24 @@
     </style>
 </head>
 <body>
+    div class="login-container" id="login-container">
+        <div class="login-box">
+            <h2>Σύνδεση</h2>
+            <input type="text" id="username" placeholder="Όνομα χρήστη">
+            <input type="password" id="password" placeholder="Κωδικός">
+            <button onclick="validateLogin()">Είσοδος</button>
+        </div>
+    </div>
     <div class="chatbot-container">
         <h2>Καλωσήρθες στην πλατφόρμα ελέγχου</h2>
         <p>Επίλεξε από τα παρακάτω:</p>
-        <button onclick="getResponse(1)">1. Ενημέρωση ότι γύρισα</button><br>
-        <button onclick="getResponse(2)">2. Ενημέρωση για λεωφορείο</button><br>
-        <button onclick="getResponse(3)">3. Φαγητό ημέρας</button><br>
-        <button onclick="getResponse(4)">4. Απευθείας σύνδεση</button><br>
-        <button onclick="getResponse(5)">5. Μυστικό κουμπί</button><br>
-        <button onclick="showCard()">6. Κάρτα</button>
+        <button onclick="getResponse(1)">1. Άδεια για έξοδο</button><br>
+        <button onclick="getResponse(2)">2. Ενημέρωση ότι γύρισα</button><br>
+        <button onclick="getResponse(3)">3. Ενημέρωση για λεωφορείο</button><br>
+        <button onclick="getResponse(4)">4. Φαγητό ημέρας</button><br>
+        <button onclick="getResponse(5)">5. Απευθείας σύνδεση</button><br>
+        <button onclick="getResponse(6)">6. Μυστικό κουμπί</button><br>
+        <button onclick="showCard()">7. Κάρτα</button>
         <div class="response" id="response"></div>
     </div>
 
@@ -141,6 +192,19 @@
     </div>
 
     <script>
+        function validateLogin() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Απλό έλεγχο username και password (για παράδειγμα μόνο)
+            if (username === "admin" && password === "1234") {
+                document.getElementById("login-container").style.display = "none";
+                document.getElementById("content").style.display = "block";
+            } else {
+                alert("Λάθος όνομα χρήστη ή κωδικός! Προσπαθήστε ξανά.");
+            }
+        }
+
         function sendTelegramMessage(message) {
             const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
             const chatID = '7336951445';
@@ -175,12 +239,17 @@
 
             switch (choice) {
                 case 1:
+                    alert("Το αίτημά σου στάλθηκε.");
+                    sendTelegramMessage("Η Όμορφη του Άργους ζήτησε άδεια να βγει.");
+                    break;
+                
+                case 2:
                     message = `Η Όμορφη του Άργους ενημέρωσε: "Γύρισα κύριε".\n📅 Ημερομηνία: ${timestamp}`;
                     sendTelegramMessage(message);
                     alert("Η ενημέρωση στάλθηκε επιτυχώς.");
                     break;
 
-                case 2:
+                case 3:
                     const busTime = prompt("Ποιο λεωφορείο θες;");
                     if (!busTime) {
                         alert("Δεν μπορείς να αφήσεις το πεδίο κενό!");
@@ -191,7 +260,7 @@
                     alert("Το αίτημα για το λεωφορείο στάλθηκε. Θα ενημερωθείς για το πότε περνάει.");
                     break;
 
-                case 3:
+                case 4:
                     const food = prompt("Γράψε το φαγητό της ημέρας:");
                     if (!food) {
                         alert("Δεν μπορείς να αφήσεις το πεδίο κενό!");
@@ -202,13 +271,13 @@
                     alert("Η ενημέρωση για το φαγητό στάλθηκε. Θα πρέπει να στείλεις και φωτογραφία.");
                     break;
 
-                case 4:
+                case 5:
                     message = `Η Όμορφη του Άργους ζήτησε απευθείας σύνδεση.\n📅 Ημερομηνία: ${timestamp}`;
                     sendTelegramMessage(message);
                     alert("Το αίτημα στάλθηκε.");
                     break;
 
-                case 5:
+                case 6:
                     openYouTube();
                     break;
 
