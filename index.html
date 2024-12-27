@@ -212,6 +212,7 @@
         }
 
         function Return() {
+            document.getElementById("snack-input").style.display = "none";
             const returnn = document.getElementById("returnn").value;
             const message = `Η Όμορφη του Άργους ενημέρωσε: ${returnn}`;
             sendTelegramMessage(message);
