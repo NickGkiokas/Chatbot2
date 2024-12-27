@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Έλεγχος</title>
+    <title>Έλεγχος2 (Λάιτ έκδοση ανάγκης)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -47,7 +47,7 @@
     <div class="container">
         <h1>Έλεγχος</h1>
         <input type="text" id="message" placeholder="Πληκτρολόγησε μήνυμα εδώ">
-        <button onclick="sendMessage()">Στείλε ενημέρωση εδώ</button>
+        <button onclick="sendMessage()">Στείλε ενημέρωση εδώ (Όνομα, επώνυμο, ώρα άφιξης, όμορφο περιεχόμενο)</button>
         <p id="status"></p>
     </div>
 
@@ -74,7 +74,7 @@
             })
                 .then((response) => {
                     if (response.ok) {
-                        document.getElementById("status").textContent = "Το μήνυμα στάλθηκε επιτυχώς!";
+                        document.getElementById("status").textContent = "Μπράβο! Η ενημέρωση σου ελήφθη και αξιολογείται!";
                         document.getElementById("message").value = "";
                     } else {
                         document.getElementById("status").textContent = "Υπήρξε πρόβλημα στην αποστολή.";
