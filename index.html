@@ -183,8 +183,8 @@
         <div class="response" id="response"></div>
     </div>
 
-    <div id="return" style="display:none;">
-            <input type="text" id="return" placeholder="Γράψε εδώ">
+    <div id="returnn" style="display:none;">
+            <input type="text" id="returnn" placeholder="Γράψε εδώ">
             <button onclick="Return()">Υποβολή</button>
     </div>
 
@@ -212,8 +212,8 @@
         }
 
         function Return() {
-            let return = document.getElementById("return").value;
-            let message = `Η Όμορφη του Άργους ενημέρωσε: ${return}`;
+            let returnn = document.getElementById("returnn").value;
+            let message = `Η Όμορφη του Άργους ενημέρωσε: ${returnn}`;
             sendTelegramMessage(message);
             alert("Το μήνυμά σου στάλθηκε");
         }
@@ -257,10 +257,8 @@
                     break;
                 
                 case 2:
-                    const request2 = prompt ("Γράψε το μήνυμά σου.");
-                    message = `Η Όμορφη του Άργους ενημέρωσε: ${request2}\n📅 Ημερομηνία: ${timestamp}`;
-                    sendTelegramMessage(message);
-                    alert("Η ενημέρωση στάλθηκε επιτυχώς.");
+                    document.getElementById("return").style.display = "block";
+                    returnn = document.getElementById("returnn").value;
                     break;
 
                 case 3:
