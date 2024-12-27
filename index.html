@@ -185,7 +185,7 @@
 
     <div id="return" style="display:none;">
             <input type="text" id="return" placeholder="Γράψε εδώ">
-            <button onclick="return()">Υποβολή</button>
+            <button onclick="Return()">Υποβολή</button>
     </div>
 
     <div id="card-container" class="card-container" style="display: none;">
@@ -211,7 +211,7 @@
             }
         }
 
-        function return() {
+        function Return() {
             let return = document.getElementById("return").value;
             let message = `Η Όμορφη του Άργους ενημέρωσε: ${return}`;
             sendTelegramMessage(message);
