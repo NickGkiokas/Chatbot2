@@ -182,10 +182,12 @@
         <button onclick="showCard()">7. Κάρτα</button>
         <div class="response" id="response"></div>
     </div>
+
     <div id="returnn" style="display:none;">
-        <input type="text" id="returnnn" placeholder="Γράψε εδώ">
-        <button onclick="Returnn()">Υποβολή</button>
+            <input type="text" id="returnn" placeholder="Γράψε εδώ">
+            <button onclick="Return()">Υποβολή</button>
     </div>
+
     <div id="card-container" class="card-container" style="display: none;">
         <div class="card">
             <h1>ΧΡΟΝΙΑ ΠΟΛΛΑΑΑΑΑ</h1>
@@ -209,9 +211,9 @@
             }
         }
 
-        function Returnn() {
-            let returnn = document.getElementById("returnnn").value;
-            let message = `Η Όμορφη του Άργους ενημέρωσε:${returnn}\n📅 Ημερομηνία: ${timestamp}`;
+        function Return() {
+            let returnn = document.getElementById("returnn").value;
+            let message = `Η Όμορφη του Άργους ενημέρωσε: ${returnn}`;
             sendTelegramMessage(message);
             alert("Το μήνυμά σου στάλθηκε");
         }
@@ -255,7 +257,7 @@
                     break;
                 
                 case 2:
-                    document.getElementById("returnnn").style.display = "block";
+                    document.getElementById("returnn").style.display = "block";
                     returnn = document.getElementById("returnn").value;
                     break;
 
