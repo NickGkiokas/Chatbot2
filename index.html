@@ -7,96 +7,82 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
             background-color: #f4f4f4;
-            text-align: center;
-            padding: 50px;
         }
-        .chatbot-container {
-            background-color: #fff;
-            border-radius: 10px;
+        .container {
+            background-color: white;
             padding: 20px;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
-            display: inline-block;
-            width: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
         }
         button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
             background-color: #007bff;
             color: white;
+            border: none;
+            padding: 10px 20px;
             border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
         }
         button:hover {
             background-color: #0056b3;
         }
-        .response, #snack-input, #wheel-container {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-        canvas {
-            margin-top: 20px;
-            border: 2px solid #007bff;
-            border-radius: 50%;
-        }
-        input, textarea {
-            ime-mode: disabled; /* Ενδέχεται να απενεργοποιήσει το autocomplete για κάποιες συσκευές */
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
-    <div class="chatbot-container">
-        <h2>Γεια! Καλωσήρθες στην πλατφόρμα ελέγχου!</h2>
-        <p>Επίλεξε από τα παρακάτω:</p>
-        <button onclick="getResponse(1)">1. Ενημέρωση</button><br>
-        <div id="snack-input" style="display:none;">
-            <input type="text" id="snack" placeholder="Γράψε εδώ...">
-            <button onclick="submitSnack()">Υποβολή</button>
-        </div>
-        
-        function getResponse(choice) {
-            document.getElementById("snack-input").style.display = "none";
-            
-            switch (choice) {
-                case 1:
-                    document.getElementById("snack-input").style.display = "block";
-                    snack = document.getElementById("snack").value;
-                    break;
-             }
-        }
+    <div class="container">
+        <h1>Έλεγχος</h1>
+        <input type="text" id="message" placeholder="Πληκτρολόγησε μήνυμα εδώ">
+        <button onclick="sendMessage()">Στείλε ενημέρωση εδώ</button>
+        <p id="status"></p>
+    </div>
 
-        function submitSnack() {
-            let snack = document.getElementById("snack").value;
-            let message = `Ο Μπόμπος ζήτησε: ${snack}`;
-            sendTelegramMessage(message);
-            alert("Η λιγούρα σου μεταφέρθηκε στο Αφεντικό");
-        }
-    
+    <script>
+        function sendMessage() {
+            const message = document.getElementById("message").value;
+            const botToken = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE"; // Αντικατάστησε με το Token του Telegram bot
+            const chatId = "7336951445"; // Αντικατάστησε με το Chat ID
 
-        function sendTelegramMessage(message) {
-            const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
-            const chatID = '7336951445';
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            if (!message) {
+                alert("Παρακαλώ πληκτρολόγησε ένα μήνυμα.");
+                return;
+            }
 
-            fetch(url, {
-                method: 'POST',
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    chat_id: chatID,
-                    text: message
-                })
+                    chat_id: chatId,
+                    text: message,
+                }),
             })
-            .then(response => response.json())
-            .then(data => console.log('Message sent:', data))
-            .catch(error => console.error('Error:', error));
+                .then((response) => {
+                    if (response.ok) {
+                        document.getElementById("status").textContent = "Το μήνυμα στάλθηκε επιτυχώς!";
+                        document.getElementById("message").value = "";
+                    } else {
+                        document.getElementById("status").textContent = "Υπήρξε πρόβλημα στην αποστολή.";
+                    }
+                })
+                .catch(() => {
+                    document.getElementById("status").textContent = "Αποτυχία σύνδεσης!";
+                });
         }
     </script>
 </body>
