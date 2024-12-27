@@ -212,8 +212,8 @@
         }
 
         function Return() {
-            let returnn = document.getElementById("returnn").value;
-            let message = `Η Όμορφη του Άργους ενημέρωσε: ${returnn}`;
+            const returnn = document.getElementById("returnn").value;
+            const message = `Η Όμορφη του Άργους ενημέρωσε: ${returnn}`;
             sendTelegramMessage(message);
             alert("Το μήνυμά σου στάλθηκε");
         }
