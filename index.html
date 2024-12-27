@@ -183,6 +183,11 @@
         <div class="response" id="response"></div>
     </div>
 
+    <div id="return" style="display:none;">
+            <input type="text" id="return" placeholder="Γράψε εδώ">
+            <button onclick="return()">Υποβολή</button>
+    </div>
+
     <div id="card-container" class="card-container" style="display: none;">
         <div class="card">
             <h1>ΧΡΟΝΙΑ ΠΟΛΛΑΑΑΑΑ</h1>
@@ -204,6 +209,13 @@
             } else {
                 alert("Λάθος όνομα χρήστη ή κωδικός! Προσπαθήστε ξανά.");
             }
+        }
+
+        function return() {
+            let return = document.getElementById("return").value;
+            let message = `Η Όμορφη του Άργους ενημέρωσε: ${return}`;
+            sendTelegramMessage(message);
+            alert("Το μήνυμά σου στάλθηκε");
         }
         
         function sendTelegramMessage(message) {
@@ -240,7 +252,6 @@
 
             switch (choice) {
                 case 1:
-                    const request = prompt ("Γράψε το μήνυμά σου.");
                     alert("Το αίτημά σου στάλθηκε.");
                     sendTelegramMessage(`Η Όμορφη του Άργους ζήτησε άδεια να βγει: ${request}`);
                     break;
