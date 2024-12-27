@@ -183,7 +183,7 @@
         <div class="response" id="response"></div>
     </div>
 
-    <div id="returnn" style="display:none;">
+    <div id="Returnn" style="display:none;">
             <input type="text" id="returnn" placeholder="Γράψε εδώ">
             <button onclick="Return()">Υποβολή</button>
     </div>
@@ -212,7 +212,7 @@
         }
 
         function Return() {
-            document.getElementById("snack-input").style.display = "none";
+            document.getElementById("Returnn").style.display = "none";
             const returnn = document.getElementById("returnn").value;
             const message = `Η Όμορφη του Άργους ενημέρωσε: ${returnn}`;
             sendTelegramMessage(message);
