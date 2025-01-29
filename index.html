@@ -3,312 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Έλεγχος</title>
+    <title>Παιχνίδι Επιλογής Φακέλου</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             text-align: center;
-            padding: 50px;
-            overflow: hidden;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
         }
-        .chatbot-container {
-            background-color: #fff;
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 50px;
+        }
+        .folder {
+            width: 100px;
+            height: 100px;
+            background-color: #ffcc00;
             border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
-            display: inline-block;
-            width: 300px;
-        }
-        button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            transition: transform 0.3s;
         }
-        button:hover {
-            background-color: #0056b3;
+        .folder:hover {
+            transform: scale(1.1);
         }
-        .response {
+        .message {
+            margin-top: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+        .link {
             margin-top: 20px;
-            font-size: 18px;
-        }
-        .login-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .login-box {
-            background-color: #fff;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.8);
-            animation: popIn 0.5s ease;
-        }
-        .login-box input {
-            margin: 10px;
-            padding: 10px;
-            width: 80%;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .login-box button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .login-box button:hover {
-            background-color: #0056b3;
-        }
-        
-        .card-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .card {
-            background-color: #fff;
-            border-radius: 15px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.8);
-            animation: popIn 0.5s ease;
-            position: relative;
-        }
-        .card h1 {
-            color: #e63946;
-            font-size: 36px;
-        }
-        .card p {
-            color: #457b9d;
             font-size: 20px;
-            margin-top: 10px;
-        }
-        .close-btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            background-color: #e63946;
-            color: white;
-            border-radius: 5px;
+            color: blue;
+            text-decoration: underline;
             cursor: pointer;
-        }
-        .close-btn:hover {
-            background-color: #a02734;
-        }
-        @keyframes popIn {
-            0% {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        @keyframes snow {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                transform: translateY(100vh);
-            }
-        }
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            color: white;
-            font-size: 1.5em;
-            animation: snow 10s linear infinite;
-        }
-        .snowflake:nth-child(odd) {
-            animation-duration: 8s;
-        }
-        .snowflake:nth-child(even) {
-            animation-duration: 12s;
-        }
-        .santa {
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
-            width: 150px;
         }
     </style>
 </head>
 <body>
-    <div class="login-container" id="login-container">
-        <div class="login-box">
-            <h2>Δεν ήσουν υπάκουη κι άργησες να μπεις, ο λογαριασμός σου κλειδώθηκε. Θα ενημερωθείς για τις συνέπειες.</h2>
-            <input type="text" id="username" placeholder="Όνομα χρήστη">
-            <input type="password" id="password" placeholder="Κωδικός">
-            <button onclick="validateLogin()">Είσοδος</button>
-        </div>
+    <h1>Διάλεξε έναν φάκελο!</h1>
+    <div class="container">
+        <div class="folder" onclick="chooseFolder(0)">📁</div>
+        <div class="folder" onclick="chooseFolder(1)">📁</div>
     </div>
-    <div class="chatbot-container">
-        <h2>Καλωσήρθες στην πλατφόρμα ελέγχου</h2>
-        <p>Επίλεξε από τα παρακάτω:</p>
-        <button onclick="getResponse(1)">1. Άδεια για έξοδο</button><br>
-        <button onclick="getResponse(2)">2. Ενημέρωση ότι γύρισα</button><br>
-        <button onclick="getResponse(3)">3. Ενημέρωση για λεωφορείο</button><br>
-        <button onclick="getResponse(4)">4. Φαγητό ημέρας</button><br>
-        <button onclick="getResponse(5)">5. Απευθείας σύνδεση</button><br>
-        <button onclick="getResponse(6)">6. Μυστικό κουμπί</button><br>
-        <button onclick="showCard()">7. Κάρτα</button>
-        <div class="response" id="response"></div>
-    </div>
-
-    <div id="card-container" class="card-container" style="display: none;">
-        <div class="card">
-            <h1>ΧΡΟΝΙΑ ΠΟΛΛΑΑΑΑΑ</h1>
-            <p>ΝΑ ΕΙΣΑΙ ΠΑΝΤΑ ΚΑΛΑ ΚΑΙ ΝΑ ΠΑΙΖΕΙΣ ΓΡΗΓΟΡΑ ΝΑ ΣΕ ΞΕΦΤΙΛΙΣΩ</p>
-            <button class="close-btn" onclick="closeCard()">Κλείσιμο</button>
-        </div>
-    </div>
+    <div class="message hidden" id="message"></div>
+    <div class="link hidden" id="giftLink" onclick="claimGift()">Πάτα εδώ και συνδέσου για να πάρεις το δώρο σου!🎁</div>
 
     <script>
-        function validateLogin() {
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
+        let winningFolder = Math.floor(Math.random() * 2);
+        let gameEnded = false;
 
-            // Απλός έλεγχος username και password (για παράδειγμα μόνο)
-            if (username === "Συγγνώμη" && password === "Θαείμαιφρόνιμη") {
-                alert(`Έτσι μπράβο! Καλωσήρθες πίσω!`);
-                document.getElementById("login-container").style.display = "none";
-                document.getElementById("content").style.display = "block";
+        function chooseFolder(index) {
+            let message = document.getElementById("message");
+            let giftLink = document.getElementById("giftLink");
+            
+            if (gameEnded) {
+                message.innerText = "⚠️ Το παιχνίδι έχει λήξει!";
+                message.style.color = "orange";
+                return;
+            }
+
+            gameEnded = true;
+            
+            if (index === winningFolder) {
+                message.innerText = "🎉 Συγχαρητήρια! Κερδίσατε! 🎉";
+                message.style.color = "green";
+                giftLink.classList.remove("hidden");
             } else {
-                alert("Πρώτα θα απολογηθείς και μετά θα μάθεις τα νέα σου στοιχεία για να έρθεις!");
+                message.innerText = "😢 Λυπάμαι, την επόμενη φορά!";
+                message.style.color = "red";
+                giftLink.classList.add("hidden");
             }
-        }
-        
-        function sendTelegramMessage(message) {
-            const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
-            const chatID = '7336951445';
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: chatID, text: message })
-            })
-            .then(response => response.json())
-            .then(data => console.log('Message sent:', data))
-            .catch(error => console.error('Error:', error));
+            message.classList.remove("hidden");
         }
 
-        function openYouTube() {
-            const youtubeUrl = "https://www.youtube.com/watch?v=qAt9zuazUls";
-            window.open(youtubeUrl, "_blank");
+        function claimGift() {
+            window.location.href = "https://chat-bot-nicks-projects-0cca1864.vercel.app/"; // Βάλτε εδώ το link του δώρου
         }
-
-        function getResponse(choice) {
-            const now = new Date();
-            const timestamp = now.toLocaleString('el-GR', { 
-                year: 'numeric', 
-                month: '2-digit', 
-                day: '2-digit', 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit' 
-            });
-            let message;
-
-            switch (choice) {
-                case 1:
-                    alert("Το αίτημά σου στάλθηκε.");
-                    sendTelegramMessage("Η Όμορφη του Άργους ζήτησε άδεια να βγει.");
-                    break;
-                
-                case 2:
-                    message = `Η Όμορφη του Άργους ενημέρωσε: "Γύρισα κύριε".\n📅 Ημερομηνία: ${timestamp}`;
-                    sendTelegramMessage(message);
-                    alert("Η ενημέρωση στάλθηκε επιτυχώς.");
-                    break;
-
-                case 3:
-                    const busTime = prompt("Ποιο λεωφορείο θες;");
-                    if (!busTime) {
-                        alert("Δεν μπορείς να αφήσεις το πεδίο κενό!");
-                        return;
-                    }
-                    message = `Η Όμορφη του Άργους ζήτησε να μάθει πότε περνάει το λεωφορείο:\n🚌 ${busTime}\n📅 Ημερομηνία: ${timestamp}`;
-                    sendTelegramMessage(message);
-                    alert("Το αίτημα για το λεωφορείο στάλθηκε. Θα ενημερωθείς για το πότε περνάει.");
-                    break;
-
-                case 4:
-                    const food = prompt("Γράψε το φαγητό της ημέρας:");
-                    if (!food) {
-                        alert("Δεν μπορείς να αφήσεις το πεδίο κενό!");
-                        return;
-                    }
-                    message = `Η Όμορφη του Άργους ενημέρωσε για το φαγητό:\n🍽️ Φαγητό: ${food}\n📅 Ημερομηνία: ${timestamp}`;
-                    sendTelegramMessage(message);
-                    alert("Η ενημέρωση για το φαγητό στάλθηκε. Θα πρέπει να στείλεις και φωτογραφία.");
-                    break;
-
-                case 5:
-                    message = `Η Όμορφη του Άργους ζήτησε απευθείας σύνδεση.\n📅 Ημερομηνία: ${timestamp}`;
-                    sendTelegramMessage(message);
-                    alert("Το αίτημα στάλθηκε.");
-                    break;
-
-                case 6:
-                    openYouTube();
-                    break;
-
-                default:
-                    document.getElementById("response").innerText = "❗ Προσπάθησε πάλι...";
-            }
-        }
-
-        function showCard() {
-            document.getElementById("card-container").style.display = "flex";
-        }
-
-        function closeCard() {
-            document.getElementById("card-container").style.display = "none";
-        }
-
-        function createSnowflakes() {
-            const snowflakeCount = 50;
-            for (let i = 0; i < snowflakeCount; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.classList.add('snowflake');
-                snowflake.innerHTML = '❄';
-                snowflake.style.left = Math.random() * window.innerWidth + 'px';
-                snowflake.style.animationDuration = Math.random() * 3 + 5 + 's';
-                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
-                document.body.appendChild(snowflake);
-            }
-        }
-
-        createSnowflakes();
     </script>
 </body>
 </html>
