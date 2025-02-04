@@ -44,7 +44,7 @@
 </head>
 <body>
     <h1>Τετράδιο Τιμωρίας</h1>
-    <p>Γράψε τη φράση "Δε θα ξανακάνω αταξίες" 10 φορές:</p>
+    <p>Γράψε τη φράση "Θα απαντάω στις ερωτήσεις" 10 φορές:</p>
     <div class="notebook" id="notebook"></div>
     <p class="error-message" id="error-message"></p>
 
@@ -52,7 +52,7 @@
         document.addEventListener("DOMContentLoaded", function() {
             const notebook = document.getElementById("notebook");
             const errorMessage = document.getElementById("error-message");
-            const phrase = "Δε θα ξανακάνω αταξίες";
+            const phrase = "Θα απαντάω στις ερωτήσεις";
 
             for (let i = 0; i < 10; i++) {
                 let line = document.createElement("div");
@@ -79,7 +79,7 @@
                 
                 input.addEventListener("cut", function(e) {
                     e.preventDefault();
-                    errorMessage.textContent = "Δεν επιτρέπεται το κόψιμο κειμένου!";
+                    errorMessage.textContent = "Δεν επιτρέπεται η αποκοπή κειμένου!";
                 });
 
                 input.addEventListener("copy", function(e) {
