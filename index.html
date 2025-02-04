@@ -3,94 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Το Παιχνίδι του Φακέλου!</title>
+    <title>Τετράδιο Τιμωρίας</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #f8f8f8;
             text-align: center;
-            background-color: #f0f8ff;
-            margin: 0;
+        }
+        .notebook {
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
             padding: 20px;
-        }
-        .container {
-            display: flex;
-            justify-content: center;
-            gap: 50px;
-            margin-top: 50px;
-        }
-        .folder {
-            width: 100px;
-            height: 100px;
-            background-color: #ffcc00;
-            border-radius: 10px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            transition: transform 0.3s;
-        }
-        .folder:hover {
-            transform: scale(1.1);
-        }
-        .message {
-            margin-top: 30px;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .hidden {
-            display: none;
-        }
-        .link {
-            margin-top: 20px;
+            background: white;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            border-left: 2px solid red;
+            line-height: 2.5;
             font-size: 20px;
-            color: blue;
-            text-decoration: underline;
-            cursor: pointer;
+            position: relative;
+        }
+        .line {
+            border-bottom: 1px dashed gray;
+            text-align: left;
+            padding-left: 10px;
+        }
+        input {
+            width: 100%;
+            font-size: 20px;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: inherit;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-    <h1>Διάλεξε έναν φάκελο!</h1>
-    <div class="container">
-        <div class="folder" onclick="chooseFolder(0)">📁</div>
-        <div class="folder" onclick="chooseFolder(1)">📁</div>
-    </div>
-    <div class="message hidden" id="message"></div>
-    <div class="link hidden" id="giftLink" onclick="claimGift()">Πάτα εδώ και συνδέσου για να πάρεις το δώρο σου!🎁</div>
+    <h1>Τετράδιο Τιμωρίας</h1>
+    <p>Γράψε τη φράση "Δε θα ξανακάνω αταξίες" 10 φορές:</p>
+    <div class="notebook" id="notebook"></div>
+    <p class="error-message" id="error-message"></p>
 
     <script>
-        let winningFolder = Math.floor(Math.random() * 2);
-        let gameEnded = false;
+        document.addEventListener("DOMContentLoaded", function() {
+            const notebook = document.getElementById("notebook");
+            const errorMessage = document.getElementById("error-message");
+            const phrase = "Δε θα ξανακάνω αταξίες";
 
-        function chooseFolder(index) {
-            let message = document.getElementById("message");
-            let giftLink = document.getElementById("giftLink");
-            
-            if (gameEnded) {
-                message.innerText = "⚠️ Το παιχνίδι έχει λήξει!";
-                message.style.color = "orange";
-                return;
+            for (let i = 0; i < 10; i++) {
+                let line = document.createElement("div");
+                line.classList.add("line");
+                let input = document.createElement("input");
+                input.type = "text";
+                input.maxLength = phrase.length;
+                input.disabled = i !== 0;
+                
+                input.addEventListener("input", function() {
+                    if (input.value === phrase) {
+                        input.setAttribute("readonly", true);
+                        errorMessage.textContent = "";
+                        if (i < 9) {
+                            notebook.children[i + 1].querySelector("input").disabled = false;
+                        }
+                    }
+                });
+
+                input.addEventListener("paste", function(e) {
+                    e.preventDefault();
+                    errorMessage.textContent = "Δεν επιτρέπεται η αντιγραφή-επικόλληση!";
+                });
+                
+                input.addEventListener("cut", function(e) {
+                    e.preventDefault();
+                    errorMessage.textContent = "Δεν επιτρέπεται το κόψιμο κειμένου!";
+                });
+
+                input.addEventListener("copy", function(e) {
+                    e.preventDefault();
+                    errorMessage.textContent = "Δεν επιτρέπεται η αντιγραφή!";
+                });
+                
+                line.appendChild(input);
+                notebook.appendChild(line);
             }
-
-            gameEnded = true;
-            
-            if (index === winningFolder) {
-                message.innerText = "🎉 Συγχαρητήρια! Κέρδισες! 🎉 Ακολούθησε τις οδηγίες του λινκ και στο σχετικό πεδίο βάλε τον κωδικό 'THEBESTAFENTIKO2025'.";
-                message.style.color = "green";
-                giftLink.classList.remove("hidden");
-            } else {
-                message.innerText = "🎉 Συγχαρητήρια! Κέρδισες! 🎉 Ακολούθησε τις οδηγίες του λινκ και στο σχετικό πεδίο βάλε τον κωδικό 'THEBESTAFENTIKO2025'.";
-                message.style.color = "green";
-                giftLink.classList.remove("hidden");
-            }
-            message.classList.remove("hidden");
-        }
-
-        function claimGift() {
-            window.location.href = "https://chat-bot-nicks-projects-0cca1864.vercel.app/"; // Βάλτε εδώ το link του δώρου
-        }
+        });
     </script>
 </body>
 </html>
