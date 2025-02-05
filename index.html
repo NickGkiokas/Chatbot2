@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Τετράδιο Τιμωρίας</title>
+    <title>Τετράδιο</title>
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -40,118 +40,57 @@
             font-size: 14px;
             margin-top: 5px;
         }
-        .controls {
-            margin-top: 10px;
-        }
-        button {
-            font-size: 16px;
-            padding: 5px 10px;
-            margin: 5px;
-            cursor: pointer;
-        }
     </style>
 </head>
 <body>
     <h1>Τετράδιο Τιμωρίας</h1>
-    <p>Γράψε τη φράση "Δε θα τρέχω με το αμάξι" 10 φορές:</p>
-    <div class="controls">
-        <button onclick="prevPage()">Προηγούμενη Σελίδα</button>
-        <span id="page-number">Σελίδα 1</span>
-        <button onclick="nextPage()">Επόμενη Σελίδα</button>
-        <button onclick="deletePage()">Διαγραφή Σελίδας</button>
-    </div>
+    <p>Γράψε τη φράση "Θα απαντάω στις ερωτήσεις" 10 φορές:</p>
     <div class="notebook" id="notebook"></div>
     <p class="error-message" id="error-message"></p>
 
     <script>
-        let pages = JSON.parse(localStorage.getItem("punishmentPages")) || [[]];
-        let currentPage = 0;
-        const phrase = "Συγγνώμη δε θα το ξανακάνω";
-        
-        function savePages() {
-            localStorage.setItem("punishmentPages", JSON.stringify(pages));
-        }
-        
-        function loadPage(pageIndex) {
-            currentPage = pageIndex;
-            document.getElementById("page-number").textContent = `Σελίδα ${currentPage + 1}`;
+        document.addEventListener("DOMContentLoaded", function() {
             const notebook = document.getElementById("notebook");
-            notebook.innerHTML = "";
-            
-            if (!pages[currentPage]) {
-                pages[currentPage] = [];
-            }
-            
-            for (let i = 0; i < pages[currentPage].length || i < 10; i++) {
+            const errorMessage = document.getElementById("error-message");
+            const phrase = "Θα απαντάω στις ερωτήσεις";
+
+            for (let i = 0; i < 10; i++) {
                 let line = document.createElement("div");
                 line.classList.add("line");
                 let input = document.createElement("input");
                 input.type = "text";
                 input.maxLength = phrase.length;
-                input.value = pages[currentPage][i] || "";
-                input.disabled = i > 0 && pages[currentPage][i - 1] !== phrase;
+                input.disabled = i !== 0;
                 
                 input.addEventListener("input", function() {
-                    pages[currentPage][i] = input.value;
-                    savePages();
                     if (input.value === phrase) {
                         input.setAttribute("readonly", true);
-                        let nextInput = notebook.querySelector("input:not([readonly])");
-                        if (nextInput) {
-                            nextInput.disabled = false;
+                        errorMessage.textContent = "";
+                        if (i < 9) {
+                            notebook.children[i + 1].querySelector("input").disabled = false;
                         }
                     }
                 });
-                
-                function punishment(e) {
+
+                input.addEventListener("paste", function(e) {
                     e.preventDefault();
-                    alert("Προστέθηκε μία ακόμα γραμμή για τιμωρία λόγω προσπάθειας αντιγραφής!");
-                    pages[currentPage].push("");
-                    savePages();
-                    loadPage(currentPage);
-                }
+                    errorMessage.textContent = "Δεν επιτρέπεται η αντιγραφή-επικόλληση!";
+                });
                 
-                input.addEventListener("paste", punishment);
-                input.addEventListener("cut", punishment);
-                input.addEventListener("copy", punishment);
+                input.addEventListener("cut", function(e) {
+                    e.preventDefault();
+                    errorMessage.textContent = "Δεν επιτρέπεται η αποκοπή κειμένου!";
+                });
+
+                input.addEventListener("copy", function(e) {
+                    e.preventDefault();
+                    errorMessage.textContent = "Δεν επιτρέπεται η αντιγραφή!";
+                });
                 
                 line.appendChild(input);
                 notebook.appendChild(line);
             }
-        }
-        
-        function nextPage() {
-            if (currentPage < pages.length - 1) {
-                loadPage(currentPage + 1);
-            } else {
-                pages.push([]);
-                savePages();
-                loadPage(pages.length - 1);
-            }
-        }
-        
-        function prevPage() {
-            if (currentPage > 0) {
-                loadPage(currentPage - 1);
-            }
-        }
-        
-        function deletePage() {
-            let password = prompt("Εισάγετε τον κωδικό για διαγραφή σελίδας:");
-            if (password === "AFENTIKO") {
-                if (pages.length > 1) {
-                    pages.splice(currentPage, 1);
-                    savePages();
-                    loadPage(Math.max(0, currentPage - 1));
-                } else {
-                    alert("Δεν μπορεί να διαγραφεί η τελευταία σελίδα!");
-                }
-            } else {
-                alert("Λάθος κωδικός!");
-            }
-        }
-        
-        loadPage(0);
+        });
     </script>
 </body>
 </html>
