@@ -27,13 +27,14 @@
             text-align: left;
             padding-left: 10px;
         }
-        input {
+        input, textarea {
             width: 100%;
             font-size: 20px;
             border: none;
             outline: none;
             background: transparent;
             font-family: inherit;
+            resize: none;
         }
         .error-message {
             color: red;
@@ -60,39 +61,52 @@
         <button onclick="nextPage()">Επόμενη Σελίδα</button>
         <button onclick="deletePage()">Διαγραφή Σελίδας</button>
     </div>
-    <div class="notebook" id="notebook"></div>
+    <div class="notebook" id="notebook">
+        <p>Ημερομηνία: <input type="date" id="date" onchange="updateMetaData()"></p>
+        <p>Λόγος Τιμωρίας: <textarea id="reason" rows="2" onchange="updateMetaData()"></textarea></p>
+    </div>
     <p class="error-message" id="error-message"></p>
 
     <script>
-        let pages = JSON.parse(localStorage.getItem("punishmentPages")) || [[]];
+        let pages = JSON.parse(localStorage.getItem("punishmentPages")) || [{}];
         let currentPage = 0;
-        const phrase = "Συγγνώμη δε θα το ξανακάνω";
+        const phrase = "Δε θα ξανακάνω αταξίες";
         
         function savePages() {
             localStorage.setItem("punishmentPages", JSON.stringify(pages));
+        }
+        
+        function updateMetaData() {
+            pages[currentPage].date = document.getElementById("date").value;
+            pages[currentPage].reason = document.getElementById("reason").value;
+            savePages();
         }
         
         function loadPage(pageIndex) {
             currentPage = pageIndex;
             document.getElementById("page-number").textContent = `Σελίδα ${currentPage + 1}`;
             const notebook = document.getElementById("notebook");
-            notebook.innerHTML = "";
+            notebook.innerHTML = `<p>Ημερομηνία: <input type="date" id="date" onchange="updateMetaData()"></p>
+                                  <p>Λόγος Τιμωρίας: <textarea id="reason" rows="2" onchange="updateMetaData()"></textarea></p>`;
             
             if (!pages[currentPage]) {
-                pages[currentPage] = [];
+                pages[currentPage] = { lines: [] };
             }
             
-            for (let i = 0; i < pages[currentPage].length || i < 10; i++) {
+            document.getElementById("date").value = pages[currentPage].date || "";
+            document.getElementById("reason").value = pages[currentPage].reason || "";
+            
+            for (let i = 0; i < pages[currentPage].lines.length || i < 10; i++) {
                 let line = document.createElement("div");
                 line.classList.add("line");
                 let input = document.createElement("input");
                 input.type = "text";
                 input.maxLength = phrase.length;
-                input.value = pages[currentPage][i] || "";
-                input.disabled = i > 0 && pages[currentPage][i - 1] !== phrase;
+                input.value = pages[currentPage].lines[i] || "";
+                input.disabled = i > 0 && pages[currentPage].lines[i - 1] !== phrase;
                 
                 input.addEventListener("input", function() {
-                    pages[currentPage][i] = input.value;
+                    pages[currentPage].lines[i] = input.value;
                     savePages();
                     if (input.value === phrase) {
                         input.setAttribute("readonly", true);
@@ -106,7 +120,7 @@
                 function punishment(e) {
                     e.preventDefault();
                     alert("Προστέθηκε μία ακόμα γραμμή για τιμωρία λόγω προσπάθειας αντιγραφής!");
-                    pages[currentPage].push("");
+                    pages[currentPage].lines.push("");
                     savePages();
                     loadPage(currentPage);
                 }
@@ -124,7 +138,7 @@
             if (currentPage < pages.length - 1) {
                 loadPage(currentPage + 1);
             } else {
-                pages.push([]);
+                pages.push({ lines: [] });
                 savePages();
                 loadPage(pages.length - 1);
             }
