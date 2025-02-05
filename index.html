@@ -3,95 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Τετράδιο Τιμωρίας</title>
+    <title>Πρόσκληση</title>
     <style>
-        body {
-            font-family: 'Comic Sans MS', cursive, sans-serif;
-            background-color: #f8f8f8;
-            text-align: center;
-        }
-        .notebook {
-            width: 80%;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            background: white;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-            border-left: 2px solid red;
-            line-height: 2.5;
-            font-size: 20px;
+        body { text-align: center; font-family: Arial, sans-serif; background-color: #f4f4f4; }
+        .container { display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+        #envelope-container {
             position: relative;
+            width: 300px;
+            height: 200px;
+            cursor: pointer;
         }
-        .line {
-            border-bottom: 1px dashed gray;
-            text-align: left;
-            padding-left: 10px;
-        }
-        input {
+        #envelope {
             width: 100%;
-            font-size: 20px;
-            border: none;
-            outline: none;
-            background: transparent;
-            font-family: inherit;
+            height: 100%;
+            background: linear-gradient(to bottom, #e0c3fc, #8ec5fc);
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            padding-top: 50px;
         }
-        .error-message {
-            color: red;
-            font-size: 14px;
-            margin-top: 5px;
+        #envelope::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-bottom: 100px solid #b388eb;
+        }
+        #content { 
+            display: none; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 10px; 
+            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+        button {
+            background: #8ec5fc;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background: #6a85b6;
         }
     </style>
+    <script>
+        function openEnvelope() {
+            document.getElementById("envelope-container").style.display = "none";
+            document.getElementById("content").style.display = "block";
+        }
+        function sendResponse() {
+            let response = document.querySelector('input[name="answer"]:checked');
+            if (!response) {
+                alert("Επίλεξε μια απάντηση!");
+                return;
+            }
+            fetch("https://api.telegram.org/bot<7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE>/sendMessage", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: "<7336951445>", text: "Απάντηση στην πρόσκληση: " + response.value })
+            });
+            alert("Η απάντηση στάλθηκε!");
+        }
+    </script>
 </head>
 <body>
-    <h1>Τετράδιο Τιμωρίας</h1>
-    <p>Γράψε τη φράση "Θα απαντάω στις ερωτήσεις" 10 φορές:</p>
-    <div class="notebook" id="notebook"></div>
-    <p class="error-message" id="error-message"></p>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const notebook = document.getElementById("notebook");
-            const errorMessage = document.getElementById("error-message");
-            const phrase = "Θα απαντάω στις ερωτήσεις";
-
-            function addLine() {
-                let line = document.createElement("div");
-                line.classList.add("line");
-                let input = document.createElement("input");
-                input.type = "text";
-                input.maxLength = phrase.length;
-                input.disabled = true;
-                
-                input.addEventListener("input", function() {
-                    if (input.value === phrase) {
-                        input.setAttribute("readonly", true);
-                        errorMessage.textContent = "";
-                        let nextInput = notebook.querySelector("input:disabled");
-                        if (nextInput) {
-                            nextInput.disabled = false;
-                        }
-                    }
-                });
-                
-                function punishment(e) {
-                    e.preventDefault();
-                    alert("Προστέθηκε μία ακόμα γραμμή για τιμωρία λόγω προσπάθειας αντιγραφής!");
-                    addLine();
-                }
-                
-                input.addEventListener("paste", punishment);
-                input.addEventListener("cut", punishment);
-                input.addEventListener("copy", punishment);
-                
-                line.appendChild(input);
-                notebook.appendChild(line);
-                input.disabled = false;
-            }
-
-            for (let i = 0; i < 10; i++) {
-                addLine();
-            }
-        });
-    </script>
+    <div class="container">
+        <div id="envelope-container" onclick="openEnvelope()">
+            <div id="envelope">Πάτα να ανοίξεις τον φάκελο</div>
+        </div>
+        <div id="content">
+            <p>Θα γυρίσεις αύριο μαζί μου;</p>
+            <label><input type="radio" name="answer" value="Ναι"> Ναι</label>
+            <label><input type="radio" name="answer" value="Όχι"> Όχι</label>
+            <br><br>
+            <button onclick="sendResponse()">Αποστολή</button>
+        </div>
+    </div>
 </body>
 </html>
