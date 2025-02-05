@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Τετράδιο</title>
+    <title>Τετράδιο Τιμωρίας</title>
     <style>
         body {
             font-family: 'Comic Sans MS', cursive, sans-serif;
@@ -44,7 +44,7 @@
 </head>
 <body>
     <h1>Τετράδιο Τιμωρίας</h1>
-    <p>Γράψε τη φράση "Θα απαντάω στις ερωτήσεις" 10 φορές:</p>
+    <p>Γράψε τη φράση "Δε θα ξανακάνω αταξίες" 10 φορές:</p>
     <div class="notebook" id="notebook"></div>
     <p class="error-message" id="error-message"></p>
 
@@ -52,43 +52,44 @@
         document.addEventListener("DOMContentLoaded", function() {
             const notebook = document.getElementById("notebook");
             const errorMessage = document.getElementById("error-message");
-            const phrase = "Θα απαντάω στις ερωτήσεις";
+            const phrase = "Δε θα ξανακάνω αταξίες";
 
-            for (let i = 0; i < 10; i++) {
+            function addLine() {
                 let line = document.createElement("div");
                 line.classList.add("line");
                 let input = document.createElement("input");
                 input.type = "text";
                 input.maxLength = phrase.length;
-                input.disabled = i !== 0;
+                input.disabled = true;
                 
                 input.addEventListener("input", function() {
                     if (input.value === phrase) {
                         input.setAttribute("readonly", true);
                         errorMessage.textContent = "";
-                        if (i < 9) {
-                            notebook.children[i + 1].querySelector("input").disabled = false;
+                        let nextInput = notebook.querySelector("input:disabled");
+                        if (nextInput) {
+                            nextInput.disabled = false;
                         }
                     }
                 });
-
-                input.addEventListener("paste", function(e) {
-                    e.preventDefault();
-                    errorMessage.textContent = "Δεν επιτρέπεται η αντιγραφή-επικόλληση!";
-                });
                 
-                input.addEventListener("cut", function(e) {
+                function punishment(e) {
                     e.preventDefault();
-                    errorMessage.textContent = "Δεν επιτρέπεται η αποκοπή κειμένου!";
-                });
-
-                input.addEventListener("copy", function(e) {
-                    e.preventDefault();
-                    errorMessage.textContent = "Δεν επιτρέπεται η αντιγραφή!";
-                });
+                    alert("Προστέθηκε μία ακόμα γραμμή για τιμωρία λόγω προσπάθειας αντιγραφής!");
+                    addLine();
+                }
+                
+                input.addEventListener("paste", punishment);
+                input.addEventListener("cut", punishment);
+                input.addEventListener("copy", punishment);
                 
                 line.appendChild(input);
                 notebook.appendChild(line);
+                input.disabled = false;
+            }
+
+            for (let i = 0; i < 10; i++) {
+                addLine();
             }
         });
     </script>
