@@ -73,10 +73,10 @@
                 alert("Επίλεξε μια απάντηση!");
                 return;
             }
-            fetch("https://api.telegram.org/bot<7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE>/sendMessage", {
+            fetch("https://api.telegram.org/bot7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE/sendMessage", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: "<7336951445>", text: "Απάντηση στην πρόσκληση: " + response.value })
+                body: JSON.stringify({ chat_id: "7336951445", text: "Απάντηση στην πρόσκληση: " + response.value })
             });
             alert("Η απάντηση στάλθηκε!");
         }
