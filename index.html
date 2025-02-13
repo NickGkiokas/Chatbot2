@@ -3,97 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Πρόσκληση</title>
+    <title>Valentine's Mystery Box</title>
     <style>
-        body { text-align: center; font-family: Arial, sans-serif; background-color: #f4f4f4; }
-        .container { display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
-        #envelope-container {
-            position: relative;
-            width: 300px;
-            height: 200px;
-            cursor: pointer;
-        }
-        #envelope {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(to bottom, #e0c3fc, #8ec5fc);
-            position: absolute;
-            top: 0;
-            left: 0;
-            border-radius: 10px;
-            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            padding-top: 50px;
+            height: 100vh;
+            background-color: #ffe6f2;
+            font-family: Arial, sans-serif;
+            text-align: center;
         }
-        #envelope::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            border-left: 150px solid transparent;
-            border-right: 150px solid transparent;
-            border-bottom: 100px solid #b388eb;
-        }
-        #content { 
-            display: none; 
-            background: white; 
-            padding: 20px; 
-            border-radius: 10px; 
-            box-shadow: 0px 4px 8px rgba(0,0,0,0.2);
-            margin-top: 20px;
-        }
-        button {
-            background: #8ec5fc;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            color: white;
-            border-radius: 5px;
+        .container {
+            position: relative;
             cursor: pointer;
+        }
+        .gift-box {
+            width: 150px;
+            transition: transform 0.5s;
+        }
+        .opened .gift-box {
+            transform: scale(1.1) translateY(-20px);
+        }
+        .hidden-content {
+            display: none;
             margin-top: 10px;
         }
-        button:hover {
-            background: #6a85b6;
+        .message {
+            font-size: 18px;
+            font-weight: bold;
+            color: #d63384;
+            margin-top: 10px;
         }
     </style>
-    <script>
-        function openEnvelope() {
-            document.getElementById("envelope-container").style.display = "none";
-            document.getElementById("content").style.display = "block";
-        }
-        function sendResponse() {
-            let response = document.querySelector('input[name="answer"]:checked');
-            if (!response) {
-                alert("Επίλεξε μια απάντηση!");
-                return;
-            }
-            fetch("https://api.telegram.org/bot7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE/sendMessage", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: "7336951445", text: "Απάντηση στην πρόσκληση: " + response.value })
-            });
-            alert("Η απάντηση στάλθηκε!");
-        }
-    </script>
 </head>
 <body>
-    <div class="container">
-        <div id="envelope-container" onclick="openEnvelope()">
-            <div id="envelope">Πάτα να ανοίξεις τον φάκελο</div>
-        </div>
-        <div id="content">
-            <p>Θα γυρίσεις σήμερα μαζί μου;</p>
-            <label><input type="radio" name="answer" value="Ναι"> Ναι</label>
-            <label><input type="radio" name="answer" value="Όχι"> Όχι</label>
-            <br><br>
-            <button onclick="sendResponse()">Αποστολή</button>
-        </div>
+    <div class="container" onclick="openGift()">
+        <p>Πάτα το mystery box για να βλέπεις ένα - ένα τα δώρα σου!</p>
+        <img id="giftImage" src="https://i.imgur.com/sNPtGL8.png" alt="Κουτί Δώρου" class="gift-box">
+        <div id="gifts" class="hidden-content"></div>
     </div>
+
+    <script>
+        const gifts = [
+            { img: "https://i.imgur.com/xxdPP7f.png", text: "Γλυκιά σοκολάτα για έναν γλυκό άνθρωπο!" },
+            { img: "https://i.imgur.com/XFKXxNN.png", text: "Ένα λουλούδι για να σου θυμίζει πόσο όμορφος/η είσαι!" },
+            { img: "https://i.imgur.com/2iApRqe.png", text: "Ένας αρκούδος για να σου κρατάει συντροφιά!" },
+            { img: "https://i.imgur.com/9BmOuSS.png", text: "Ένα κουπόνι για δωρεάν χάρη! Χρησιμοποίησέ το σοφά!" },
+            { img: "https://i.imgur.com/rMNhNWj.png", text: "Ε... εντάξει, για το χαβαλέ! 😆" }
+        ];
+
+        let giftIndex = 0;
+        let boxOpened = false;
+
+        function openGift() {
+            if (!boxOpened) {
+                document.getElementById("giftImage").src = "https://i.imgur.com/KHPn5H9.png";
+                boxOpened = true;
+            }
+            if (giftIndex < gifts.length) {
+                const giftDiv = document.getElementById("gifts");
+                const newGift = document.createElement("div");
+                newGift.innerHTML = `<img src="${gifts[giftIndex].img}" width="100"><p class="message">${gifts[giftIndex].text}</p>`;
+                giftDiv.appendChild(newGift);
+                giftDiv.style.display = "block";
+                giftIndex++;
+            }
+        }
+    </script>
 </body>
 </html>
