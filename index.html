@@ -3,73 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mystery Box</title>
+    <title>Έλεγχος</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 50px;
+        }
+        .chatbot-container {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
+            display: inline-block;
+            width: 300px;
+        }
+
+        .profile-container {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .profile-container img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .response, #snack-input, #wheel-container {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .login-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            background-color: #ffe6f2;
-            font-family: Arial, sans-serif;
-            text-align: center;
+            z-index: 1000;
         }
-        .container {
-            position: relative;
+        .login-box {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0px 0px 25px rgba(255, 255, 255, 0.8);
+            animation: popIn 0.5s ease;
+        }
+        .login-box input {
+            margin: 10px;
+            padding: 10px;
+            width: 80%;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .login-box button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
             cursor: pointer;
         }
-        .gift-box {
-            width: 150px;
-            transition: transform 0.5s;
+        .login-box button:hover {
+            background-color: #0056b3;
         }
-        .opened .gift-box {
-            transform: scale(1.1) translateY(-20px);
+        canvas {
+            margin-top: 20px;
+            border: 2px solid #007bff;
+            border-radius: 50%;
         }
-        .hidden-content {
+        input, textarea {
+            ime-mode: disabled; /* Ενδέχεται να απενεργοποιήσει το autocomplete για κάποιες συσκευές */
+        }
+        #update-field {
             display: none;
-            margin-top: 10px;
+            margin-top: 20px;
         }
-        .message {
-            font-size: 18px;
-            font-weight: bold;
-            color: #d63384;
-            margin-top: 10px;
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="container" onclick="openGift()">
-        <p>Έχεις 6 μυστικά δώρα από το Αφεντικό, γιατί όλοι αξίζουν ένα δώρο του Αγίου Βαλεντίνου! Κάνε κλικ στην οθόνη να εμφανίζονται ένα-ένα κάθε φορά και κάνε scroll για να τα δεις!</p>
-        <img id="giftImage" src="https://i.imgur.com/sNPtGL8.png" alt="Κουτί Δώρου" class="gift-box">
-        <div id="gifts" class="hidden-content"></div>
+    <div class="login-container" id="login-container">
+        <div class="login-box">
+            <h2>Συνδέσου με τα προσωπικά σου στοιχεία για να συνεχίσεις</h2>
+            <input type="text" id="username" placeholder="Όνομα χρήστη">
+            <input type="password" id="password" placeholder="Κωδικός">
+            <button onclick="validateLogin()">Είσοδος</button>
+        </div>
     </div>
-
+    <div class="chatbot-container">
+        <div class="profile-container">
+            <img src="https://i.imgur.com/m9m4IX1.jpeg" id="user-image" alt="Προφίλ">
+            <h3 id="user-name">Όμορφη του Άργους</h3>
+        </div>
+        <h2>Καλωσήρθες στην πλατφόρμα ελέγχου!</h2>
+        <p>Επίλεξε από τα παρακάτω:</p>
+        <button onclick="getResponse(1)">1. Άδεια</button><br>
+        <button onclick="getResponse(2)">2. Ενημέρωση</button><br>
+        <button onclick="getResponse(3)">3. Μπιρίμπα</button><br>
+        <button onclick="getResponse(4)">4. Τιμωρία</button><br>
+        <button onclick="getResponse(5)">5. Σύνδεση με Αφεντικό</button><br>
+        
+        <div class="response" id="response"></div>
+        <div id="mpirimpa-input" style="display:none;">
+            <input type="text" id="snack" placeholder="Αίτημα για μπιρίμπα εδώ...">
+            <button onclick="submitMpirimpa()">Υποβολή</button>
+        </div>
+        <div id="wheel-container" style="display:none;">
+            <canvas id="wheel" width="300" height="300"></canvas>
+            <button onclick="spinWheel()">Περίστρεψε τον τροχό</button>
+        </div>
+        
+        <div id="update-field" style="display:none;">
+            <textarea id="update-message" placeholder="Γράψε το μήνυμά σου εδώ..." rows="3"></textarea>
+            <button onclick="sendUpdate()">Αποστολή</button>
+        </div>
+        
     <script>
-        const gifts = [
-            { img: "https://i.imgur.com/xxdPP7f.png", text: "1. Σοκολάτα γλυκιά σαν εσένα :)" },
-            { img: "https://i.imgur.com/XFKXxNN.png", text: "2. Ένα όμορφο λουλούδι!" },
-            { img: "https://i.imgur.com/2iApRqe.png", text: "3. Ένας αρκούδος για παρέα! Και να μη ξεχνάς ότι αυτά τα αξίζεις κάθε μέρα! Για τα τελευταία 3:" },
-            { img: "https://i.imgur.com/bUd3WCa.png", text: "4. (210-5323018) Το τηλέφωνο ενός κοντινού συνεργείου SEAT μπας και φτιάξετε την κωλοπόρτα επιτέλους χαχαχ" },
-            { img: "https://i.imgur.com/9BmOuSS.png", text: "5. Ένα κουπόνι για δωρεάν χάρη! Χρησιμοποίησέ το σοφά! (Καντο σκριν να το έχεις αν θες!" },
-            { img: "https://i.imgur.com/rMNhNWj.png", text: "6. Και τα βασικά της ημέρας χαχαχτιλεωανειναιδυνατον😆" }
-        ];
+        
+        let wheelSpinning = false;
+        let labels = ["10 φορές γράψιμο 'Συγγνώμη δε θα το ξανακάνω'","10 φορές γράψιμο 'Συγγνώμη δε θα το ξανακάνω'", "10 φορές γράψιμο 'Συγγνώμη δε θα το ξανακάνω'", "10 φορές γράψιμο 'Συγγνώμη δε θα το ξανακάνω'", "10 φορές γράψιμο 'Συγγνώμη δε θα το ξανακάνω'", "10 φορές γράψιμο 'Συγγνώμη δε θα το ξανακάνω'"];
 
-        let giftIndex = 0;
-        let boxOpened = false;
+        function getResponse(choice) {
+            document.getElementById("response").innerText = "";
+            document.getElementById("mpirimpa-input").style.display = "none";
+            document.getElementById("wheel-container").style.display = "none";
 
-        function openGift() {
-            if (!boxOpened) {
-                document.getElementById("giftImage").src = "https://i.imgur.com/KHPn5H9.png";
-                boxOpened = true;
+            switch (choice) {
+                case 1:
+                    submitLeaveRequest();
+                    break;
+                case 2:
+                    showUpdateField();
+                    break;
+                case 3:
+                    document.getElementById("mpirimpa-input").style.display = "block";
+                    snack = document.getElementById("mpirimpa").value;
+                    break;
+                case 4:
+                    handlePunishment();
+                    document.getElementById("wheel-container").style.display = "block";
+                    drawWheel();
+                    break;
+                case 5:
+                    sendTelegramMessage("Η Όμορφη του Άργους ζήτησε απευθείας σύνδεση.");
+                    alert("Το αίτημά σου μεταφέρθηκε.");
+                    break;
+                default:
+                    document.getElementById("response").innerText = "❗ Προσπάθησε πάλι...";
             }
-            if (giftIndex < gifts.length) {
-                const giftDiv = document.getElementById("gifts");
-                const newGift = document.createElement("div");
-                newGift.innerHTML = `<img src="${gifts[giftIndex].img}" width="100"><p class="message">${gifts[giftIndex].text}</p>`;
-                giftDiv.appendChild(newGift);
-                giftDiv.style.display = "block";
-                giftIndex++;
+        }
+
+        function submitLeaveRequest() {
+            let leaveMessage = prompt("Ζήτα άδεια εδώ (ΕΥΓΕΝΙΚΗ ερώτηση)").trim();
+
+            // Έλεγχος αν το μήνυμα τελειώνει με "παρακαλώ πολύ"
+            if (!leaveMessage.toLowerCase().endsWith("παρακαλώ πολύ;")) {
+                alert("Μήπως να ζητήσεις αυτό που θες πιο ευγενικά;🤔 ('... παρακαλώ πολύ;').");
+                const note = `Η Όμορφη του Άργους δεν ζήτησε άδεια ευγενικά και προσπαθεί πάλι.`;
+                sendTelegramMessage(note);
+                return; // Διακοπή της διαδικασίας αν ο έλεγχος αποτύχει
             }
+
+            const now = new Date();
+            const timestamp = now.toLocaleString('el-GR', { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit'
+            });
+
+            const message = `Η Όμορφη του Άργους ζήτησε άδεια να βγει: ${leaveMessage}\n📅 Ώρα: ${timestamp}`;
+            sendTelegramMessage(message);
+        }
+
+        function showUpdateField() {
+            const field = document.getElementById("update-field");
+            const currentDisplay = getComputedStyle(field).display;
+            field.style.display = field.style.display === "none" ? "block" : "none";
+        }
+
+        function sendUpdate() {
+            const message = document.getElementById("update-message").value.trim();
+            if (!message) {
+                alert("Πρέπει να γράψεις ένα μήνυμα!");
+                return;
+            }
+            const timestamp = new Date().toLocaleString("el-GR");
+            sendTelegramMessage(`Ενημέρωση από Όμορφη του Άργους στις ${timestamp}:\n${message}`);
+            alert("Η ενημέρωσή σου μεταφέρθηκε και θα αξιολογηθεί!");
+            document.getElementById("update-message").value = "";
+        }
+
+        function handlePunishment() {
+            const reason = prompt("Γράψε γιατί μπήκες τιμωρία:");
+            if (!reason) {
+                alert("Δεν έγραψες τον λόγο τιμωρίας. Προσπάθησε ξανά.");
+                return;
+            }
+            
+            const now = new Date();
+            const timestamp = now.toLocaleString('el-GR', { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+            });
+
+            const message = `Η Όμορφη του Άργους έγραψε τον λόγο τιμωρίας:\n"${reason}"\n📅 Ημερομηνία: ${timestamp}`;
+            sendTelegramMessage(message);
+            alert("Πολύ καλά. Γύρνα τώρα τον τροχό για να μάθεις την τιμωρία σου :)");
+            drawWheel();
+        }
+
+        function submitMpirimpa() {
+            let mpirimpa = document.getElementById("mpirimpa").value.trim();
+    
+            const now = new Date();
+            const timestamp = now.toLocaleString('el-GR', { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit', 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit'
+            });
+
+            const message = `Η Όμορφη του Άργους λέει: ${mpirimpa}\n📅 Ώρα: ${timestamp}`;
+            sendTelegramMessage(message);
+            alert("Το αίτημά σου μεταφέρθηκε επιτυχώς!");
+            document.getElementById("update-message").value = ""; // Εκκαθάριση του πεδίου
+        }
+
+        function drawWheel() {
+            const canvas = document.getElementById("wheel");
+            const ctx = canvas.getContext("2d");
+            const numSlices = labels.length;
+            const sliceAngle = 2 * Math.PI / numSlices;
+            const colors = ["#f4b41a", "#007bff", "#ff6347", "#32cd32", "#8a2be2", "#ff4500"];
+    
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < numSlices; i++) {
+                ctx.beginPath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.moveTo(150, 150);
+        
+                // Μικρή προσαρμογή στις γωνίες για να καλύψουμε πλήρως την τελευταία φέτα.
+                ctx.arc(150, 150, 150, i * sliceAngle, (i + 1) * sliceAngle, false);
+                ctx.lineTo(150, 150);
+                ctx.fill();
+
+                ctx.save();
+                ctx.translate(150, 150);
+                ctx.rotate((i + 1.5) * sliceAngle);  // Ακριβώς στο κέντρο κάθε φέτας
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = "#fff";
+                ctx.font = "bold 18px Arial";
+                ctx.fillText(i + 1, 50, -90);  // Τοποθέτηση του αριθμού
+                ctx.restore();
+            }
+        }
+
+        function spinWheel() {
+            if (wheelSpinning) return;
+            wheelSpinning = true;
+
+            const canvas = document.getElementById("wheel");
+            const ctx = canvas.getContext("2d");
+            const randomAngle = Math.random() * 360 + 720;
+            let start = null;
+
+            function rotateWheel(timestamp) {
+                if (!start) start = timestamp;
+                const progress = timestamp - start;
+                const angle = (randomAngle * (progress / 3000)) % 360;
+
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.save();
+                ctx.translate(150, 150);
+                ctx.rotate(angle * Math.PI / 180);
+                ctx.translate(-150, -150);
+                drawWheel();
+                ctx.restore();
+
+                if (progress < 3000) {
+                    requestAnimationFrame(rotateWheel);
+                } else {
+                    wheelSpinning = false;
+                    const selectedIndex = Math.floor((360 - angle % 360) / (360 / labels.length)) % labels.length;
+                    const result = labels[selectedIndex];
+                    alert(`Ο τροχός έδειξε: ${result}`);
+                    
+                    if (result === "10 φορές γράψιμο 'Συγγνώμη δε θα το ξανακάνω'") {
+                        document.getElementById("write-page").style.display = "block";
+                        sendTelegramMessage(`Ο τροχός έδειξε: ${result}`);
+                    } else {
+                        sendTelegramMessage(`Ο τροχός έδειξε: ${result}`);
+                    }
+                }
+            }
+
+            requestAnimationFrame(rotateWheel);
+        }
+
+        function validateLogin() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Απλός έλεγχος username και password (για παράδειγμα μόνο)
+            if (username === "Mpompos" && password === "I<3Afentiko") {
+                alert(`Επιτυχής σύνδεση! Καλωσήρθες Μπόμπο!`);
+                sendTelegramMessage("Ο Μπόμπος συνδέθηκε με επιτυχία στις " + new Date().toLocaleString("el-GR"));
+                document.getElementById("login-container").style.display = "none";
+                document.getElementById("content").style.display = "block";
+            } else {
+                alert("Συμπλήρωσε σωστά τα στοιχεία σου Μπόμπο!");
+            }
+        }
+        
+        function sendTelegramMessage(message) {
+            const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
+            const chatID = '7336951445';
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: chatID,
+                    text: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Message sent:', data))
+            .catch(error => console.error('Error:', error));
         }
     </script>
 </body>
