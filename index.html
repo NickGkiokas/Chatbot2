@@ -62,12 +62,19 @@
         <label for="request">Ζητά εδώ αυτό που θες ευγενικά:</label>
         <textarea id="request" rows="4" required></textarea>
 
-        <button type="button" onclick="validateForm()">Υποβολή Αίτησης</button>
+        <button type="button" onclick="validateAndSend()">Υποβολή Αίτησης</button>
     </form>
 
     <script>
-        function validateForm() {
+        // Συμπλήρωσε εδώ το TOKEN του bot σου και το CHAT ID
+        const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
+        const CHAT_ID = '7336951445';
+
+        function validateAndSend() {
+            let name = document.getElementById("name").value.trim();
             let recipient = document.getElementById("recipient").value.trim();
+            let dob = document.getElementById("dob").value.trim();
+            let reason = document.getElementById("reason").value.trim();
             let requestText = document.getElementById("request").value.trim();
 
             if (recipient !== "Κ. Γκιώκας") {
@@ -80,7 +87,42 @@
                 return;
             }
 
-            alert("Η αίτηση υποβλήθηκε επιτυχώς!");
+            let message = `📩 *Νέα Αίτηση Άδειας*\n\n` +
+                          `👤 *Ονοματεπώνυμο:* ${name}\n` +
+                          `📩 *Παραλήπτης:* ${recipient}\n` +
+                          `📅 *Ημερομηνία Γέννησης:* ${dob}\n` +
+                          `📝 *Λόγος Αίτησης:* ${reason}\n` +
+                          `📌 *Αίτημα:* ${requestText}`;
+
+            sendTelegramMessage(message);
+        }
+
+        function sendTelegramMessage(message) {
+            let url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            let params = {
+                chat_id: CHAT_ID,
+                text: message,
+                parse_mode: "Markdown"
+            };
+
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(params)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    alert("Η αίτηση υποβλήθηκε επιτυχώς και στάλθηκε στο Telegram!");
+                } else {
+                    alert("Σφάλμα στην αποστολή στο Telegram: " + data.description);
+                }
+            })
+            .catch(error => {
+                alert("Αποτυχία σύνδεσης με το Telegram: " + error);
+            });
         }
     </script>
 
