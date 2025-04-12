@@ -14,14 +14,18 @@
 <body>
   <h1>Αίτηση Ειδικής Άδειας Μπόμπου</h1>  <input id="name" placeholder="Ονοματεπώνυμο">
   <input id="destination" placeholder="Προορισμός">
-  <input id="dates" placeholder="Διάστημα άδειας (π.χ. 02/05 - 06/05)">  <textarea id="requestText" placeholder="Γράψε ευγενικά στο Αφεντικό το αίτημα σου για άδεια..."></textarea>  <h3>📜 Μιας και σου αρέσει να στέλνεις φωνητικά, θα διαβάσεις σε φωνητικό τους παρακάτω όρους (Ταπεινά και πειστικά, αλλιώς θα τα διαβάσεις πάλι)</h3>
+  <input id="dates" placeholder="Διάστημα άδειας (π.χ. 02/05 - 06/05)">  <textarea id="requestText" placeholder="Γράψε ευγενικά στο Αφεντικό το αίτημα σου για άδεια..."></textarea>  <h3>📜 Μιας και σου αρέσει να στέλνεις φωνητικά, θα διαβάσεις σε φωνητικό τους παρακάτω όρους (σωστά, ταπεινά και πειστικά, αλλιώς θα τα διαβάσεις πάλι)</h3>
   <ul style="text-align: left; max-width: 500px; margin: auto;">
-    <li>Θα είμαι φρόνιμη καθ' όλη τη διάρκεια της άδειας</li>
-    <li>Θα ενημερώνω εγκαίρως για κάθε μου κίνηση</li>
-    <li>Αναγνωρίζω την απόλυτη εξουσία του Αφεντικού</li>
+    <li>Αφεντικό σας υπόσχομαι ότι θα είμαι φρόνιμη, υπάκουη και καλό κορίτσι.</li>
+    <li>Θα ενημερώνω εγκαίρως, θα προσέχω και θα ακούω ό,τι μου λέτε.</li>
+    <li>Αναγνωρίζω ότι κουμάντο κάνει το Αφεντικό κι αν δε μου δώσει άδεια δε μπορώ να πάω πουθενά.</li>
+    <li>Ξέρω ότι τελευταία δεν ήμουν πολύ φρόνιμη, γι' αυτό ΑΝ πάρω αυτή την άδεια θα ευχαριστήσω θερμά το Αφεντικό.</li>
+    <li>Εάν δεν τηρήσω τους όρους, θα πρέπει να μπω τιμωρία για να μάθω και να μη το ξανακάνω.</li>
+    <li>Θα φέρω καμιά αλβνκ λιχουδιά.</li>
+    <li>Θα περάσω τέλεια! E dua Shqipërinë!</li>
   </ul><button id="recordBtn">🎤 Ηχογράφηση</button> <button id="stopBtn" disabled>⏹ Διακοπή</button>
 
-  <p id="recordingStatus">Δεν έχει ξεκινήσει η ηχογράφηση</p>  <h3>🖼 Φωτογραφία με ύφος μεταμέλειας:</h3>
+  <p id="recordingStatus">Δεν έχει ξεκινήσει η ηχογράφηση</p>  <h3>🖼 Φωτογραφία με ταπεινό ύφος:</h3>
   <input type="file" id="imageUpload" accept="image/*"><button onclick="submitApplication()">📤 Υποβολή στο Αφεντικό</button>
 
   <p id="status"></p>  <script>
@@ -67,8 +71,8 @@
       formData.append("photo", image);
       formData.append("caption", `📝 Αίτηση Ειδικής Άδειας\nΟνοματεπώνυμο: ${name}\nΠροορισμός: ${destination}\nΗμερομηνίες: ${dates}\nΑίτημα: ${request}`);
 
-      const botToken = "YOUR_BOT_TOKEN";
-      const chatId = "YOUR_CHAT_ID";
+      const botToken = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
+      const chatId = "7336951445";
 
       fetch(`https://api.telegram.org/bot${botToken}/sendPhoto?chat_id=${chatId}`, {
         method: "POST",
