@@ -2,7 +2,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Αίτηση Ειδικής Άδειας</title>
+  <title>Αίτηση Ειδικής Άδειας Ταξιδίου</title>
   <style>
     body { font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; text-align: center; }
     input, textarea, button { width: 90%; padding: 10px; margin: 10px 0; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; }
@@ -14,12 +14,12 @@
 <body>
   <h1>Αίτηση Ειδικής Άδειας Μπόμπου</h1>  <input id="name" placeholder="Ονοματεπώνυμο">
   <input id="destination" placeholder="Προορισμός">
-  <input id="dates" placeholder="Διάστημα άδειας (π.χ. 02/05 - 06/05)">  <textarea id="requestText" placeholder="Γράψε ευγενικά το αίτημα σου για άδεια..."></textarea>  <h3>📜 Όροι και Προϋποθέσεις:</h3>
+  <input id="dates" placeholder="Διάστημα άδειας (π.χ. 02/05 - 06/05)">  <textarea id="requestText" placeholder="Γράψε ευγενικά στο Αφεντικό το αίτημα σου για άδεια..."></textarea>  <h3>📜 Μιας και σου αρέσει να στέλνεις φωνητικά, θα διαβάσεις σε φωνητικό τους παρακάτω όρους (Ταπεινά και πειστικά, αλλιώς θα τα διαβάσεις πάλι)</h3>
   <ul style="text-align: left; max-width: 500px; margin: auto;">
     <li>Θα είμαι φρόνιμη καθ' όλη τη διάρκεια της άδειας</li>
     <li>Θα ενημερώνω εγκαίρως για κάθε μου κίνηση</li>
     <li>Αναγνωρίζω την απόλυτη εξουσία του Αφεντικού</li>
-  </ul><button id="recordBtn">🎤 Ηχογράφησε την ανάγνωση των όρων</button> <button id="stopBtn" disabled>⏹ Διακοπή</button>
+  </ul><button id="recordBtn">🎤 Ηχογράφηση</button> <button id="stopBtn" disabled>⏹ Διακοπή</button>
 
   <p id="recordingStatus">Δεν έχει ξεκινήσει η ηχογράφηση</p>  <h3>🖼 Φωτογραφία με ύφος μεταμέλειας:</h3>
   <input type="file" id="imageUpload" accept="image/*"><button onclick="submitApplication()">📤 Υποβολή στο Αφεντικό</button>
