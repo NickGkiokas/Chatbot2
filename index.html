@@ -17,6 +17,7 @@
             border: 2px solid #000;
             max-width: 600px;
             margin: auto;
+            position: relative;
         }
         h1 {
             text-align: center;
@@ -39,6 +40,9 @@
             font-size: 14px;
             box-sizing: border-box;
         }
+        textarea {
+            height: 100px;
+        }
         button {
             background-color: #000;
             color: white;
@@ -50,6 +54,19 @@
         }
         button:hover {
             background-color: #444;
+        }
+
+        .only-export {
+            display: none;
+        }
+
+        @media print {
+            .no-export {
+                display: none !important;
+            }
+            .only-export {
+                display: block !important;
+            }
         }
     </style>
 </head>
@@ -82,36 +99,46 @@
             Αναγνωρίζεις ότι έγιναν τα παραπάνω;
             Έχεις κάτι να πεις για τον εαυτό σου; Γράψε 2 λόγους που τα έκανες αυτά:
         </label>
-        <textarea></textarea>
+        <textarea style="height: 150px;"></textarea>
 
         <label>
             Για τα παραπάνω λοιπόν κι επειδή τα πράγματα είναι πλέον αυστηρά, μπαίνεις τιμωρία. Θεωρείς δίκαιη την απόφαση; Πιστεύεις θα βοηθήσει να μπεις σε σειρά; 
             (Υπενθύμιση ότι πλέον δε γλυτώνεις την τιμωρία, άρα οι απαντήσεις σου μπορούν να οδηγήσουν μόνο σε καλύτερη ή χειρότερη τιμωρία. Εκμεταλλεύσου το!)
         </label>
-        <textarea></textarea>
+        <textarea style="height: 150px;"></textarea>
 
         <label>
             Υπεύθυνη δήλωση: Γράψε ότι κατανόησες, συμφωνείς και θα τηρήσεις τα παραπάνω. Να χρησιμοποιηθούν γνωστές λέξεις-κλειδιά, όπως Μάλιστα Αφεντικό, φρόνιμη, υπάκουη, καλό κορίτσι, Κοτ, κλπ. 
             (Όσο περισσότερα εντοπισθούν τόσο καλύτερα για σένα!)
         </label>
-        <textarea></textarea>
+        <textarea style="height: 150px;"></textarea>
 
-        <div style="margin-top: 40px; border-top: 1px solid black; padding-top: 20px; text-align: center;">
+        <div class="only-export" style="margin-top: 40px; border-top: 1px solid black; padding-top: 20px; text-align: center;">
             <p style="font-size: 14px; font-style: italic;">Ο Μπόμπος συμφώνησε, αναγνώρισε ότι ήταν άτακτος και περιμένει φρόνιμα την τιμωρία</p>
             <p style="font-size: 16px; font-weight: bold;">Σφραγίδα Αφεντικού ✅</p>
         </div>
 
-        <button onclick="downloadImage()">Εξαγωγή σε επίσημο έγγραφο</button>
+        <button class="no-export" onclick="downloadImage()">Εξαγωγή σε επίσημο έγγραφο</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         function downloadImage() {
+            // Εμφανίζει τη σφραγίδα προσωρινά
+            const stamp = document.querySelector(".only-export");
+            const button = document.querySelector(".no-export");
+            stamp.style.display = "block";
+            button.style.display = "none";
+
             html2canvas(document.querySelector("#capture")).then(canvas => {
                 let link = document.createElement("a");
                 link.download = "timoria_bobos.png";
                 link.href = canvas.toDataURL();
                 link.click();
+
+                // Επαναφέρει εμφάνιση για την οθόνη
+                stamp.style.display = "none";
+                button.style.display = "block";
             });
         }
     </script>
