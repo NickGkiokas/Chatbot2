@@ -2,33 +2,41 @@
 <head>
     <meta charset="UTF-8">
     <title>Ειδοποίηση Τιμωρίας</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: 'Times New Roman', serif;
             background: #f9f9f9;
-            padding: 40px;
-            max-width: 700px;
-            margin: auto;
-            border: 2px solid #000;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
             background-color: white;
+            padding: 20px;
+            border: 2px solid #000;
+            max-width: 600px;
+            margin: auto;
         }
         h1 {
             text-align: center;
             text-decoration: underline;
+            font-size: 24px;
         }
         p {
-            font-size: 18px;
+            font-size: 16px;
             line-height: 1.5;
-            margin-top: 30px;
+            margin-top: 20px;
         }
         label {
             font-weight: bold;
+            font-size: 14px;
         }
-        input {
+        input, textarea {
             width: 100%;
             padding: 6px;
             margin: 10px 0 20px 0;
-            font-size: 16px;
+            font-size: 14px;
+            box-sizing: border-box;
         }
         button {
             background-color: #000;
@@ -37,40 +45,49 @@
             font-size: 16px;
             cursor: pointer;
             border: none;
+            width: 100%;
         }
         button:hover {
             background-color: #444;
         }
     </style>
 </head>
-<body id="capture">
-    <h1>Ειδοποίηση Τιμωρίας</h1>
-    <p>
-        Το παρόν αποτελεί <strong>επίσημη ανακοίνωση</strong> προς τον Μπόμπο ότι μπαίνει τιμωρία. 
-        Υπάρχει υποχρέωση συμπλήρωσης των ζητούμενων στοιχείων και αποστολής του εντύπου στο Αφεντικό 
-        εντός προθεσμίας και σύμφωνα με τους κανόνες. Σε διαφορετική περίπτωση προβλέπονται περαιτέρω ποινές.
-    </p><label>Ονοματεπώνυμο:</label>
-<input type="text" placeholder="π.χ. Σάρα Μπόμπο">
+<body>
+    <div class="container" id="capture">
+        <h1>Ειδοποίηση Τιμωρίας</h1>
+        <p>
+            Το παρόν αποτελεί <strong>επίσημη ανακοίνωση</strong> προς τον Μπόμπο ότι μπαίνει τιμωρία. 
+            Υπάρχει υποχρέωση συμπλήρωσης των ζητούμενων στοιχείων και αποστολής του εντύπου στο Αφεντικό 
+            εντός προθεσμίας και σύμφωνα με τους κανόνες. Σε διαφορετική περίπτωση προβλέπονται περαιτέρω ποινές.
+        </p><label>Ονοματεπώνυμο:</label>
+    <input type="text" placeholder="π.χ. Σάρα Μπόμπο">
 
-<label>Ημερομηνία γέννησης:</label>
-<input type="text" placeholder="π.χ. 13/07/2002">
+    <label>Ημερομηνία γέννησης:</label>
+    <input type="text" placeholder="π.χ. 13/07/2002">
 
-<label>Ποσό που κερδήθηκε στο Ρουκ Ζουκ:</label>
-<input type="text" placeholder="π.χ. 10.000€">
+    <label>Ποσό που κερδήθηκε στο Ρουκ Ζουκ:</label>
+    <input type="text" placeholder="π.χ. 10.000€">
+
+    <label>
+        Μπαίνεις τιμωρία καθώς τελευταία παρατηρήθηκαν μαζεμένα εκ μέρους σου ανυπακοή, υφάκι και μη φρόνιμη συμπεριφορά.
+        Έχεις κάτι να πεις για τον εαυτό σου; Γράψε 2 λόγους που δεν ήσουν καλό κορίτσι:
+    </label>
+    <textarea rows="4" placeholder="π.χ. 1) Είπα όχι στο Αφεντικό
+
+2. Έκανα του κεφαλιού μου"></textarea>
 
 <button onclick="downloadImage()">Εξαγωγή σε επίσημο έγγραφο</button>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script>
-    function downloadImage() {
-        html2canvas(document.querySelector("#capture")).then(canvas => {
-            let link = document.createElement("a");
-            link.download = "timoria_bobos.png";
-            link.href = canvas.toDataURL();
-            link.click();
-        });
-    }
-</script>
+ </div> <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> <script>
+     function downloadImage() {
+         html2canvas(document.querySelector("#capture")).then(canvas => {
+             let link = document.createElement("a");
+             link.download = "timoria_bobos.png";
+             link.href = canvas.toDataURL();
+             link.click();
+         });
+     }
+ </script>
 
 </body>
 </html>
