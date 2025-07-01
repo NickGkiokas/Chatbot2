@@ -166,8 +166,13 @@
         });
     
         // Τοποθέτηση εικόνας σε μέγεθος σελίδας A4
-        doc.addImage(imgData, 'PNG', 0, 0, 210, 297);
-    
+        // Υπολογισμός αναλογιών
+        const imgProps = doc.getImageProperties(imgData);
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        
+        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+
         // Μετατροπή PDF σε Blob
         const pdfBlob = doc.output("blob");
     
