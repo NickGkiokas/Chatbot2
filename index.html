@@ -146,14 +146,14 @@
     
         const captureElement = document.querySelector("#capture");
     
-        // Τράβα screenshot με html2canvas
-        const canvas = await html2canvas(captureElement, {
-          scale: 3,
-          useCORS: true,
-          windowWidth: document.body.scrollWidth,
-          scrollY: -window.scrollY
-        });
-    
+        html2canvas(captureElement, {
+            scale: 3,
+            useCORS: true,
+            scrollY: 0,
+            windowWidth: document.body.scrollWidth,
+            windowHeight: document.body.scrollHeight
+        }).then(canvas => {
+
         // Μετατροπή σε εικόνα PNG (για το PDF)
         const imgData = canvas.toDataURL("image/png");
     
@@ -167,6 +167,10 @@
     
         // Τοποθέτηση εικόνας σε μέγεθος σελίδας A4
         // Υπολογισμός αναλογιών
+        const imgProps = doc.getImageProperties(imgData);
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        
         const imgProps = doc.getImageProperties(imgData);
         const pdfWidth = doc.internal.pageSize.getWidth();
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
