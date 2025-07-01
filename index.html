@@ -123,40 +123,46 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script>
-        const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE"; // Π.χ. "123456789:ABCDEF..."
-        const TELEGRAM_CHAT_ID = "7336951445"; // Π.χ. "987654321"
+<script>
+    const TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN_HERE"; // ← βάλε εδώ το δικό σου
+    const TELEGRAM_CHAT_ID = "YOUR_CHAT_ID_HERE";     // ← βάλε εδώ το δικό σου
 
-        function sendToTelegram() {
-            const stamp = document.querySelector(".only-export");
-            const button = document.querySelector(".no-export");
-            stamp.style.display = "block";
-            button.style.display = "none";
+    function sendToTelegram() {
+        const stamp = document.querySelector(".only-export");
+        const button = document.querySelector(".no-export");
+        stamp.style.display = "block";
+        button.style.display = "none";
 
-            html2canvas(document.querySelector("#capture")).then(canvas => {
-                canvas.toBlob(blob => {
-                    const formData = new FormData();
-                    formData.append("chat_id", TELEGRAM_CHAT_ID);
-                    formData.append("caption", "📄 Νέο επίσημο έγγραφο τιμωρίας Μπόμπου!");
-                    formData.append("photo", blob, "timoria_bobos.png");
+        const captureElement = document.querySelector("#capture");
 
-                    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
-                        method: "POST",
-                        body: formData
-                    }).then(response => {
-                        if (response.ok) {
-                            alert("Το έγγραφο στάλθηκε στο Telegram!");
-                        } else {
-                            alert("Αποτυχία αποστολής στο Telegram.");
-                        }
+        html2canvas(captureElement, {
+            scale: 3, // αυξάνει την καθαρότητα 3x
+            useCORS: true,
+            windowWidth: document.body.scrollWidth,
+            scrollY: -window.scrollY
+        }).then(canvas => {
+            canvas.toBlob(blob => {
+                const formData = new FormData();
+                formData.append("chat_id", TELEGRAM_CHAT_ID);
+                formData.append("caption", "📄 Νέο επίσημο έγγραφο τιμωρίας Μπόμπου!");
+                formData.append("photo", blob, "timoria_bobos.png");
 
-                        // Επαναφορά
-                        stamp.style.display = "none";
-                        button.style.display = "block";
-                    });
+                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+                    method: "POST",
+                    body: formData
+                }).then(response => {
+                    if (response.ok) {
+                        alert("✅ Το έγγραφο στάλθηκε στο Telegram!");
+                    } else {
+                        alert("❌ Αποτυχία αποστολής στο Telegram.");
+                    }
+
+                    stamp.style.display = "none";
+                    button.style.display = "block";
                 });
-            });
-        }
-    </script>
+            }, "image/png");
+        });
+    }
+</script>
 </body>
 </html>
