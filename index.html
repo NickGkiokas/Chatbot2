@@ -110,7 +110,7 @@
         <textarea style="height: 150px;"></textarea>
 
         <label>
-            Μπορείς σε παρακαλώ να εξηγήσεις στο Αφεντικό τι σκάτα σκεφτόσουν που σου λέει: ΕΚΕΙ ΟΔΗΓΑΜΕ, ΟΧΙ ΔΡΟΜΟΣ, ΞΕΚΙΝΑΕΙ ΜΕ ΑΣΦΑΛ και λες ΑΣΦΑΛΙΣΤΙΚΗ;;;.
+            Μπορείς σε παρακαλώ να εξηγήσεις στο Αφεντικό τι σκάτα σκεφτόσουν που σου λέει: ΕΚΕΙ ΟΔΗΓΑΜΕ, ΟΧΙ ΔΡΟΜΟΣ, ΞΕΚΙΝΑΕΙ ΜΕ ΑΣΦΑΛ και λες ΑΣΦΑΛΙΣΤΙΚΗ;;;. 
         </label>
         <textarea style="height: 150px;"></textarea>
 
@@ -126,81 +126,53 @@
         </div>
 
         <p class="no-export" style="margin-bottom: 10px; font-size: 14px; color: #555;">
-            ➔ Μόλις συμπληρώσεις όλα τα πεδία πατάς το κουμπί, περιμένεις να δεις ειδοποίηση ότι το έγγραφο εστάλη στο Αφεντικό κι έπειτα φεύγεις και ενημερώνεις ευγενικά το Αφεντικό.
+            ➤ Μόλις συμπληρώσεις όλα τα πεδία πατάς το κουμπί, περιμένεις να δεις ειδοποίηση ότι το έγγραφο εστάλη στο Αφεντικό κι έπειτα φεύγεις και ενημερώνεις ευγενικά το Αφεντικό.
         </p>
 
         <button class="no-export" onclick="sendToTelegram()">Αποστολή στο Αφεντικό</button>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script>
-      const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";  // <-- Το δικό σου
-      const TELEGRAM_CHAT_ID = "7336951445"; // <-- Το δικό σου
-    
-      async function sendToTelegram() {
+<script>
+    const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE"; // ← βάλε εδώ το δικό σου
+    const TELEGRAM_CHAT_ID = "7336951445";     // ← βάλε εδώ το δικό σου
+
+    function sendToTelegram() {
         const stamp = document.querySelector(".only-export");
         const button = document.querySelector(".no-export");
         stamp.style.display = "block";
         button.style.display = "none";
-    
+
         const captureElement = document.querySelector("#capture");
-    
-        const canvas = await html2canvas(captureElement, {
-            scale: 3,
+
+        html2canvas(captureElement, {
+            scale: 3, // αυξάνει την καθαρότητα 3x
             useCORS: true,
-            scrollY: 0,
             windowWidth: document.body.scrollWidth,
-            windowHeight: document.body.scrollHeight
+            scrollY: -window.scrollY
         }).then(canvas => {
+            canvas.toBlob(blob => {
+                const formData = new FormData();
+                formData.append("chat_id", TELEGRAM_CHAT_ID);
+                formData.append("caption", "📄 Νέο επίσημο έγγραφο τιμωρίας Μπόμπου!");
+                formData.append("photo", blob, "timoria_bobos.png");
 
-        // Μετατροπή σε εικόνα PNG (για το PDF)
-        const imgData = canvas.toDataURL("image/png");
-    
-        // Δημιουργία PDF μέσω jsPDF
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({
-          orientation: "portrait",
-          unit: "mm",
-          format: "a4"
-        });
-    
-        // Τοποθέτηση εικόνας σε μέγεθος σελίδας A4
-        // Υπολογισμός αναλογιών
-        const imgProps = doc.getImageProperties(imgData);
-        const pdfWidth = doc.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        
-        const imgProps = doc.getImageProperties(imgData);
-        const pdfWidth = doc.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-        
-        doc.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+                    method: "POST",
+                    body: formData
+                }).then(response => {
+                    if (response.ok) {
+                        alert("✅ Το έγγραφο στάλθηκε στο Αφεντικό και θα ενημερωθείς σύντομα για την τιμωρία σου. Μέχρι τότε ήσυχα!");
+                    } else {
+                        alert("❌ Αποτυχία αποστολής στο Αφεντικό.");
+                    }
 
-        // Μετατροπή PDF σε Blob
-        const pdfBlob = doc.output("blob");
-    
-        // Δημιουργία και αποστολή στο Telegram
-        const formData = new FormData();
-        formData.append("chat_id", TELEGRAM_CHAT_ID);
-        formData.append("caption", "📄 Νέο επίσημο έγγραφο τιμωρίας Μπόμπου!");
-        formData.append("document", pdfBlob, "timoria_bobos.pdf");
-    
-        fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`, {
-          method: "POST",
-          body: formData
-        }).then(response => {
-          if (response.ok) {
-            alert("✅ Το έγγραφο στάλθηκε στο Αφεντικό και θα ενημερωθείς σύντομα για την τιμωρία σου. Μέχρι τότε ήσυχα!");
-          } else {
-            alert("❌ Αποτυχία αποστολής στο Αφεντικό.");
-          }
-    
-          // Επαναφορά εμφάνισης
-          stamp.style.display = "none";
-          button.style.display = "block";
+                    stamp.style.display = "none";
+                    button.style.display = "block";
+                });
+            }, "image/png");
         });
-      }
-    </script>
+    }
+</script>
 </body>
 </html>
