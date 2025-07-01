@@ -1,147 +1,35 @@
-<!DOCTYPE html>
-<html lang="el">
-<head>
-    <meta charset="UTF-8">
-    <title>Ειδοποίηση Τιμωρίας</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: 'Times New Roman', serif;
-            background: #f9f9f9;
-            padding: 20px;
-            margin: 0;
-        }
-        .container {
-            background-color: white;
-            padding: 20px;
-            border: 2px solid #000;
-            max-width: 600px;
-            margin: auto;
-            position: relative;
-        }
-        h1 {
-            text-align: center;
-            text-decoration: underline;
-            font-size: 24px;
-        }
-        p {
-            font-size: 16px;
-            line-height: 1.5;
-            margin-top: 20px;
-        }
-        label {
-            font-weight: bold;
-            font-size: 14px;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 6px;
-            margin: 10px 0 20px 0;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        textarea {
-            height: 100px;
-        }
-        button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #444;
-        }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE"; // Βάλε το token του bot σου
+    const TELEGRAM_CHAT_ID = "7336951445"; // Βάλε το user ID σου
 
-        .only-export {
-            display: none;
-        }
+    function downloadImage() {
+        const stamp = document.querySelector(".only-export");
+        const button = document.querySelector(".no-export");
 
-        @media print {
-            .no-export {
-                display: none !important;
-            }
-            .only-export {
-                display: block !important;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container" id="capture">
-        <h1>Ειδοποίηση Τιμωρίας</h1>
-        <p>
-            Το παρόν αποτελεί <strong>επίσημη ανακοίνωση</strong> προς τον Μπόμπο ότι μπαίνει τιμωρία. 
-            Υπάρχει υποχρέωση συμπλήρωσης των ζητούμενων στοιχείων και αποστολής του εντύπου στο Αφεντικό, εντός προθεσμίας και σύμφωνα με τους κανόνες.
-            Προθεσμία: 24 ώρες από τη στιγμή της ενημέρωσης (Αν περάσει το 24ωρο, για κάθε ώρα που αργείς γίνεται πιο αυστηρή η τιμωρία)
-            Εφαρμογή τιμωρίας: το διάστημα 10-17 Ιουλίου, αλλά με τρόπο έκπληξη!🤫
-        </p>
+        stamp.style.display = "block";
+        button.style.display = "none";
 
-        <label>Ονοματεπώνυμο:</label>
-        <input type="text" placeholder="π.χ. Σάρα Μπόμπος Τούρια">
+        html2canvas(document.querySelector("#capture")).then(canvas => {
+            canvas.toBlob(blob => {
+                const formData = new FormData();
+                formData.append("chat_id", TELEGRAM_CHAT_ID);
+                formData.append("caption", "📄 Νέο επίσημο έγγραφο τιμωρίας Μπόμπου!");
+                formData.append("photo", blob, "timoria_bobos.png");
 
-        <label>Ημερομηνία γέννησης:</label>
-        <input type="text" placeholder="π.χ. 13/07/2002">
-
-        <label>Ποσό που κερδήθηκε στο Ρουκ Ζουκ:</label>
-        <input type="text" placeholder="π.χ. 10.000€">
-
-        <label>Έχεις κυλιόμενη στο σπίτι σου;</label>
-        <input type="text" placeholder="π.χ. Ναι και Ουάσινγκτον = Αγγλία">
-
-        <label>
-            Τελευταία παρατηρήθηκαν μαζεμένα εκ μέρους σου ανυπακοή, λίγο υφάκι και μη φρόνιμη συμπεριφορά.
-            Παραδείγματα: 1. Είπες στο Αφεντικό σε φωνητικό "ΟΧΙ ΔΕ ΘΑ ΚΑΤΣΩ ΤΙΜΩΡΙΑ ΕΙΧΑ ΠΕΙ ΘΑ ΒΓΩ" (ανυπακοή και υφάκι)
-            2. Απαντήσεις όπως "ΝΑΙ ΕΓΙΝΕΣ ΣΑΦΗΣ" αντί για το ευρέως γνωστό "ΜΑΛΙΣΤΑ ΑΦΕΝΤΙΚΟ" (υφάκι και μη φρόνιμη συμπεριφορά)
-            3. Μη φρόνιμη μεταμεσονύχτια δραστηριότητα (ΜΗ ΦΡΟΝΙΜΗ ΣΥΜΠΕΡΙΦΟΡΑ).
-            Αναγνωρίζεις ότι έγιναν τα παραπάνω;
-            Έχεις κάτι να πεις για τον εαυτό σου; Γράψε 2 λόγους που τα έκανες αυτά:
-        </label>
-        <textarea style="height: 150px;"></textarea>
-
-        <label>
-            Για τα παραπάνω λοιπόν κι επειδή τα πράγματα είναι πλέον αυστηρά, μπαίνεις τιμωρία. Θεωρείς δίκαιη την απόφαση; Πιστεύεις θα βοηθήσει να μπεις σε σειρά; 
-            (Υπενθύμιση ότι πλέον δε γλυτώνεις την τιμωρία, άρα οι απαντήσεις σου μπορούν να οδηγήσουν μόνο σε καλύτερη ή χειρότερη τιμωρία. Εκμεταλλεύσου το!)
-        </label>
-        <textarea style="height: 150px;"></textarea>
-
-        <label>
-            Υπεύθυνη δήλωση: Γράψε ότι κατανόησες, συμφωνείς και θα τηρήσεις τα παραπάνω. Να χρησιμοποιηθούν γνωστές λέξεις-κλειδιά, όπως Μάλιστα Αφεντικό, φρόνιμη, υπάκουη, καλό κορίτσι, Κοτ, κλπ. 
-            (Όσο περισσότερα εντοπισθούν τόσο καλύτερα για σένα!)
-        </label>
-        <textarea style="height: 150px;"></textarea>
-
-        <div class="only-export" style="margin-top: 40px; border-top: 1px solid black; padding-top: 20px; text-align: center;">
-            <p style="font-size: 14px; font-style: italic;">Ο Μπόμπος συμφώνησε, αναγνώρισε ότι ήταν άτακτος και περιμένει φρόνιμα την τιμωρία</p>
-            <p style="font-size: 16px; font-weight: bold;">Σφραγίδα Αφεντικού ✅</p>
-        </div>
-
-        <button class="no-export" onclick="downloadImage()">Εξαγωγή σε επίσημο έγγραφο</button>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script>
-        function downloadImage() {
-            // Εμφανίζει τη σφραγίδα προσωρινά
-            const stamp = document.querySelector(".only-export");
-            const button = document.querySelector(".no-export");
-            stamp.style.display = "block";
-            button.style.display = "none";
-
-            html2canvas(document.querySelector("#capture")).then(canvas => {
-                let link = document.createElement("a");
-                link.download = "timoria_bobos.png";
-                link.href = canvas.toDataURL();
-                link.click();
-
-                // Επαναφέρει εμφάνιση για την οθόνη
-                stamp.style.display = "none";
-                button.style.display = "block";
+                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+                    method: "POST",
+                    body: formData
+                }).then(response => {
+                    if (response.ok) {
+                        alert("Το έγγραφο εστάλη στο Telegram!");
+                    } else {
+                        alert("Κάτι πήγε στραβά με την αποστολή στο Telegram.");
+                    }
+                    stamp.style.display = "none";
+                    button.style.display = "block";
+                });
             });
-        }
-    </script>
-</body>
-</html>
+        });
+    }
+</script>
