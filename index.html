@@ -1,123 +1,76 @@
-<!DOCTYPE html>
-<html lang="el">
+<!DOCTYPE html><html lang="el">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MpompoShop</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Comic Neue', cursive;
-      background: #fffbe7;
-      margin: 0;
-      padding: 0;
-      color: #333;
-    }
-    header {
-      background-color: #ffd54f;
-      padding: 20px;
-      text-align: center;
-      font-size: 2rem;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-    .points {
-      text-align: center;
-      margin-top: 10px;
-    }
-    .section {
-      padding: 20px;
-    }
-    h2 {
-      text-align: center;
-      margin-top: 40px;
-    }
-    .shop-grid {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-    }
-    .item {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      padding: 20px;
-      width: 220px;
-      text-align: center;
-    }
-    .item button {
-      background-color: #ff7043;
-      color: white;
-      border: none;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .item button:hover {
-      background-color: #e64a19;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>Ειδοποίηση Τιμωρίας</title>
+    <style>
+        body {
+            font-family: 'Times New Roman', serif;
+            background: #f9f9f9;
+            padding: 40px;
+            max-width: 700px;
+            margin: auto;
+            border: 2px solid #000;
+            background-color: white;
+        }
+        h1 {
+            text-align: center;
+            text-decoration: underline;
+        }
+        p {
+            font-size: 18px;
+            line-height: 1.5;
+            margin-top: 30px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 6px;
+            margin: 10px 0 20px 0;
+            font-size: 16px;
+        }
+        button {
+            background-color: #000;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #444;
+        }
+    </style>
 </head>
-<body>
-  <header>
-    Καλωσήρθες στο MpompoShop™
-  </header>
+<body id="capture">
+    <h1>Ειδοποίηση Τιμωρίας</h1>
+    <p>
+        Το παρόν αποτελεί <strong>επίσημη ανακοίνωση</strong> προς τον Μπόμπο ότι μπαίνει τιμωρία. 
+        Υπάρχει υποχρέωση συμπλήρωσης των ζητούμενων στοιχείων και αποστολής του εντύπου στο Αφεντικό 
+        εντός προθεσμίας και σύμφωνα με τους κανόνες. Σε διαφορετική περίπτωση προβλέπονται περαιτέρω ποινές.
+    </p><label>Ονοματεπώνυμο:</label>
+<input type="text" placeholder="π.χ. Σάρα Μπόμπο">
 
-  <div class="points">
-    <p>Πόντοι Ανταμοιβής: <strong>20</strong> | Πόντοι Ποινής:<strong>120</strong></p>
-  </div>
+<label>Ημερομηνία γέννησης:</label>
+<input type="text" placeholder="π.χ. 13/07/2002">
 
-  <div class="section">
-    <h2>Δώρα</h2>
-    <div class="shop-grid">
-      <div class="item">
-        <h3>1 Λιχουδιά</h3>
-        <p>10 πόντοι</p>
-        <button>Εξαργύρωση</button>
-      </div>
-      <div class="item">
-        <h3>Άδεια για 1 μέρα</h3>
-        <p>20 πόντοι</p>
-        <button>Εξαργύρωση</button>
-      </div>
-      <div class="item">
-        <h3>Χωρίς έλεγχο για 2 μέρες</h3>
-        <p>100 πόντοι</p>
-        <button>Εξαργύρωση</button>
-      </div>
-    </div>
-  </div>
+<label>Ποσό που κερδήθηκε στο Ρουκ Ζουκ:</label>
+<input type="text" placeholder="π.χ. 10.000€">
 
-  <div class="section">
-    <h2>Τιμωρίες (εξαργύρωση πόντων Ποινής)</h2>
-    <div class="shop-grid">
-      <div class="item">
-        <h3>1 μέρα χωρίς άδεια </h3>
-        <p>10 πόντοι ποινής</p>
-        <button>Εξαργύρωση</button>
-      </div>
-      <div class="item">
-        <h3>1 εβδομάδα χωρίς λιχουδιές</h3>
-        <p>20 πόντοι ποινής</p>
-        <button>Εξαργύρωση</button>
-      </div>
-      <div class="item">
-        <h3>Τιμωρία τροχού</h3>
-        <p>30 πόντοι ποινής</p>
-        <button>Εξαργύρωση</button>
-      </div>
-      <div class="item">
-        <h3>Αξιολόγηση και απολογία</h3>
-        <p>50 πόντοι ποινής</p>
-        <button>Εξαργύρωση</button>
-      </div>
-      <div class="item">
-        <h3>Αυστηρή απαγόρευση: Δέσιμο με λουρί όλο το ΣΚ</h3>
-        <p>150 πόντοι ποινής</p>
-        <button>Εξαργύρωση</button>
-      </div>
-    </div>
-  </div>
+<button onclick="downloadImage()">Εξαγωγή σε επίσημο έγγραφο</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    function downloadImage() {
+        html2canvas(document.querySelector("#capture")).then(canvas => {
+            let link = document.createElement("a");
+            link.download = "timoria_bobos.png";
+            link.href = canvas.toDataURL();
+            link.click();
+        });
+    }
+</script>
+
 </body>
 </html>
