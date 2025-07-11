@@ -57,10 +57,9 @@
 <body>
   <div class="container">
     <h1>Κατάλογος υποχρεώσεων Μπόμπου</h1>
-    <p>Επίλεξε από τα παρακάτω:</p><button onclick="showForm('saturday')">Έξοδος Σάββατο <span id="status-saturday"></span></button>
-<button onclick="showForm('vacation')">Διακοπές <span id="status-vacation"></span></button>
-
-<div id="form-container"></div>
+    <p>Επίλεξε από τα παρακάτω:</p>
+    <button onclick="showForm('saturday')">Έξοδος Σάββατο <span id="status-saturday"></span></button>
+    <button onclick="showForm('vacation')">Διακοπές <span id="status-vacation"></span></button><div id="form-container"></div>
 
   </div>  <script>
     const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN';
@@ -79,9 +78,9 @@
       let formHtml = `
         <div class="section">
           <h2>${title}</h2>
-          <input type="text" placeholder="Ονοματεπώνυμο">
-          <input type="text" placeholder="Ημερομηνία">
-          <textarea placeholder="Λόγος αίτησης"></textarea><textarea id="reason-${type}" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea>
+          <input id="name" type="text" placeholder="Ονοματεπώνυμο">
+          <input id="date" type="text" placeholder="Ημερομηνία">
+          <textarea id="reason" placeholder="Λόγος αίτησης"></textarea><textarea id="reason-${type}" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea>
       <button onclick="submitForm('${type}')">Υποβολή</button>
       <div id="warning-${type}" class="warning hidden"></div>
     </div>`;
@@ -108,28 +107,24 @@ function submitForm(type) {
 
 function showPunishment(type) {
   let count = 0;
-  let box = prompt("Γράψε 5 φορές: \"" + requiredPhrase + "\"");
-  while (box !== null) {
+  while (count < 5) {
+    let box = prompt(`Γράψε 5 φορές: \"${requiredPhrase}\" (${count + 1}/5)`);
     if (box === requiredPhrase) {
       count++;
-      if (count === 5) {
-        alert("Έτσι μπράβο. Συνέχισε εκεί που έμεινες τώρα.");
-        document.getElementById(`warning-${type}`).classList.add("hidden");
-        return;
-      }
     } else {
-      alert("Λάθος! Ξεκινάς από την αρχή.");
+      alert("Λάθος! Ξεκινάς από την αρχή!");
       count = 0;
     }
-    box = prompt("Γράψε 5 φορές: \"" + requiredPhrase + "\" (${count}/5)");
   }
+  alert("Έτσι μπράβο. Συνέχισε εκεί που έμεινες τώρα.");
+  document.getElementById(`warning-${type}`).classList.add("hidden");
 }
 
 function sendToTelegram(type) {
   const formData = {
-    ονομα: document.querySelector("input[type='text']").value,
-    ημερομηνια: document.querySelectorAll("input[type='text']")[1].value,
-    λογος: document.querySelector("textarea").value,
+    ονομα: document.getElementById("name").value,
+    ημερομηνια: document.getElementById("date").value,
+    λογος: document.getElementById("reason").value,
     ευγενεια: document.getElementById(`reason-${type}`).value
   };
 
