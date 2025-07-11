@@ -62,9 +62,9 @@
     <button onclick="showForm('vacation')">Διακοπές <span id="status-vacation"></span></button><div id="form-container"></div>
 
   </div>  <script>
-    const TELEGRAM_BOT_TOKEN = 'YOUR_BOT_TOKEN';
-    const TELEGRAM_CHAT_ID = 'YOUR_CHAT_ID';
-    const requiredPhrase = "Συγγνώμη Αφεντικό θα μιλάω ευγενικά";
+    const TELEGRAM_BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
+    const TELEGRAM_CHAT_ID = '7336951445';
+    const requiredPhrase = "Συγγνώμη Αφεντικό θα είμαι ευγενική";
 
     let completedForms = {
       saturday: false,
@@ -108,7 +108,7 @@ function submitForm(type) {
 function showPunishment(type) {
   let count = 0;
   while (count < 5) {
-    let box = prompt(`Γράψε 5 φορές: \"${requiredPhrase}\" (${count + 1}/5)`);
+    let box = prompt(`Όταν ζητάμε κάτι λέμε "Αφεντικό" και "Παρακαλώ πολύ". Γράψε 5 φορές: \"${requiredPhrase}\" (${count + 1}/5) για να το μάθεις`);
     if (box === requiredPhrase) {
       count++;
     } else {
