@@ -16,7 +16,6 @@
       background: white;
       padding: 20px;
       border: 2px solid black;
-      
     }
     h1 {
       text-align: center;
@@ -55,6 +54,7 @@
 
     <button class="menu-btn" onclick="showForm('saturday')">Άδεια για Έξοδο το Σάββατο</button>
     <button class="menu-btn" onclick="showForm('vacation')">Άδεια για Διακοπές</button>
+
     <div style="text-align: center; margin-top: 20px;">
       <button onclick="finalize()" class="menu-btn">Ολοκλήρωση</button>
     </div>
@@ -79,8 +79,8 @@
   </div>
 
   <script>
-    const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE"; // π.χ. "123456789:ABC..."
-    const TELEGRAM_CHAT_ID = "7336951445";     // π.χ. "123456789"
+    const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
+    const TELEGRAM_CHAT_ID = "7336951445";
 
     function showForm(id) {
       document.querySelectorAll('.form-section').forEach(el => el.style.display = 'none');
@@ -88,10 +88,11 @@
     }
 
     function validateRequest(type) {
-      const polite = document.getElementById(type + "Request").value.toLowerCase();
+      const polite = document.getElementById(type + "Request").value.toLowerCase().trim();
       if (!polite.includes('αφεντικ') || !polite.includes('παρακαλώ πολύ')) {
         alert("❌ Όταν ζητάμε κάτι λέμε 'Αφεντικό' και 'παρακαλώ πολύ'. Γράψε 5 φορές τι πρέπει να κάνεις για να το μάθεις!");
         askForgiveness(type);
+        punish();
         return;
       }
 
@@ -108,7 +109,7 @@
 
       function askNext() {
         let input = prompt(`Γράψε (${count + 1}/${attempts}): '${phrase}'`);
-        if (input.trim() === null) return;
+        if (input === null) return;
         if (input.trim() !== phrase) {
           alert("Λάθος. Ξεκίνα από την αρχή.");
           count = 0;
@@ -118,12 +119,24 @@
           if (count < attempts) {
             askNext();
           } else {
-            alert("✅ Έτσι μπράβο! Για πήγαινε και ρώτα ευγενικά τώρα.");
+            alert("✅ Έτσι μπράβο! Συνέχισε εκεί που έμεινες τώρα.");
           }
         }
       }
 
       askNext();
+    }
+
+    function punish() {
+      const finalMsg = `⛔ Ο Μπόμπος δε ρώτησε ευγενικά και γράφει τη φράση για τιμωρία.`;
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: finalMsg
+        })
+      });
     }
 
     function sendToTelegram(type) {
@@ -171,10 +184,12 @@
         alert("❌ Δεν μπόρεσε να συνδεθεί με το Telegram.");
       });
     }
+
     function finalize() {
       alert("✅ Μπράβο Μπόμπο! Θα ενημερωθείς από το Αφεντικό αν πήρες άδεια ή αν θα κάτσεις σπιτάκι🛖.");
       let ack = prompt("Τέλος, να σε ενημερώσουμε ότι η τιμωρία σου αντί για τη βδομάδα 10-17 μετατίθεται για τέλος του μήνα, οπότε σε περίπτωση που λάβεις άδεια θα ληφθεί υπόψη και αν ήσουν φρόνιμη αυτό το διάστημα. Κατανοητό;");
       alert("Μπορείς να αποχωρήσεις :)");
+
       const finalMsg = `📦 Ο Μπόμπος ολοκλήρωσε επιτυχώς τα αιτήματα, ενημερώθηκε για την τιμωρία και λέει: ${ack}`;
       fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: 'POST',
@@ -184,8 +199,7 @@
           text: finalMsg
         })
       });
-}
-
+    }
   </script>
 </body>
 </html>
