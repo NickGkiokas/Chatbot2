@@ -1,178 +1,92 @@
-<!DOCTYPE html>
-<html lang="el">
+<!DOCTYPE html><html lang="el">
 <head>
     <meta charset="UTF-8">
-    <title>Ειδοποίηση Τιμωρίας</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Κατάλογος Υποχρεώσεων Μπόμπου</title>
     <style>
         body {
-            font-family: 'Times New Roman', serif;
-            background: #f9f9f9;
-            padding: 20px;
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
             margin: 0;
+            padding: 0;
         }
         .container {
-            background-color: white;
-            padding: 20px;
-            border: 2px solid #000;
             max-width: 600px;
-            margin: auto;
-            position: relative;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         h1 {
             text-align: center;
-            text-decoration: underline;
-            font-size: 24px;
         }
-        p {
-            font-size: 16px;
-            line-height: 1.5;
+        .task {
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .status {
+            float: right;
+            font-weight: bold;
+        }
+        form {
+            display: none;
             margin-top: 20px;
         }
-        label {
-            font-weight: bold;
-            font-size: 14px;
-        }
-        input, textarea {
+        input, textarea, button {
+            display: block;
             width: 100%;
-            padding: 6px;
-            margin: 10px 0 20px 0;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-        textarea {
-            height: 100px;
-        }
-        button {
-            background-color: #000;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-            border: none;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #444;
-        }
-
-        .only-export {
-            display: none;
-        }
-
-        @media print {
-            .no-export {
-                display: none !important;
-            }
-            .only-export {
-                display: block !important;
-            }
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 1em;
         }
     </style>
 </head>
 <body>
-    <div class="container" id="capture">
-        <h1>Ειδοποίηση Τιμωρίας</h1>
-        <p>
-            Αγαπητέ Μπόμπο, <br>
-            Το παρόν αποτελεί <strong>επίσημη ανακοίνωση</strong> ότι μπαίνεις τιμωρία. 
-            Υποχρεούσαι να συπληρώσεις και να στείλεις το έντυπο στο Αφεντικό. <br>
-            - Προθεσμία: 24 ώρες από τη στιγμή της ενημέρωσης (Αν περάσει το 24ωρο, για κάθε ώρα που αργείς γίνεται πιο αυστηρή η τιμωρία) <br>
-            - Εφαρμογή τιμωρίας: το διάστημα 10-17 Ιουλίου, αλλά με τρόπο έκπληξη!🤫
-        </p>
-
-        <label>Ονοματεπώνυμο:</label>
-        <input type="text" placeholder="π.χ. Σάρα Μπόμπος Τούρια">
-
-        <label>Ημερομηνία γέννησης:</label>
-        <input type="text" placeholder="π.χ. 13/07/2002">
-
-        <label>Ποσό που κερδήθηκε στο Ρουκ Ζουκ:</label>
-        <input type="text" placeholder="π.χ. 10.000€">
-
-        <label>Έχεις κυλιόμενη στο σπίτι σου;</label>
-        <input type="text" placeholder="π.χ. Ναι και Ουάσινγκτον = Αγγλία">
-
-        <label>
-            Τελευταία παρατηρήθηκαν μαζεμένα εκ μέρους σου ανυπακοή, λίγο υφάκι και μη φρόνιμη συμπεριφορά.
-            Παραδείγματα: 1. Είπες στο Αφεντικό σε φωνητικό "ΟΧΙ ΔΕ ΘΑ ΚΑΤΣΩ ΤΙΜΩΡΙΑ ΕΙΧΑ ΠΕΙ ΘΑ ΒΓΩ" (=ανυπακοή και υφάκι)
-            2. Απαντήσεις όπως "ΝΑΙ ΕΓΙΝΕΣ ΣΑΦΗΣ" αντί για "ΜΑΛΙΣΤΑ ΑΦΕΝΤΙΚΟ" (=υφάκι και μη φρόνιμη συμπεριφορά)
-            3. Μη φρόνιμη μεταμεσονύχτια δραστηριότητα (=ΜΗ ΦΡΟΝΙΜΗ ΣΥΜΠΕΡΙΦΟΡΑ)
-            Αναγνωρίζεις ότι έγιναν τα παραπάνω;
-            Γράψε 2 λόγους που τα έκανες και τι έχεις να πεις για τον εαυτό σου:
-        </label>
-        <textarea style="height: 150px;"></textarea>
-
-        <label>
-            Λόγω των παραπάνω λοιπόν κι επειδή τα πράγματα είναι πλέον αυστηρά, μπαίνεις τιμωρία. Θεωρείς δίκαιη την απόφαση; Πιστεύεις θα μπεις έτσι σε σειρά; 
-            (Θυμίσου ότι πλέον δε γλυτώνεις την τιμωρία, άρα οι απαντήσεις σου μπορούν μόνο να κάνουν την τιμωρία καλύτερη ή χειρότερη. Εκμεταλλεύσου το λοιπόν!)
-        </label>
-        <textarea style="height: 150px;"></textarea>
-
-        <label>
-            Μπορείς σε παρακαλώ να εξηγήσεις στο Αφεντικό τι σκάτα σκεφτόσουν που σου λέει: ΕΚΕΙ ΟΔΗΓΑΜΕ, ΟΧΙ ΔΡΟΜΟΣ, ΞΕΚΙΝΑΕΙ ΜΕ ΑΣΦΑΛ και λες ΑΣΦΑΛΙΣΤΙΚΗ;;;. 
-        </label>
-        <textarea style="height: 150px;"></textarea>
-
-        <label>
-            Υπεύθυνη δήλωση: Γράψε ότι κατανόησες, συμφωνείς και θα τηρήσεις τα παραπάνω. 
-            (Χρησιμοποίησε γνωστές λέξεις-κλειδιά: Μάλιστα Αφεντικό, φρόνιμη, υπάκουη, καλό κορίτσι, Κοτ😎 κλπ. Όσο περισσότερες εντοπιστούν τόσο το καλύτερο για σένα!)
-        </label>
-        <textarea style="height: 150px;"></textarea>
-
-        <div class="only-export" style="margin-top: 40px; border-top: 1px solid black; padding-top: 20px; text-align: center;">
-            <p style="font-size: 14px; font-style: italic;">Ο Μπόμπος συμφώνησε, αναγνώρισε ότι ήταν άτακτος και περιμένει φρόνιμα την τιμωρία</p>
-            <p style="font-size: 16px; font-weight: bold;">Σφραγίδα Αφεντικού ✅</p>
-        </div>
-
-        <p class="no-export" style="margin-bottom: 10px; font-size: 14px; color: #555;">
-            ➤ Μόλις συμπληρώσεις όλα τα πεδία πατάς το κουμπί, περιμένεις να δεις ειδοποίηση ότι το έγγραφο εστάλη στο Αφεντικό κι έπειτα φεύγεις και ενημερώνεις ευγενικά το Αφεντικό.
-        </p>
-
-        <button class="no-export" onclick="sendToTelegram()">Αποστολή στο Αφεντικό</button>
+    <div class="container">
+        <h1>Κατάλογος Υποχρεώσεων Μπόμπου</h1>
+        <p>📋 Επίλεξε από τα παρακάτω:</p><div class="task" onclick="showForm('saturday')">
+        Έξοδος Σάββατο <span id="status-saturday" class="status">Εκκρεμεί</span>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <div class="task" onclick="showForm('vacation')">
+        Διακοπές <span id="status-vacation" class="status">Εκκρεμεί</span>
+    </div>
+
+    <form id="form-saturday" onsubmit="return submitForm('saturday')">
+        <h3>Αίτηση για Έξοδο Σάββατο</h3>
+        <input type="text" placeholder="Τοποθεσία" required>
+        <input type="text" placeholder="Με ποιον/ποιους;" required>
+        <textarea placeholder="Γιατί αξίζεις να βγεις;" required></textarea>
+        <button type="submit">Υποβολή</button>
+    </form>
+
+    <form id="form-vacation" onsubmit="return submitForm('vacation')">
+        <h3>Αίτηση για Διακοπές</h3>
+        <input type="text" placeholder="Προορισμός" required>
+        <input type="text" placeholder="Ημερομηνίες" required>
+        <textarea placeholder="Αιτιολόγηση/Σχόλια προς το Αφεντικό" required></textarea>
+        <button type="submit">Υποβολή</button>
+    </form>
+</div>
+
 <script>
-    const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE"; // ← βάλε εδώ το δικό σου
-    const TELEGRAM_CHAT_ID = "7336951445";     // ← βάλε εδώ το δικό σου
+    function showForm(task) {
+        document.getElementById('form-saturday').style.display = 'none';
+        document.getElementById('form-vacation').style.display = 'none';
+        document.getElementById(`form-${task}`).style.display = 'block';
+    }
 
-    function sendToTelegram() {
-        const stamp = document.querySelector(".only-export");
-        const button = document.querySelector(".no-export");
-        stamp.style.display = "block";
-        button.style.display = "none";
-
-        const captureElement = document.querySelector("#capture");
-
-        html2canvas(captureElement, {
-            scale: 3, // αυξάνει την καθαρότητα 3x
-            useCORS: true,
-            windowWidth: document.body.scrollWidth,
-            scrollY: -window.scrollY
-        }).then(canvas => {
-            canvas.toBlob(blob => {
-                const formData = new FormData();
-                formData.append("chat_id", TELEGRAM_CHAT_ID);
-                formData.append("caption", "📄 Νέο επίσημο έγγραφο τιμωρίας Μπόμπου!");
-                formData.append("photo", blob, "timoria_bobos.png");
-
-                fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
-                    method: "POST",
-                    body: formData
-                }).then(response => {
-                    if (response.ok) {
-                        alert("✅ Το έγγραφο στάλθηκε στο Αφεντικό και θα ενημερωθείς σύντομα για την τιμωρία σου. Μέχρι τότε ήσυχα!");
-                    } else {
-                        alert("❌ Αποτυχία αποστολής στο Αφεντικό.");
-                    }
-
-                    stamp.style.display = "none";
-                    button.style.display = "block";
-                });
-            }, "image/png");
-        });
+    function submitForm(task) {
+        document.getElementById(`status-${task}`).innerText = 'Ολοκληρώθηκε';
+        document.getElementById(`form-${task}`).style.display = 'none';
+        alert("✅ Η υποβολή σου καταχωρήθηκε. Συνέχισε στην επόμενη.");
+        return false; // Prevent actual form submission
     }
 </script>
+
 </body>
 </html>
