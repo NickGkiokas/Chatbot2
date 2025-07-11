@@ -119,19 +119,38 @@ function showPunishment(type) {
   alert("Έτσι μπράβο. Συνέχισε εκεί που έμεινες τώρα.");
   document.getElementById(`warning-${type}`).classList.add("hidden");
 }
-
 function sendToTelegram(type) {
   const name = document.getElementById("name").value;
   const date = document.getElementById("date").value;
   const reason = document.getElementById("reason").value;
   const polite = document.getElementById(`reason-${type}`).value;
 
-  const text = `📝 Νέα Αίτηση (${type === 'saturday' ? 'Έξοδος Σαββάτου' : 'Διακοπές'})\nΟνοματεπώνυμο: ${name}\nΗμερομηνία: ${date}\nΛόγος: ${reason}\nΖήτηση ευγενικά: ${polite}`;
+  const message = `📝 Νέα Αίτηση (${type === 'saturday' ? 'Έξοδος Σαββάτου' : 'Διακοπές'})\n` +
+    `👤 Ονοματεπώνυμο: ${name}\n📅 Ημερομηνία: ${date}\n📝 Λόγος: ${reason}\n🙏 Ζητήθηκε ευγενικά: ${polite}`;
 
-  fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text })
+  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+  
+  fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text: message,
+      parse_mode: 'HTML'
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      alert("❌ Κάτι πήγε στραβά με την αποστολή στο Αφεντικό!");
+    } else {
+      alert("✅ Το αίτημα υποβλήθηκε και εστάλη στο Αφεντικό!");
+    }
+  })
+  .catch(err => {
+    console.error("Telegram error:", err);
+    alert("❌ Σφάλμα σύνδεσης με το Telegram!");
   });
 }
 
