@@ -1,100 +1,126 @@
-<!DOCTYPE html><html lang="el">
+<!DOCTYPE html>
+<html lang="el">
 <head>
-    <meta charset="UTF-8">
-    <title>Κατάλογος Υποχρεώσεων Μπόμπου</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f3f3f3;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            border-radius: 10px;
-            max-width: 600px;
-            margin: auto;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .task {
-            margin-bottom: 20px;
-        }
-        .status {
-            font-size: 14px;
-            color: gray;
-            float: right;
-        }
-        .form {
-            display: none;
-            margin-top: 10px;
-        }
-        input, textarea, button {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
-            box-sizing: border-box;
-        }
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Κατάλογος Υποχρεώσεων Μπόμπου</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border: 2px solid black;
+    }
+    h1 {
+      text-align: center;
+    }
+    .menu-btn {
+      width: 100%;
+      padding: 10px;
+      font-size: 18px;
+      margin: 10px 0;
+      cursor: pointer;
+    }
+    .form-section {
+      display: none;
+      margin-top: 20px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+    }
+    .status {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-    <h1>Κατάλογος Υποχρεώσεων Μπόμπου</h1><div class="task">
-    <strong>Έξοδος Σάββατο</strong> <span class="status" id="status-saturday">[Εκκρεμεί]</span>
-    <button onclick="toggleForm('form-saturday')">Συμπλήρωση</button>
-    <div class="form" id="form-saturday">
-        <input type="text" placeholder="Πού θα πας;">
-        <input type="text" placeholder="Με ποιους θα είσαι;">
-        <input type="text" placeholder="Ωρα αναχώρησης και επιστροφής">
-        <textarea id="request-saturday" placeholder="Ζήτα ευγενικά από το Αφεντικό..."></textarea>
-        <button onclick="submitForm('saturday')">Υποβολή</button>
+  <div class="container">
+    <h1>Κατάλογος υποχρεώσεων Μπόμπου</h1>
+    <p>Επίλεξε από τα παρακάτω:</p>
+    <div id="statusArea">
+      <div class="status">Έξοδος Σάββατο: <span id="saturdayStatus">Εκκρεμεί</span></div>
+      <div class="status">Διακοπές: <span id="vacationStatus">Εκκρεμεί</span></div>
     </div>
-</div>
 
-<div class="task">
-    <strong>Διακοπές</strong> <span class="status" id="status-vacation">[Εκκρεμεί]</span>
-    <button onclick="toggleForm('form-vacation')">Συμπλήρωση</button>
-    <div class="form" id="form-vacation">
-        <input type="text" placeholder="Πού θα πας;">
-        <input type="text" placeholder="Με ποιους θα είσαι;">
-        <input type="text" placeholder="Ημερομηνίες διαμονής">
-        <textarea id="request-vacation" placeholder="Ζήτα ευγενικά από το Αφεντικό..."></textarea>
-        <button onclick="submitForm('vacation')">Υποβολή</button>
+    <button class="menu-btn" onclick="showForm('saturday')">Έξοδος Σάββατο</button>
+    <button class="menu-btn" onclick="showForm('vacation')">Διακοπές</button>
+
+    <div id="saturday" class="form-section">
+      <h3>Αίτηση για Έξοδο Σάββατο</h3>
+      <input type="text" placeholder="Ώρα Εξόδου" /><br />
+      <input type="text" placeholder="Τοποθεσία" /><br />
+      <textarea placeholder="Με ποιους θα είμαι"></textarea><br />
+      <textarea id="saturdayRequest" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea><br />
+      <button onclick="validateRequest('saturday')">Υποβολή</button>
     </div>
-</div>
 
-</div><script>
-    function toggleForm(id) {
-        const form = document.getElementById(id);
-        form.style.display = form.style.display === 'block' ? 'none' : 'block';
+    <div id="vacation" class="form-section">
+      <h3>Αίτηση για Διακοπές</h3>
+      <input type="text" placeholder="Ημερομηνία Αναχώρησης" /><br />
+      <input type="text" placeholder="Προορισμός" /><br />
+      <textarea placeholder="Με ποιον/ποιους θα πάω"></textarea><br />
+      <textarea id="vacationRequest" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea><br />
+      <button onclick="validateRequest('vacation')">Υποβολή</button>
+    </div>
+  </div>
+
+  <script>
+    function showForm(id) {
+      document.querySelectorAll('.form-section').forEach(el => el.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
     }
 
-    function submitForm(task) {
-        const textarea = document.getElementById(`request-${task}`);
-        const value = textarea.value.toLowerCase();
+    function validateRequest(type) {
+      const field = document.getElementById(type + 'Request');
+      const value = field.value.toLowerCase();
 
-        if (!value.includes("αφεντικό") || !value.includes("παρακαλώ πολύ")) {
-            alert("Δεν είπες \"Αφεντικό\" και \"παρακαλώ πολύ\". Γράψε 5 φορές \"Συγγνώμη Αφεντικό θα μιλάω ευγενικά\" για να μάθεις.");
-            return;
+      if (!value.includes('αφεντικό') || !value.includes('παρακαλώ πολύ')) {
+        alert("❌ Δεν είπες 'Αφεντικό' και 'παρακαλώ πολύ'. Τώρα γράψε 5 φορές τη σωστή φράση για να μάθεις!");
+        askForgiveness(type);
+        return;
+      }
+
+      document.getElementById(type + 'Status').innerText = 'Ολοκληρώθηκε';
+      document.getElementById(type).style.display = 'none';
+    }
+
+    function askForgiveness(type) {
+      const attempts = 5;
+      let count = 0;
+      let phrase = "Συγγνώμη Αφεντικό θα μιλάω ευγενικά";
+      let completed = true;
+
+      function askNext() {
+        let input = prompt(`Γράψε (${count + 1}/${attempts}): '${phrase}'`);
+        if (input === null) return; // cancel
+        if (input !== phrase) {
+          alert("Λάθος. Ξεκίνα από την αρχή.");
+          count = 0;
+          askNext();
+        } else {
+          count++;
+          if (count < attempts) {
+            askNext();
+          } else {
+            alert("✅ Έτσι μπράβο! Συνέχισε εκεί που έμεινες τώρα.");
+          }
         }
+      }
 
-        document.getElementById(`status-${task}`).innerText = '[Ολοκληρώθηκε]';
-        alert("Υποβολή επιτυχής! Επιστρέφεις στο κεντρικό μενού.");
-        document.getElementById(`form-${task}`).style.display = 'none';
+      askNext();
     }
-</script></body>
+  </script>
+</body>
 </html>
