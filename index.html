@@ -1,56 +1,47 @@
-<!DOCTYPE html><html lang="el">
+<!DOCTYPE html>
+<html lang="el">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Κατάλογος υποχρεώσεων Μπόμπου</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Κατάλογος Υποχρεώσεων Μπόμπου</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f7f7f7;
-      margin: 0;
-      padding: 0;
+      background-color: #f9f9f9;
+      padding: 20px;
     }
     .container {
       max-width: 600px;
-      margin: 20px auto;
-      background-color: #fff;
+      margin: auto;
+      background: white;
       padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border: 2px solid black;
     }
-    h1, h2 {
+    h1 {
       text-align: center;
-      color: #333;
     }
-    button, input, textarea {
+    .menu-btn {
       width: 100%;
-      margin: 10px 0;
       padding: 10px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      font-size: 18px;
+      margin: 10px 0;
+      cursor: pointer;
     }
-    button {
-      background-color: #007bff;
-      color: #fff;
-      border: none;
+    .form-section {
+      display: none;
+      margin-top: 20px;
     }
-    button:hover {
-      background-color: #0056b3;
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 10px;
+    }
+    .status {
+      font-weight: bold;
+      margin-bottom: 10px;
     }
     .hidden {
       display: none;
-    }
-    .completed {
-      color: green;
-      font-weight: bold;
-    }
-    .section {
-      margin-top: 20px;
-    }
-    .warning {
-      color: red;
-      font-weight: bold;
     }
   </style>
 </head>
@@ -58,128 +49,78 @@
   <div class="container">
     <h1>Κατάλογος υποχρεώσεων Μπόμπου</h1>
     <p>Επίλεξε από τα παρακάτω:</p>
-    <button onclick="showForm('saturday')">Έξοδος Σάββατο <span id="status-saturday"></span></button>
-    <button onclick="showForm('vacation')">Διακοπές <span id="status-vacation"></span></button>
-    <div id="form-container"></div>
-  </div>  <script>
-    const TELEGRAM_BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
-    const TELEGRAM_CHAT_ID = '7336951445';
-    const requiredPhrase = "Συγγνώμη Αφεντικό θα είμαι ευγενική";
-
-    let completedForms = {
-      saturday: false,
-      vacation: false
-    };
-
-    function showForm(type) {
-      if (completedForms[type]) return;
-
-      const title = type === 'saturday' ? 'Αίτηση Εξόδου Σαββάτου' : 'Αίτηση Διακοπών';
-      document.getElementById('form-container').innerHTML = `
-        <div class="section">
-          <h2>${title}</h2>
-          <input id="name" type="text" placeholder="Ονοματεπώνυμο">
-          <input id="date" type="text" placeholder="Ημερομηνία">
-          <textarea id="reason" placeholder="Λόγος αίτησης"></textarea><textarea id="reason-${type}" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea>
-      <button onclick="submitForm('${type}')">Υποβολή</button>
-      <div id="warning-${type}" class="warning hidden"></div>
+    <div id="statusArea">
+      <div class="status">Έξοδος Σάββατο: <span id="saturdayStatus">Εκκρεμεί</span></div>
+      <div class="status">Διακοπές: <span id="vacationStatus">Εκκρεμεί</span></div>
     </div>
-  `;
-}
 
-function submitForm(type) {
-  const reasonText = document.getElementById(`reason-${type}`).value.toLowerCase();
+    <button class="menu-btn" onclick="showForm('saturday')">Έξοδος Σάββατο</button>
+    <button class="menu-btn" onclick="showForm('vacation')">Διακοπές</button>
 
-  if (!reasonText.includes("αφεντικ") || !reasonText.includes("παρακαλώ πολύ")) {
-    const warning = document.getElementById(`warning-${type}`);
-    warning.textContent = "Δεν είπες τις μαγικές λέξεις...";
-    warning.classList.remove("hidden");
-    showPunishment(type);
-    return;
-  }
+    <div id="saturday" class="form-section">
+      <h3>Αίτηση για Έξοδο Σάββατο</h3>
+      <input type="text" placeholder="Ώρα Εξόδου" /><br />
+      <input type="text" placeholder="Τοποθεσία" /><br />
+      <textarea placeholder="Με ποιους θα είμαι"></textarea><br />
+      <textarea id="saturdayRequest" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea><br />
+      <button onclick="validateRequest('saturday')">Υποβολή</button>
+    </div>
 
-  completedForms[type] = true;
-  document.getElementById(`status-${type}`).textContent = '✓ Ολοκληρώθηκε';
-  document.getElementById('form-container').innerHTML = '';
+    <div id="vacation" class="form-section">
+      <h3>Αίτηση για Διακοπές</h3>
+      <input type="text" placeholder="Ημερομηνία Αναχώρησης" /><br />
+      <input type="text" placeholder="Προορισμός" /><br />
+      <textarea placeholder="Με ποιον/ποιους θα πάω"></textarea><br />
+      <textarea id="vacationRequest" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea><br />
+      <button onclick="validateRequest('vacation')">Υποβολή</button>
+    </div>
+  </div>
 
-  sendToTelegram(type);
-}
-
-function showPunishment(type) {
-  let count = 0;
-  while (count < 5) {
-    let input = prompt(`Γράψε 5 φορές: \"${requiredPhrase}\" (${count + 1}/5)`);
-    if (input === requiredPhrase) {
-      count++;
-    } else {
-      alert("Λάθος! Ξεκινάς από την αρχή!");
-      count = 0;
+  <script>
+    function showForm(id) {
+      document.querySelectorAll('.form-section').forEach(el => el.style.display = 'none');
+      document.getElementById(id).style.display = 'block';
     }
-  }
-  alert("Έτσι μπράβο. Συνέχισε εκεί που έμεινες τώρα.");
-  document.getElementById(`warning-${type}`).classList.add("hidden");
-}
-function sendToTelegram(type) {
-  const name = document.getElementById("name").value;
-  const date = document.getElementById("date").value;
-  const reason = document.getElementById("reason").value;
-  const polite = document.getElementById(`reason-${type}`).value;
 
-  const message = `📝 Νέα Αίτηση (${type === 'saturday' ? 'Έξοδος Σαββάτου' : 'Διακοπές'})\n` +
-    `👤 Ονοματεπώνυμο: ${name}\n📅 Ημερομηνία: ${date}\n📝 Λόγος: ${reason}\n🙏 Ζητήθηκε ευγενικά: ${polite}`;
+    function validateRequest(type) {
+      const field = document.getElementById(type + 'Request');
+      const value = field.value.toLowerCase();
 
-  const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
-  
-  fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      chat_id: TELEGRAM_CHAT_ID,
-      text: message,
-      parse_mode: 'HTML'
-    })
-  })
-  .then(response => {
-    if (!response.ok) {
-      alert("❌ Κάτι πήγε στραβά με την αποστολή στο Αφεντικό!");
-    } else {
-      alert("✅ Το αίτημα υποβλήθηκε και εστάλη στο Αφεντικό!");
+      if (!value.includes('αφεντικό') || !value.includes('παρακαλώ πολύ')) {
+        alert("❌ Δεν είπες 'Αφεντικό' και 'παρακαλώ πολύ'. Τώρα γράψε 5 φορές τη σωστή φράση για να μάθεις!");
+        askForgiveness(type);
+        return;
+      }
+
+      document.getElementById(type + 'Status').innerText = 'Ολοκληρώθηκε';
+      document.getElementById(type).style.display = 'none';
     }
-  })
-  .catch(err => {
-    console.error("Telegram error:", err);
-    alert("❌ Σφάλμα σύνδεσης με το Telegram!");
-  });
-}
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.body.addEventListener("cut", e => {
-    if (e.target.tagName.toLowerCase() === 'textarea') {
-      e.preventDefault();
-      alert("Έκοψες; Ξεκινάς από την αρχή!");
-      e.target.value = "";
+    function askForgiveness(type) {
+      const attempts = 5;
+      let count = 0;
+      let phrase = "Συγγνώμη Αφεντικό θα μιλάω ευγενικά";
+      let completed = true;
+
+      function askNext() {
+        let input = prompt(`Γράψε (${count + 1}/${attempts}): '${phrase}'`);
+        if (input === null) return; // cancel
+        if (input !== phrase) {
+          alert("Λάθος. Ξεκίνα από την αρχή.");
+          count = 0;
+          askNext();
+        } else {
+          count++;
+          if (count < attempts) {
+            askNext();
+          } else {
+            alert("✅ Έτσι μπράβο! Συνέχισε εκεί που έμεινες τώρα.");
+          }
+        }
+      }
+
+      askNext();
     }
-  });
-
-  document.body.addEventListener("copy", e => {
-    if (e.target.tagName.toLowerCase() === 'textarea') {
-      e.preventDefault();
-      alert("Αντέγραψες; Ξεκινάς από την αρχή!");
-      e.target.value = "";
-    }
-  });
-
-  document.body.addEventListener("paste", e => {
-    if (e.target.tagName.toLowerCase() === 'textarea') {
-      e.preventDefault();
-      alert("Έκανες επικόλληση; Ξεκινάς από την αρχή!");
-      e.target.value = "";
-    }
-  });
-});
-
   </script>
 </body>
 </html>
