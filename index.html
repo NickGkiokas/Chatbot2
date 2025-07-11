@@ -16,6 +16,10 @@
       background: white;
       padding: 20px;
       border: 2px solid black;
+    <div style="text-align: center; margin-top: 20px;">
+      <button onclick="finalize()" class="menu-btn">Ολοκλήρωση</button>
+    </div>
+      
     }
     h1 {
       text-align: center;
@@ -45,18 +49,18 @@
 <body>
   <div class="container">
     <h1>Κατάλογος αιτημάτων Μπόμπου</h1>
-    <h2 class="subtitle">Συμπλήρωσε τα παρακάτω με τη σειρά όμορφα κι ωραία μπας και πάρεις άδεια από το Αφεντικό</h2>
-    <p>Επίλεξε τι θέλεις να αιτηθείς πρώτα:</p>
+    <h2 class="subtitle">Συμπλήρωσέ τα με τη σειρά όμορφα κι ωραία μπας και πάρεις άδεια από το Αφεντικό</h2>
+    <p>Επίλεξε τι θέλεις να αιτηθείς:</p>
     <div id="statusArea">
-      <div class="status">Άδεια για Έξοδο Σάββατο: <span id="saturdayStatus">Εκκρεμεί</span></div>
+      <div class="status">Άδεια για Έξοδο το Σάββατο: <span id="saturdayStatus">Εκκρεμεί</span></div>
       <div class="status">Άδεια για Διακοπές: <span id="vacationStatus">Εκκρεμεί</span></div>
     </div>
 
-    <button class="menu-btn" onclick="showForm('saturday')">Άδεια για Έξοδο Σάββατο</button>
+    <button class="menu-btn" onclick="showForm('saturday')">Άδεια για Έξοδο το Σάββατο</button>
     <button class="menu-btn" onclick="showForm('vacation')">Άδεια για Διακοπές</button>
 
     <div id="saturday" class="form-section">
-      <h3>Αίτηση για Έξοδο Σάββατο</h3>
+      <h3>Αίτηση για Έξοδο το Σάββατο</h3>
       <input type="text" id="saturday-time" placeholder="Ώρα Εξόδου" />
       <input type="text" id="saturday-location" placeholder="Τοποθεσία" />
       <textarea id="saturday-with" placeholder="Τι πρέπει να κάνεις και να είσαι όσο λείπει το Αφεντικό;"></textarea>
@@ -131,8 +135,8 @@
         const withWhom = document.getElementById("saturday-with").value;
         const polite = document.getElementById("saturdayRequest").value;
 
-        message = `📋 *Αίτηση για Έξοδο Σάββατο*\n` +
-                  `⏰ Ώρα: ${time}\n📍 Τοποθεσία: ${location}\n👥 Όσο λείπει το Αφεντικό: ${withWhom}\n🙏 Ευγενικό αίτημα: ${polite}`;
+        message = `📋 *Αίτηση Μπόμπου για Έξοδο το Σάββατο*\n` +
+                  `⏰ Ώρα: ${time}\n📍 Τοποθεσία: ${location}\n🫡 Όσο λείπει το Αφεντικό: ${withWhom}\n🙏 Ευγενικό αίτημα: ${polite}`;
       }
 
       if (type === "vacation") {
@@ -141,8 +145,8 @@
         const withWhom = document.getElementById("vacation-with").value;
         const polite = document.getElementById("vacationRequest").value;
 
-        message = `📋 *Αίτηση για Διακοπές*\n` +
-                  `📅 Ημερομηνία: ${date}\n🌴 Προορισμός: ${dest}\n👥 Επαρχία: ${withWhom}\n🙏 Ευγενικό αίτημα: ${polite}`;
+        message = `📋 *Αίτηση Μπόμπου για Διακοπές*\n` +
+                  `📅 Ημερομηνία: ${date}\n🌴 Προορισμός: ${dest}\n🛖 Επαρχία: ${withWhom}\n🙏 Ευγενικό αίτημα: ${polite}`;
       }
 
       fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -167,6 +171,21 @@
         alert("❌ Δεν μπόρεσε να συνδεθεί με το Telegram.");
       });
     }
+    function finalize() {
+      alert("✅ Μπράβο Μπόμπο! Θα ενημερωθείς από το Αφεντικό αν πήρες άδεια ή αν θα κάτσεις σπιτάκι🛖.");
+      let ack = prompt("Τέλος, να σε ενημερώσουμε ότι η τιμωρία σου αντί για τη βδομάδα 10-17 μετατίθεται για τέλος του μήνα, οπότε σε περίπτωση που λάβεις άδεια θα ληφθεί υπόψη και αν ήσουν φρόνιμη αυτό το διάστημα. Κατανοητό;");
+      alert("Μπορείς να αποχωρήσεις :)");
+      const finalMsg = `📦 Ο Μπόμπος ολοκλήρωσε επιτυχώς τα αιτήματα, ενημερώθηκε για την τιμωρία και λέει: ${ack}`;
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: finalMsg
+        })
+      });
+}
+
   </script>
 </body>
 </html>
