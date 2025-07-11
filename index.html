@@ -104,7 +104,7 @@
       function askNext() {
         let input = prompt(`Γράψε (${count + 1}/${attempts}): '${phrase}'`);
         if (input === null) return;
-        if (input !== phrase.trim()) {
+        if (input !== phrase) {
           alert("Λάθος. Ξεκίνα από την αρχή.");
           count = 0;
           askNext();
