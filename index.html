@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Κατάλογος Υποχρεώσεων Μπόμπου</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f9f9f9;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
       padding: 20px;
     }
     .container {
@@ -15,111 +16,156 @@
       margin: auto;
       background: white;
       padding: 20px;
-      border: 2px solid black;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     h1 {
       text-align: center;
     }
-    .menu-btn {
-      width: 100%;
+    .task {
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
       padding: 10px;
-      font-size: 18px;
-      margin: 10px 0;
-      cursor: pointer;
-    }
-    .form-section {
-      display: none;
-      margin-top: 20px;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 10px;
-    }
-    .status {
-      font-weight: bold;
-      margin-bottom: 10px;
+      border-radius: 5px;
     }
     .hidden {
       display: none;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0 10px;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px;
+      width: 100%;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .complete {
+      color: green;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Κατάλογος υποχρεώσεων Μπόμπου</h1>
-    <p>Επίλεξε από τα παρακάτω:</p>
-    <div id="statusArea">
-      <div class="status">Έξοδος Σάββατο: <span id="saturdayStatus">Εκκρεμεί</span></div>
-      <div class="status">Διακοπές: <span id="vacationStatus">Εκκρεμεί</span></div>
+    <h1>Κατάλογος Υποχρεώσεων Μπόμπου</h1>
+
+    <div class="task" id="task1">
+      <div id="status1">Έξοδος Σάββατο - <span>Εκκρεμεί</span></div>
+      <button onclick="openForm(1)">Συμπλήρωσε</button>
+      <div id="form1" class="hidden">
+        <input type="text" placeholder="Πού θα πας;" id="place1">
+        <input type="text" placeholder="Με ποιον;" id="with1">
+        <input type="text" placeholder="Ώρα επιστροφής" id="return1">
+        <textarea placeholder="Ζήτα ευγενικά από το Αφεντικό" id="request1" onpaste="handlePaste(event)"></textarea>
+        <button onclick="validateRequest(1)">Υποβολή</button>
+      </div>
     </div>
 
-    <button class="menu-btn" onclick="showForm('saturday')">Έξοδος Σάββατο</button>
-    <button class="menu-btn" onclick="showForm('vacation')">Διακοπές</button>
-
-    <div id="saturday" class="form-section">
-      <h3>Αίτηση για Έξοδο Σάββατο</h3>
-      <input type="text" placeholder="Ώρα Εξόδου" /><br />
-      <input type="text" placeholder="Τοποθεσία" /><br />
-      <textarea placeholder="Με ποιους θα είμαι"></textarea><br />
-      <textarea id="saturdayRequest" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea><br />
-      <button onclick="validateRequest('saturday')">Υποβολή</button>
+    <div class="task" id="task2">
+      <div id="status2">Διακοπές - <span>Εκκρεμεί</span></div>
+      <button onclick="openForm(2)">Συμπλήρωσε</button>
+      <div id="form2" class="hidden">
+        <input type="text" placeholder="Πού θα πας;" id="place2">
+        <input type="text" placeholder="Με ποιον;" id="with2">
+        <input type="text" placeholder="Ημερομηνίες" id="return2">
+        <textarea placeholder="Ζήτα ευγενικά από το Αφεντικό" id="request2" onpaste="handlePaste(event)"></textarea>
+        <button onclick="validateRequest(2)">Υποβολή</button>
+      </div>
     </div>
+  </div>
 
-    <div id="vacation" class="form-section">
-      <h3>Αίτηση για Διακοπές</h3>
-      <input type="text" placeholder="Ημερομηνία Αναχώρησης" /><br />
-      <input type="text" placeholder="Προορισμός" /><br />
-      <textarea placeholder="Με ποιον/ποιους θα πάω"></textarea><br />
-      <textarea id="vacationRequest" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea><br />
-      <button onclick="validateRequest('vacation')">Υποβολή</button>
+  <div class="hidden" id="punishmentPopup">
+    <div class="container">
+      <h3>Τιμωρία: Πληκτρολόγησε 5 φορές σωστά:</h3>
+      <p><strong>"Συγγνώμη Αφεντικό θα μιλάω ευγενικά"</strong></p>
+      <input type="text" id="penaltyInput">
+      <div id="penaltyCount">0 / 5</div>
+      <button onclick="submitPenalty()">Υποβολή</button>
     </div>
   </div>
 
   <script>
-    function showForm(id) {
-      document.querySelectorAll('.form-section').forEach(el => el.style.display = 'none');
-      document.getElementById(id).style.display = 'block';
+    const TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN";
+    const TELEGRAM_CHAT_ID = "YOUR_CHAT_ID";
+
+    let penaltyAttempts = 0;
+    let currentTask = 0;
+
+    function openForm(taskNum) {
+      if (document.querySelector(`#status${taskNum} span`).innerText === "Ολοκληρώθηκε") return;
+      document.getElementById(`form${taskNum}`).classList.remove("hidden");
     }
 
-    function validateRequest(type) {
-      const field = document.getElementById(type + 'Request');
-      const value = field.value.toLowerCase();
+    function handlePaste(e) {
+      e.preventDefault();
+      alert("Έκλεψες άρα ξεκινάς πάλι");
+      startPunishment();
+    }
 
-      if (!value.includes('αφεντικό') || !value.includes('παρακαλώ πολύ')) {
-        alert("❌ Δεν είπες 'Αφεντικό' και 'παρακαλώ πολύ'. Τώρα γράψε 5 φορές τη σωστή φράση για να μάθεις!");
-        askForgiveness(type);
+    function validateRequest(taskNum) {
+      const text = document.getElementById(`request${taskNum}`).value.toLowerCase();
+      if (!text.includes("αφεντικό") || !text.includes("παρακαλώ πολύ")) {
+        alert("Δεν είπες Αφεντικό ή παρακαλώ πολύ. Πάμε για τιμωρία!");
+        currentTask = taskNum;
+        startPunishment();
         return;
       }
-
-      document.getElementById(type + 'Status').innerText = 'Ολοκληρώθηκε';
-      document.getElementById(type).style.display = 'none';
+      completeTask(taskNum);
     }
 
-    function askForgiveness(type) {
-      const attempts = 5;
-      let count = 0;
-      let phrase = "Συγγνώμη Αφεντικό θα μιλάω ευγενικά";
-      let completed = true;
+    function completeTask(taskNum) {
+      const place = document.getElementById(`place${taskNum}`).value;
+      const withWhom = document.getElementById(`with${taskNum}`).value;
+      const ret = document.getElementById(`return${taskNum}`).value;
+      const msg = `✅ Νέο αίτημα:
+Κατηγορία: ${taskNum === 1 ? "Έξοδος Σάββατο" : "Διακοπές"}
+Πού: ${place}
+Με ποιον: ${withWhom}
+Επιστροφή/Ημ: ${ret}`;
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg })
+      });
+      document.getElementById(`status${taskNum}`).innerHTML = `${taskNum === 1 ? "Έξοδος Σάββατο" : "Διακοπές"} - <span class='complete'>Ολοκληρώθηκε</span>`;
+      document.getElementById(`form${taskNum}`).classList.add("hidden");
+    }
 
-      function askNext() {
-        let input = prompt(`Γράψε (${count + 1}/${attempts}): '${phrase}'`);
-        if (input === null) return; // cancel
-        if (input !== phrase) {
-          alert("Λάθος. Ξεκίνα από την αρχή.");
-          count = 0;
-          askNext();
-        } else {
-          count++;
-          if (count < attempts) {
-            askNext();
-          } else {
-            alert("✅ Έτσι μπράβο! Συνέχισε εκεί που έμεινες τώρα.");
-          }
+    function startPunishment() {
+      document.querySelector(".container").classList.add("hidden");
+      document.getElementById("punishmentPopup").classList.remove("hidden");
+      document.getElementById("penaltyInput").value = "";
+      penaltyAttempts = 0;
+      updatePenaltyCount();
+    }
+
+    function updatePenaltyCount() {
+      document.getElementById("penaltyCount").innerText = `${penaltyAttempts} / 5`;
+    }
+
+    function submitPenalty() {
+      const val = document.getElementById("penaltyInput").value.trim();
+      if (val === "Συγγνώμη Αφεντικό θα μιλάω ευγενικά") {
+        penaltyAttempts++;
+        if (penaltyAttempts === 5) {
+          alert("Έτσι μπράβο! Συνέχισε εκεί που έμεινες τώρα.");
+          document.querySelector(".container").classList.remove("hidden");
+          document.getElementById("punishmentPopup").classList.add("hidden");
         }
+        document.getElementById("penaltyInput").value = "";
+        updatePenaltyCount();
+      } else {
+        alert("Λάθος. Ξεκινάς από την αρχή!");
+        penaltyAttempts = 0;
+        updatePenaltyCount();
       }
-
-      askNext();
     }
   </script>
 </body>
