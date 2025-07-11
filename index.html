@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Κατάλογος Υποχρεώσεων Μπόμπου</title>
+  <title>Κατάλογος Αιτημάτων Μπόμπου</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -44,31 +44,32 @@
 </head>
 <body>
   <div class="container">
-    <h1>Κατάλογος υποχρεώσεων Μπόμπου</h1>
-    <p>Επίλεξε από τα παρακάτω:</p>
+    <h1>Κατάλογος αιτημάτων Μπόμπου</h1>
+    <h2 class="subtitle">Συμπλήρωσε τα παρακάτω με τη σειρά όμορφα κι ωραία μπας και πάρεις άδεια από το Αφεντικό</h2>
+    <p>Επίλεξε τι θέλεις να αιτηθείς πρώτα:</p>
     <div id="statusArea">
-      <div class="status">Έξοδος Σάββατο: <span id="saturdayStatus">Εκκρεμεί</span></div>
-      <div class="status">Διακοπές: <span id="vacationStatus">Εκκρεμεί</span></div>
+      <div class="status">Άδεια για Έξοδο Σάββατο: <span id="saturdayStatus">Εκκρεμεί</span></div>
+      <div class="status">Άδεια για Διακοπές: <span id="vacationStatus">Εκκρεμεί</span></div>
     </div>
 
-    <button class="menu-btn" onclick="showForm('saturday')">Έξοδος Σάββατο</button>
-    <button class="menu-btn" onclick="showForm('vacation')">Διακοπές</button>
+    <button class="menu-btn" onclick="showForm('saturday')">Άδεια για Έξοδο Σάββατο</button>
+    <button class="menu-btn" onclick="showForm('vacation')">Άδεια για Διακοπές</button>
 
     <div id="saturday" class="form-section">
       <h3>Αίτηση για Έξοδο Σάββατο</h3>
       <input type="text" id="saturday-time" placeholder="Ώρα Εξόδου" />
       <input type="text" id="saturday-location" placeholder="Τοποθεσία" />
-      <textarea id="saturday-with" placeholder="Με ποιους θα είμαι"></textarea>
-      <textarea id="saturdayRequest" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea>
+      <textarea id="saturday-with" placeholder="Τι πρέπει να κάνεις και να είσαι όσο λείπει το Αφεντικό;"></textarea>
+      <textarea id="saturdayRequest" placeholder="Ζήτα σωστά κι ευγενικά άδεια από το Αφεντικό (εάν δε γίνει σωστά υπάρχει ποινή)"></textarea>
       <button onclick="validateRequest('saturday')">Υποβολή</button>
     </div>
 
     <div id="vacation" class="form-section">
       <h3>Αίτηση για Διακοπές</h3>
-      <input type="text" id="vacation-date" placeholder="Ημερομηνία Αναχώρησης" />
+      <input type="text" id="vacation-date" placeholder="Διάστημα Διακοπών" />
       <input type="text" id="vacation-dest" placeholder="Προορισμός" />
-      <textarea id="vacation-with" placeholder="Με ποιον/ποιους θα πάω"></textarea>
-      <textarea id="vacationRequest" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea>
+      <textarea id="vacation-with" placeholder="Υπόσχεσαι ότι δε θα ξεμείνεις στην επαρχία πριν τα 70;"></textarea>
+      <textarea id="vacationRequest" placeholder="Ζήτα ευγενικά άδεια από το Αφεντικό (εάν δε γίνει σωστά υπάρχει ποινή)"></textarea>
       <button onclick="validateRequest('vacation')">Υποβολή</button>
     </div>
   </div>
@@ -102,7 +103,7 @@
       let count = 0;
 
       function askNext() {
-        let input = prompt(`Γράψε (${count + 1}/${attempts}): '${phrase}'`);
+        let input.trim() = prompt(`Γράψε (${count + 1}/${attempts}): '${phrase}'`);
         if (input === null) return;
         if (input !== phrase) {
           alert("Λάθος. Ξεκίνα από την αρχή.");
@@ -131,7 +132,7 @@
         const polite = document.getElementById("saturdayRequest").value;
 
         message = `📋 *Αίτηση για Έξοδο Σάββατο*\n` +
-                  `⏰ Ώρα: ${time}\n📍 Τοποθεσία: ${location}\n👥 Με ποιους: ${withWhom}\n🙏 Ζήτηση ευγενικά: ${polite}`;
+                  `⏰ Ώρα: ${time}\n📍 Τοποθεσία: ${location}\n👥 Όσο λείπει το Αφεντικό: ${withWhom}\n🙏 Ευγενικό αίτημα: ${polite}`;
       }
 
       if (type === "vacation") {
@@ -141,7 +142,7 @@
         const polite = document.getElementById("vacationRequest").value;
 
         message = `📋 *Αίτηση για Διακοπές*\n` +
-                  `📅 Ημερομηνία: ${date}\n🌴 Προορισμός: ${dest}\n👥 Με ποιον/ποιους: ${withWhom}\n🙏 Ζήτηση ευγενικά: ${polite}`;
+                  `📅 Ημερομηνία: ${date}\n🌴 Προορισμός: ${dest}\n👥 Επαρχία: ${withWhom}\n🙏 Ευγενικό αίτημα: ${polite}`;
       }
 
       fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
