@@ -22,7 +22,7 @@
       text-align: center;
       color: #333;
     }
-    button, input, textarea, select {
+    button, input, textarea {
       width: 100%;
       margin: 10px 0;
       padding: 10px;
@@ -59,8 +59,8 @@
     <h1>Κατάλογος υποχρεώσεων Μπόμπου</h1>
     <p>Επίλεξε από τα παρακάτω:</p>
     <button onclick="showForm('saturday')">Έξοδος Σάββατο <span id="status-saturday"></span></button>
-    <button onclick="showForm('vacation')">Διακοπές <span id="status-vacation"></span></button><div id="form-container"></div>
-
+    <button onclick="showForm('vacation')">Διακοπές <span id="status-vacation"></span></button>
+    <div id="form-container"></div>
   </div>  <script>
     const TELEGRAM_BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
     const TELEGRAM_CHAT_ID = '7336951445';
@@ -74,8 +74,8 @@
     function showForm(type) {
       if (completedForms[type]) return;
 
-      let title = type === 'saturday' ? 'Αίτηση Εξόδου Σαββάτου' : 'Αίτηση Διακοπών';
-      let formHtml = `
+      const title = type === 'saturday' ? 'Αίτηση Εξόδου Σαββάτου' : 'Αίτηση Διακοπών';
+      document.getElementById('form-container').innerHTML = `
         <div class="section">
           <h2>${title}</h2>
           <input id="name" type="text" placeholder="Ονοματεπώνυμο">
@@ -83,23 +83,23 @@
           <textarea id="reason" placeholder="Λόγος αίτησης"></textarea><textarea id="reason-${type}" placeholder="Ζήτα ευγενικά από το Αφεντικό"></textarea>
       <button onclick="submitForm('${type}')">Υποβολή</button>
       <div id="warning-${type}" class="warning hidden"></div>
-    </div>`;
-  document.getElementById('form-container').innerHTML = formHtml;
+    </div>
+  `;
 }
 
 function submitForm(type) {
-  let reasonField = document.getElementById(`reason-${type}`);
-  let reason = reasonField.value.toLowerCase();
+  const reasonText = document.getElementById(`reason-${type}`).value.toLowerCase();
 
-  if (!reason.includes("αφεντικ") || !reason.includes("παρακαλώ πολύ")) {
-    document.getElementById(`warning-${type}`).classList.remove("hidden");
-    document.getElementById(`warning-${type}`).innerText = "Δεν είπες τις μαγικές λέξεις...";
+  if (!reasonText.includes("αφεντικ") || !reasonText.includes("παρακαλώ πολύ")) {
+    const warning = document.getElementById(`warning-${type}`);
+    warning.textContent = "Δεν είπες τις μαγικές λέξεις...";
+    warning.classList.remove("hidden");
     showPunishment(type);
     return;
   }
 
   completedForms[type] = true;
-  document.getElementById(`status-${type}`).innerText = '✓ Ολοκληρώθηκε';
+  document.getElementById(`status-${type}`).textContent = '✓ Ολοκληρώθηκε';
   document.getElementById('form-container').innerHTML = '';
 
   sendToTelegram(type);
@@ -108,8 +108,8 @@ function submitForm(type) {
 function showPunishment(type) {
   let count = 0;
   while (count < 5) {
-    let box = prompt(`Όταν ζητάμε κάτι λέμε "Αφεντικό" και "Παρακαλώ πολύ". Γράψε 5 φορές: \"${requiredPhrase}\" (${count + 1}/5) για να το μάθεις`);
-    if (box === requiredPhrase) {
+    let input = prompt(`Γράψε 5 φορές: \"${requiredPhrase}\" (${count + 1}/5)`);
+    if (input === requiredPhrase) {
       count++;
     } else {
       alert("Λάθος! Ξεκινάς από την αρχή!");
@@ -121,14 +121,12 @@ function showPunishment(type) {
 }
 
 function sendToTelegram(type) {
-  const formData = {
-    ονομα: document.getElementById("name").value,
-    ημερομηνια: document.getElementById("date").value,
-    λογος: document.getElementById("reason").value,
-    ευγενεια: document.getElementById(`reason-${type}`).value
-  };
+  const name = document.getElementById("name").value;
+  const date = document.getElementById("date").value;
+  const reason = document.getElementById("reason").value;
+  const polite = document.getElementById(`reason-${type}`).value;
 
-  const text = `📝 Νέα Αίτηση (${type === 'saturday' ? 'Έξοδος Σαββάτου' : 'Διακοπές'})\nΟνοματεπώνυμο: ${formData.ονομα}\nΗμερομηνία: ${formData.ημερομηνια}\nΛόγος: ${formData.λογος}\nΖήτηση ευγενικά: ${formData.ευγενεια}`;
+  const text = `📝 Νέα Αίτηση (${type === 'saturday' ? 'Έξοδος Σαββάτου' : 'Διακοπές'})\nΟνοματεπώνυμο: ${name}\nΗμερομηνία: ${date}\nΛόγος: ${reason}\nΖήτηση ευγενικά: ${polite}`;
 
   fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
     method: "POST",
