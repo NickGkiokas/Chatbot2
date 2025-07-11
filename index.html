@@ -85,7 +85,7 @@
     function validateRequest(type) {
       const polite = document.getElementById(type + "Request").value.toLowerCase();
       if (!polite.includes('αφεντικ') || !polite.includes('παρακαλώ πολύ')) {
-        alert("❌ Δεν είπες 'Αφεντικό' και 'παρακαλώ πολύ'. Τώρα γράψε 5 φορές τη σωστή φράση για να μάθεις!");
+        alert("❌ Όταν ζητάμε κάτι λέμε 'Αφεντικό' και 'παρακαλώ πολύ'. Γράψε 5 φορές τι πρέπει να κάνεις για να το μάθεις!");
         askForgiveness(type);
         return;
       }
