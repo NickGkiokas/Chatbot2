@@ -90,7 +90,7 @@
     function validateRequest(type) {
       const polite = document.getElementById(type + "Request").value.toLowerCase().trim();
       if (!polite.includes('αφεντικ') || !polite.includes('παρακαλώ πολύ')) {
-        alert("❌ Όταν ζητάμε κάτι λέμε 'Αφεντικό' και 'παρακαλώ πολύ'. Γράψε 5 φορές τι πρέπει να κάνεις για να το μάθεις!");
+        alert("❌ Όταν ζητάμε κάτι λέμε 'Αφεντικό' και 'παρακαλώ πολύ'. Γράψε 3 φορές τι πρέπει να κάνεις για να το μάθεις!");
         askForgiveness(type);
         punish();
         return;
