@@ -63,6 +63,7 @@
       <h3>Αίτηση για Έξοδο σήμερα Κυριακή</h3>
       <input type="text" id="saturday-time" placeholder="Ώρα Εξόδου" />
       <input type="text" id="saturday-location" placeholder="Τοποθεσία" />
+      <textarea id="saturday-with" placeholder="Τι πρέπει να κάνεις και να είσαι όσο λείπει το Αφεντικό;"></textarea>
       <textarea id="saturdayRequest" placeholder="Ζήτα σωστά κι ευγενικά άδεια από το Αφεντικό (εάν δε γίνει σωστά υπάρχει ποινή)"></textarea>
       <button onclick="validateRequest('saturday')">Υποβολή</button>
     </div>
@@ -148,7 +149,7 @@
         const polite = document.getElementById("saturdayRequest").value;
 
         message = `📋 *Αίτηση Μπόμπου για Έξοδο το Σάββατο*\n` +
-                  `⏰ Ώρα: ${time}\n📍 Τοποθεσία: ${location}\n🙏 Ευγενικό αίτημα: ${polite}`;
+                  `⏰ Ώρα: ${time}\n📍 Τοποθεσία: ${location}\n🫡 Όσο λείπει το Αφεντικό: ${withWhom}\n🙏 Ευγενικό αίτημα: ${polite}`;
       }
 
       if (type === "vacation") {
@@ -236,4 +237,4 @@
     }
   </script>
 </body>
-  </html>
+</html>
