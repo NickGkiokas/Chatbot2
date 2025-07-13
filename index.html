@@ -173,38 +173,60 @@
       });
     }
 
-    function finalize() {
+    async function getPhraseNTimes(phrase, times, label) {
+      let count = 0;
+      while (count < times) {
+        const startTime = new Date().getTime();
+        let input = prompt(`Γράψε ${times} φορές '${phrase}' (${count + 1}/${times})`);
+        const duration = (new Date().getTime() - startTime) / 1000;
+    
+        if (input === null) {
+          alert("❌ Δεν μπορείς να ακυρώσεις. Πρέπει να ολοκληρώσεις την τιμωρία.");
+          continue;
+        }
+    
+        if (input.trim() !== phrase || duration < 1.2) {
+          alert("❌ Λάθος ή πολύ γρήγορη πληκτρολόγηση (μήπως έκανες copy-paste;). Ξεκινάμε από την αρχή!");
+          count = 0;
+          continue;
+        }
+    
+        count++;
+      }
+    
+      sendTelegramMessage(`✍️ Ο Μπόμπος έγραψε ${times} φορές τη φράση: "${phrase}" (${label})`);
+    }
+    
+    async function finalize() {
       alert("✅ Μπράβο Μπόμπο! Θα ενημερωθείς από το Αφεντικό σύντομα.");
       alert("⚠️ Επειδή ήσουν λίγο ανυπάκουη, προστέθηκε τιμωρία:");
-
+    
       const phrase1 = "Συγγνώμη Αφεντικούλη άλλη φορά θα ακούω αμέσως";
-      let count1 = 0;
-      while (count1 < 5) {
-        let input = prompt(`Γράψε 5 φορές '${phrase1}'(${count1 + 1}/5)`);
-        if (input === null) return;
-        if (input.trim() !== phrase1) {
-          alert("Λάθος. Ξεκίνα από την αρχή.");
-          count1 = 0;
-        } else {
-          count1++;
-        }
-      sendTelegramMessage(`✍️ Ο Μπόμπος έγραψε 5 φορές τη φράση: "${phrase1}"`);
-      }
-
+      await getPhraseNTimes(phrase1, 5, "Τιμωρία 1");
+    
       const phrase2 = "Αφεντικό εσείς κάνετε κουμάντο";
-      let count2 = 0;
-      while (count2 < 5) {
-        let input = prompt(`Γράψε 5 φορές '${phrase2}'(${count2 + 1}/5)`);
-        if (input === null) return;
-        if (input.trim() !== phrase2) {
-          alert("Λάθος. Ξεκίνα από την αρχή.");
-          count2 = 0;
-        } else {
-          count2++;
-        }
-      sendTelegramMessage(`✍️ Ο Μπόμπος έγραψε 5 φορές τη φράση: "${phrase2}"`);
-      }
-
+      await getPhraseNTimes(phrase2, 5, "Τιμωρία 2");
+    
+      alert("Έτσι μπράβο. Ακόμη, να σε ενημερώσουμε ότι η τιμωρία σου αντί για τη βδομάδα 10-17 μετατίθεται για τέλος του μήνα, άρα εάν λάβεις άδεια θα ληφθεί υπόψη και αν ήσουν φρόνιμη όσο έλειπες.");
+    
+      let notify = prompt("Τέλος: 1. Εννοείται ότι αν το Αφεντικό ΔΕΝ δώσει άδεια θα κάτσεις σπιτάκι και δε θα πας πουθενά\n2.  Η τιμωρία που αναφέραμε πριν θα κυμαίνεται από απλή απαγόρευση εξόδου έως τιμωρία στη γωνία και δέσιμο με λουράκι. Είναι όλα κατανοητά; Τι έχεις να πεις;");
+      sendTelegramMessage(notify);
+    
+      alert("Επίσης το Αφεντικό έβαλε το καλάθι άρα χρωστάς ένα βιντεάκι με χαμόγελο!");
+      let ack = prompt("Γράψε ευγενικά στο Αφεντικό ότι τα έκανες όλα φρόνιμα κι ότι έμαθες το μάθημά σου και μετά μπορείς να αποχωρήσεις");
+      alert("Μπορείς να αποχωρήσεις :)");
+    
+      const finalMsg = `❗ Ο Μπόμπος ολοκλήρωσε επιτυχώς τα αιτήματα και τις τιμωρίες, ενημερώθηκε για όλα και λέει: ${ack}`;
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: finalMsg
+        })
+      });
+    }
+  
       alert("Έτσι μπράβο. Ακόμη, να σε ενημερώσουμε ότι η τιμωρία σου αντί για τη βδομάδα 10-17 μετατίθεται για τέλος του μήνα, αρά εάν λάβεις άδεια θα ληφθεί υπόψη και αν ήσουν φρόνιμη όσο έλειπες.");
       let notify = prompt("Τέλος: 1. Εννοείται ότι αν το Αφεντικό ΔΕΝ δώσει άδεια θα κάτσεις σπιτάκι και δε θα πας πουθενά\n2.  Η τιμωρία που αναφέραμε πριν θα κυμαίνεται από απλή απαγόρευση εξόδου έως τιμωρία στη γωνία και δέσιμο με λουράκι. Είναι όλα κατανοητά; Τι έχεις να πεις;");
       sendTelegramMessage(notify);
