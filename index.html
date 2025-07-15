@@ -60,7 +60,7 @@
       <h3>Αίτηση για Διακοπές</h3>
       <input type="text" id="vacation-date" placeholder="Διάστημα Διακοπών" />
       <input type="text" id="vacation-dest" placeholder="Προορισμός" />
-      <textarea id="vacation-role" placeholder="Τι θα είσαι όσο λείπεις διακοπές;"></textarea>
+      <textarea id="vacation-role" placeholder="Τι θα κάνεις όσο λείπεις διακοπές (πχ θα είμαι φρόνιμη, καλό κορίτσι, θα ενημερώνω κλπ);"></textarea>
       <textarea id="vacation-with" placeholder="Υπόσχεσαι ότι δε θα ξεμείνεις στην επαρχία πριν τα 70;"></textarea>
       <textarea id="vacationRequest" placeholder="Ζήτα άδεια από το Αφεντικό (ευγενικά αλλιώς έχει τιμωρία)"></textarea>
       <button onclick="validateRequest('vacation')">Υποβολή</button>
@@ -213,7 +213,6 @@
       let notify = prompt("Τέλος, εννοείται ότι αν το Αφεντικό ΔΕΝ δώσει άδεια θα κάτσεις σπιτάκι και δε θα πας πουθενά, έτσι δεν είναι;");
       sendTelegramMessage(`Ο Μπόμπος αν δεν πάρει άδεια λέει: ${notify}`);
     
-      alert("Επίσης το Αφεντικό έβαλε το καλάθι άρα χρωστάς ένα βιντεάκι με χαμόγελο!");
       let ack = prompt("Γράψε ευγενικά στο Αφεντικό ότι τα έκανες όλα φρόνιμα κι ότι έμαθες το μάθημά σου και μετά μπορείς να αποχωρήσεις.");
       alert("Μπορείς να αποχωρήσεις :)");
     
