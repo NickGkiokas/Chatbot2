@@ -76,6 +76,8 @@
       const polite = document.getElementById(type + "Request").value.toLowerCase().trim();
       if (!polite.includes('αφεντικ') || !polite.includes('παρακαλώ πολύ')) {
         alert("❌ Όταν ζητάμε κάτι λέμε 'Αφεντικό' και 'παρακαλώ πολύ'. Δοκίμασε ξανά!");
+        let msgg = ("Ο Μπόμπος δε ζήτησε άδεια ευγενικά και προσπαθεί πάλι.")
+        sendTelegramMessage(msgg);
         return;
       }
 
@@ -109,7 +111,12 @@
       .then(res => res.json())
       .then(data => {
         if (data.ok) {
-          alert("✅ Το αίτημα εστάλη στο Αφεντικό!");
+          alert("✅ Το αίτημα εστάλη στο Αφεντικό! Θα ενημερωθείς αν πήρες άδεια ή αν θα κάτσεις σπιτάκι! Στο μεταξύ να σε ενημερώσουμε ότι:");
+          let note = prompt("Η τιμωρία σου μετατίθεται για τέλος του μήνα, άρα ΑΝ πάρεις άδεια για διακοπές θα ληφθεί υπόψη και αν ήσουν φρόνιμη όσο έλειπες. Ήσυχα λοιπόν! Κατανοητό;");
+          sendTelegramMessage(`Ο Μπόμπος ενημερώθηκε για την τιμωρία και λέει: ${note}`);
+          alert("Έτσι Μπράβο! Μπορείς να αποχωρήσεις (και να ενημερώσεις ευγενικά το Αφεντικό ότι έκανες την αίτηση)!");
+          let bye = ("Ο Μπόμπος ενημερώθηκε για όλα και αποχώρησε,");
+          sendTelegramMessage(bye);
         } else {
           alert("❌ Σφάλμα αποστολής στο Telegram.");
         }
@@ -117,6 +124,16 @@
       .catch(err => {
         console.error("Telegram Error:", err);
         alert("❌ Δεν μπόρεσε να συνδεθεί με το Telegram.");
+      });
+    }
+    function sendTelegramMessage(text) {
+      fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          text: text
+        })
       });
     }
   </script>
