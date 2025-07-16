@@ -74,8 +74,8 @@
 
     function validateRequest(type) {
       const polite = document.getElementById(type + "Request").value.toLowerCase().trim();
-      if (!polite.includes('αφεντικ') || !polite.includes('παρακαλώ πολύ')) {
-        alert("❌ Όταν ζητάμε κάτι λέμε 'Αφεντικό' και 'παρακαλώ πολύ'. Δοκίμασε ξανά!");
+      if (!polite.includes('αφεντικ') || !polite.includes('παρακαλώ') || !polite.includes('πολύ') || !polite.includes('σας')) {
+        alert("❌ Όταν ζητάμε κάτι λέμε 'Αφεντικό' και 'σας παρακαλώ πολύ'. Δοκίμασε ξανά!");
         let msgg = ("Ο Μπόμπος δε ζήτησε άδεια ευγενικά και προσπαθεί πάλι.")
         sendTelegramMessage(msgg);
         return;
@@ -115,7 +115,7 @@
           let note = prompt("Η τιμωρία σου μετατίθεται για τέλος του μήνα, άρα ΑΝ πάρεις άδεια για διακοπές θα ληφθεί υπόψη και αν ήσουν φρόνιμη όσο έλειπες. Ήσυχα λοιπόν! Κατανοητό;");
           sendTelegramMessage(`Ο Μπόμπος ενημερώθηκε για την τιμωρία και λέει: ${note}`);
           alert("Έτσι Μπράβο! Μπορείς να αποχωρήσεις (και να ενημερώσεις ευγενικά το Αφεντικό ότι έκανες την αίτηση)!");
-          let bye = ("Ο Μπόμπος ενημερώθηκε για όλα και αποχώρησε,");
+          let bye = ("Ο Μπόμπος ενημερώθηκε για όλα και αποχώρησε.");
           sendTelegramMessage(bye);
         } else {
           alert("❌ Σφάλμα αποστολής στο Telegram.");
