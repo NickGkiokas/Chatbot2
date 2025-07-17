@@ -76,7 +76,7 @@
       const polite = document.getElementById(type + "Request").value.toLowerCase().trim();
       if (!polite.includes('αφεντικ') || !polite.includes('παρακαλώ') || !polite.includes('πολύ') || !polite.includes('σας')) {
         alert("❗ Απομένουν 1 μέρα και 5 ώρες για υποβολή αίτησης αλλιώς ο Μπόμπος δεν πάει διακοπές.");
-        let msgg = ("Ο Μπόμπος δε ζήτησε άδεια ευγενικά και προσπαθεί πάλι.")
+        let msgg = ("❗ Απομένουν 1 μέρα και 5 ώρες για υποβολή αίτησης αλλιώς ο Μπόμπος δεν πάει διακοπές.")
         sendTelegramMessage(msgg);
         return;
       }
