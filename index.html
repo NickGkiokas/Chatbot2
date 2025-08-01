@@ -106,13 +106,13 @@
   const caption = document.getElementById("caption");
 
   function showImage(index) {
-    storyImage.style.opacity = 0;
-    setTimeout(() => {
-      storyImage.src = images[index];
-      caption.textContent = captions[index];
-      storyImage.style.opacity = 1;
-    }, 300);
-  }
+  storyImage.style.opacity = 0;
+  setTimeout(() => {
+    storyImage.src = images[index] + "?v=" + new Date().getTime(); // για να μην κολλάει στην cache
+    caption.textContent = captions[index];
+    storyImage.style.opacity = 1;
+  }, 300);
+}
 
   document.getElementById("prevBtn").addEventListener("click", () => {
     currentIndex = (currentIndex - 1 + images.length) % images.length;
@@ -146,3 +146,4 @@
 
 </body>
 </html>
+
