@@ -38,15 +38,16 @@
     border-radius: 10px;
     font-size: 18px;
     cursor: pointer;
+    transition: background 0.3s;
   }
   button:hover { background: #ff3333; }
 
-  /* 🎯 Στυλ τροχού */
+  /* 🎯 Στυλ Τροχού */
   .wheel-container {
     margin-top: 40px;
     position: relative;
-    width: 300px;
-    height: 300px;
+    width: 320px;
+    height: 320px;
     margin-left: auto;
     margin-right: auto;
   }
@@ -54,27 +55,42 @@
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 8px solid #333;
+    border: 6px solid #333;
     position: relative;
-    transition: transform 4s ease-out;
+    transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
     background: conic-gradient(
-      #ff9999 0deg 72deg,
-      #ffcc99 72deg 144deg,
-      #ffff99 144deg 216deg,
-      #99ff99 216deg 288deg,
-      #9999ff 288deg 360deg
+      #FF6F61 0deg 72deg,
+      #FFB347 72deg 144deg,
+      #FFE156 144deg 216deg,
+      #6BCB77 216deg 288deg,
+      #4D96FF 288deg 360deg
     );
+    box-shadow: 0 0 10px rgba(0,0,0,0.3) inset;
   }
+  /* Λευκές γραμμές διαχωρισμού */
+  .wheel::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background:
+      repeating-conic-gradient(white 0deg 1deg, transparent 1deg 72deg);
+    mask: radial-gradient(circle 96px, rgba(0,0,0,0) 99%, rgba(0,0,0,1) 100%);
+    -webkit-mask: radial-gradient(circle 96px, rgba(0,0,0,0) 99%, rgba(0,0,0,1) 100%);
+  }
+  /* Κόκκινη βελόνα */
   .pointer {
     width: 0;
     height: 0;
     border-left: 20px solid transparent;
     border-right: 20px solid transparent;
-    border-bottom: 40px solid #333;
+    border-bottom: 40px solid red;
     position: absolute;
-    top: -40px;
+    top: -45px;
     left: 50%;
     transform: translateX(-50%);
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
   }
   .result-box {
     margin-top: 20px;
@@ -130,12 +146,11 @@
 const TELEGRAM_TOKEN = "ΒΑΛΕ_ΤΟ_TOKEN_ΤΟΥ_BOT";
 const CHAT_ID = "ΒΑΛΕ_ΤΟ_CHAT_ID_ΣΟΥ";
 
-const punishments = [
-  "📚 Διάβασμα κανόνων για 30 λεπτά",
-  "🧹 Σκούπισμα όλου του σπιτιού",
-  "📝 Γράψε 50 φορές «θα είμαι φρόνιμη»",
-  "🍵 Φτιάξε καφέ στο αφεντικό",
-  "🚫 Καμία τιμωρία – σήμερα είσαι τυχερή!"
+// ✍️ Οι 3 φράσεις
+const phrases = [
+  "Συγγνώμη Αφεντικούλη θα είμαι φρόνιμη και καλή",
+  "Θα ακούω το Αφεντικό και θα ζητάω άδεια",
+  "Θα κάθομαι σούζα, δε θα αντιμιλάω και δε θα έχω υφάκι"
 ];
 
 let wheel = document.getElementById("wheel");
@@ -171,23 +186,30 @@ document.getElementById("punishmentForm").addEventListener("submit", function(e)
 
 // 🎡 Συνάρτηση για γύρισμα τροχού
 function spinWheel() {
-  let randomDegree = Math.floor(Math.random() * 360) + 1080; // 3 στροφές + τυχαία θέση
+  let randomDegree = Math.floor(Math.random() * 360) + 1080; // 3+ στροφές
   wheel.style.transform = `rotate(${randomDegree}deg)`;
 
-  // Υπολογισμός τιμωρίας μετά από 4s (όσο διαρκεί η animation)
   setTimeout(() => {
-    let normalizedDegree = randomDegree % 360;
-    let slice = Math.floor(normalizedDegree / 72); // 360/5 = 72 μοίρες η κάθε φέτα
-    let punishmentIndex = (5 - slice) % 5; // αντιστρέφουμε γιατί ο τροχός γυρίζει δεξιά
-    resultBox.innerHTML = `<h3>👉 Η τιμωρία σου: ${punishments[punishmentIndex]}</h3>`;
+    // ✅ Η “τιμωρία” είναι πάντα Γράψιμο Φράσεων
+    let phrasesHTML = phrases.map(p => `<li>${p} (x3 φορές)</li>`).join("");
+    resultBox.innerHTML = `
+      <h3>✍️ Η τιμωρία σου: <u>Γράψιμο Φράσεων</u></h3>
+      <p>📜 Θα γράψεις 3 φορές τις εξής φράσεις:</p>
+      <ul style="text-align:left; display:inline-block; font-size:18px; margin-top:10px;">${phrasesHTML}</ul>
+    `;
 
-    // Στέλνουμε στο Telegram και το αποτέλεσμα
+    // Στέλνουμε στο Telegram όλες τις φράσεις
+    let telegramMessage = "🎯 Η τιμωρία που έτυχε: ✍️ Γράψιμο Φράσεων\n\nΘα γράψει:\n";
+    phrases.forEach(p => {
+      telegramMessage += `- ${p} (x3 φορές)\n`;
+    });
+
     fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: CHAT_ID,
-        text: `🎯 *Η τιμωρία που έτυχε:* ${punishments[punishmentIndex]}`,
+        text: telegramMessage,
         parse_mode: "Markdown"
       })
     });
