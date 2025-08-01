@@ -110,7 +110,7 @@
   function showImage(index) {
   storyImage.style.opacity = 0;
   setTimeout(() => {
-    storyImage.src = images[index] + "?v=" + new Date().getTime(); // για να μην κολλάει στην cache
+    storyImage.src = images[index]; // για να μην κολλάει στην cache
     caption.textContent = captions[index];
     storyImage.style.opacity = 1;
   }, 300);
@@ -148,6 +148,7 @@
 
 </body>
 </html>
+
 
 
 
