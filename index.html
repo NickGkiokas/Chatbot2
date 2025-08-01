@@ -14,7 +14,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    overflow: hidden;
+    overflow: hidden; /* 🔒 ΜΟΝΟ για το story mode */
   }
   .container {
     width: 95%;
@@ -199,6 +199,11 @@
 
   // 👉 ΦΟΡΜΑ QUIZ
   function startQuiz() {
+    // ✅ Αλλάζουμε layout για να μπορεί να γίνεται scroll
+    document.body.style.overflow = "auto";
+    document.body.style.height = "auto";
+    document.body.style.display = "block";
+    
     document.body.innerHTML = `
       <div style="padding: 30px; max-width: 700px; margin: auto; font-family: 'Quicksand', sans-serif; text-align: center;">
         <h1>📋 Η Αξιολόγηση του Μπόμπου</h1>
@@ -300,3 +305,4 @@
 
 </body>
 </html>
+
