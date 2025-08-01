@@ -46,23 +46,6 @@
   #stayAwakeBtn:hover {
     background: #ff7700;
   }
-
-  /* 🔒 Μη κλείσιμο του alert */
-  #finalAlertOverlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-size: 24px;
-    font-weight: bold;
-    text-align: center;
-    z-index: 9999;
-    padding: 20px;
-  }
 </style>
 </head>
 <body>
@@ -126,8 +109,10 @@ function finishTimer() {
   } else {
     sendTelegramMessage("📝 Δεν έγραψε τίποτα στη γωνιά σκέψης.");
   }
-  
-alert("ΤΕΛΟΣ");
+
+  // ✅ Κανονικό alert με το τελικό μήνυμα
+  alert("🎉 ΤΕΛΟΣ ΤΙΜΩΡΙΑΣ! 🎉\n\n🔓 Ο κωδικός για το λουκέτο είναι 000.\n\nΜπορείς να αποχωρήσεις και να ανοίξεις το δώρο σου!");
+}
 
 // ✅ Συνάρτηση για να στέλνουμε μήνυμα στο Telegram
 function sendTelegramMessage(text) {
