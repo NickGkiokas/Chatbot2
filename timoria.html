@@ -3,186 +3,241 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⏳ Γωνιά Σκέψης</title>
+<title>🚨 Πλατφόρμα Τιμωρίας 🚨</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 <style>
   body {
     margin: 0;
     font-family: 'Quicksand', sans-serif;
-    background: #f9f9f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    flex-direction: column;
+    background: linear-gradient(to bottom, #ffe5e5, #ffcccc);
+    padding: 20px;
     text-align: center;
   }
-  h1 {
-    font-size: 30px;
-    margin-bottom: 20px;
-    color: #333;
-  }
-  #timer {
-    font-size: 50px;
-    font-weight: bold;
-    color: #e60000;
+  .rules-box {
+    background: rgba(255,255,255,0.9);
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    padding: 20px;
     margin-bottom: 20px;
   }
   textarea {
     width: 80%;
-    max-width: 400px;
-    height: 100px;
-    margin-top: 15px;
-    font-size: 16px;
-    padding: 10px;
+    max-width: 500px;
+    margin-top: 10px;
     border-radius: 10px;
     border: 1px solid #aaa;
-    display: block;
+    padding: 8px;
+    font-family: inherit;
   }
   button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    font-size: 18px;
-    border-radius: 10px;
-    border: none;
-    background: #4CAF50;
+    background: #ff6666;
     color: white;
+    border: none;
+    padding: 12px 20px;
+    margin-top: 15px;
+    border-radius: 10px;
+    font-size: 18px;
     cursor: pointer;
+    transition: background 0.3s;
   }
-  button:hover { background: #45a049; }
-  #stayAwakeBtn {
-    background: #ff9933;
-    margin-bottom: 20px;
+  button:hover { background: #ff3333; }
+
+  /* 🎯 Καθαρός Τροχός χωρίς άσπρες γραμμές */
+  .wheel-container {
+    margin-top: 40px;
+    position: relative;
+    width: 320px;
+    height: 320px;
+    margin-left: auto;
+    margin-right: auto;
   }
-  #stayAwakeBtn:hover {
-    background: #ff7700;
+  .wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 6px solid #333;
+    position: relative;
+    transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+    background: conic-gradient(
+      #FF6F61 0deg 72deg,
+      #FFB347 72deg 144deg,
+      #FFE156 144deg 216deg,
+      #6BCB77 216deg 288deg,
+      #4D96FF 288deg 360deg
+    );
+    box-shadow: 0 0 10px rgba(0,0,0,0.3) inset;
+  }
+  /* Κόκκινη βελόνα */
+  .pointer {
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 40px solid red;
+    position: absolute;
+    top: -45px;
+    left: 50%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+  }
+  .result-box {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
   }
 </style>
 </head>
 <body>
 
-<h1>⏳ Γωνιά Σκέψης</h1>
-<div id="timer">00:05</div>
+<h1>🚨 Πλατφόρμα Τιμωρίας 🚨</h1>
 
-<!-- ✅ ΝΕΟ ΚΟΥΜΠΙ -->
-<button id="stayAwakeBtn" onclick="stayAwake()">☀️ Πάτα για να μη σβήσει η οθόνη</button>
+<div class="rules-box">
+  <h2>📜 Κανόνες Συμπεριφοράς</h2>
+  <p>1️⃣ Μιλάς πάντα στον πληθυντικό.</p>
+  <p>2️⃣ Λες «μάλιστα» όταν σου γίνεται παρατήρηση.</p>
+  <p>3️⃣ Υπακούς στις οδηγίες χωρίς αντιρρήσεις.</p>
+</div>
 
-<p id="instructions">Μη ακουμπήσεις τίποτα άλλο. Μη φύγεις από τη σελίδα. Μην κάνεις τίποτα μέχρι να τελειώσει ο χρόνος.</p>
+<h2>📋 Ερωτήσεις πριν αποφασιστεί η τιμωρία σου:</h2>
 
-<div id="finalStep" style="display:none;">
-  <h2>✍️ Γράψε όσα σκέφτηκες:</h2>
-  <textarea id="thoughtsInput" placeholder="Γράψε εδώ..."></textarea>
-  <button onclick="submitThoughts()">📨 Υποβολή</button>
+<form id="punishmentForm">
+  <div>
+    <label>1️⃣ Γιατί δεν ήσουν φρόνιμη;</label><br>
+    <textarea name="q1" rows="2" placeholder="Γράψε εδώ..."></textarea>
+  </div>
+
+  <div>
+    <label>2️⃣ Το θεωρείς σωστό;</label><br>
+    <textarea name="q2" rows="2" placeholder="Γράψε εδώ..."></textarea>
+  </div>
+
+  <div>
+    <label>3️⃣ Έχεις να πεις κάτι στο αφεντικό πριν αποφασιστεί η τιμωρία σου;</label><br>
+    <textarea name="q3" rows="2" placeholder="Γράψε εδώ..."></textarea>
+  </div>
+
+  <button type="submit">📨 Υποβολή απαντήσεων</button>
+</form>
+
+<div id="wheelSection" style="display:none;">
+  <h2>🎯 Ο Τροχός της Τιμωρίας</h2>
+  <div class="wheel-container">
+    <div class="pointer"></div>
+    <div class="wheel" id="wheel"></div>
+  </div>
+  <button onclick="spinWheel()">🎡 Γύρνα τον τροχό!</button>
+  <div class="result-box" id="resultBox"></div>
+</div>
+
+<div id="writingSection" style="display:none; margin-top:30px;">
+  <h2>✍️ Γράψιμο Φράσεων</h2>
+  <p id="phraseInstruction"></p>
+  <input type="text" id="phraseInput" placeholder="Γράψε ακριβώς τη φράση εδώ">
+  <button onclick="submitPhrase()">✅ Υποβολή</button>
+  <p id="progressText" style="margin-top:10px; font-weight:bold;"></p>
 </div>
 
 <script>
 const TELEGRAM_TOKEN = "ΒΑΛΕ_ΤΟ_TOKEN_ΤΟΥ_BOT";
 const CHAT_ID = "ΒΑΛΕ_ΤΟ_CHAT_ID_ΣΟΥ";
 
-let timeLeft = 5; // 2 λεπτά = 120 δευτερόλεπτα
-let timerInterval;
-let restarted = false;
-let canWrite = false; // ✅ ΜΟΝΟ όταν τελειώσει το χρονόμετρο θα γίνει true
+// ✍️ Οι 3 φράσεις
+const phrases = [
+  "Συγγνώμη Αφεντικούλη θα είμαι φρόνιμη και καλή",
+  "Θα ακούω το Αφεντικό και θα ζητάω άδεια",
+  "Θα κάθομαι σούζα, δε θα αντιμιλάω και δε θα έχω υφάκι"
+];
 
-// ✅ λίστα για να ξέρουμε ποιο κουμπί είναι “επιτρεπτό”
-let safeButtonPressed = false;
+let currentPhraseIndex = 0;
+let currentCount = 0;
 
-// ✅ Ξεκινάμε το χρονόμετρο
-function startTimer() {
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    updateTimerDisplay();
-    if (timeLeft <= 0) {
-      clearInterval(timerInterval);
-      allowWriting();
-    }
-  }, 1000);
-}
+let wheel = document.getElementById("wheel");
+let resultBox = document.getElementById("resultBox");
 
-// ✅ Εμφανίζει τον χρόνο σωστά (mm:ss)
-function updateTimerDisplay() {
-  let minutes = Math.floor(timeLeft / 60);
-  let seconds = timeLeft % 60;
-  document.getElementById("timer").textContent =
-    `${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")}`;
-}
+document.getElementById("punishmentForm").addEventListener("submit", function(e){
+  e.preventDefault();
 
-// ✅ Αν ακουμπήσει την οθόνη/πατήσει/scroll → Στέλνουμε μήνυμα και επανεκκίνηση (εκτός από το ειδικό κουμπί)
-function violationDetected(reason) {
-  if (!safeButtonPressed) {
-    sendTelegramMessage(`⚠️ Παραβίαση κανόνων: ${reason}. Το χρονόμετρο ξεκινά από την αρχή.`);
-    alert("⚠️ Παραβίασες τον κανόνα! Το χρονόμετρο ξεκινάει ξανά!");
-    resetTimer();
+  // Παίρνουμε τις απαντήσεις
+  const formData = new FormData(this);
+  let message = "📋 *Απαντήσεις πριν την τιμωρία:* 📋\n\n";
+  let i = 1;
+  for (let [name, value] of formData.entries()) {
+    message += `Ερώτηση ${i}: ${value}\n`;
+    i++;
   }
-  safeButtonPressed = false; // Επαναφορά μετά την “ασφαλή” ενέργεια
-}
 
-// ✅ Επανεκκίνηση χρονομέτρου
-function resetTimer() {
-  clearInterval(timerInterval);
-  timeLeft = 120;
-  updateTimerDisplay();
-  startTimer();
-}
-
-// ✅ Όταν λήξει ο χρόνος → εμφανίζεται το πεδίο κειμένου
-function allowWriting() {
-  document.getElementById("instructions").textContent = "✅ Ο χρόνος τελείωσε. Τώρα γράψε όσα σκέφτηκες.";
-  document.getElementById("finalStep").style.display = "block";
-  canWrite = true;
-}
-
-// ✅ Αποστολή στο Telegram των σκέψεων
-function submitThoughts() {
-  if (!canWrite) {
-    alert("⛔ Δεν επιτρέπεται ακόμη! Περίμενε να τελειώσει ο χρόνος.");
-    return;
-  }
-  let text = document.getElementById("thoughtsInput").value.trim();
-  if (text === "") {
-    alert("✏️ Πρέπει να γράψεις κάτι!");
-    return;
-  }
-  sendTelegramMessage(`📝 Σκέψεις από τη γωνιά: ${text}`);
-  alert("🎉 Μπράβο! Ολοκλήρωσες τη γωνιά σκέψης.");
-  document.body.innerHTML = "<h1>🎉 Μπράβο! Η διαδικασία ολοκληρώθηκε! 🎉</h1>";
-}
-
-// ✅ Συνάρτηση για να στέλνουμε μήνυμα στο Telegram
-function sendTelegramMessage(text) {
+  // Στέλνουμε στο Telegram
   fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       chat_id: CHAT_ID,
-      text: text
+      text: message,
+      parse_mode: "Markdown"
     })
   });
-}
 
-// ✅ Συνάρτηση για το κουμπί “Πάτα για να μη σβήσει η οθόνη”
-function stayAwake() {
-  safeButtonPressed = true;
-  alert("☀️ Η οθόνη δεν θα σβήσει – συνέχισε να περιμένεις!");
-}
-
-// --------------------
-// Ανίχνευση “απαγορευμένων” ενεργειών
-// --------------------
-document.addEventListener("click", () => violationDetected("Κλικ στην οθόνη"));
-document.addEventListener("touchstart", () => violationDetected("Άγγιγμα στην οθόνη"));
-document.addEventListener("scroll", () => violationDetected("Scroll στη σελίδα"));
-
-// ✅ Αν ο χρήστης φύγει από τη σελίδα/αλλάξει tab
-document.addEventListener("visibilitychange", () => {
-  if (document.hidden) {
-    violationDetected("Άφησε τη σελίδα / άλλαξε tab");
-  }
+  // Κρύβουμε τη φόρμα και δείχνουμε τον τροχό
+  document.getElementById("punishmentForm").style.display = "none";
+  document.getElementById("wheelSection").style.display = "block";
 });
 
-// ✅ Εκκίνηση
-updateTimerDisplay();
-startTimer();
+// 🎡 Συνάρτηση για γύρισμα τροχού
+function spinWheel() {
+  let randomDegree = Math.floor(Math.random() * 360) + 1080; // 3+ στροφές
+  wheel.style.transform = `rotate(${randomDegree}deg)`;
+
+  setTimeout(() => {
+    alert("✍️ Η τιμωρία σου είναι: Γράψιμο Φράσεων!");
+
+    // Ξεκινάμε διαδικασία γραψίματος
+    document.getElementById("wheelSection").style.display = "none";
+    document.getElementById("writingSection").style.display = "block";
+
+    startPhrase();
+  }, 4000);
+}
+
+// ➡️ Έναρξη για την τρέχουσα φράση
+function startPhrase() {
+  currentCount = 0;
+  document.getElementById("phraseInstruction").innerText =
+    `Γράψε ακριβώς αυτή τη φράση (3 φορές): \n"${phrases[currentPhraseIndex]}"`;
+  document.getElementById("progressText").innerText = `0/3`;
+  document.getElementById("phraseInput").value = "";
+}
+
+// ➡️ Υποβολή φράσης
+function submitPhrase() {
+  const userInput = document.getElementById("phraseInput").value.trim();
+  const correctPhrase = phrases[currentPhraseIndex];
+
+  if (userInput === correctPhrase) {
+    currentCount++;
+    document.getElementById("progressText").innerText = `${currentCount}/3`;
+    document.getElementById("phraseInput").value = "";
+
+    if (currentCount === 3) {
+      currentPhraseIndex++;
+      if (currentPhraseIndex < phrases.length) {
+        alert("✅ Τέλεια! Προχωράς στην επόμενη φράση.");
+        startPhrase();
+      } else {
+        alert("🎉 Μπράβο! Ολοκλήρωσες όλες τις φράσεις!");
+        alert("Μεταφέρεσαι αυτόματα στη Γωνία Σκέψης για να σκεφτείς όσα έκανες και έμαθες...");
+        document.getElementById("writingSection").innerHTML =
+          "<h2>🎉 Μπράβο! Ολοκλήρωσες την τιμωρία σου! 🎉</h2>";
+        window.location.href="gwnia.html";
+      }
+    }
+  } else {
+    alert("❌ Λάθος! Ξεκινάς πάλι τη συγκεκριμένη φράση.");
+    currentCount = 0;
+    document.getElementById("progressText").innerText = `0/3`;
+    document.getElementById("phraseInput").value = "";
+  }
+}
 </script>
 
 </body>
