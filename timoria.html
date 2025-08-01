@@ -225,8 +225,10 @@ function submitPhrase() {
         startPhrase();
       } else {
         alert("🎉 Μπράβο! Ολοκλήρωσες όλες τις φράσεις!");
+        alert("Μεταφέρεσαι αυτόματα στη Γωνία Σκέψης για να σκεφτείς όσα έκανες και έμαθες...");
         document.getElementById("writingSection").innerHTML =
           "<h2>🎉 Μπράβο! Ολοκλήρωσες την τιμωρία σου! 🎉</h2>";
+        window.location.href="gwnia.html";
       }
     }
   } else {
