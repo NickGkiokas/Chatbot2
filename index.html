@@ -85,6 +85,32 @@
     color: #8b6f4e;
     opacity: 0.8;
   }
+
+  /* Animation για ανάλυση αποτελεσμάτων */
+  .loading {
+    font-size: 24px;
+    font-weight: bold;
+    color: #444;
+    animation: blink 1s infinite;
+  }
+  @keyframes blink {
+    50% { opacity: 0.5; }
+  }
+  #resultSection {
+    text-align: center;
+    margin-top: 20px;
+  }
+  #punishBtn {
+    display: inline-block;
+    background: red;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 10px;
+    border: none;
+    font-size: 20px;
+    margin-top: 20px;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -133,7 +159,6 @@
       caption.textContent = captions[index];
       storyImage.style.opacity = 1;
 
-      // ✔ Όταν φτάνουμε στην τελευταία εικόνα
       if (index === images.length - 1) {
         nextBtn.style.display = "none";
         prevBtn.style.display = "none";
@@ -158,7 +183,7 @@
     showImage(currentIndex);
   });
 
-  // Εναλλαγή με swipe για κινητά
+  // swipe κινητού
   let startX = 0;
   storyImage.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; });
   storyImage.addEventListener("touchend", (e) => {
@@ -172,37 +197,104 @@
     }
   });
 
-  // 👉 Λειτουργία quiz
+  // 👉 ΦΟΡΜΑ QUIZ
   function startQuiz() {
     document.body.innerHTML = `
       <div style="padding: 30px; max-width: 700px; margin: auto; font-family: 'Quicksand', sans-serif; text-align: center;">
         <h1>📋 Η Αξιολόγηση του Μπόμπου</h1>
         <p>Απάντησε τις ερωτήσεις!</p>
         <form id="quizForm">
-          <div style="margin: 15px 0;">
-            <label>1️⃣ Πόσο φρόνιμος ήταν ο Μπόμπος στις διακοπές; </label><br>
+
+          <!-- 5 Πολλαπλής -->
+          <div><label>1️⃣ Πόσο φρόνιμος ήταν ο Μπόμπος στις διακοπές;</label><br>
             <input type="radio" name="q1" value="πολύ"> Πολύ<br>
             <input type="radio" name="q1" value="λίγο"> Λίγο<br>
-            <input type="radio" name="q1" value="καθόλου"> Καθόλου<br>
-          </div>
-          <div style="margin: 15px 0;">
-            <label>2️⃣ Έφερε σοκολάτες από τη Ζάκυνθο; </label><br>
+            <input type="radio" name="q1" value="καθόλου"> Καθόλου<br></div>
+
+          <div><label>2️⃣ Έφερε σοκολάτες από τη Ζάκυνθο;</label><br>
             <input type="radio" name="q2" value="ναι"> Ναι<br>
-            <input type="radio" name="q2" value="όχι"> Όχι<br>
-          </div>
-          <button type="submit" style="padding: 10px 20px; background: #ff69b4; color: #fff; border:none; border-radius: 8px; font-size: 18px;">Υποβολή</button>
+            <input type="radio" name="q2" value="όχι"> Όχι<br></div>
+
+          <div><label>3️⃣ Έκανε φασαρία στο σπίτι;</label><br>
+            <input type="radio" name="q3" value="καθόλου"> Καθόλου<br>
+            <input type="radio" name="q3" value="μερικές φορές"> Μερικές φορές<br>
+            <input type="radio" name="q3" value="πολύ"> Πολύ<br></div>
+
+          <div><label>4️⃣ Έπλυνε τα πιάτα μετά το φαγητό;</label><br>
+            <input type="radio" name="q4" value="πάντα"> Πάντα<br>
+            <input type="radio" name="q4" value="μερικές φορές"> Μερικές φορές<br>
+            <input type="radio" name="q4" value="ποτέ"> Ποτέ<br></div>
+
+          <div><label>5️⃣ Ήταν ευγενικός με όλους;</label><br>
+            <input type="radio" name="q5" value="ναι"> Ναι<br>
+            <input type="radio" name="q5" value="όχι"> Όχι<br></div>
+
+          <!-- 3 Ανοιχτού -->
+          <div><label>✏️ 6️⃣ Τι σου άρεσε περισσότερο στις διακοπές του Μπόμπου;</label><br>
+            <textarea name="q6" rows="2" cols="40"></textarea></div>
+
+          <div><label>✏️ 7️⃣ Τι θα μπορούσε να κάνει καλύτερα ο Μπόμπος;</label><br>
+            <textarea name="q7" rows="2" cols="40"></textarea></div>
+
+          <div><label>✏️ 8️⃣ Τι μήνυμα θα ήθελες να του αφήσεις;</label><br>
+            <textarea name="q8" rows="2" cols="40"></textarea></div>
+
+          <button type="submit" style="margin-top:15px; padding: 10px 20px; background: #ff69b4; color: #fff; border:none; border-radius: 8px; font-size: 18px;">Υποβολή</button>
         </form>
-        <div id="result" style="margin-top:20px; font-weight:bold;"></div>
+
+        <div id="resultSection"></div>
       </div>
     `;
 
-    document.getElementById("quizForm").addEventListener("submit", (e) => {
+    // capture submit
+    document.getElementById("quizForm").addEventListener("submit", async (e) => {
       e.preventDefault();
-      document.getElementById("result").innerText = "🎉 Η αξιολόγηση ολοκληρώθηκε!";
+
+      // συλλέγουμε όλα τα στοιχεία
+      const formData = new FormData(e.target);
+      let message = "📋 *Απαντήσεις αξιολόγησης Μπόμπου* 📋\n\n";
+      let i = 1;
+      for (let [name, value] of formData.entries()) {
+        message += `Ερώτηση ${i}: ${value}\n`;
+        i++;
+      }
+
+      // ΣΤΕΛΝΕΙ ΣΤΟ TELEGRAM
+      const TELEGRAM_TOKEN = "ΒΑΛΕ_ΤΟ_TOKEN_ΣΟΥ";
+      const CHAT_ID = "ΒΑΛΕ_ΤΟ_CHAT_ID_ΣΟΥ";
+      fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: CHAT_ID,
+          text: message,
+          parse_mode: "Markdown"
+        })
+      });
+
+      // Δείχνει animation “Ανάλυση αποτελεσμάτων…”
+      document.getElementById("resultSection").innerHTML = `<p class="loading">🔍 Ανάλυση αποτελεσμάτων...</p>`;
+
+      // Μετά από 3 δευτερόλεπτα, εμφανίζει μήνυμα τιμωρίας
+      setTimeout(() => {
+        document.getElementById("resultSection").innerHTML = `
+          <h2>📢 Αποφασίστηκε ότι μπαίνεις τιμωρία!</h2>
+          <button id="punishBtn" onclick="goToPunish()">🚨 Πάτα για είσοδο στην πλατφόρμα τιμωρίας</button>
+        `;
+      }, 3000);
     });
   }
 
-  // Εμφάνιση πρώτης εικόνας
+  // 👉 ΕΔΩ ΜΕΤΑ ΣΤΗΝΟΥΜΕ ΤΗΝ ΠΛΑΤΦΟΡΜΑ ΤΙΜΩΡΙΑΣ
+  function goToPunish() {
+    document.body.innerHTML = `
+      <div style="text-align:center; font-family: 'Quicksand', sans-serif; margin-top:50px;">
+        <h1>🚨 Η ΠΛΑΤΦΟΡΜΑ ΤΙΜΩΡΙΑΣ 🚨</h1>
+        <p>Εδώ θα μπουν οι “δοκιμασίες” ή οι ασκήσεις για την τιμωρία του Μπόμπου! 💀</p>
+      </div>
+    `;
+  }
+
   showImage(currentIndex);
 </script>
 
