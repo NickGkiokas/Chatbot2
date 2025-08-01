@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⏳ Γωνιά Σκέψης</title>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Quicksand', sans-serif;
+    background: #f9f9f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    text-align: center;
+  }
+  h1 {
+    font-size: 30px;
+    margin-bottom: 20px;
+    color: #333;
+  }
+  #timer {
+    font-size: 50px;
+    font-weight: bold;
+    color: #e60000;
+    margin-bottom: 20px;
+  }
+  textarea {
+    width: 80%;
+    max-width: 400px;
+    height: 100px;
+    margin-top: 15px;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #aaa;
+    display: block;
+  }
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    border: none;
+    background: #4CAF50;
+    color: white;
+    cursor: pointer;
+  }
+  button:hover { background: #45a049; }
+</style>
+</head>
+<body>
+
+<h1>⏳ Γωνιά Σκέψης</h1>
+<div id="timer">02:00</div>
+<p id="instructions">Μη ακουμπήσεις τίποτα. Μη φύγεις από τη σελίδα. Μην κάνεις τίποτα μέχρι να τελειώσει ο χρόνος.</p>
+
+<div id="finalStep" style="display:none;">
+  <h2>✍️ Γράψε όσα σκέφτηκες:</h2>
+  <textarea id="thoughtsInput" placeholder="Γράψε εδώ..."></textarea>
+  <button onclick="submitThoughts()">📨 Υποβολή</button>
+</div>
+
+<script>
+const TELEGRAM_TOKEN = "ΒΑΛΕ_ΤΟ_TOKEN_ΤΟΥ_BOT";
+const CHAT_ID = "ΒΑΛΕ_ΤΟ_CHAT_ID_ΣΟΥ";
+
+let timeLeft = 120; // 2 λεπτά = 120 δευτερόλεπτα
+let timerInterval;
+let restarted = false;
+
+// Ξεκινάμε το χρονόμετρο
+function startTimer() {
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      allowWriting();
+    }
+  }, 1000);
+}
+
+// Εμφανίζει τον χρόνο σωστά (mm:ss)
+function updateTimerDisplay() {
+  let minutes = Math.floor(timeLeft / 60);
+  let seconds = timeLeft % 60;
+  document.getElementById("timer").textContent =
+    `${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")}`;
+}
+
+// Αν ακουμπήσει την οθόνη/πατήσει/scroll → στέλνουμε μήνυμα και επανεκκίνηση
+function violationDetected(reason) {
+  if (!restarted) {
+    restarted = true;
+    sendTelegramMessage(`⚠️ Παραβίαση κανόνων: ${reason}. Το χρονόμετρο ξεκινά από την αρχή.`);
+    alert("⚠️ Παραβίασες τον κανόνα! Το χρονόμετρο ξεκινάει ξανά!");
+    resetTimer();
+  }
+}
+
+// Επανεκκίνηση χρονομέτρου
+function resetTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 120;
+  restarted = false;
+  updateTimerDisplay();
+  startTimer();
+}
+
+// Όταν λήξει ο χρόνος → εμφανίζεται το πεδίο κειμένου
+function allowWriting() {
+  document.getElementById("instructions").textContent = "✅ Ο χρόνος τελείωσε. Τώρα γράψε όσα σκέφτηκες.";
+  document.getElementById("finalStep").style.display = "block";
+}
+
+// Αποστολή στο Telegram των σκέψεων
+function submitThoughts() {
+  let text = document.getElementById("thoughtsInput").value.trim();
+  if (text === "") {
+    alert("✏️ Πρέπει να γράψεις κάτι!");
+    return;
+  }
+  sendTelegramMessage(`📝 Σκέψεις από τη γωνιά: ${text}`);
+  alert("🎉 Μπράβο! Ολοκλήρωσες τη γωνιά σκέψης.");
+  document.body.innerHTML = "<h1>🎉 Μπράβο! Η διαδικασία ολοκληρώθηκε! 🎉</h1>";
+}
+
+// Συνάρτηση για να στέλνουμε μήνυμα στο Telegram
+function sendTelegramMessage(text) {
+  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      text: text
+    })
+  });
+}
+
+// --------------------
+// Ανίχνευση “απαγορευμένων” ενεργειών
+// --------------------
+document.addEventListener("click", () => violationDetected("Κλικ στην οθόνη"));
+document.addEventListener("touchstart", () => violationDetected("Άγγιγμα στην οθόνη"));
+document.addEventListener("scroll", () => violationDetected("Scroll στη σελίδα"));
+
+// Αν ο χρήστης φύγει από τη σελίδα/αλλάξει tab
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden) {
+    violationDetected("Άφησε τη σελίδα / άλλαξε tab");
+  }
+});
+
+// Ξεκινάμε
+updateTimerDisplay();
+startTimer();
+</script>
+
+</body>
+</html>
