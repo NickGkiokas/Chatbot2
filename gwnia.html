@@ -28,17 +28,6 @@
     color: #e60000;
     margin-bottom: 20px;
   }
-  textarea {
-    width: 80%;
-    max-width: 400px;
-    height: 100px;
-    margin-top: 15px;
-    font-size: 16px;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #aaa;
-    display: block;
-  }
   button {
     margin-top: 10px;
     padding: 10px 20px;
@@ -57,6 +46,23 @@
   #stayAwakeBtn:hover {
     background: #ff7700;
   }
+
+  /* 🔒 Μη κλείσιμο του alert */
+  #finalAlertOverlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    z-index: 9999;
+    padding: 20px;
+  }
 </style>
 </head>
 <body>
@@ -64,16 +70,10 @@
 <h1>⏳ Γωνιά Σκέψης</h1>
 <div id="timer">00:05</div>
 
-<!-- ✅ ΝΕΟ ΚΟΥΜΠΙ -->
+<!-- ✅ Κουμπί να μη σβήσει η οθόνη -->
 <button id="stayAwakeBtn" onclick="stayAwake()">☀️ Πάτα για να μη σβήσει η οθόνη</button>
 
 <p id="instructions">Μη ακουμπήσεις τίποτα άλλο. Μη φύγεις από τη σελίδα. Μην κάνεις τίποτα μέχρι να τελειώσει ο χρόνος.</p>
-
-<div id="finalStep" style="display:none;">
-  <h2>✍️ Γράψε όσα σκέφτηκες:</h2>
-  <textarea id="thoughtsInput" placeholder="Γράψε εδώ..."></textarea>
-  <button onclick="submitThoughts()">📨 Υποβολή</button>
-</div>
 
 <script>
 const TELEGRAM_TOKEN = "ΒΑΛΕ_ΤΟ_TOKEN_ΤΟΥ_BOT";
@@ -81,7 +81,6 @@ const CHAT_ID = "ΒΑΛΕ_ΤΟ_CHAT_ID_ΣΟΥ";
 
 let timeLeft = 5; // 2 λεπτά = 120 δευτερόλεπτα
 let timerInterval;
-let canWrite = false;
 
 // ✅ Ξεκινάμε το χρονόμετρο
 function startTimer() {
@@ -90,7 +89,7 @@ function startTimer() {
     updateTimerDisplay();
     if (timeLeft <= 0) {
       clearInterval(timerInterval);
-      allowWriting();
+      finishTimer();
     }
   }, 1000);
 }
@@ -103,14 +102,14 @@ function updateTimerDisplay() {
     `${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")}`;
 }
 
-// ✅ Αν ακουμπήσει την οθόνη/πατήσει/scroll → Στέλνουμε μήνυμα και επανεκκίνηση (εκτός από το ειδικό κουμπί)
+// ✅ Παραβίαση κανόνων
 function violationDetected(reason) {
   sendTelegramMessage(`⚠️ Παραβίαση κανόνων: ${reason}. Το χρονόμετρο ξεκινά από την αρχή.`);
   alert("⚠️ Παραβίασες τον κανόνα! Το χρονόμετρο ξεκινάει ξανά!");
   resetTimer();
 }
 
-// ✅ Επανεκκίνηση χρονομέτρου
+// ✅ Reset timer
 function resetTimer() {
   clearInterval(timerInterval);
   timeLeft = 5;
@@ -118,27 +117,31 @@ function resetTimer() {
   startTimer();
 }
 
-// ✅ Όταν λήξει ο χρόνος → εμφανίζεται το πεδίο κειμένου
-function allowWriting() {
-  document.getElementById("instructions").textContent = "✅ Ο χρόνος τελείωσε. Τώρα γράψε όσα σκέφτηκες.";
-  document.getElementById("finalStep").style.display = "block";
-  canWrite = true;
+// ✅ Όταν λήξει το χρονόμετρο
+function finishTimer() {
+  // Prompt για σκέψεις
+  let thoughts = prompt("✍️ Ο χρόνος τελείωσε. Γράψε τι σκέφτηκες:");
+  if (thoughts && thoughts.trim() !== "") {
+    sendTelegramMessage(`📝 Σκέψεις από τη γωνιά: ${thoughts}`);
+  } else {
+    sendTelegramMessage("📝 Δεν έγραψε τίποτα στη γωνιά σκέψης.");
+  }
+
+  // Εμφανίζουμε "alert" που δεν κλείνει (modal)
+  showFinalAlert();
 }
 
-// ✅ Αποστολή στο Telegram των σκέψεων
-function submitThoughts() {
-  if (!canWrite) {
-    alert("⛔ Δεν επιτρέπεται ακόμη! Περίμενε να τελειώσει ο χρόνος.");
-    return;
-  }
-  let text = document.getElementById("thoughtsInput").value.trim();
-  if (text === "") {
-    alert("✏️ Πρέπει να γράψεις κάτι!");
-    return;
-  }
-  sendTelegramMessage(`📝 Σκέψεις από τη γωνιά: ${text}`);
-  alert("🎉 Μπράβο! Ολοκλήρωσες τη γωνιά σκέψης.");
-  document.body.innerHTML = "<h1>🎉 Μπράβο! Η διαδικασία ολοκληρώθηκε! 🎉</h1>";
+// ✅ Εμφάνιση overlay alert που δεν κλείνει
+function showFinalAlert() {
+  const overlay = document.createElement("div");
+  overlay.id = "finalAlertOverlay";
+  overlay.innerHTML = `
+    🔓 <br>
+    <br> 🎉 ΤΕΛΟΣ ΤΙΜΩΡΙΑΣ! 🎉 <br><br>
+    📜 Ο κωδικός για το λουκέτο είναι <b>000</b>.<br><br>
+    Μπορείς να αποχωρήσεις και να ανοίξεις το δώρο σου!
+  `;
+  document.body.appendChild(overlay);
 }
 
 // ✅ Συνάρτηση για να στέλνουμε μήνυμα στο Telegram
@@ -161,21 +164,13 @@ function stayAwake() {
 // --------------------
 // Ανίχνευση “απαγορευμένων” ενεργειών
 // --------------------
-
-// ❗ Αντί για document.addEventListener("click", ...) χρησιμοποιούμε “capture” για να δούμε τι πατήθηκε
 document.addEventListener("click", (e) => {
-  if (e.target && e.target.id === "stayAwakeBtn") {
-    // ✅ Το κουμπί είναι επιτρεπτό → ΔΕΝ υπάρχει παραβίαση
-    return;
-  }
-  // ❌ Όλα τα άλλα clicks είναι παραβίαση
+  if (e.target && e.target.id === "stayAwakeBtn") return; // ✅ Το κουμπί είναι ΟΚ
   violationDetected("Κλικ στην οθόνη");
 });
 
 document.addEventListener("touchstart", (e) => {
-  if (e.target && e.target.id === "stayAwakeBtn") {
-    return;
-  }
+  if (e.target && e.target.id === "stayAwakeBtn") return; // ✅ Το κουμπί είναι ΟΚ
   violationDetected("Άγγιγμα στην οθόνη");
 });
 
