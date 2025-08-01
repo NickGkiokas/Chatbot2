@@ -81,11 +81,7 @@ const CHAT_ID = "ΒΑΛΕ_ΤΟ_CHAT_ID_ΣΟΥ";
 
 let timeLeft = 5; // 2 λεπτά = 120 δευτερόλεπτα
 let timerInterval;
-let restarted = false;
-let canWrite = false; // ✅ ΜΟΝΟ όταν τελειώσει το χρονόμετρο θα γίνει true
-
-// ✅ λίστα για να ξέρουμε ποιο κουμπί είναι “επιτρεπτό”
-let safeButtonPressed = false;
+let canWrite = false;
 
 // ✅ Ξεκινάμε το χρονόμετρο
 function startTimer() {
@@ -109,18 +105,15 @@ function updateTimerDisplay() {
 
 // ✅ Αν ακουμπήσει την οθόνη/πατήσει/scroll → Στέλνουμε μήνυμα και επανεκκίνηση (εκτός από το ειδικό κουμπί)
 function violationDetected(reason) {
-  if (!safeButtonPressed) {
-    sendTelegramMessage(`⚠️ Παραβίαση κανόνων: ${reason}. Το χρονόμετρο ξεκινά από την αρχή.`);
-    alert("⚠️ Παραβίασες τον κανόνα! Το χρονόμετρο ξεκινάει ξανά!");
-    resetTimer();
-  }
-  safeButtonPressed = false; // Επαναφορά μετά την “ασφαλή” ενέργεια
+  sendTelegramMessage(`⚠️ Παραβίαση κανόνων: ${reason}. Το χρονόμετρο ξεκινά από την αρχή.`);
+  alert("⚠️ Παραβίασες τον κανόνα! Το χρονόμετρο ξεκινάει ξανά!");
+  resetTimer();
 }
 
 // ✅ Επανεκκίνηση χρονομέτρου
 function resetTimer() {
   clearInterval(timerInterval);
-  timeLeft = 120;
+  timeLeft = 5;
   updateTimerDisplay();
   startTimer();
 }
@@ -162,15 +155,30 @@ function sendTelegramMessage(text) {
 
 // ✅ Συνάρτηση για το κουμπί “Πάτα για να μη σβήσει η οθόνη”
 function stayAwake() {
-  safeButtonPressed = true;
-  alert("☀️ Η οθόνη δεν θα σβήσει – συνέχισε να περιμένεις!");
+  alert("☀️ Η οθόνη δεν θα σβήσει – μπορείς να συνεχίσεις να περιμένεις!");
 }
 
 // --------------------
 // Ανίχνευση “απαγορευμένων” ενεργειών
 // --------------------
-document.addEventListener("click", () => violationDetected("Κλικ στην οθόνη"));
-document.addEventListener("touchstart", () => violationDetected("Άγγιγμα στην οθόνη"));
+
+// ❗ Αντί για document.addEventListener("click", ...) χρησιμοποιούμε “capture” για να δούμε τι πατήθηκε
+document.addEventListener("click", (e) => {
+  if (e.target && e.target.id === "stayAwakeBtn") {
+    // ✅ Το κουμπί είναι επιτρεπτό → ΔΕΝ υπάρχει παραβίαση
+    return;
+  }
+  // ❌ Όλα τα άλλα clicks είναι παραβίαση
+  violationDetected("Κλικ στην οθόνη");
+});
+
+document.addEventListener("touchstart", (e) => {
+  if (e.target && e.target.id === "stayAwakeBtn") {
+    return;
+  }
+  violationDetected("Άγγιγμα στην οθόνη");
+});
+
 document.addEventListener("scroll", () => violationDetected("Scroll στη σελίδα"));
 
 // ✅ Αν ο χρήστης φύγει από τη σελίδα/αλλάξει tab
