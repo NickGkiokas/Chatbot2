@@ -128,21 +128,7 @@ function finishTimer() {
   }
 
   // Εμφανίζουμε "alert" που δεν κλείνει (modal)
-  showFinalAlert();
-}
-
-// ✅ Εμφάνιση overlay alert που δεν κλείνει
-function showFinalAlert() {
-  const overlay = document.createElement("div");
-  overlay.id = "finalAlertOverlay";
-  overlay.innerHTML = `
-    🔓 <br>
-    <br> 🎉 ΤΕΛΟΣ ΤΙΜΩΡΙΑΣ! 🎉 <br><br>
-    📜 Ο κωδικός για το λουκέτο είναι <b>000</b>.<br><br>
-    Μπορείς να αποχωρήσεις και να ανοίξεις το δώρο σου!
-  `;
-  document.body.appendChild(overlay);
-}
+  alert("ΤΕΛΟΣ");
 
 // ✅ Συνάρτηση για να στέλνουμε μήνυμα στο Telegram
 function sendTelegramMessage(text) {
