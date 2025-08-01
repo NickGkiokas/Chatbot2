@@ -292,17 +292,13 @@
 
   // 👉 ΕΔΩ ΜΕΤΑ ΣΤΗΝΟΥΜΕ ΤΗΝ ΠΛΑΤΦΟΡΜΑ ΤΙΜΩΡΙΑΣ
   function goToPunish() {
-    document.body.innerHTML = `
-      <div style="text-align:center; font-family: 'Quicksand', sans-serif; margin-top:50px;">
-        <h1>🚨 Η ΠΛΑΤΦΟΡΜΑ ΤΙΜΩΡΙΑΣ 🚨</h1>
-        <p>Εδώ θα μπουν οι “δοκιμασίες” ή οι ασκήσεις για την τιμωρία του Μπόμπου! 💀</p>
-      </div>
-    `;
-  }
+    window.location.href = "timoria.html";  // ✅ φορτώνει τη σελίδα τιμωρίας
+}
 
   showImage(currentIndex);
 </script>
 
 </body>
 </html>
+
 
