@@ -50,13 +50,24 @@
     cursor: pointer;
   }
   button:hover { background: #45a049; }
+  #stayAwakeBtn {
+    background: #ff9933;
+    margin-bottom: 20px;
+  }
+  #stayAwakeBtn:hover {
+    background: #ff7700;
+  }
 </style>
 </head>
 <body>
 
 <h1>⏳ Γωνιά Σκέψης</h1>
-<div id="timer">02:00</div>
-<p id="instructions">Μη ακουμπήσεις τίποτα. Μη φύγεις από τη σελίδα. Μην κάνεις τίποτα μέχρι να τελειώσει ο χρόνος.</p>
+<div id="timer">00:05</div>
+
+<!-- ✅ ΝΕΟ ΚΟΥΜΠΙ -->
+<button id="stayAwakeBtn" onclick="stayAwake()">☀️ Πάτα για να μη σβήσει η οθόνη</button>
+
+<p id="instructions">Μη ακουμπήσεις τίποτα άλλο. Μη φύγεις από τη σελίδα. Μην κάνεις τίποτα μέχρι να τελειώσει ο χρόνος.</p>
 
 <div id="finalStep" style="display:none;">
   <h2>✍️ Γράψε όσα σκέφτηκες:</h2>
@@ -68,11 +79,15 @@
 const TELEGRAM_TOKEN = "ΒΑΛΕ_ΤΟ_TOKEN_ΤΟΥ_BOT";
 const CHAT_ID = "ΒΑΛΕ_ΤΟ_CHAT_ID_ΣΟΥ";
 
-let timeLeft = 120; // 2 λεπτά = 120 δευτερόλεπτα
+let timeLeft = 5; // 2 λεπτά = 120 δευτερόλεπτα
 let timerInterval;
 let restarted = false;
+let canWrite = false; // ✅ ΜΟΝΟ όταν τελειώσει το χρονόμετρο θα γίνει true
 
-// Ξεκινάμε το χρονόμετρο
+// ✅ λίστα για να ξέρουμε ποιο κουμπί είναι “επιτρεπτό”
+let safeButtonPressed = false;
+
+// ✅ Ξεκινάμε το χρονόμετρο
 function startTimer() {
   timerInterval = setInterval(() => {
     timeLeft--;
@@ -84,7 +99,7 @@ function startTimer() {
   }, 1000);
 }
 
-// Εμφανίζει τον χρόνο σωστά (mm:ss)
+// ✅ Εμφανίζει τον χρόνο σωστά (mm:ss)
 function updateTimerDisplay() {
   let minutes = Math.floor(timeLeft / 60);
   let seconds = timeLeft % 60;
@@ -92,33 +107,37 @@ function updateTimerDisplay() {
     `${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")}`;
 }
 
-// Αν ακουμπήσει την οθόνη/πατήσει/scroll → στέλνουμε μήνυμα και επανεκκίνηση
+// ✅ Αν ακουμπήσει την οθόνη/πατήσει/scroll → Στέλνουμε μήνυμα και επανεκκίνηση (εκτός από το ειδικό κουμπί)
 function violationDetected(reason) {
-  if (!restarted) {
-    restarted = true;
+  if (!safeButtonPressed) {
     sendTelegramMessage(`⚠️ Παραβίαση κανόνων: ${reason}. Το χρονόμετρο ξεκινά από την αρχή.`);
     alert("⚠️ Παραβίασες τον κανόνα! Το χρονόμετρο ξεκινάει ξανά!");
     resetTimer();
   }
+  safeButtonPressed = false; // Επαναφορά μετά την “ασφαλή” ενέργεια
 }
 
-// Επανεκκίνηση χρονομέτρου
+// ✅ Επανεκκίνηση χρονομέτρου
 function resetTimer() {
   clearInterval(timerInterval);
   timeLeft = 120;
-  restarted = false;
   updateTimerDisplay();
   startTimer();
 }
 
-// Όταν λήξει ο χρόνος → εμφανίζεται το πεδίο κειμένου
+// ✅ Όταν λήξει ο χρόνος → εμφανίζεται το πεδίο κειμένου
 function allowWriting() {
   document.getElementById("instructions").textContent = "✅ Ο χρόνος τελείωσε. Τώρα γράψε όσα σκέφτηκες.";
   document.getElementById("finalStep").style.display = "block";
+  canWrite = true;
 }
 
-// Αποστολή στο Telegram των σκέψεων
+// ✅ Αποστολή στο Telegram των σκέψεων
 function submitThoughts() {
+  if (!canWrite) {
+    alert("⛔ Δεν επιτρέπεται ακόμη! Περίμενε να τελειώσει ο χρόνος.");
+    return;
+  }
   let text = document.getElementById("thoughtsInput").value.trim();
   if (text === "") {
     alert("✏️ Πρέπει να γράψεις κάτι!");
@@ -129,7 +148,7 @@ function submitThoughts() {
   document.body.innerHTML = "<h1>🎉 Μπράβο! Η διαδικασία ολοκληρώθηκε! 🎉</h1>";
 }
 
-// Συνάρτηση για να στέλνουμε μήνυμα στο Telegram
+// ✅ Συνάρτηση για να στέλνουμε μήνυμα στο Telegram
 function sendTelegramMessage(text) {
   fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
     method: "POST",
@@ -141,6 +160,12 @@ function sendTelegramMessage(text) {
   });
 }
 
+// ✅ Συνάρτηση για το κουμπί “Πάτα για να μη σβήσει η οθόνη”
+function stayAwake() {
+  safeButtonPressed = true;
+  alert("☀️ Η οθόνη δεν θα σβήσει – συνέχισε να περιμένεις!");
+}
+
 // --------------------
 // Ανίχνευση “απαγορευμένων” ενεργειών
 // --------------------
@@ -148,14 +173,14 @@ document.addEventListener("click", () => violationDetected("Κλικ στην ο
 document.addEventListener("touchstart", () => violationDetected("Άγγιγμα στην οθόνη"));
 document.addEventListener("scroll", () => violationDetected("Scroll στη σελίδα"));
 
-// Αν ο χρήστης φύγει από τη σελίδα/αλλάξει tab
+// ✅ Αν ο χρήστης φύγει από τη σελίδα/αλλάξει tab
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
     violationDetected("Άφησε τη σελίδα / άλλαξε tab");
   }
 });
 
-// Ξεκινάμε
+// ✅ Εκκίνηση
 updateTimerDisplay();
 startTimer();
 </script>
