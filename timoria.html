@@ -194,7 +194,7 @@ document.getElementById("punishmentForm").addEventListener("submit", function(e)
 // 🎡 Συνάρτηση για γύρισμα τροχού
 function spinWheel() {
   // 📩 Στέλνουμε μήνυμα όταν πάει να γυρίσει τον τροχό
-  sendTelegramMessage("🎡 Ο Μπόμπος πάει να γυρίσει τον Τροχό της Τιμωρίας!");
+  sendTelegramMessage("🎡 Ο Μπόμπος πάει να γυρίσει τον Τροχό της Τιμωρίας! Η Τιμωρία είναι Γράψιμο Φράσεων!");
 
   let randomDegree = Math.floor(Math.random() * 360) + 1080; // 3+ στροφές
   wheel.style.transform = `rotate(${randomDegree}deg)`;
