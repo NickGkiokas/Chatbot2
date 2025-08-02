@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>⏳ Γωνιά Σκέψης</title>
+<title>⏳ Γωνία Σκέψης</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 <style>
   body {
@@ -51,18 +51,18 @@
 <body>
 
 <h1>⏳ Γωνιά Σκέψης</h1>
-<div id="timer">00:05</div>
+<div id="timer">01:00</div>
 
 <!-- ✅ Κουμπί να μη σβήσει η οθόνη -->
 <button id="stayAwakeBtn" onclick="stayAwake()">☀️ Πάτα για να μη σβήσει η οθόνη</button>
 
-<p id="instructions">Μη ακουμπήσεις τίποτα άλλο. Μη φύγεις από τη σελίδα. Μην κάνεις τίποτα μέχρι να τελειώσει ο χρόνος. Σκέψου τι έκανες, τι έμαθες και πώς θα είσαι καλύτερος Μπόμπος.</p>
+<p id="instructions">Μην ακουμπήσεις τίποτα άλλο. Μη φύγεις από τη σελίδα. Μην κάνεις τίποτα μέχρι να τελειώσει ο χρόνος. Είσαι τιμωρία στη Γωνία Σκέψης. Σκέψου τι έκανες, τι έμαθες και πώς θα είσαι καλύτερος Μπόμπος.</p>
 
 <script>
 const TELEGRAM_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
 const CHAT_ID = "7336951445";
 
-let timeLeft = 5; // 2 λεπτά = 120 δευτερόλεπτα
+let timeLeft = 60; // 1 λεπτό = 60 δευτερόλεπτα
 let timerInterval;
 
 // ✅ Ξεκινάμε το χρονόμετρο
@@ -95,7 +95,7 @@ function violationDetected(reason) {
 // ✅ Reset timer
 function resetTimer() {
   clearInterval(timerInterval);
-  timeLeft = 5;
+  timeLeft = 60;
   updateTimerDisplay();
   startTimer();
 }
