@@ -174,7 +174,7 @@ document.getElementById("punishmentForm").addEventListener("submit", function(e)
 
   // Παίρνουμε τις απαντήσεις
   const formData = new FormData(this);
-  let message = "📋 *Απαντήσεις πριν την τιμωρία:* 📋\n\n";
+  let message = "📋 *Απαντήσεις πριν την τιμωρία:*\n\n";
   let i = 1;
   for (let [name, value] of formData.entries()) {
     message += `Ερώτηση ${i}: ${value}\n`;
