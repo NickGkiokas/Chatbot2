@@ -42,7 +42,6 @@
   }
   button:hover { background: #ff3333; }
 
-  /* 🎯 Καθαρός Τροχός χωρίς άσπρες γραμμές */
   .wheel-container {
     margin-top: 40px;
     position: relative;
@@ -67,7 +66,6 @@
     );
     box-shadow: 0 0 10px rgba(0,0,0,0.3) inset;
   }
-  /* Κόκκινη βελόνα */
   .pointer {
     width: 0;
     height: 0;
@@ -95,7 +93,7 @@
 <div class="rules-box">
   <h2>📜 Κανόνες Συμπεριφοράς. Όσο βρίσκεσαι στην πλατφόρμα τιμωρίας δεν υπάρχουν αστεία, άρα τους ακολουθείς αυστηρά, αλλιώς η τιμωρία θα είναι πιο βαριά.</h2>
   <p>1️⃣ Μιλάς πάντα στον πληθυντικό.</p>
-  <p>2️⃣ Λες πάντα «μάλιστα» και "Αφεντικό".</p>
+  <p>2️⃣ Λες πάντα «μάλιστα» και «Αφεντικό».</p>
   <p>3️⃣ Υπακούς στις οδηγίες χωρίς αντιρρήσεις.</p>
 </div>
 
@@ -108,12 +106,12 @@
   </div>
 
   <div>
-    <label>2️⃣ Το θεωρείς ωραίο που μπαίνεις τιμωρία; Δε θα ήταν καλύτερα να ήσουν εξαρχής καλή;</label><br>
+    <label>2️⃣ Το θεωρείς σωστό που μπαίνεις τιμωρία;</label><br>
     <textarea name="q2" rows="2" placeholder="Γράψε εδώ..."></textarea>
   </div>
 
   <div>
-    <label>3️⃣ Τι έχεις να πεις στο Αφεντικό για τις φορές που αγνόησες όσα έλεγε, έβγαινες κρυφά και απαντούσες με υφάκι;</label><br>
+    <label>3️⃣ Τι έχεις να πεις στο Αφεντικό για τις φορές που αγνόησες όσα έλεγε, έβγαινες κρυφά και μετά απαντούσες και με υφάκι;</label><br>
     <textarea name="q3" rows="2" placeholder="Γράψε εδώ..."></textarea>
   </div>
   
@@ -150,15 +148,26 @@ const CHAT_ID = "7336951445";
 // ✍️ Οι 3 φράσεις
 const phrases = [
   "Συγγνώμη Αφεντικούλη θα είμαι φρόνιμη και καλή",
-  "Θα ακούω το Αφεντικό και θα ζητάω άδεια",
-  "Θα κάθομαι σούζα, δε θα αντιμιλάω και δε θα έχω υφάκι"
+  "Θα ακούω το Αφεντικό γιατί κάνει κουμάντο",
+  "Δε θα αντιμιλάω και δε θα έχω υφάκι"
 ];
 
 let currentPhraseIndex = 0;
 let currentCount = 0;
 
 let wheel = document.getElementById("wheel");
-let resultBox = document.getElementById("resultBox");
+
+// 📩 Βοηθητική συνάρτηση αποστολής Telegram
+function sendTelegramMessage(text) {
+  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      text: text
+    })
+  });
+}
 
 document.getElementById("punishmentForm").addEventListener("submit", function(e){
   e.preventDefault();
@@ -173,16 +182,10 @@ document.getElementById("punishmentForm").addEventListener("submit", function(e)
   }
 
   // Στέλνουμε στο Telegram
-  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text: message,
-      parse_mode: "Markdown"
-    })
-  });
-
+  sendTelegramMessage(message);
+  
+  alert("Πολύ ωραία. Ώρα να γυρίσεις τον τροχό και να μάθεις την τιμωρία σου!");
+  
   // Κρύβουμε τη φόρμα και δείχνουμε τον τροχό
   document.getElementById("punishmentForm").style.display = "none";
   document.getElementById("wheelSection").style.display = "block";
@@ -190,6 +193,9 @@ document.getElementById("punishmentForm").addEventListener("submit", function(e)
 
 // 🎡 Συνάρτηση για γύρισμα τροχού
 function spinWheel() {
+  // 📩 Στέλνουμε μήνυμα όταν πάει να γυρίσει τον τροχό
+  sendTelegramMessage("🎡 Ο Μπόμπος πάει να γυρίσει τον Τροχό της Τιμωρίας!");
+
   let randomDegree = Math.floor(Math.random() * 360) + 1080; // 3+ στροφές
   wheel.style.transform = `rotate(${randomDegree}deg)`;
 
@@ -224,6 +230,9 @@ function submitPhrase() {
     document.getElementById("phraseInput").value = "";
 
     if (currentCount === 3) {
+      // 📩 Στέλνουμε μήνυμα κάθε φορά που ολοκληρώνεται φράση
+      sendTelegramMessage(`✅ Ο Μπόμπος έγραψε τη φράση ${currentPhraseIndex + 1}: "${correctPhrase}"`);
+
       currentPhraseIndex++;
       if (currentPhraseIndex < phrases.length) {
         alert("✅ Τέλεια! Προχωράς στην επόμενη φράση.");
