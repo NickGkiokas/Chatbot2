@@ -217,37 +217,38 @@
         <form id="quizForm">
 
           <!-- 5 Πολλαπλής -->
-          <div><label>1️⃣ Πόσο φρόνιμος ήταν ο Μπόμπος στις διακοπές;</label><br>
-            <input type="radio" name="q1" value="πολύ"> Πολύ<br>
-            <input type="radio" name="q1" value="λίγο"> Λίγο<br>
-            <input type="radio" name="q1" value="καθόλου"> Καθόλου<br></div>
+          <div><label>1️⃣ Πόσο φρόνιμος ήσουν Μπόμπο στις διακοπές;</label><br>
+            <input type="radio" name="q1" value="Πολύ"> Πολύ<br>
+            <input type="radio" name="q1" value="Αρκετά"> Αρκετά<br>
+            <input type="radio" name="q1" value="Καθόλου"> Καθόλου<br></div>
 
-          <div><label>2️⃣ Έφερε σοκολάτες από τη Ζάκυνθο;</label><br>
-            <input type="radio" name="q2" value="ναι"> Ναι<br>
-            <input type="radio" name="q2" value="όχι"> Όχι<br></div>
+          <div><label>2️⃣ Έκανες ό,τι έλεγε το Αφεντικό και ενημέρωνες πάντα;</label><br>
+            <input type="radio" name="q2" value="Εννοείται!"> Εννοείται!<br>
+            <input type="radio" name="q2" value="Εμ καμιά φορά ίσως και όχι..."> Εμ καμιά φορά ίσως και όχι...<br></div>
+            <input type="radio" name="q3" value="Μπορούσα και καλύτερα :("> Όχι<br></div>
 
-          <div><label>3️⃣ Έκανε φασαρία στο σπίτι;</label><br>
-            <input type="radio" name="q3" value="καθόλου"> Καθόλου<br>
-            <input type="radio" name="q3" value="μερικές φορές"> Μερικές φορές<br>
-            <input type="radio" name="q3" value="πολύ"> Πολύ<br></div>
+          <div><label>3️⃣ Υπήρξαν φορές που έκρυψες κάτι και είπες ψέματα στο Αφεντικό;</label><br>
+            <input type="radio" name="q3" value="Όχι βέβαια!"> Όχι βέβαια!<br>
+            <input type="radio" name="q3" value="Συνήθως όχι"> Συνήθως όχι<br>
+            <input type="radio" name="q3" value="Εμ εμ ίσως κάτι λίγο..."> Εμ εμ ίσως κάτι λίγο...<br></div>
 
-          <div><label>4️⃣ Έπλυνε τα πιάτα μετά το φαγητό;</label><br>
-            <input type="radio" name="q4" value="πάντα"> Πάντα<br>
-            <input type="radio" name="q4" value="μερικές φορές"> Μερικές φορές<br>
-            <input type="radio" name="q4" value="ποτέ"> Ποτέ<br></div>
+          <div><label>4️⃣ Τι πρέπει να λες στο Αφεντικό που είναι καλό και σε άφησε να λείπεις τόσες μέρες;</label><br>
+            <input type="radio" name="q4" value="Τίποτα"> Τίποτα<br>
+            <input type="radio" name="q4" value="Να με αφήσει πάλι"> Να με αφήσει πάλι<br>
+            <input type="radio" name="q4" value="Σας ευχαριστώ πολύ Αφεντικό!"> Σας ευχαριστώ πολύ Αφεντικό!<br></div>
 
-          <div><label>5️⃣ Ήταν ευγενικός με όλους;</label><br>
+          <div><label>5️⃣ Δηλώνεις ρητά ότι απάντησες παντού με ειλικρίνεια;</label><br>
             <input type="radio" name="q5" value="ναι"> Ναι<br>
             <input type="radio" name="q5" value="όχι"> Όχι<br></div>
 
           <!-- 3 Ανοιχτού -->
-          <div><label>✏️ 6️⃣ Τι σου άρεσε περισσότερο στις διακοπές του Μπόμπου;</label><br>
+          <div><label>✏️ 6️⃣ Τι σου άρεσε περισσότερο στις διακοπές σου;</label><br>
             <textarea name="q6" rows="2" cols="40"></textarea></div>
 
-          <div><label>✏️ 7️⃣ Τι θα μπορούσε να κάνει καλύτερα ο Μπόμπος;</label><br>
+          <div><label>✏️ 7️⃣ Τι θα μπορούσες να κάνεις καλύτερα ως Μπόμπος;</label><br>
             <textarea name="q7" rows="2" cols="40"></textarea></div>
 
-          <div><label>✏️ 8️⃣ Τι μήνυμα θα ήθελες να του αφήσεις;</label><br>
+          <div><label>✏️ 8️⃣ Τι έχεις να πεις στο Αφεντικό πριν αποφασίσει για την αξιολόγησή σου;</label><br>
             <textarea name="q8" rows="2" cols="40"></textarea></div>
 
           <button type="submit" style="margin-top:15px; padding: 10px 20px; background: #ff69b4; color: #fff; border:none; border-radius: 8px; font-size: 18px;">Υποβολή</button>
@@ -296,6 +297,8 @@
     });
   }
 
+  alert("Αποφασίστηκε ότι μπαίνεις τιμωρία! Πάτα το κουμπί κάτω κάτω για να εισέλθεις στην πλατφόρμα τιμωρίας.");
+
   // 👉 ΕΔΩ ΜΕΤΑ ΣΤΗΝΟΥΜΕ ΤΗΝ ΠΛΑΤΦΟΡΜΑ ΤΙΜΩΡΙΑΣ
   function goToPunish() {
     window.location.href = "timoria.html";  // ✅ φορτώνει τη σελίδα τιμωρίας
@@ -306,6 +309,7 @@
 
 </body>
 </html>
+
 
 
 
