@@ -191,55 +191,126 @@ document.getElementById("punishmentForm").addEventListener("submit", function(e)
   document.getElementById("wheelSection").style.display = "block";
 });
 
-// 🎡 Συνάρτηση για γύρισμα τροχού
+<script>
+// ... κρατάμε όλον τον υπόλοιπο κώδικα ίδιο μέχρι τη spinWheel()
+
 function spinWheel() {
   // 📩 Στέλνουμε μήνυμα όταν πάει να γυρίσει τον τροχό
-  sendTelegramMessage("🎡 Ο Μπόμπος πάει να γυρίσει τον Τροχό της Τιμωρίας! Η Τιμωρία είναι Γράψιμο Φράσεων!");
+  sendTelegramMessage("🎡 Ο Μπόμπος γύρισε τον Τροχό! Η Τιμωρία είναι: Επιλογή Μπόμπου!");
 
   let randomDegree = Math.floor(Math.random() * 360) + 1080; // 3+ στροφές
   wheel.style.transform = `rotate(${randomDegree}deg)`;
 
   setTimeout(() => {
-    alert("✍️ Η τιμωρία σου είναι: Γράψιμο Φράσεων!");
+    alert("⚖️ Η τιμωρία σου είναι: *Επιλογή Μπόμπου*!");
 
-    // Ξεκινάμε διαδικασία γραψίματος
-    document.getElementById("wheelSection").style.display = "none";
-    document.getElementById("writingSection").style.display = "block";
+    // Δείχνουμε παράθυρο επιλογών
+    showChoicePopup();
 
-    startPhrase();
   }, 4000);
 }
 
-// ➡️ Έναρξη για την τρέχουσα φράση
-function startPhrase() {
+// ➡️ Popup επιλογών
+function showChoicePopup() {
+  const choiceDiv = document.createElement("div");
+  choiceDiv.style.position = "fixed";
+  choiceDiv.style.top = "0";
+  choiceDiv.style.left = "0";
+  choiceDiv.style.width = "100%";
+  choiceDiv.style.height = "100%";
+  choiceDiv.style.background = "rgba(0,0,0,0.6)";
+  choiceDiv.style.display = "flex";
+  choiceDiv.style.justifyContent = "center";
+  choiceDiv.style.alignItems = "center";
+  choiceDiv.innerHTML = `
+    <div style="background:#fff; padding:20px; border-radius:15px; max-width:400px; text-align:center;">
+      <h2>⚖️ Επιλογή Μπόμπου</h2>
+      <p>Διάλεξε την τιμωρία σου:</p>
+      <button id="optionNotebook" style="margin:10px; padding:10px 15px;">✍️ 3 φορές στο Τετράδιο + Γωνία</button>
+      <button id="optionMobile" style="margin:10px; padding:10px 15px;">📱 5 φορές στο Κινητό + Γωνία</button>
+    </div>
+  `;
+  document.body.appendChild(choiceDiv);
+
+  document.getElementById("optionNotebook").onclick = () => {
+    sendTelegramMessage("📒 Ο Μπόμπος διάλεξε: 3 φορές στο Τετράδιο + Γωνία!");
+    document.body.removeChild(choiceDiv);
+    showNotebookUpload();
+  };
+
+  document.getElementById("optionMobile").onclick = () => {
+    sendTelegramMessage("📱 Ο Μπόμπος διάλεξε: 5 φορές στο Κινητό + Γωνία!");
+    document.body.removeChild(choiceDiv);
+
+    // Προσαρμόζουμε: χρειάζεται 5 φορές αντί για 3
+    startPhraseMobile();
+  };
+}
+
+// ➡️ Πεδίο ανεβάσματος φωτογραφίας (για τετράδιο)
+function showNotebookUpload() {
+  document.getElementById("wheelSection").style.display = "none";
+  const div = document.createElement("div");
+  div.style.marginTop = "30px";
+  div.innerHTML = `
+    <h2>📷 Απόδειξη Τιμωρίας</h2>
+    <p>Ανεβάστε φωτογραφία από το τετράδιο που γράψατε 3 φορές τις φράσεις.</p>
+    <input type="file" id="photoUpload" accept="image/*"><br><br>
+    <button onclick="submitNotebook()">✅ Υποβολή</button>
+  `;
+  document.body.appendChild(div);
+}
+
+function submitNotebook() {
+  const fileInput = document.getElementById("photoUpload");
+  if (!fileInput.files.length) {
+    alert("❌ Πρέπει να ανεβάσεις μια φωτογραφία!");
+    return;
+  }
+  alert("✅ Φωτογραφία ανέβηκε! Μεταφέρεσαι στη Γωνία Σκέψης...");
+  window.location.href = "gwnia.html";
+}
+
+// ➡️ Flow για κινητό (5 φορές)
+function startPhraseMobile() {
+  currentPhraseIndex = 0;
   currentCount = 0;
+  document.getElementById("wheelSection").style.display = "none";
+  document.getElementById("writingSection").style.display = "block";
+
+  // Τροποποιούμε οδηγία ώστε να ζητάει 5 φορές
   document.getElementById("phraseInstruction").innerText =
-    `Γράψε ακριβώς αυτή τη φράση (3 φορές): \n"${phrases[currentPhraseIndex]}"`;
-  document.getElementById("progressText").innerText = `0/3`;
+    `Γράψε ακριβώς αυτή τη φράση (5 φορές): \n"${phrases[currentPhraseIndex]}"`;
+  document.getElementById("progressText").innerText = `0/5`;
   document.getElementById("phraseInput").value = "";
 }
 
-// ➡️ Υποβολή φράσης
+// Τροποποιούμε submitPhrase ώστε να ελέγχει 5 αντί για 3 όταν είναι για κινητό
 function submitPhrase() {
   const userInput = document.getElementById("phraseInput").value.trim();
   const correctPhrase = phrases[currentPhraseIndex];
 
+  const repetitions = (document.getElementById("phraseInstruction").innerText.includes("5 φορές")) ? 5 : 3;
+
   if (userInput === correctPhrase) {
     currentCount++;
-    document.getElementById("progressText").innerText = `${currentCount}/3`;
+    document.getElementById("progressText").innerText = `${currentCount}/${repetitions}`;
     document.getElementById("phraseInput").value = "";
 
-    if (currentCount === 3) {
-      // 📩 Στέλνουμε μήνυμα κάθε φορά που ολοκληρώνεται φράση
+    if (currentCount === repetitions) {
       sendTelegramMessage(`✅ Ο Μπόμπος έγραψε τη φράση ${currentPhraseIndex + 1}: "${correctPhrase}"`);
 
       currentPhraseIndex++;
       if (currentPhraseIndex < phrases.length) {
         alert("✅ Τέλεια! Προχωράς στην επόμενη φράση.");
-        startPhrase();
+        currentCount = 0;
+        document.getElementById("phraseInstruction").innerText =
+          `Γράψε ακριβώς αυτή τη φράση (${repetitions} φορές): \n"${phrases[currentPhraseIndex]}"`;
+        document.getElementById("progressText").innerText = `0/${repetitions}`;
+        document.getElementById("phraseInput").value = "";
       } else {
         alert("🎉 Μπράβο! Ολοκλήρωσες όλες τις φράσεις!");
-        alert("Μεταφέρεσαι αυτόματα στη Γωνία Σκέψης για να σκεφτείς όσα έκανες και έμαθες...");
+        alert("Μεταφέρεσαι αυτόματα στη Γωνία Σκέψης...");
         document.getElementById("writingSection").innerHTML =
           "<h2>🎉 Μπράβο! Ολοκλήρωσες την τιμωρία σου! 🎉</h2>";
         window.location.href="gwnia.html";
@@ -248,7 +319,7 @@ function submitPhrase() {
   } else {
     alert("❌ Λάθος! Ξεκινάς πάλι τη συγκεκριμένη φράση.");
     currentCount = 0;
-    document.getElementById("progressText").innerText = `0/3`;
+    document.getElementById("progressText").innerText = `0/${repetitions}`;
     document.getElementById("phraseInput").value = "";
   }
 }
