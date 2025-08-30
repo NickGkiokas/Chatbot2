@@ -147,9 +147,9 @@ const CHAT_ID = "7336951445";
 
 // ✍️ Οι 3 φράσεις
 const phrases = [
-  "Συγγνώμη Αφεντικούλη θα είμαι φρόνιμη και καλή",
-  "Θα ακούω το Αφεντικό γιατί κάνει κουμάντο",
-  "Δε θα αντιμιλάω και δε θα έχω υφάκι"
+  "Συγγνώμη Αφεντικούλη που ήμουν άτακτη και ανυπάκουη",
+  "Θα ζητάω άδεια και θα ενημερώνω το Αφεντικό",
+  "Δε θα αντιμιλάω και δε θα έχω υφάκι, αλλιώς θα μπαίνω αμέσως τιμωρία"
 ];
 
 let currentPhraseIndex = 0;
@@ -225,20 +225,20 @@ function showChoicePopup() {
     <div style="background:#fff; padding:20px; border-radius:15px; max-width:400px; text-align:center;">
       <h2>⚖️ Επιλογή Μπόμπου</h2>
       <p>Διάλεξε την τιμωρία σου:</p>
-      <button id="optionNotebook" style="margin:10px; padding:10px 15px;">✍️ 3 φορές στο Τετράδιο + Γωνία</button>
-      <button id="optionMobile" style="margin:10px; padding:10px 15px;">📱 5 φορές στο Κινητό + Γωνία</button>
+      <button id="optionNotebook" style="margin:10px; padding:10px 15px;">✍️ 3 φορές γράψιμο φράσεων στο Τετράδιο Μπόμπου + Τιμωρία στη Γωνία</button>
+      <button id="optionMobile" style="margin:10px; padding:10px 15px;">📱 5 φορές γράψιμο φράσεων στο κινητό + Τιμωρία στη Γωνία</button>
     </div>
   `;
   document.body.appendChild(choiceDiv);
 
   document.getElementById("optionNotebook").onclick = () => {
-    sendTelegramMessage("📒 Ο Μπόμπος διάλεξε: 3 φορές στο Τετράδιο + Γωνία!");
+    sendTelegramMessage("📒 Ο Μπόμπος διάλεξε: 3 φορές γράψιμο στο Τετράδιο + Γωνία!");
     document.body.removeChild(choiceDiv);
     showNotebookUpload();
   };
 
   document.getElementById("optionMobile").onclick = () => {
-    sendTelegramMessage("📱 Ο Μπόμπος διάλεξε: 5 φορές στο Κινητό + Γωνία!");
+    sendTelegramMessage("📱 Ο Μπόμπος διάλεξε: 5 φορές γράψιμο στο Κινητό + Τιμωρία στη Γωνία!");
     document.body.removeChild(choiceDiv);
 
     // Προσαρμόζουμε: χρειάζεται 5 φορές αντί για 3
@@ -253,7 +253,7 @@ function showNotebookUpload() {
   div.style.marginTop = "30px";
   div.innerHTML = `
     <h2>📷 Απόδειξη Τιμωρίας</h2>
-    <p>Ανεβάστε φωτογραφία από το τετράδιο που γράψατε 3 φορές τις φράσεις.</p>
+    <p>Ανέβασε φωτογραφία από το τετράδιό σου που έγράψες 3 φορές τις φράσεις (ΠΡΟΣΕΧΕ ΜΗΝ ΚΛΕΙΣΕΙΣ ΤΗ ΣΕΛΙΔΑ ΒΓΕΣ ΠΡΟΣΕΚΤΙΚΑ ΒΓΑΛΕ ΦΩΤΟ ΚΑΙ ΞΑΝΑΜΠΕΣ!!!).</p>
     <input type="file" id="photoUpload" accept="image/*"><br><br>
     <button onclick="submitNotebook()">✅ Υποβολή</button>
   `;
@@ -281,7 +281,7 @@ function submitNotebook() {
   .then(data => {
     console.log("Telegram response:", data);
     if (data.ok) {
-      alert("✅ Φωτογραφία ανέβηκε και στάλθηκε στο Telegram! Μεταφέρεσαι στη Γωνία Σκέψης...");
+      alert("✅Η φωτογραφία στάλθηκε στο Αφεντικό! Μεταφέρεσαι αυτόματα στη Γωνία Σκέψης για να μάθεις το μάθημά σου μια και καλή...");
       window.location.href = "gwnia.html";
     } else {
       alert("⚠️ Κάτι πήγε στραβά με την αποστολή στο Telegram!");
@@ -330,8 +330,8 @@ function submitPhrase() {
         document.getElementById("progressText").innerText = `0/${repetitions}`;
         document.getElementById("phraseInput").value = "";
       } else {
-        alert("🎉 Μπράβο! Ολοκλήρωσες όλες τις φράσεις!");
-        alert("Μεταφέρεσαι αυτόματα στη Γωνία Σκέψης...");
+        alert("🎉 Μπράβο Μπόμπο! Ολοκλήρωσες όλες τις φράσεις!");
+        alert("Μεταφέρεσαι αυτόματα στη Γωνία Σκέψης για να μάθεις το μάθημά σου μια και καλή...");
         document.getElementById("writingSection").innerHTML =
           "<h2>🎉 Μπράβο! Ολοκλήρωσες την τιμωρία σου! 🎉</h2>";
         window.location.href="gwnia.html";
