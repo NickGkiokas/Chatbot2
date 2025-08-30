@@ -266,10 +266,32 @@ function submitNotebook() {
     alert("❌ Πρέπει να ανεβάσεις μια φωτογραφία!");
     return;
   }
-  alert("✅ Φωτογραφία ανέβηκε! Μεταφέρεσαι στη Γωνία Σκέψης...");
-  window.location.href = "gwnia.html";
-}
 
+  const file = fileInput.files[0];
+  const formData = new FormData();
+  formData.append("chat_id", CHAT_ID);
+  formData.append("photo", file);
+  formData.append("caption", "📒 Απόδειξη τιμωρίας: Ο Μπόμπος ανέβασε το τετράδιο!");
+
+  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, {
+    method: "POST",
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Telegram response:", data);
+    if (data.ok) {
+      alert("✅ Φωτογραφία ανέβηκε και στάλθηκε στο Telegram! Μεταφέρεσαι στη Γωνία Σκέψης...");
+      window.location.href = "gwnia.html";
+    } else {
+      alert("⚠️ Κάτι πήγε στραβά με την αποστολή στο Telegram!");
+    }
+  })
+  .catch(err => {
+    console.error("Error uploading:", err);
+    alert("⚠️ Σφάλμα κατά την αποστολή!");
+  });
+}
 // ➡️ Flow για κινητό (5 φορές)
 function startPhraseMobile() {
   currentPhraseIndex = 0;
