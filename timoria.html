@@ -311,7 +311,7 @@ function submitPhrase() {
   const userInput = document.getElementById("phraseInput").value.trim();
   const correctPhrase = phrases[currentPhraseIndex];
 
-  const repetitions = (document.getElementById("phraseInstruction").innerText.includes("5 φορές")) ? 5 : 3;
+  const repetitions = (document.getElementById("phraseInstruction").innerText.includes("5 φορές")) ? 5 : 5;
 
   if (userInput === correctPhrase) {
     currentCount++;
