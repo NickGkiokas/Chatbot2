@@ -132,8 +132,8 @@ function closeModal() {
 
 // Έλεγχος ανοιχτών ερωτήσεων
 function validateOpenAnswer(text) {
-  const hasAfentiko = text.includes("Αφεντικ") || text.includes("αφεντικ"); 
-  const hasPlural = /(τε|στε|είτε)\b/.test(text); 
+  const hasAfentiko = /Αφεντικ/i.test(text); // case-insensitive
+  const hasPlural = /(τε|στε|είτε|σας|θα θέλατε|μπορείτε)/i.test(text);
   return hasAfentiko && hasPlural;
 }
 
@@ -163,3 +163,4 @@ document.getElementById("quizForm").addEventListener("submit", function(e) {
 
 </body>
 </html>
+
