@@ -216,18 +216,20 @@ document.getElementById("quizForm").addEventListener("submit", async function(e)
   // Εμφάνιση μηνύματος “μπαίνεις τιμωρία”
   alert("⚠️ Χωρίς πολλή ανάλυση, εννοείται ότι μπαίνεις τιμωρία. Μεταφέρεσαι αυτόματα στη γνωστή πλατφόρμα…");
 
+  let msg = "Ο Μπόμπος οδηγήθηκε αυτόματα στην πλατφόρμα τιμωρίας. Αναμένουμε αποτελέσματα...";
+  SendTelegramMessage(msg);
+
   // Redirect στην timoria.html μετά από 1 δευτερόλεπτο
   setTimeout(() => {
     window.location.href = "timoria.html";
   }, 1000);
 });
-
-let msg = "Ο Μπόμπος οδηγήθηκε αυτόματα στην πλατφόρμα τιμωρίας. Αναμένουμε αποτελέσματα...";
-SendTelegramMessage(msg);
+  
 </script>
 
 </body>
 </html>
+
 
 
 
