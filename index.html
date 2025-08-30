@@ -3,99 +3,53 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Η Απίστευτη Ιστορία του Δώρου!</title>
+<title>Η Αξιολόγηση του Μπόμπου</title>
 <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 <style>
   body {
-    margin: 0;
     font-family: 'Quicksand', sans-serif;
     background: linear-gradient(to bottom, #fdf6e3, #fceabb);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden; /* 🔒 ΜΟΝΟ για το story mode */
-  }
-  .container {
-    width: 95%;
-    max-width: 700px;
-    position: relative;
+    margin: 0;
+    padding: 30px;
     text-align: center;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 20px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    padding: 20px;
-    animation: fadeIn 1s ease-in;
   }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.98); }
-    to { opacity: 1; transform: scale(1); }
-  }
-  img {
-    width: 100%;
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    transition: opacity 0.6s ease-in-out;
-  }
-  .caption {
-    margin-top: 12px;
-    font-size: 20px;
-    font-weight: 600;
+  h1 {
     color: #5b4636;
-    text-shadow: 1px 1px 2px rgba(255,255,255,0.7);
   }
-  .btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 182, 193, 0.8);
-    color: #fff;
-    border: none;
-    padding: 14px;
-    font-size: 24px;
-    border-radius: 50%;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-    transition: background 0.3s;
-  }
-  .btn:hover { background: rgba(255, 105, 180, 1); }
-  #prevBtn { left: -15px; }
-  #nextBtn { right: -15px; }
-
-  /* Νέο κουμπί */
-  #quizBtn {
-    display: none;
+  form {
     margin-top: 20px;
-    background: #ff69b4;
-    color: #fff;
-    font-size: 20px;
-    font-weight: bold;
-    padding: 12px 20px;
-    border-radius: 12px;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  label {
+    font-weight: 600;
+    display: block;
+    margin: 10px 0 5px;
+  }
+  textarea {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 8px;
+    font-family: inherit;
+  }
+  button {
+    margin-top:15px; 
+    padding: 10px 20px; 
+    background: #ff69b4; 
+    color: #fff; 
+    border:none; 
+    border-radius: 8px; 
+    font-size: 18px;
     cursor: pointer;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-    border: none;
   }
-  #quizBtn:hover { background: #ff1493; }
-
-  .hint {
-    font-size: 14px;
-    margin-top: 8px;
-    color: #8b6f4e;
-    opacity: 0.8;
-  }
-
-  /* Animation για ανάλυση αποτελεσμάτων */
-  .loading {
-    font-size: 24px;
-    font-weight: bold;
-    color: #444;
-    animation: blink 1s infinite;
-  }
-  @keyframes blink {
-    50% { opacity: 0.5; }
-  }
+  button:hover { background: #ff1493; }
   #resultSection {
     text-align: center;
     margin-top: 20px;
@@ -115,220 +69,88 @@
 </head>
 <body>
 
-<div class="container">
-  <button id="prevBtn" class="btn">‹</button>
-  <img id="storyImage" src="" alt="Story Image">
-  <button id="nextBtn" class="btn">›</button>
-  <div class="caption" id="caption"></div>
-  <div class="hint">✨ Κάνε swipe ή πάτησε τα βελάκια για να συνεχίσει η ιστορία ✨</div>
+  <h1>📋 Η Αξιολόγηση του Μπόμπου</h1>
+  <p>Μπόμπο, ήρθε η στιγμή να απαντήσεις με ειλικρίνεια στην αξιολόγηση!  
+  Διάβασε τις ερωτήσεις και απάντησε προσεκτικά.</p>
 
-  <!-- ΝΕΟ κουμπί για την αξιολόγηση -->
-  <button id="quizBtn" onclick="startQuiz()">📋 Πάτα εδώ για να πας στην αξιολόγηση</button>
-</div>
+  <form id="quizForm">
+
+    <label>1️⃣ Πόσο φρόνιμος ήσουν Μπόμπο στις διακοπές;</label>
+    <input type="radio" name="q1" value="Πολύ"> Πολύ<br>
+    <input type="radio" name="q1" value="Αρκετά"> Αρκετά<br>
+    <input type="radio" name="q1" value="Καθόλου"> Καθόλου<br>
+
+    <label>2️⃣ Έκανες ό,τι έλεγε το Αφεντικό και ενημέρωνες πάντα;</label>
+    <input type="radio" name="q2" value="Εννοείται!"> Εννοείται!<br>
+    <input type="radio" name="q2" value="Εμ καμιά φορά ίσως και όχι..."> Εμ καμιά φορά ίσως και όχι...<br>
+    <input type="radio" name="q2" value="Όχι"> Όχι<br>
+
+    <label>3️⃣ Υπήρξαν φορές που έκρυψες κάτι ή δεν ενημέρωσες ή είπες ψέματα στο Αφεντικό;</label>
+    <input type="radio" name="q3" value="Όχι βέβαια!"> Όχι βέβαια!<br>
+    <input type="radio" name="q3" value="Συνήθως όχι"> Συνήθως όχι<br>
+    <input type="radio" name="q3" value="Ίσως κάτι λίγο..."> Ίσως κάτι λίγο...<br>
+
+    <label>4️⃣ Τι πρέπει να λες στο Αφεντικό που είναι καλό και σε αφήνει να λείπεις;</label>
+    <input type="radio" name="q4" value="Τίποτα, το δικαιούμαι"> Τίποτα, το δικαιούμαι<br>
+    <input type="radio" name="q4" value="Να με αφήσει πάλι"> Να με αφήσει πάλι<br>
+    <input type="radio" name="q4" value="Σας ευχαριστώ πολύ Αφεντικό!"> Σας ευχαριστώ πολύ Αφεντικό!<br>
+
+    <label>5️⃣ Δηλώνεις ρητά ότι απάντησες με ειλικρίνεια;</label>
+    <input type="radio" name="q5" value="Ναι"> Ναι<br>
+    <input type="radio" name="q5" value="Όχι"> Όχι<br>
+
+    <label>✏️ 6️⃣ Τι σου άρεσε περισσότερο στις διακοπές σου;</label>
+    <textarea name="q6" rows="2"></textarea>
+
+    <label>✏️ 7️⃣ Τι θα μπορούσες να έχεις κάνει καλύτερα ως Μπόμπος;</label>
+    <textarea name="q7" rows="2"></textarea>
+
+    <label>✏️ 8️⃣ Τι έχεις να πεις στο Αφεντικό πριν αποφασίσει για την αξιολόγησή σου;</label>
+    <textarea name="q8" rows="2"></textarea>
+
+    <button type="submit">Υποβολή</button>
+  </form>
+
+  <div id="resultSection"></div>
 
 <script>
-  const images = [
-    "https://i.imgur.com/FJnNAp3.jpeg",
-    "https://i.imgur.com/AhDmDKg.png",
-    "https://i.imgur.com/jtp4eiT.png",
-    "https://i.imgur.com/pdUp63P.png",
-    "https://i.imgur.com/NRQ57QW.png",
-    "https://i.imgur.com/IiVgh5o.png"
-  ];
+document.getElementById("quizForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-  // Προφόρτωση
-  images.forEach(src => {
-    const img = new Image();
-    img.src = src;
-  });
-
-  const captions = [
-    "Ο Στιτς έχει ένα τέλειο δώρο για τον Μπόμπο και ετοιμάζεται να πάει να τον βρει!",
-    "Όμως ο Μπόμπος είναι στη Ζάκυνθο και κάνει βουτιές...",
-    "Κι έτσι ο Στιτς πήγε στο φαρμακείο να βρει τον Μπόμπο, δε τον βρήκε και στεναχωρήθηκε :(",
-    "Για αυτό ήρθε κρυφά και άφησε το δώρο σε εμένα! Είχε κι ένα σημείωμα πάνω που έλεγε:",
-    "",
-    "Για αυτό λοιπόν ήρθε η ώρα ο Μπόμπος να περάσει αξιολόγηση!"
-  ];
-
-  let currentIndex = 0;
-  const storyImage = document.getElementById("storyImage");
-  const caption = document.getElementById("caption");
-  const quizBtn = document.getElementById("quizBtn");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-
-  function showImage(index) {
-    storyImage.style.opacity = 0;
-    setTimeout(() => {
-      storyImage.src = images[index];
-      caption.textContent = captions[index];
-      storyImage.style.opacity = 1;
-
-      if (index === images.length - 1) {
-        nextBtn.style.display = "none";
-        prevBtn.style.display = "none";
-        quizBtn.style.display = "inline-block";
-        document.querySelector(".hint").style.display = "none";
-      } else {
-        nextBtn.style.display = "inline-block";
-        prevBtn.style.display = "inline-block";
-        quizBtn.style.display = "none";
-        document.querySelector(".hint").style.display = "block";
-      }
-    }, 300);
+  const formData = new FormData(e.target);
+  let message = "📋 *Απαντήσεις αξιολόγησης Μπόμπου*\n\n";
+  let i = 1;
+  for (let [name, value] of formData.entries()) {
+    message += `Ερώτηση ${i}: ${value}\n`;
+    i++;
   }
 
-  document.getElementById("prevBtn").addEventListener("click", () => {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    showImage(currentIndex);
+  // Στέλνουμε στο Telegram
+  const TELEGRAM_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
+  const CHAT_ID = "7336951445";
+  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      chat_id: CHAT_ID,
+      text: message,
+      parse_mode: "Markdown"
+    })
   });
 
-  document.getElementById("nextBtn").addEventListener("click", () => {
-    currentIndex = (currentIndex + 1) % images.length;
-    showImage(currentIndex);
-  });
+  // Ειδοποίηση + κουμπί "τιμωρίας"
+  alert("Αποφασίστηκε ότι μπαίνεις τιμωρία!");
 
-  // swipe κινητού
-  let startX = 0;
-  storyImage.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; });
-  storyImage.addEventListener("touchend", (e) => {
-    let endX = e.changedTouches[0].clientX;
-    if (startX - endX > 50) {
-      currentIndex = (currentIndex + 1) % images.length;
-      showImage(currentIndex);
-    } else if (endX - startX > 50) {
-      currentIndex = (currentIndex - 1 + images.length) % images.length;
-      showImage(currentIndex);
-    }
-  });
+  document.getElementById("resultSection").innerHTML = `
+    <h2>📢 Αποφασίστηκε ότι μπαίνεις τιμωρία!</h2>
+    <button id="punishBtn" onclick="goToPunish()">🚨 Πάτα για είσοδο στην πλατφόρμα τιμωρίας</button>
+  `;
+});
 
-  // 👉 ΦΟΡΜΑ QUIZ
-  function startQuiz() {
-    // ✅ Αλλάζουμε layout για να μπορεί να γίνεται scroll
-    document.body.style.overflow = "auto";
-    document.body.style.height = "auto";
-    document.body.style.display = "block";
-    
-    document.body.innerHTML = `
-      <div style="padding: 30px; max-width: 700px; margin: auto; font-family: 'Quicksand', sans-serif; text-align: center;">
-        <h1>📋 Η Αξιολόγηση του Μπόμπου</h1>
-        <p>Απάντησε τις ερωτήσεις!</p>
-        <form id="quizForm">
-
-          <!-- 5 Πολλαπλής -->
-          <div><label>1️⃣ Πόσο φρόνιμος ήσουν Μπόμπο στις διακοπές;</label><br>
-            <input type="radio" name="q1" value="Πολύ"> Πολύ<br>
-            <input type="radio" name="q1" value="Αρκετά"> Αρκετά<br>
-            <input type="radio" name="q1" value="Καθόλου"> Καθόλου<br></div>
-
-          <div><label>2️⃣ Έκανες ό,τι έλεγε το Αφεντικό και ενημέρωνες πάντα;</label><br>
-            <input type="radio" name="q2" value="Εννοείται!"> Εννοείται!<br>
-            <input type="radio" name="q2" value="Εμ καμιά φορά ίσως και όχι..."> Εμ καμιά φορά ίσως και όχι...<br>
-            <input type="radio" name="q3" value="Μπορούσα και καλύτερα :("> Όχι<br></div>
-
-          <div><label>3️⃣ Υπήρξαν τελευταία φορές που έκρυψες κάτι ή δεν ενημέρωσες ή είπες ψέματα στο Αφεντικό;</label><br>
-            <input type="radio" name="q3" value="Όχι βέβαια!"> Όχι βέβαια!<br>
-            <input type="radio" name="q3" value="Συνήθως όχι"> Συνήθως όχι<br>
-            <input type="radio" name="q3" value="Εμ εμ ίσως κάτι λίγο..."> Εμ εμ ίσως κάτι λίγο...<br></div>
-
-          <div><label>4️⃣ Τι πρέπει να λες στο Αφεντικό που είναι καλό και σε αφήνει να λείπεις να βγαίνεις και να τριγυρνάς;</label><br>
-            <input type="radio" name="q4" value="Τίποτα, το δικαιούμαι"> Τίποτα, το δικαιούμαι<br>
-            <input type="radio" name="q4" value="Να με αφήσει πάλι"> Να με αφήσει πάλι<br>
-            <input type="radio" name="q4" value="Σας ευχαριστώ πολύ Αφεντικό!"> Σας ευχαριστώ πολύ Αφεντικό!<br></div>
-
-          <div><label>5️⃣ Δηλώνεις ρητά ότι απάντησες παντού με ειλικρίνεια;</label><br>
-            <input type="radio" name="q5" value="ναι"> Ναι<br>
-            <input type="radio" name="q5" value="όχι"> Όχι<br></div>
-
-          <!-- 3 Ανοιχτού -->
-          <div><label>✏️ 6️⃣ Τι σου άρεσε περισσότερο στις διακοπές σου;</label><br>
-            <textarea name="q6" rows="2" cols="40"></textarea></div>
-
-          <div><label>✏️ 7️⃣ Τι θα μπορούσες να έχεις κάνει καλύτερα ως Μπόμπος τελευταία;</label><br>
-            <textarea name="q7" rows="2" cols="40"></textarea></div>
-
-          <div><label>✏️ 8️⃣ Τι έχεις να πεις στο Αφεντικό πριν αποφασίσει για την αξιολόγησή σου;</label><br>
-            <textarea name="q8" rows="2" cols="40"></textarea></div>
-
-          <button type="submit" style="margin-top:15px; padding: 10px 20px; background: #ff69b4; color: #fff; border:none; border-radius: 8px; font-size: 18px;">Υποβολή</button>
-        </form>
-
-        <div id="resultSection"></div>
-      </div>
-    `;
-
-    // capture submit
-    document.getElementById("quizForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      // συλλέγουμε όλα τα στοιχεία
-      const formData = new FormData(e.target);
-      let message = "📋 *Απαντήσεις αξιολόγησης Μπόμπου*\n\n";
-      let i = 1;
-      for (let [name, value] of formData.entries()) {
-        message += `Ερώτηση ${i}: ${value}\n`;
-        i++;
-      }
-
-      // ΣΤΕΛΝΕΙ ΣΤΟ TELEGRAM
-      const TELEGRAM_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
-      const CHAT_ID = "7336951445";
-      fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: message,
-          parse_mode: "Markdown"
-        })
-      });
-
-      // 👉 ΣΤΕΛΝΟΥΜΕ ΕΠΙΠΛΕΟΝ ΜΗΝΥΜΑ ΓΙΑ ΤΗΝ ΤΙΜΩΡΙΑ
-      fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: CHAT_ID,
-          text: "🚨 Μετά την αξιολόγηση αποφασίστηκε ότι ο Μπόμπος μπαίνει τιμωρία! Ετοιμάζεται για είσοδο στην πλατφόρμα τιμωρίας..."
-        })
-      });
-
-      alert("Ανάλυση αποτελεσμάτων σε εξέλιξη...");
-      alert("Αποφασίστηκε ότι μπαίνεις τιμωρία! Πάτα το κουμπί κάτω κάτω για να εισέλθεις στην πλατφόρμα τιμωρίας.");
-
-      // Μετά από 3 δευτερόλεπτα, εμφανίζει μήνυμα τιμωρίας
-      setTimeout(() => {
-        document.getElementById("resultSection").innerHTML = `
-          <h2>📢 Αποφασίστηκε ότι μπαίνεις τιμωρία!</h2>
-          <button id="punishBtn" onclick="goToPunish()">🚨 Πάτα για είσοδο στην πλατφόρμα τιμωρίας</button>
-        `;
-      }, 300);
-    });
-  }
-
-  // 👉 ΕΔΩ ΜΕΤΑ ΣΤΗΝΟΥΜΕ ΤΗΝ ΠΛΑΤΦΟΡΜΑ ΤΙΜΩΡΙΑΣ
-  function goToPunish() {
-    window.location.href = "timoria.html";  // ✅ φορτώνει τη σελίδα τιμωρίας
+function goToPunish() {
+  window.location.href = "timoria.html";
 }
-
-  showImage(currentIndex);
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
