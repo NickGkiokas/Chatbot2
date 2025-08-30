@@ -8,148 +8,157 @@
 <style>
   body {
     font-family: 'Quicksand', sans-serif;
-    background: linear-gradient(to bottom, #fdf6e3, #fceabb);
     margin: 0;
-    padding: 30px;
-    text-align: center;
+    background: linear-gradient(to bottom, #fdf6e3, #fceabb);
   }
-  h1 {
-    color: #5b4636;
-  }
-  form {
-    margin-top: 20px;
-    text-align: left;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+  .container {
     max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 40px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
   }
-  label {
-    font-weight: 600;
-    display: block;
-    margin: 10px 0 5px;
-  }
-  textarea {
-    width: 100%;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    padding: 8px;
-    font-family: inherit;
-  }
+  h1 { text-align: center; color: #5b4636; }
+  label { font-weight: bold; }
+  textarea { width: 100%; border-radius: 8px; padding: 6px; }
   button {
-    margin-top:15px; 
-    padding: 10px 20px; 
-    background: #ff69b4; 
-    color: #fff; 
-    border:none; 
-    border-radius: 8px; 
+    margin-top: 15px;
+    padding: 10px 20px;
+    background: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 8px;
     font-size: 18px;
     cursor: pointer;
   }
   button:hover { background: #ff1493; }
-  #resultSection {
-    text-align: center;
-    margin-top: 20px;
+
+  /* --- Modal --- */
+  .modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 1000;
   }
-  #punishBtn {
-    display: inline-block;
-    background: red;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 10px;
-    border: none;
-    font-size: 20px;
-    margin-top: 20px;
-    cursor: pointer;
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
   }
 </style>
 </head>
 <body>
 
-  <h1>📋 Η Αξιολόγηση του Μπόμπου</h1>
-  <p>Μπόμπο, ήρθε η στιγμή να απαντήσεις με ειλικρίνεια στην αξιολόγηση!  
-  Διάβασε τις ερωτήσεις και απάντησε προσεκτικά.</p>
+<!-- Modal -->
+<div id="introModal" class="modal">
+  <div class="modal-content">
+    <h2>📋 Η Αξιολόγηση του Μπόμπου</h2>
+    <p>Θα απαντήσεις με ειλικρίνεια σε όλες τις ερωτήσεις.  
+    Πρόσεξε ιδιαίτερα στις ανοιχτές απαντήσεις: πρέπει να αναφέρεις το <b>Αφεντικό</b> και να μιλάς στον πληθυντικό!</p>
+    <button onclick="closeModal()">Ξεκινάμε!</button>
+  </div>
+</div>
 
+<div class="container">
+  <h1>📋 Η Αξιολόγηση του Μπόμπου</h1>
   <form id="quizForm">
 
-    <label>1️⃣ Πόσο φρόνιμος ήσουν Μπόμπο στις διακοπές;</label>
-    <input type="radio" name="q1" value="Πολύ"> Πολύ<br>
-    <input type="radio" name="q1" value="Αρκετά"> Αρκετά<br>
-    <input type="radio" name="q1" value="Καθόλου"> Καθόλου<br>
+    <!-- 5 Πολλαπλής -->
+    <div>
+      <label>1️⃣ Πόσο φρόνιμος ήσουν Μπόμπο στις διακοπές;</label><br>
+      <input type="radio" name="q1" value="Πολύ"> Πολύ<br>
+      <input type="radio" name="q1" value="Αρκετά"> Αρκετά<br>
+      <input type="radio" name="q1" value="Καθόλου"> Καθόλου<br>
+    </div>
 
-    <label>2️⃣ Έκανες ό,τι έλεγε το Αφεντικό και ενημέρωνες πάντα;</label>
-    <input type="radio" name="q2" value="Εννοείται!"> Εννοείται!<br>
-    <input type="radio" name="q2" value="Εμ καμιά φορά ίσως και όχι..."> Εμ καμιά φορά ίσως και όχι...<br>
-    <input type="radio" name="q2" value="Όχι"> Όχι<br>
+    <div>
+      <label>2️⃣ Έκανες ό,τι έλεγε το Αφεντικό και ενημέρωνες πάντα;</label><br>
+      <input type="radio" name="q2" value="Εννοείται!"> Εννοείται!<br>
+      <input type="radio" name="q2" value="Καμιά φορά όχι..."> Καμιά φορά όχι...<br>
+      <input type="radio" name="q2" value="Όχι"> Όχι<br>
+    </div>
 
-    <label>3️⃣ Υπήρξαν φορές που έκρυψες κάτι ή δεν ενημέρωσες ή είπες ψέματα στο Αφεντικό;</label>
-    <input type="radio" name="q3" value="Όχι βέβαια!"> Όχι βέβαια!<br>
-    <input type="radio" name="q3" value="Συνήθως όχι"> Συνήθως όχι<br>
-    <input type="radio" name="q3" value="Ίσως κάτι λίγο..."> Ίσως κάτι λίγο...<br>
+    <div>
+      <label>3️⃣ Υπήρξαν φορές που έκρυψες κάτι ή δεν ενημέρωσες ή είπες ψέματα στο Αφεντικό;</label><br>
+      <input type="radio" name="q3" value="Όχι βέβαια!"> Όχι βέβαια!<br>
+      <input type="radio" name="q3" value="Συνήθως όχι"> Συνήθως όχι<br>
+      <input type="radio" name="q3" value="Ίσως κάτι λίγο..."> Ίσως κάτι λίγο...<br>
+    </div>
 
-    <label>4️⃣ Τι πρέπει να λες στο Αφεντικό που είναι καλό και σε αφήνει να λείπεις;</label>
-    <input type="radio" name="q4" value="Τίποτα, το δικαιούμαι"> Τίποτα, το δικαιούμαι<br>
-    <input type="radio" name="q4" value="Να με αφήσει πάλι"> Να με αφήσει πάλι<br>
-    <input type="radio" name="q4" value="Σας ευχαριστώ πολύ Αφεντικό!"> Σας ευχαριστώ πολύ Αφεντικό!<br>
+    <div>
+      <label>4️⃣ Τι πρέπει να λες στο Αφεντικό που είναι καλό και σε αφήνει να λείπεις;</label><br>
+      <input type="radio" name="q4" value="Τίποτα"> Τίποτα<br>
+      <input type="radio" name="q4" value="Να με αφήσει πάλι"> Να με αφήσει πάλι<br>
+      <input type="radio" name="q4" value="Σας ευχαριστώ πολύ Αφεντικό!"> Σας ευχαριστώ πολύ Αφεντικό!<br>
+    </div>
 
-    <label>5️⃣ Δηλώνεις ρητά ότι απάντησες με ειλικρίνεια;</label>
-    <input type="radio" name="q5" value="Ναι"> Ναι<br>
-    <input type="radio" name="q5" value="Όχι"> Όχι<br>
+    <div>
+      <label>5️⃣ Δηλώνεις ότι απάντησες παντού με ειλικρίνεια;</label><br>
+      <input type="radio" name="q5" value="Ναι"> Ναι<br>
+      <input type="radio" name="q5" value="Όχι"> Όχι<br>
+    </div>
 
-    <label>✏️ 6️⃣ Τι σου άρεσε περισσότερο στις διακοπές σου;</label>
-    <textarea name="q6" rows="2"></textarea>
+    <!-- 3 Ανοιχτού -->
+    <div>
+      <label>✏️ 6️⃣ Τι σου άρεσε περισσότερο στις διακοπές σου;</label><br>
+      <textarea name="q6" rows="2"></textarea>
+    </div>
 
-    <label>✏️ 7️⃣ Τι θα μπορούσες να έχεις κάνει καλύτερα ως Μπόμπος;</label>
-    <textarea name="q7" rows="2"></textarea>
+    <div>
+      <label>✏️ 7️⃣ Τι θα μπορούσες να έχεις κάνει καλύτερα ως Μπόμπος τελευταία;</label><br>
+      <textarea name="q7" rows="2"></textarea>
+    </div>
 
-    <label>✏️ 8️⃣ Τι έχεις να πεις στο Αφεντικό πριν αποφασίσει για την αξιολόγησή σου;</label>
-    <textarea name="q8" rows="2"></textarea>
+    <div>
+      <label>✏️ 8️⃣ Τι έχεις να πεις στο Αφεντικό πριν αποφασίσει για την αξιολόγησή σου;</label><br>
+      <textarea name="q8" rows="2"></textarea>
+    </div>
 
     <button type="submit">Υποβολή</button>
   </form>
-
-  <div id="resultSection"></div>
+</div>
 
 <script>
+function closeModal() {
+  document.getElementById("introModal").style.display = "none";
+}
+
+// Έλεγχος ανοιχτών ερωτήσεων
+function validateOpenAnswer(text) {
+  const hasAfentiko = text.includes("Αφεντικ") || text.includes("αφεντικ"); 
+  const hasPlural = /(τε|στε|είτε)\b/.test(text); 
+  return hasAfentiko && hasPlural;
+}
+
 document.getElementById("quizForm").addEventListener("submit", function(e) {
   e.preventDefault();
 
-  const formData = new FormData(e.target);
-  let message = "📋 *Απαντήσεις αξιολόγησης Μπόμπου*\n\n";
-  let i = 1;
-  for (let [name, value] of formData.entries()) {
-    message += `Ερώτηση ${i}: ${value}\n`;
-    i++;
+  const q6 = this.q6.value.trim();
+  const q7 = this.q7.value.trim();
+  const q8 = this.q8.value.trim();
+
+  if (!validateOpenAnswer(q6)) {
+    alert("Η απάντηση στην ερώτηση 6 πρέπει να περιέχει τη λέξη 'Αφεντικό' και να είναι σε πληθυντικό.");
+    return;
+  }
+  if (!validateOpenAnswer(q7)) {
+    alert("Η απάντηση στην ερώτηση 7 πρέπει να περιέχει τη λέξη 'Αφεντικό' και να είναι σε πληθυντικό.");
+    return;
+  }
+  if (!validateOpenAnswer(q8)) {
+    alert("Η απάντηση στην ερώτηση 8 πρέπει να περιέχει τη λέξη 'Αφεντικό' και να είναι σε πληθυντικό.");
+    return;
   }
 
-  // Στέλνουμε στο Telegram
-  const TELEGRAM_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
-  const CHAT_ID = "7336951445";
-  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text: message,
-      parse_mode: "Markdown"
-    })
-  });
-
-  // Ειδοποίηση + κουμπί "τιμωρίας"
-  alert("Αποφασίστηκε ότι μπαίνεις τιμωρία!");
-
-  document.getElementById("resultSection").innerHTML = `
-    <h2>📢 Αποφασίστηκε ότι μπαίνεις τιμωρία!</h2>
-    <button id="punishBtn" onclick="goToPunish()">🚨 Πάτα για είσοδο στην πλατφόρμα τιμωρίας</button>
-  `;
+  alert("✅ Οι απαντήσεις σου υποβλήθηκαν με επιτυχία!");
 });
-
-function goToPunish() {
-  window.location.href = "timoria.html";
-}
 </script>
 
 </body>
