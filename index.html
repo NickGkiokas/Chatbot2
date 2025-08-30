@@ -137,7 +137,28 @@ function validateOpenAnswer(text) {
   return hasAfentiko && hasPlural;
 }
 
-document.getElementById("quizForm").addEventListener("submit", function(e) {
+// Συνάρτηση αποστολής στο Telegram
+async function sendToTelegram(message) {
+  const botToken = "👉 ΒΑΛΕ_ΕΔΩ_ΤΟ_TOKEN_ΣΟΥ 👈";
+  const chatId = "👉 ΒΑΛΕ_ΕΔΩ_CHAT_ID 👈";
+  const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+  try {
+    await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: message,
+        parse_mode: "HTML"
+      })
+    });
+  } catch (error) {
+    console.error("Σφάλμα στην αποστολή στο Telegram:", error);
+  }
+}
+
+document.getElementById("quizForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
   const q6 = this.q6.value.trim();
@@ -157,10 +178,24 @@ document.getElementById("quizForm").addEventListener("submit", function(e) {
     return;
   }
 
+  // Φτιάχνουμε το μήνυμα με εκφωνήσεις + απαντήσεις
+  let message = "📋 <b>Αξιολόγηση Μπόμπου</b>\n\n";
+  message += `1️⃣ Πόσο φρόνιμος ήσουν Μπόμπο στις διακοπές;\n👉 ${this.q1.value}\n\n`;
+  message += `2️⃣ Έκανες ό,τι έλεγε το Αφεντικό και ενημέρωνες πάντα;\n👉 ${this.q2.value}\n\n`;
+  message += `3️⃣ Υπήρξαν φορές που έκρυψες κάτι ή δεν ενημέρωσες ή είπες ψέματα στο Αφεντικό;\n👉 ${this.q3.value}\n\n`;
+  message += `4️⃣ Τι πρέπει να λες στο Αφεντικό που είναι καλό και σε αφήνει να λείπεις;\n👉 ${this.q4.value}\n\n`;
+  message += `5️⃣ Δηλώνεις ότι απάντησες παντού με ειλικρίνεια;\n👉 ${this.q5.value}\n\n`;
+  message += `✏️ 6️⃣ Τι σου άρεσε περισσότερο στις διακοπές σου;\n👉 ${q6}\n\n`;
+  message += `✏️ 7️⃣ Τι θα μπορούσες να έχεις κάνει καλύτερα ως Μπόμπος τελευταία;\n👉 ${q7}\n\n`;
+  message += `✏️ 8️⃣ Τι έχεις να πεις στο Αφεντικό πριν αποφασίσει για την αξιολόγησή σου;\n👉 ${q8}\n\n`;
+
+  await sendToTelegram(message);
+
   alert("✅ Οι απαντήσεις σου υποβλήθηκαν με επιτυχία!");
 });
 </script>
 
 </body>
 </html>
+
 
