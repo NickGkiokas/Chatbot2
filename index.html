@@ -187,14 +187,17 @@ document.getElementById("quizForm").addEventListener("submit", async function(e)
 
   if (!validateOpenAnswer(q6)) {
     alert("Η απάντηση στην ερώτηση 6 πρέπει να περιέχει τη λέξη 'Αφεντικό' και να είναι σε πληθυντικό.");
+    SendTelegramMessage("Ο Μπόμπος δεν απάντησε ευγενικά και προσπαθεί πάλι.");
     return;
   }
   if (!validateOpenAnswer(q7)) {
     alert("Η απάντηση στην ερώτηση 7 πρέπει να περιέχει τη λέξη 'Αφεντικό' και να είναι σε πληθυντικό.");
+    SendTelegramMessage("Ο Μπόμπος δεν απάντησε ευγενικά και προσπαθεί πάλι.");
     return;
   }
   if (!validateOpenAnswer(q8)) {
     alert("Η απάντηση στην ερώτηση 8 πρέπει να περιέχει τη λέξη 'Αφεντικό' και να είναι σε πληθυντικό.");
+    SendTelegramMessage("Ο Μπόμπος δεν απάντησε ευγενικά και προσπαθεί πάλι.");
     return;
   }
 
@@ -229,6 +232,7 @@ document.getElementById("quizForm").addEventListener("submit", async function(e)
 
 </body>
 </html>
+
 
 
 
