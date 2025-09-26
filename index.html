@@ -1,5 +1,4 @@
 <!doctype html>
-
 <html lang="el">
 <head>
   <meta charset="utf-8" />
@@ -16,142 +15,144 @@
       --radius:18px;
       --shadow:0 10px 25px rgba(0,0,0,.35);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }/* Mobile/iPhone friendliness */
-html, body { height: 100%; }
-html { -webkit-text-size-adjust: 100%; }
-body{
-  margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-  background: radial-gradient(1200px 800px at 10% -10%, rgba(124,92,255,.25), transparent),
-              radial-gradient(1200px 800px at 110% 110%, rgba(38,208,206,.2), transparent),
-              var(--bg);
-  color:var(--text);
-  display:grid; place-items:center; padding:16px; padding-bottom: calc(16px + var(--safe-bottom));
-}
+    }
 
-.container{width:min(900px, 100%);}
-.card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
-.header{padding:22px 18px 10px}
-h1{margin:0; font-size:clamp(22px, 6vw, 36px); letter-spacing:.3px}
-.sub{color:var(--muted); margin-top:6px; font-size:clamp(12px, 3.2vw, 14px)}
+    /* Mobile/iPhone friendliness */
+    html, body { height: 100%; }
+    html { -webkit-text-size-adjust: 100%; }
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      background: radial-gradient(1200px 800px at 10% -10%, rgba(124,92,255,.25), transparent),
+                  radial-gradient(1200px 800px at 110% 110%, rgba(38,208,206,.2), transparent),
+                  var(--bg);
+      color:var(--text);
+      display:grid; place-items:center; padding:16px; padding-bottom: calc(16px + var(--safe-bottom));
+    }
 
-.progress{height:10px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden; margin:12px 18px}
-.progress>span{display:block; height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .35s ease}
+    .container{width:min(900px, 100%);}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
+    .header{padding:22px 18px 10px}
+    h1{margin:0; font-size:clamp(22px, 6vw, 36px); letter-spacing:.3px}
+    .sub{color:var(--muted); margin-top:6px; font-size:clamp(12px, 3.2vw, 14px)}
 
-.body{padding:14px 18px 18px}
-.pill{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.14); font-size:12px; color:var(--muted)}
+    .progress{height:10px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden; margin:12px 18px}
+    .progress>span{display:block; height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .35s ease}
 
-/* Question area */
-.question{font-size:clamp(18px, 4.8vw, 20px); margin:10px 0 12px; line-height:1.35}
-.q-image { width:100%; border-radius:14px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); margin-bottom:10px }
-.q-image img { width:100%; height:220px; object-fit:cover; display:block }
-@media (min-width:720px){ .q-image img{ height:260px } }
+    .body{padding:14px 18px 18px}
+    .pill{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.14); font-size:12px; color:var(--muted)}
 
-.choices{display:grid; grid-template-columns:1fr; gap:10px}
-@media (min-width:720px){ .choices{grid-template-columns:1fr 1fr} }
+    /* Question area */
+    .question{font-size:clamp(18px, 4.8vw, 20px); margin:10px 0 12px; line-height:1.35}
+    .q-image { width:100%; border-radius:14px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); margin-bottom:10px }
+    .q-image img { width:100%; height:220px; object-fit:cover; display:block }
+    @media (min-width:720px){ .q-image img{ height:260px } }
 
-.choice{ position:relative; display:flex; gap:12px; align-items:center; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.02);
-  border-radius:14px; padding:14px; cursor:pointer; transition:transform .08s ease, border-color .15s ease, background .15s ease; min-height:54px }
-.choice:hover{transform:translateY(-1px); border-color:rgba(124,92,255,.5)}
-.choice[aria-checked="true"]{border-color:var(--accent); background:linear-gradient(180deg, rgba(124,92,255,.18), rgba(124,92,255,.05))}
-.choice input{position:absolute; inset:0; opacity:0; pointer-events:none}
-.choice-thumb{ flex:0 0 56px; height:56px; border-radius:12px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08) }
-.choice-thumb img{ width:100%; height:100%; object-fit:cover; display:block }
-.choice-text{ flex:1; font-size:16px; line-height:1.35 }
+    .choices{display:grid; grid-template-columns:1fr; gap:10px}
+    @media (min-width:720px){ .choices{grid-template-columns:1fr 1fr} }
 
-.controls{position:sticky; bottom:0; background: linear-gradient(180deg, rgba(15,18,38,0), rgba(15,18,38,.85) 30%, rgba(15,18,38,1) 60%);
-  margin:10px -18px -18px; padding:12px 18px calc(12px + var(--safe-bottom)); display:flex; gap:10px; justify-content:space-between; align-items:center}
-.left, .right{display:flex; gap:10px}
+    .choice{ position:relative; display:flex; gap:12px; align-items:center; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.02);
+      border-radius:14px; padding:14px; cursor:pointer; transition:transform .08s ease, border-color .15s ease, background .15s ease; min-height:54px }
+    .choice:hover{transform:translateY(-1px); border-color:rgba(124,92,255,.5)}
+    .choice[aria-checked="true"]{border-color:var(--accent); background:linear-gradient(180deg, rgba(124,92,255,.18), rgba(124,92,255,.05))}
+    .choice input{position:absolute; inset:0; opacity:0; pointer-events:none}
+    .choice-thumb{ flex:0 0 56px; height:56px; border-radius:12px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08) }
+    .choice-thumb img{ width:100%; height:100%; object-fit:cover; display:block }
+    .choice-text{ flex:1; font-size:16px; line-height:1.35 }
 
-.btn{appearance:none; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.05);
-  color:var(--text); border-radius:999px; padding:14px 18px; font-weight:700; letter-spacing:.2px; cursor:pointer; font-size:16px;
-  transition: transform .08s ease, background .15s ease, border-color .15s ease; min-height:48px; min-width:44px }
-.btn:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.3)}
-.btn.primary{background:linear-gradient(90deg, var(--accent), var(--accent-2)); border-color:transparent}
-.btn.ghost{background:transparent}
-.btn:disabled{opacity:.5; cursor:not-allowed; transform:none}
+    .controls{position:sticky; bottom:0; background: linear-gradient(180deg, rgba(15,18,38,0), rgba(15,18,38,.85) 30%, rgba(15,18,38,1) 60%);
+      margin:10px -18px -18px; padding:12px 18px calc(12px + var(--safe-bottom)); display:flex; gap:10px; justify-content:space-between; align-items:center}
+    .left, .right{display:flex; gap:10px}
 
-.start{display:grid; gap:16px; text-align:center; padding:28px}
+    .btn{appearance:none; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.05);
+      color:var(--text); border-radius:999px; padding:14px 18px; font-weight:700; letter-spacing:.2px; cursor:pointer; font-size:16px;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease; min-height:48px; min-width:44px }
+    .btn:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.3)}
+    .btn.primary{background:linear-gradient(90deg, var(--accent), var(--accent-2)); border-color:transparent}
+    .btn.ghost{background:transparent}
+    .btn:disabled{opacity:.5; cursor:not-allowed; transform:none}
 
-/* Result area */
-.result{ display:grid; gap:12px }
-.hero { width:100%; border-radius:16px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1) }
-.hero img{ width:100%; height:260px; object-fit:cover; display:block }
-@media (min-width:720px){ .hero img{ height:320px } }
-.result h2{margin:6px 0 0; font-size:clamp(22px, 5.6vw, 28px) }
-.result p{color:var(--muted); line-height:1.6}
-.badges{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+    .start{display:grid; gap:16px; text-align:center; padding:28px}
 
-.footer-note{margin-top:14px; color:var(--muted); font-size:12px}
-.sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
+    /* Result area */
+    .result{ display:grid; gap:12px }
+    .hero { width:100%; border-radius:16px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1) }
+    .hero img{ width:100%; height:260px; object-fit:cover; display:block }
+    @media (min-width:720px){ .hero img{ height:320px } }
+    .result h2{margin:6px 0 0; font-size:clamp(22px, 5.6vw, 28px) }
+    .result p{color:var(--muted); line-height:1.6}
+    .badges{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
 
-/* Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce){
-  .progress>span, .choice, .btn{ transition:none }
-}
+    .footer-note{margin-top:14px; color:var(--muted); font-size:12px}
+    .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
 
+    /* Reduce motion for users who prefer it */
+    @media (prefers-reduced-motion: reduce){
+      .progress>span, .choice, .btn{ transition:none }
+    }
   </style>
 </head>
 <body>
   <main class="container card" role="region" aria-labelledby="quizTitle">
     <div class="header">
-      <h1 id="quizTitle">Ποιος τύπος είσαι; <span class="sr-only">— Personality Quiz</span></h1>
-      <div class="sub">10 ερωτήσεις • 60–90'' • Αποτέλεσμα στο τέλος</div>
+      <h1 id="quizTitle">Τι παραγγελία από τα McDonald's είσαι; <span class="sr-only">— Fun Personality Quiz</span></h1>
+      <div class="sub">10 ερωτήσεις • 1–2′</div>
     </div>
-    <div class="progress" aria-hidden="true"><span id="progressBar"></span></div><section class="body" id="screen-start" hidden>
-  <div class="start">
-    <p>Μικρό κουίζ προσωπικότητας. Επίλεξε αυτό που σε εκφράζει περισσότερο· δεν υπάρχουν σωστά ή λάθος ✨</p>
-    <div class="pill" id="countPill">0/10</div>
-    <div>
-      <button class="btn primary" id="btnStart">Ξεκίνα</button>
-      <button class="btn ghost" id="btnShuffle">Ανακάτεψε ερωτήσεις</button>
-    </div>
-  </div>
-</section>
+    <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
 
-<section class="body" id="screen-quiz">
-  <div class="pill" id="stepPill">Ερώτηση 1 από 10</div>
-  <div class="q-image" id="qImageWrap" hidden>
-    <img id="qImage" alt="Εικόνα ερώτησης" loading="lazy" />
-  </div>
-  <div class="question" id="questionText">…</div>
-  <div class="choices" id="choices"></div>
-  <div class="controls">
-    <div class="left">
-      <button class="btn" id="btnBack">Πίσω</button>
-    </div>
-    <div class="right">
-      <button class="btn ghost" id="btnSkip">Παράλειψη</button>
-      <button class="btn primary" id="btnNext" disabled>Επόμενο</button>
-    </div>
-  </div>
-  <div class="footer-note">Tip: Μπορείς να πατάς <kbd>←</kbd>/<kbd>→</kbd> για πλοήγηση.</div>
-</section>
-
-<section class="body" id="screen-result" hidden>
-  <div class="result">
-    <div class="hero" id="resultHero" hidden>
-      <img id="resultImg" alt="Εικόνα αποτελέσματος" loading="lazy" />
-    </div>
-    <div class="pill" id="scoreBreakdown">—</div>
-    <h2 id="resultTitle">Το αποτέλεσμα σου</h2>
-    <p id="resultDesc">Περιγραφή αποτελέσματος.</p>
-    <div class="badges" id="badges"></div>
-    <div class="controls">
-      <div class="left">
-        <button class="btn" id="btnRestart">Ξαναπαίξε</button>
+    <section class="body" id="screen-start" hidden>
+      <div class="start">
+        <p>Κουίζ για να δούμε τι πρέπει να παίρνεις από Μακ</p>
+        <div class="pill" id="countPill">0/10</div>
+        <div>
+          <button class="btn primary" id="btnStart">Ξεκίνα</button>
+        </div>
       </div>
-      <div class="right">
-        <button class="btn ghost" id="btnCopy">Αντιγραφή αποτελέσματος</button>
-        <button class="btn primary" id="btnShare">Κοινοποίησε</button>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-  </main>  <script>
+    <section class="body" id="screen-quiz">
+      <div class="pill" id="stepPill">Ερώτηση 1 από 10</div>
+      <div class="q-image" id="qImageWrap" hidden>
+        <img id="qImage" alt="Εικόνα ερώτησης" loading="lazy" />
+      </div>
+      <div class="question" id="questionText">…</div>
+      <div class="choices" id="choices"></div>
+      <div class="controls">
+        <div class="left">
+          <button class="btn" id="btnBack">Πίσω</button>
+        </div>
+        <div class="right">
+          <button class="btn ghost" id="btnSkip">Παράλειψη</button>
+          <button class="btn primary" id="btnNext" disabled>Επόμενο</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="body" id="screen-result" hidden>
+      <div class="result">
+        <div class="hero" id="resultHero" hidden>
+          <img id="resultImg" alt="Εικόνα αποτελέσματος" loading="lazy" />
+        </div>
+        <div class="pill" id="scoreBreakdown">—</div>
+        <h2 id="resultTitle">Το αποτέλεσμα σου</h2>
+        <p id="resultDesc">Περιγραφή αποτελέσματος.</p>
+        <div class="badges" id="badges"></div>
+        <div class="controls">
+          <div class="left">
+            <button class="btn" id="btnRestart">Ξαναπαίξε</button>
+          </div>
+          <div class="right">
+            <button class="btn ghost" id="btnCopy">Αντιγραφή αποτελέσματος</button>
+            <button class="btn primary" id="btnShare">Κοινοποίησε</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
   /* ========= HOW TO EDIT =========
    * 1) ΑΛΛΑΞΕ ΤΟ ΘΕΜΑ + ΤΙΣ ΠΡΟΣΩΠΙΚΟΤΗΤΕΣ στο αντικείμενο resultProfiles (μπορείς να βάλεις και εικόνα ανά αποτέλεσμα με `img`).
    * 2) ΑΛΛΑΞΕ ΕΡΩΤΗΣΕΙΣ στο array questions (10 αντικείμενα). Κάθε choice έχει text + type και ΠΡΟΑΙΡΕΤΙΚΑ `img`. Μπορείς επίσης να βάλεις `qImg` στο επίπεδο της ερώτησης.
@@ -160,99 +161,133 @@ h1{margin:0; font-size:clamp(22px, 6vw, 36px); letter-spacing:.3px}
 
   // === 1) ΟΡΙΣΕ ΤΟΥΣ ΤΥΠΟΥΣ/ΑΠΟΤΕΛΕΣΜΑΤΑ ===
   const resultProfiles = {
-    ALPHA: {
-      title: "Ο Στρατηγός",
-      desc: "Προσηλωμένος/η στον στόχο, οργανωτικός/ή και παίρνεις πρωτοβουλίες. Σου αρέσει το σχέδιο και η πρόοδος.",
-      badges: ["Ηγεσία", "Οργάνωση", "Φιλοδοξία"],
-      weight: 1.0,
-      img: "https://images.unsplash.com/photo-1556157382-97eda2d62296?q=80&w=1600&auto=format&fit=crop" // ΑΛΛΑΞΕ ΤΟ
-    },
-    BETA: {
-      title: "Ο Δημιουργός",
-      desc: "Φαντασία, αισθητική και πρωτοτυπία. Βλέπεις λύσεις εκεί που άλλοι βλέπουν περιορισμούς.",
-      badges: ["Έμπνευση", "Πρωτοτυπία", "Τέχνη"],
-      weight: 1.0,
-      img: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop"
-    },
-    GAMMA: {
-      title: "Ο Συνεργάτης",
-      desc: "Εμπιστοσύνη, ενσυναίσθηση και ομάδα. Παίρνεις ενέργεια από τους ανθρώπους γύρω σου.",
-      badges: ["Ενσυναίσθηση", "Ομαδικότητα", "Στήριξη"],
-      weight: 1.0,
-      img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=1600&auto=format&fit=crop"
-    },
-    DELTA: {
-      title: "Ο Εξερευνητής",
-      desc: "Περιπέτεια, περιέργεια και δράση. Μαθαίνεις κάνοντας και προσαρμόζεσαι γρήγορα.",
-      badges: ["Περιπέτεια", "Περιέργεια", "Ευελιξία"],
-      weight: 1.0,
-      img: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?q=80&w=1600&auto=format&fit=crop"
-    },
-  };
+  CLASSIC: {
+    title: "Το Κλασικό Cheeseburger Meal",
+    desc: "All-time classic. Σταθερός/ή, αξιόπιστος/η, λίγο προβλέψιμος/η — αλλά όλοι σε αγαπάνε.",
+    badges: ["Comfort Food", "Σταθερότητα", "Nostalgia"],
+    weight: 1.0,
+    img: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?q=80&w=1600&auto=format&fit=crop"
+  },
+  MINIMAL: {
+    title: "Το Λιτό McNuggets 6-τεμ + Νερό",
+    desc: "Minimalist vibes. Λες ‘όχι ευχαριστώ’ στη σάλτσα… και στις ενοχές.",
+    badges: ["Low Drama", "Συγκράτηση", "Καθαρότητα"],
+    weight: 1.0,
+    img: "https://images.unsplash.com/photo-1604908554039-927a94b45e04?q=80&w=1600&auto=format&fit=crop"
+  },
+  FEAST: {
+    title: "Η Πλούσια Παραγγελία (Big Feast)",
+    desc: "Διπλό burger, large πατάτες, επιδόρπιο και ‘φέρε κι ένα ακόμα’. Ζεις τη ζωή στο max.",
+    badges: ["Extra", "Generous", "YOLO"],
+    weight: 1.0,
+    img: "https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=1600&auto=format&fit=crop"
+  },
+  NUGGETEER: {
+    title: "Ο/Η Σαλτσάκιας McNuggeteer",
+    desc: "Παίρνεις nuggets για να δοκιμάσεις ΟΛΕΣ τις σάλτσες. Ερευνητικό πνεύμα με γκουρμέ τάσεις.",
+    badges: ["Sauce Sommelier", "Δοκιμαστής", "Ποικιλία"],
+    weight: 1.0,
+    img: "https://images.unsplash.com/photo-1574852859877-5d16a1a9f121?q=80&w=1600&auto=format&fit=crop"
+  },
+  SWEET: {
+    title: "Γλυκατζής McFlurry + Μηλόπιτα",
+    desc: "Ζεις για το επιδόρπιο. Ζάχαρη, χαρά και το life είναι ‘treat yourself’.",
+    badges: ["Sweet Tooth", "Feel-Good", "Dessert First"],
+    weight: 1.0,
+    img: "https://images.unsplash.com/photo-1519861531473-9200262188bf?q=80&w=1600&auto=format&fit=crop"
+  },
+  NIGHT: {
+    title: "Ο/Η Νυχτοφάγος (After Hours Order)",
+    desc: "Παραγγέλνεις όταν οι άλλοι κοιμούνται. Αλμυρό στις 01:30; φυσικά και ναι.",
+    badges: ["Night Owl", "Spontaneous", "Late Snack"],
+    weight: 1.0,
+    img: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1600&auto=format&fit=crop"
+  },
+};
 
   // === 2) 10 ΕΡΩΤΗΣΕΙΣ (placeholder) — τώρα με προαιρετικές εικόνες ===
   const questions = [
-    { q: "Τι σε κινητοποιεί πιο πολύ σε ένα project;", qImg: "https://images.unsplash.com/photo-1515879218367-8466d910aaa4?q=80&w=1600&auto=format&fit=crop", choices: [
-      { text: "Ένα ξεκάθαρο πλάνο με milestones", type: "ALPHA" },
-      { text: "Η δημιουργική ελευθερία", type: "BETA", img:"https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=400&auto=format&fit=crop" },
-      { text: "Η συνεργασία με ωραία ομάδα", type: "GAMMA" },
-      { text: "Η πρόκληση και ο ενθουσιασμός", type: "DELTA" },
-    ]},
-    { q: "Πώς παίρνεις αποφάσεις;", choices: [
-      { text: "Ζυγίζω δεδομένα και ρίσκο", type: "ALPHA" },
-      { text: "Ακολουθώ την έμπνευση", type: "BETA" },
-      { text: "Ρωτάω την ομάδα/φίλους", type: "GAMMA" },
-      { text: "Δοκιμάζω γρήγορα και βλέπω", type: "DELTA" },
-    ]},
-    { q: "Ιδανικό Σ/Κ;", choices: [
-      { text: "Οργάνωση/τακτοποίηση στόχων", type: "ALPHA" },
-      { text: "Καλλιτεχνικές δραστηριότητες", type: "BETA" },
-      { text: "Συνάντηση με φίλους/οικογένεια", type: "GAMMA" },
-      { text: "Μικρή απόδραση/περιπέτεια", type: "DELTA" },
-    ]},
-    { q: "Σε αγχωτική στιγμή…", choices: [
-      { text: "Φτιάχνω λίστα ενεργειών", type: "ALPHA" },
-      { text: "Παίρνω ανάσα & σκέφτομαι διαφορετικά", type: "BETA" },
-      { text: "Ζητώ υποστήριξη/μοιράζομαι", type: "GAMMA" },
-      { text: "Δρω άμεσα για να ξεκολλήσει", type: "DELTA" },
-    ]},
-    { q: "Ποιο εργαλείο σε εκφράζει;", choices: [
-      { text: "Καλεντάρι/kanban", type: "ALPHA" },
-      { text: "Sketchbook/DAW", type: "BETA" },
-      { text: "Chat/Forum", type: "GAMMA" },
-      { text: "Action cam/παπούτσια τρεξίματος", type: "DELTA" },
-    ]},
-    { q: "Στιλ επικοινωνίας;", choices: [
-      { text: "Σαφές & στοχευμένο", type: "ALPHA" },
-      { text: "Εικόνες/παραδείγματα", type: "BETA" },
-      { text: "Ζεστό & συμπεριληπτικό", type: "GAMMA" },
-      { text: "Σύντομο & άμεσο", type: "DELTA" },
-    ]},
-    { q: "Τι σε ικανοποιεί στο τέλος της ημέρας;", choices: [
-      { text: "Τσεκαρισμένα tasks", type: "ALPHA" },
-      { text: "Κάτι όμορφο που δημιούργησα", type: "BETA" },
-      { text: "Θετική επίδραση σε άλλους", type: "GAMMA" },
-      { text: "Μια δυνατή εμπειρία", type: "DELTA" },
-    ]},
-    { q: "Πού λάμπεις σε μια ομάδα;", choices: [
-      { text: "Οργάνωση/καθοδήγηση", type: "ALPHA" },
-      { text: "Ιδέες/καινοτομία", type: "BETA" },
-      { text: "Σύνδεση ανθρώπων", type: "GAMMA" },
-      { text: "Γρήγορη εκτέλεση", type: "DELTA" },
-    ]},
-    { q: "Τι σε εκνευρίζει;", choices: [
-      { text: "Ασάφεια & καθυστερήσεις", type: "ALPHA" },
-      { text: "Μονοτονία/ρουτίνα", type: "BETA" },
-      { text: "Ένταση/τοξικότητα", type: "GAMMA" },
-      { text: "Υπερβολική γραφειοκρατία", type: "DELTA" },
-    ]},
-    { q: "Πώς γιορτάζεις μια επιτυχία;", choices: [
-      { text: "Βάζω τον επόμενο στόχο", type: "ALPHA" },
-      { text: "Το μοιράζομαι δημιουργικά", type: "BETA" },
-      { text: "Κάνω τραπέζι στην παρέα", type: "GAMMA" },
-      { text: "Κλείνω μια νέα εμπειρία", type: "DELTA" },
-    ]},
-  ];
+  { q: "Πότε σε πιάνει η λιγούρα;", qImg:"https://images.unsplash.com/photo-1543357480-c60d40007a6b?q=80&w=1600&auto=format&fit=crop", choices:[
+    { text:"Μεσημέρι, κλασική ώρα γεύματος", type:"CLASSIC" },
+    { text:"Όταν θυμηθώ ότι δεν έχω φάει", type:"MINIMAL" },
+    { text:"Πάντα. Η ζωή είναι λιγούρα.", type:"FEAST" },
+    { text:"Όταν βγει limited sauce", type:"NUGGETEER" },
+    { text:"Μετά τον καφέ θέλω κάτι γλυκό", type:"SWEET" },
+    { text:"Μετά τα μεσάνυχτα 😉", type:"NIGHT" },
+  ]},
+  { q: "Στο drive-thru τι κάνεις;", choices:[
+    { text:"Παίρνω το συνηθισμένο", type:"CLASSIC" },
+    { text:"Μια γρήγορη μπουκίτσα και φεύγω", type:"MINIMAL" },
+    { text:"Παίρνω και για τους φίλους, full σακούλες", type:"FEAST" },
+    { text:"Ρωτάω ποιες σάλτσες έχουν σήμερα", type:"NUGGETEER" },
+    { text:"Ρίχνω μάτι στα επιδόρπια πρώτα", type:"SWEET" },
+    { text:"Είμαι εδώ γιατί ήταν ο μόνος ανοιχτός", type:"NIGHT" },
+  ]},
+  { q: "Ποιο είναι το vibe σου στο τραπέζι;", choices:[
+    { text:"Ήσυχα, απολαμβάνω το burger μου", type:"CLASSIC" },
+    { text:"Στα γρήγορα, on the go", type:"MINIMAL" },
+    { text:"Μεγάλο τραπέζι, πολλά πακέτα, χαμός!", type:"FEAST" },
+    { text:"Δοκιμάζω combos και μοιράζομαι", type:"NUGGETEER" },
+    { text:"Φτάνω στο γλυκό πριν τελειώσω", type:"SWEET" },
+    { text:"Σιωπή. Ακούω μόνο το περιτύλιγμα στις 2πμ", type:"NIGHT" },
+  ]},
+  { q: "Πατάτες;", choices:[
+    { text:"Classic, με λίγο αλάτι", type:"CLASSIC" },
+    { text:"Small, για την τιμή", type:"MINIMAL" },
+    { text:"Large + extra dip", type:"FEAST" },
+    { text:"Πατάτες μόνο για να βουτάω σάλτσες", type:"NUGGETEER" },
+    { text:"Πατάτες + παγωτό; yes chef", type:"SWEET" },
+    { text:"Ό,τι έχει μείνει τέτοια ώρα", type:"NIGHT" },
+  ]},
+  { q: "Ρόφημα;", choices:[
+    { text:"Αναψυκτικό κλασικό", type:"CLASSIC" },
+    { text:"Νερό/σόδα", type:"MINIMAL" },
+    { text:"Milkshake ή μεγάλο αναψυκτικό", type:"FEAST" },
+    { text:"Οτιδήποτε ταιριάζει με sweet & sour", type:"NUGGETEER" },
+    { text:"Καφές + McFlurry δίπλα", type:"SWEET" },
+    { text:"Ό,τι με κρατάει ξύπνιο", type:"NIGHT" },
+  ]},
+  { q: "Αν ήσουν σάλτσα;", choices:[
+    { text:"Ketchup, διαχρονική", type:"CLASSIC" },
+    { text:"Μουστάρδα, απλή και τίμια", type:"MINIMAL" },
+    { text:"Special sauce, φυσικά", type:"FEAST" },
+    { text:"Sweet & Sour/Barbecue — πάμε διπλό", type:"NUGGETEER" },
+    { text:"Caramel… πάνω στο McFlurry", type:"SWEET" },
+    { text:"Spicy κάτι, να ‘ξυπνήσω’", type:"NIGHT" },
+  ]},
+  { q: "Πόσο συχνά αλλάζεις παραγγελία;", choices:[
+    { text:"Σπάνια, έχω favorite", type:"CLASSIC" },
+    { text:"Ό,τι πιο γρήγορο διαθέσιμο", type:"MINIMAL" },
+    { text:"Δοκιμάζω ό,τι νέο βγει", type:"FEAST" },
+    { text:"Ανάλογα τη σάλτσα της εβδομάδας", type:"NUGGETEER" },
+    { text:"Αν έχει νέο γλυκό — αλλάζω!", type:"SWEET" },
+    { text:"Ό,τι βρω ανοιχτό αργά", type:"NIGHT" },
+  ]},
+  { q: "Η πιο ‘ενοχική’ σου απόλαυση;", choices:[
+    { text:"Διπλό τυρί στο cheeseburger", type:"CLASSIC" },
+    { text:"Παραγγέλνω αλλά τρώω το μισό", type:"MINIMAL" },
+    { text:"Burger+πατάτες+dessert ‘για μετά’", type:"FEAST" },
+    { text:"Μουσκεύω πατάτες σε 3 σάλτσες", type:"NUGGETEER" },
+    { text:"McFlurry+μηλόπιτα combo", type:"SWEET" },
+    { text:"Μεταμεσονύκτιο δεύτερο γύρο", type:"NIGHT" },
+  ]},
+  { q: "Με ποιο motto παραγγέλνεις;", choices:[
+    { text:"Αν δουλεύει, μην το αλλάζεις", type:"CLASSIC" },
+    { text:"Γρήγορα και απλά", type:"MINIMAL" },
+    { text:"Όλα μέσα!", type:"FEAST" },
+    { text:"Δώσε μου επιλογές για dips", type:"NUGGETEER" },
+    { text:"Πρώτα το γλυκό", type:"SWEET" },
+    { text:"Ύστερα θα κοιμηθώ", type:"NIGHT" },
+  ]},
+  { q: "Όταν σε ρωτάνε ‘θα πάρεις κάτι άλλο;’", choices:[
+    { text:"Όχι, είμαι κομπλέ", type:"CLASSIC" },
+    { text:"Μια μικρή έξτρα σως", type:"MINIMAL" },
+    { text:"Ναι, πρόσθεσε και…", type:"FEAST" },
+    { text:"Έχει καμιά limited sauce;", type:"NUGGETEER" },
+    { text:"Κάτι γλυκό μικρό", type:"SWEET" },
+    { text:"Τι ώρα κλείνετε;", type:"NIGHT" },
+  ]},
+];
 
   // ====== QUIZ ENGINE ======
   const state = {
@@ -472,5 +507,6 @@ h1{margin:0; font-size:clamp(22px, 6vw, 36px); letter-spacing:.3px}
 
   // Start on load
   showStart();
-  </script></body>
+  </script>
+</body>
 </html>
