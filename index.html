@@ -32,7 +32,7 @@
       display:grid; place-items:center; padding:16px; padding-bottom: calc(16px + var(--safe-bottom));
     }
 
-    .container{width:min(900px, 100%);}
+    .container{width:min(900px, 100%);} 
     .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
     .header{padding:22px 18px 10px}
     h1{margin:0; font-size:clamp(22px, 6vw, 36px); letter-spacing:.3px}
@@ -155,10 +155,10 @@
 
   <script>
   /* ========= HOW TO EDIT =========
- * 1) Άλλαξε τύπους/εικόνες στα resultProfiles (img προαιρετικό).
- * 2) Άλλαξε τις 10 ερωτήσεις στο questions (qImg/img προαιρετικά).
- * 3) Για Telegram ειδοποιήσεις, βάλε το webhook URL σου στο TELEGRAM_HOOK.
- */
+   * 1) Άλλαξε τύπους/εικόνες στα resultProfiles (img προαιρετικό).
+   * 2) Άλλαξε τις 10 ερωτήσεις στο questions (qImg/img προαιρετικά).
+   * 3) Το Telegram γίνεται από το frontend (όπως ζήτησες).
+   */
 
   // === 1) ΟΡΙΣΕ ΤΟΥΣ ΤΥΠΟΥΣ/ΑΠΟΤΕΛΕΣΜΑΤΑ ===
   const resultProfiles = {
@@ -330,11 +330,45 @@
   const QUIZ_ID   = 'mcd-quiz-v1';
 
   function escapeMd(s=''){
-    return s.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\$1');
+    // Πρόσθεσε backslash πριν από markdown chars
+    return s.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1');
+  }
+
+  function composeTelegramText(type, payload){
+    const ts = new Date().toISOString();
+    if (type==='start'){
+      const lines = [
+        `🧩 *Quiz*: ${escapeMd(QUIZ_ID)}`,
+        `⏱️ *Start*: ${escapeMd(ts)}`,
+        `💻 *UA*: ${escapeMd(navigator.userAgent)}`,
+      ];
+      if (document.referrer) lines.push(`↩️ *Ref*: ${escapeMd(document.referrer)}`);
+      return lines.join('\n');
+    }
+    if (type==='finish'){
+      const { result, answers } = payload || {};
+      const lines = [];
+      lines.push(`🧩 *Quiz*: ${escapeMd(QUIZ_ID)}`);
+      lines.push(`⏱️ *Finish*: ${escapeMd(ts)}`);
+      if (result) lines.push(`🍔 *Result*: *${escapeMd(result.title)}* (${escapeMd(result.key)})`);
+      if (Array.isArray(answers)){
+        lines.push('\n📝 *Answers*');
+        answers.forEach(a=>{
+          const q = escapeMd(a.question);
+          const ans = a.answer ? ` _${escapeMd(a.answer)}_` : ' _(skipped)_';
+          lines.push(`• Q${a.step}. ${q}${ans}`);
+        });
+      }
+      return lines.join('\n');
+    }
+    return '';
   }
 
   async function tgSend(text){
     try{
+      // Αν δεν έχουν αλλαχθεί τα placeholders, μην κάνεις κλήση
+      if (!BOT_TOKEN || BOT_TOKEN.startsWith('PASTE_')) return;
+      if (!CHAT_ID || CHAT_ID.startsWith('PASTE_')) return;
       const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
       await fetch(url, {
         method: 'POST',
@@ -359,37 +393,8 @@
   }
 
   async function sendEvent(type, payload){
-    const ts = new Date().toISOString();
-    if (type==='start'){
-      const lines = [
-        `🧩 *Quiz*: ${escapeMd(QUIZ_ID)}`,
-        `⏱️ *Start*: ${escapeMd(ts)}`,
-        `💻 *UA*: ${escapeMd(navigator.userAgent)}`,
-      ];
-      if (document.referrer) lines.push(`↩️ *Ref*: ${escapeMd(document.referrer)}`);
-      await tgSend(lines.join('
-'));
-      return;
-    }
-    if (type==='finish'){
-      const { result, answers } = payload || {};
-      const lines = [];
-      lines.push(`🧩 *Quiz*: ${escapeMd(QUIZ_ID)}`);
-      lines.push(`⏱️ *Finish*: ${escapeMd(ts)}`);
-      if (result) lines.push(`🍔 *Result*: *${escapeMd(result.title)}* (${escapeMd(result.key)})`);
-      if (Array.isArray(answers)){
-        lines.push('
-📝 *Answers*');
-        answers.forEach(a=>{
-          const q = escapeMd(a.question);
-          const ans = a.answer ? ` _${escapeMd(a.answer)}_` : ' _(skipped)_';
-          lines.push(`• Q${a.step}. ${q}${ans}`);
-        });
-      }
-      await tgSend(lines.join('
-'));
-      return;
-    }
+    const text = composeTelegramText(type, payload);
+    if (text) await tgSend(text);
   }
 
   function showStart(){
@@ -592,6 +597,22 @@
     if (e.key==='ArrowRight') next();
     if (e.key==='ArrowLeft') back();
   });
+
+  // Self-tests (simple runtime checks)
+  (function runSelfTests(){
+    const tests = [];
+    const assert = (name, cond)=>tests.push({name, ok: !!cond});
+    // escapeMd
+    assert('escapeMd underscores', escapeMd('a_b') === 'a\\_b');
+    assert('escapeMd brackets', escapeMd('[x]') === '\\[x\\]');
+    // composeTelegramText format
+    const startText = composeTelegramText('start');
+    assert('compose start returns string', typeof startText === 'string' && startText.length>0);
+    const finishText = composeTelegramText('finish', { result:{key:'CLASSIC', title:'Η Κλασική Προσφορά'}, answers:[{step:1, question:'Q', answer:'A'}]});
+    assert('compose finish returns string', typeof finishText === 'string' && finishText.includes('Result'));
+    // No unescaped multiline literals at runtime (cannot directly test parse errors)
+    console.log('[Quiz Self-Tests]', tests.map(t=>`${t.ok?'✅':'❌'} ${t.name}`).join(' | '));
+  })();
 
   // Start on load
   showStart();
