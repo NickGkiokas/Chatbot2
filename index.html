@@ -14,7 +14,7 @@
       --accent-2:#26d0ce; /* teal */
       --radius:18px;
       --shadow:0 10px 25px rgba(0,0,0,.35);
-      --safe-bottom: env(safe-area-inset-bottoδδδm, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     /* Mobile/iPhone friendliness */
@@ -137,7 +137,6 @@
         <div class="hero" id="resultHero" hidden>
           <img id="resultImg" alt="Εικόνα αποτελέσματος" loading="lazy" />
         </div>
-        <div class="pill" id="scoreBreakdown">—</div>
         <h2 id="resultTitle">Το αποτέλεσμα σου</h2>
         <p id="resultDesc">Περιγραφή αποτελέσματος.</p>
         <div class="badges" id="badges"></div>
@@ -320,7 +319,6 @@
   const btnShare = el('btnShare');
   const resultTitle = el('resultTitle');
   const resultDesc = el('resultDesc');
-  const scoreBreakdown = el('scoreBreakdown');
   const badges = el('badges');
   const resultHero = el('resultHero');
   const resultImg = el('resultImg');
@@ -352,18 +350,23 @@
     const profile = resultProfiles[topKey];
     resultTitle.textContent = `${profile.title}`;
     resultDesc.textContent = profile.desc;
-    // breakdown
-    scoreBreakdown.textContent = scores.map(([k,v])=>`${resultProfiles[k].title}: ${v}`).join(' • ');
     badges.innerHTML = '';
     (profile.badges || []).forEach(b=>{
       const span = document.createElement('span');
       span.className='pill'; span.textContent=b; badges.appendChild(span);
     });
     // hero image
-    if (profile.img){
-      resultImg.src = profile.img; resultHero.hidden = false;
-    } else {
-      resultHero.hidden = true; resultImg.removeAttribute('src');
+    {
+      const fallback = {
+        CLASSIC: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?q=80&w=1600&auto=format&fit=crop",
+        MINIMAL: "https://images.unsplash.com/photo-1604908554039-927a94b45e04?q=80&w=1600&auto=format&fit=crop",
+        FEAST: "https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=1600&auto=format&fit=crop",
+        NUGGETEER: "https://images.unsplash.com/photo-1574852859877-5d16a1a9f121?q=80&w=1600&auto=format&fit=crop",
+        SWEET: "https://images.unsplash.com/photo-1519861531473-9200262188bf?q=80&w=1600&auto=format&fit=crop",
+        NIGHT: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1600&auto=format&fit=crop",
+      };
+      const src = profile.img && profile.img.trim()!=='' ? profile.img : (fallback[topKey] || fallback.CLASSIC);
+      resultImg.src = src; resultHero.hidden = false;
     }
   }
 
