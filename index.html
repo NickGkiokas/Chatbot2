@@ -358,12 +358,12 @@
     // hero image
     {
       const fallback = {
-        CLASSIC: "https://images.unsplash.com/photo-1553979459-d2229ba7433b?q=80&w=1600&auto=format&fit=crop",
-        MINIMAL: "https://images.unsplash.com/photo-1604908554039-927a94b45e04?q=80&w=1600&auto=format&fit=crop",
-        FEAST: "https://images.unsplash.com/photo-1550317138-10000687a72b?q=80&w=1600&auto=format&fit=crop",
-        NUGGETEER: "https://images.unsplash.com/photo-1574852859877-5d16a1a9f121?q=80&w=1600&auto=format&fit=crop",
-        SWEET: "https://images.unsplash.com/photo-1519861531473-9200262188bf?q=80&w=1600&auto=format&fit=crop",
-        NIGHT: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1600&auto=format&fit=crop",
+        CLASSIC: "img1.jpg",
+        MINIMAL: "img2.jpg",
+        FEAST: "img1.jpg",
+        NUGGETEER: "img2.jpg",
+        SWEET: "img1.jpg",
+        NIGHT: "img2.jpg",
       };
       const src = profile.img && profile.img.trim()!=='' ? profile.img : (fallback[topKey] || fallback.CLASSIC);
       resultImg.src = src; resultHero.hidden = false;
@@ -515,3 +515,4 @@
   </script>
 </body>
 </html>
+
