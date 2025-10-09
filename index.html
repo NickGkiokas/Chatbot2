@@ -556,7 +556,7 @@
 
   /* ΝΕΟ: Συνέχεια → index.html */
   function continueToIndex(){
-    sendEvent('continue', { to: 'note.html' });
+    sendEvent('continue', { to: 'notes.html' });
     toast('Γίνεται μετάβαση στη σελίδα ενημέρωσης…');
     setTimeout(()=>{ window.location.href = 'index.html'; }, 800);
   }
