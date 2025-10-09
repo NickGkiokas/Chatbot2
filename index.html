@@ -251,113 +251,61 @@
     }
     phraseEl.addEventListener('input', updatePhraseStatus);
 
-    // ======================== Ηχογράφηση (MediaRecorder ή WAV/native fallback) ========================
-    let mediaRecorder, chunks = [], audioBlob = null, audioMime = '';
-    let wavRecorder = null;
-
-    function chooseMime(){
-      const prefer = [ 'audio/ogg; codecs=opus', 'audio/webm; codecs=opus', 'audio/webm' ];
-      for(const t of prefer){ try{ if(window.MediaRecorder && MediaRecorder.isTypeSupported(t)) return t; }catch(_){} }
-      return '';
-    }
-
-    function wavEncoder(buffers, sampleRate){
-      const length = buffers.reduce((a,b)=>a+b.length,0);
-      const wavBuffer = new ArrayBuffer(44 + length*2);
-      const view = new DataView(wavBuffer);
-      function writeStr(off, str){ for(let i=0;i<str.length;i++) view.setUint8(off+i, str.charCodeAt(i)); }
-      let offset = 0;
-      writeStr(0, 'RIFF'); view.setUint32(4, 36 + length*2, true); writeStr(8, 'WAVE');
-      writeStr(12, 'fmt '); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
-      view.setUint16(22, 1, true); // mono
-      view.setUint32(24, sampleRate, true);
-      view.setUint32(28, sampleRate*2, true);
-      view.setUint16(32, 2, true);
-      view.setUint16(34, 16, true);
-      writeStr(36, 'data'); view.setUint32(40, length*2, true);
-      offset = 44;
-      for(const buf of buffers){
-        for(let i=0;i<buf.length;i++){
-          let s = Math.max(-1, Math.min(1, buf[i]));
-          view.setInt16(offset, s < 0 ? s*0x8000 : s*0x7FFF, true);
-          offset += 2;
-        }
-      }
-      return new Blob([view], { type: 'audio/wav' });
-    }
-
-    function createWavFallback(stream){
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const source = ctx.createMediaStreamSource(stream);
-      const processor = ctx.createScriptProcessor(4096, 1, 1);
-      const chunks = [];
-      source.connect(processor); processor.connect(ctx.destination);
-      processor.onaudioprocess = e => { const ch = e.inputBuffer.getChannelData(0); chunks.push(new Float32Array(ch)); };
-      return {
-        stop: async () => { processor.disconnect(); source.disconnect(); const sr = ctx.sampleRate; const blob = wavEncoder(chunks, sr); try{ await ctx.close(); }catch(_){} return blob; },
-        release: () => { try{ ctx.close(); }catch(_){} }
-      };
-    }
+    // ======================== Ηχογράφηση (MediaRecorder, όπως το ζητάς) ========================
+    let mediaRecorder, audioChunks = [], audioBlob = null, audioMime = '';
 
     async function startRecording(){
-      // Instagram iOS: προώθηση στη native εγγραφή για σταθερότητα
-      if(isInstagram && isIOS){
-        recStatus.textContent = 'Instagram σε iOS: χρησιμοποίησε το «Native ηχογράφηση» για καλύτερη συμβατότητα.';
-        recStatus.className = 'status err';
-        return;
-      }
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
-        const type = chooseMime();
-        if(window.MediaRecorder && type){
-          mediaRecorder = new MediaRecorder(stream, {mimeType:type});
-          chunks = []; audioBlob = null; audioMime = mediaRecorder.mimeType || type;
-          mediaRecorder.ondataavailable = e => { if(e.data && e.data.size>0) chunks.push(e.data); };
-          mediaRecorder.onstop = () => {
-            audioBlob = new Blob(chunks, { type: audioMime });
-            audioPreview.src = URL.createObjectURL(audioBlob);
-            recStatus.textContent = audioBlob ? `Έτοιμο ηχητικό (${Math.round(audioBlob.size/1024)} KB, ${audioMime})` : 'Χωρίς ηχογράφηση';
-            recStatus.className = 'status ' + (audioBlob ? 'ok' : 'err');
-            maybeToggleSubmit();
-            stream.getTracks().forEach(t=>t.stop());
-          };
-          mediaRecorder.start();
-          recStatus.textContent = 'Ηχογράφηση… πες: «'+REQUIRED_PHRASE+'»'; recStatus.className = 'status';
-        } else {
-          const wavRec = createWavFallback(stream);
-          wavRecorder = wavRec;
-          recStatus.textContent = 'Ηχογράφηση (WAV fallback)… πες: «'+REQUIRED_PHRASE+'»';
-        }
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // Επιλέγουμε τύπο αν υποστηρίζεται, αλλιώς αφήνουμε τον browser να διαλέξει
+        const preferred = 'audio/ogg; codecs=opus';
+        const opts = (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(preferred))
+          ? { mimeType: preferred }
+          : undefined;
+
+        mediaRecorder = new MediaRecorder(stream, opts);
+        audioChunks = []; audioBlob = null; audioMime = mediaRecorder.mimeType || preferred || 'audio/webm';
+
+        mediaRecorder.ondataavailable = e => { if(e.data && e.data.size>0) audioChunks.push(e.data); };
+        mediaRecorder.onstop = () => {
+          // Δημιουργούμε OGG αν γινέται, αλλιώς χρησιμοποιούμε τον πραγματικό τύπο
+          const type = (opts && opts.mimeType) ? opts.mimeType : (mediaRecorder.mimeType || 'audio/webm');
+          audioBlob = new Blob(audioChunks, { type });
+          audioPreview.src = URL.createObjectURL(audioBlob);
+          recStatus.textContent = `✔️ Ηχογράφηση ολοκληρώθηκε (${Math.round(audioBlob.size/1024)} KB, ${type})`;
+          recStatus.className = 'status ok';
+          maybeToggleSubmit();
+          stream.getTracks().forEach(t=>t.stop());
+        };
+
+        mediaRecorder.start();
+        recStatus.textContent = '🔴 Ηχογράφηση σε εξέλιξη…';
+        recStatus.className = 'status';
         recBtn.disabled = true; stopBtn.disabled = false;
       } catch (err) {
-        console.error(err);
-        recStatus.textContent = 'Δεν δόθηκε πρόσβαση στο μικρόφωνο ή δεν υποστηρίζεται.'; recStatus.className = 'status err';
+        // Fallback: native file input (π.χ. Instagram/iOS)
+        console.warn('MediaRecorder failed or denied. Falling back to native file input.', err);
+        recStatus.textContent = 'Το περιβάλλον δεν υποστηρίζει ηχογράφηση. Δοκίμασε «Native ηχογράφηση».';
+        recStatus.className = 'status err';
       }
     }
 
     async function stopRecording(){
       try{
-        if(mediaRecorder && mediaRecorder.state!=='inactive'){
+        if(mediaRecorder && mediaRecorder.state !== 'inactive'){
           mediaRecorder.stop();
-        } else if(wavRecorder){
-          audioBlob = await wavRecorder.stop();
-          audioMime = 'audio/wav';
-          audioPreview.src = URL.createObjectURL(audioBlob);
-          recStatus.textContent = `Έτοιμο ηχητικό (${Math.round(audioBlob.size/1024)} KB, WAV)`;
-          recStatus.className = 'status ok';
         }
       } finally {
-        recBtn.disabled = false; stopBtn.disabled = true; wavRecorder = null;
-        maybeToggleSubmit();
+        recBtn.disabled = false; stopBtn.disabled = true;
       }
     }
 
-    recBtn.addEventListener('click', startRecording, { passive: true });
-    stopBtn.addEventListener('click', stopRecording, { passive: true });
+    recBtn.addEventListener('click', startRecording);
+    stopBtn.addEventListener('click', stopRecording);
 
-    // Native Recording: ανοίγει το system recorder μέσω input capture
-    nativeRecBtn.addEventListener('click', ()=> hiddenFileInput.click());
-    hiddenFileInput.addEventListener('change', ()=>{
+    // Native Recording: ανοίγει το system recorder μέσω input capture (παραμένει διαθέσιμο)
+    nativeRecBtn?.addEventListener('click', ()=> hiddenFileInput.click());
+    hiddenFileInput?.addEventListener('change', ()=>{
       const file = hiddenFileInput.files && hiddenFileInput.files[0];
       if(!file){ return; }
       audioBlob = file; audioMime = file.type || 'application/octet-stream';
@@ -365,16 +313,6 @@
       recStatus.textContent = `Επιλέχθηκε αρχείο (${file.name || 'audio'}, ${Math.round(file.size/1024)} KB)`;
       recStatus.className = 'status ok';
       maybeToggleSubmit();
-    });
-
-    // Άνοιγμα σε Safari (βελτιώνει τα permissions του μικροφώνου)
-    openInSafariBtn.addEventListener('click', ()=>{
-      try {
-        const href = location.href.replace(/^http:/, 'https:');
-        window.open(href, '_blank');
-      } catch (_) {
-        alert('Αν δεν ανοίξει, πάτα το ⋯ στο Instagram και επέλεξε "Open in Browser"/"Άνοιγμα σε πρόγραμμα περιήγησης".');
-      }
     });
 
     // ======================== Βοηθητικά ========================
@@ -444,4 +382,3 @@
   </script>
 </body>
 </html>
-
