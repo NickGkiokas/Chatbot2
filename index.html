@@ -6,36 +6,53 @@
   <title>Quiz: Ποιος Μπόμπος γενεθλίων είσαι;</title>
   <style>
     :root{
-      --bg:#0f1226; --card:#161a38; --muted:#8b90b5; --text:#e8ebff;
-      --accent:#7c5cff; --accent-2:#26d0ce; --radius:18px;
-      --shadow:0 10px 25px rgba(0,0,0,.35); --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --bg:#0f1226; /* deep indigo */
+      --card:#161a38;
+      --muted:#8b90b5;
+      --text:#e8ebff;
+      --accent:#7c5cff; /* violet */
+      --accent-2:#26d0ce; /* teal */
+      --radius:18px;
+      --shadow:0 10px 25px rgba(0,0,0,.35);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
+
+    /* Mobile/iPhone friendliness */
     html, body { height: 100%; }
     html { -webkit-text-size-adjust: 100%; }
     body{
       margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
       -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-      -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
       background: radial-gradient(1200px 800px at 10% -10%, rgba(124,92,255,.25), transparent),
                   radial-gradient(1200px 800px at 110% 110%, rgba(38,208,206,.2), transparent),
-                  #0f1226;
-      color:var(--text); display:grid; place-items:center; padding:16px; padding-bottom: calc(16px + var(--safe-bottom));
+                  var(--bg);
+      color:var(--text);
+      display:grid; place-items:center; padding:16px; padding-bottom: calc(16px + var(--safe-bottom));
     }
+
     .container{width:min(900px, 100%);} 
     .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
     .header{padding:22px 18px 10px}
     h1{margin:0; font-size:clamp(22px, 6vw, 36px); letter-spacing:.3px}
     .sub{color:var(--muted); margin-top:6px; font-size:clamp(12px, 3.2vw, 14px)}
+
     .progress{height:10px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden; margin:12px 18px}
     .progress>span{display:block; height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .35s ease}
+
     .body{padding:14px 18px 18px}
     .pill{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.14); font-size:12px; color:var(--muted)}
+
+    /* Question area */
     .question{font-size:clamp(18px, 4.8vw, 20px); margin:10px 0 12px; line-height:1.35}
     .q-image { width:100%; border-radius:14px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); margin-bottom:10px }
     .q-image img { width:100%; height:220px; object-fit:cover; display:block }
     @media (min-width:720px){ .q-image img{ height:260px } }
+
     .choices{display:grid; grid-template-columns:1fr; gap:10px}
     @media (min-width:720px){ .choices{grid-template-columns:1fr 1fr} }
+
     .choice{ position:relative; display:flex; gap:12px; align-items:center; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.02);
       border-radius:14px; padding:14px; cursor:pointer; transition:transform .08s ease, border-color .15s ease, background .15s ease; min-height:54px }
     .choice:hover{transform:translateY(-1px); border-color:rgba(124,92,255,.5)}
@@ -44,9 +61,11 @@
     .choice-thumb{ flex:0 0 56px; height:56px; border-radius:12px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08) }
     .choice-thumb img{ width:100%; height:100%; object-fit:cover; display:block }
     .choice-text{ flex:1; font-size:16px; line-height:1.35 }
+
     .controls{position:sticky; bottom:0; background: linear-gradient(180deg, rgba(15,18,38,0), rgba(15,18,38,.85) 30%, rgba(15,18,38,1) 60%);
       margin:10px -18px -18px; padding:12px 18px calc(12px + var(--safe-bottom)); display:flex; gap:10px; justify-content:space-between; align-items:center}
     .left, .right{display:flex; gap:10px}
+
     .btn{appearance:none; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.05);
       color:var(--text); border-radius:999px; padding:14px 18px; font-weight:700; letter-spacing:.2px; cursor:pointer; font-size:16px;
       transition: transform .08s ease, background .15s ease, border-color .15s ease; min-height:48px; min-width:44px }
@@ -54,7 +73,10 @@
     .btn.primary{background:linear-gradient(90deg, var(--accent), var(--accent-2)); border-color:transparent}
     .btn.ghost{background:transparent}
     .btn:disabled{opacity:.5; cursor:not-allowed; transform:none}
+
     .start{display:grid; gap:16px; text-align:center; padding:28px}
+
+    /* Result area */
     .result{ display:grid; gap:12px }
     .hero { width:100%; border-radius:16px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1) }
     .hero img{ width:100%; height:260px; object-fit:cover; display:block }
@@ -62,9 +84,14 @@
     .result h2{margin:6px 0 0; font-size:clamp(22px, 5.6vw, 28px) }
     .result p{color:var(--muted); line-height:1.6}
     .badges{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
+
     .footer-note{margin-top:14px; color:var(--muted); font-size:12px}
     .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
-    @media (prefers-reduced-motion: reduce){ .progress>span, .choice, .btn{ transition:none } }
+
+    /* Reduce motion for users who prefer it */
+    @media (prefers-reduced-motion: reduce){
+      .progress>span, .choice, .btn{ transition:none }
+    }
   </style>
 </head>
 <body>
@@ -113,64 +140,135 @@
         <h2 id="resultTitle">Το αποτέλεσμα σου</h2>
         <p id="resultDesc">Περιγραφή αποτελέσματος.</p>
         <div class="badges" id="badges"></div>
-        <div class="controls">
-          <div class="left"></div>
-          <div class="right">
-            <!-- ΜΟΝΟ Συνέχεια -->
-            <button class="btn primary" id="btnContinue">Συνέχεια →</button>
-          </div>
-        </div>
+        <div class="controls" style="justify-content: center;">
+  <button class="btn primary" id="btnContinue">Συνέχεια →</button>
+</div>
       </div>
     </section>
   </main>
 
   <script>
-  // ====== CONFIG ======
+  /* ========= HOW TO EDIT =========
+   * 1) Άλλαξε τύπους/εικόνες στα resultProfiles (img προαιρετικό).
+   * 2) Άλλαξε τις 10 ερωτήσεις στο questions (qImg/img προαιρετικά).
+   * 3) Το Telegram γίνεται από το frontend (όπως ζήτησες).
+   */
+
+  // === 1) ΟΡΙΣΕ ΤΟΥΣ ΤΥΠΟΥΣ/ΑΠΟΤΕΛΕΣΜΑΤΑ ===
   const resultProfiles = {
-    CLASSIC:{title:"Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",desc:"Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",badges:["Καλοσύνη","Χαρά","Απλότητα","Λίγη γκρίνια..."],weight:1,img:""},
-    MINIMAL:{title:"Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",desc:"Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",badges:["Καλοσύνη","Χαρά","Απλότητα","Λίγη γκρίνια..."],weight:1,img:""},
-    FEAST:{title:"Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",desc:"Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",badges:["Καλοσύνη","Χαρά","Απλότητα","Λίγη γκρίνια..."],weight:1,img:""},
-    NUGGETEER:{title:"Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",desc:"Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",badges:["Καλοσύνη","Χαρά","Απλότητα","Λίγη γκρίνια..."],weight:1,img:""},
-    SWEET:{title:"Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",desc:"Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",badges:["Καλοσύνη","Χαρά","Απλότητα","Λίγη γκρίνια..."],weight:1,img:""},
-    NIGHT:{title:"Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",desc:"Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",badges:["Καλοσύνη","Χαρά","Απλότητα","Λίγη γκρίνια..."],weight:1,img:""},
-  };
+  CLASSIC: {
+    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
+    desc: "Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",
+    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Λίγη γκρίνια..."],
+    weight: 1.0,
+    img: ""
+  },
+  MINIMAL: {
+    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
+    desc: "Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",
+    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Λίγη γκρίνια..."],
+    weight: 1.0,
+    img: ""
+  },
+  FEAST: {
+    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
+    desc: "Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",
+    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Λίγη γκρίνια..."],
+    weight: 1.0,
+    img: ""
+  },
+  NUGGETEER: {
+    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
+    desc: "Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",
+    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Λίγη γκρίνια..."],
+    weight: 1.0,
+    img: ""
+  },
+  SWEET: {
+    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
+    desc: "Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",
+    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Λίγη γκρίνια..."],
+    weight: 1.0,
+    img: ""
+  },
+  NIGHT: {
+    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
+    desc: "Έξυπνη, αστεία, όμορφη, ευαίσθητη... Σε λατρεύουν όλοι!",
+    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Λίγη γκρίνια..."],
+    weight: 1.0,
+    img: ""
+  },
+};
 
+  // === 2) 10 ΕΡΩΤΗΣΕΙΣ (placeholder) — τώρα με προαιρετικές εικόνες ===
   const questions = [
-    { q:"Ποιο είναι το αγαπημένο σου χρώμα;", choices:[
-      {text:"Κόκκινο",type:"FEAST"},{text:"Κίτρινο",type:"MINIMAL"},{text:"Μπλε",type:"CLASSIC"},
-      {text:"Μωβ",type:"NUGGETEER"},{text:"Κανένα!",type:"NIGHT"},{text:"Όλα!",type:"SWEET"},
-    ]},
-    { q:"Αγαπημένη Ομάδα;", choices:[
-      {text:"ΟΛΥΜΠΙΑΚΟΣ",type:"CLASSIC"},{text:"ΟΣΦΠ",type:"MINIMAL"},{text:"ΘΡΥΛΟΣ",type:"FEAST"},
-      {text:"ΟΛΥΜΠΙΑΚΑΡΑ",type:"NUGGETEER"},{text:"ΘΡΥΛΕ ΟΛΕ",type:"SWEET"},{text:"ΟΛΥΜΠΙΑΚΟΣ ΠΛΙΖ ΝΑ ΕΡΘΩ ΓΗΠΕΔΟ",type:"NIGHT"},
-    ]},
-    { q:"Στο Ρουκ Ζουκ ήσουν:", choices:[
-      {text:"Κουκλάρα!",type:"CLASSIC"},{text:"Αστεία!",type:"MINIMAL"},{text:"Έξυπνη!",type:"FEAST"},
-      {text:"Φοβερή με το κράνος",type:"NUGGETEER"},{text:"Έτοιμη για λούμπεν!",type:"SWEET"},{text:"Όλα μαζί!",type:"NIGHT"},
-    ]},
-    { q:"Ο δρόμος αλλιώς;;", choices:[
-      {text:"Δρομάκι",type:"CLASSIC"},{text:"Οδός",type:"MINIMAL"},{text:"Παράδρομος",type:"FEAST"},
-      {text:"Στενό",type:"NUGGETEER"},{text:"Άσφαλτος",type:"SWEET"},{text:"ΑΣΦΑΛΙΣΤΙΚΗ...",type:"NIGHT"},
-    ]},
-    { q:"Το Σάββατο...", choices:[
-      {text:"Θα το κάψουμε!",type:"CLASSIC"},{text:"Πιείτε μπουρδέλα!",type:"MINIMAL"},{text:"ΜΥΛΟΟΟΟΟΟΟΟΟΟΣ",type:"FEAST"},
-      {text:"Θα μας διώξουν από το Ρακί Αμάν γιατί θα τραγουδήσουμε...",type:"NUGGETEER"},{text:"ΠΩ ποιος έχει όρεξη...",type:"SWEET"},{text:"ΩΧ είναι κάτι το Σάββατο;",type:"NIGHT"},
-    ]},
-    { q:"Ο Μπόμπος...", choices:[
-      {text:"Είναι δε μπεστ!",type:"CLASSIC"},{text:"Είναι μοναδικός!",type:"MINIMAL"},{text:"Είναι γκρινιάρης...",type:"FEAST"},
-      {text:"Είναι ΑΤΑΚΤΟΣ",type:"NUGGETEER"},{text:"Θα μας ξεφτιλίσει στο μπάσκετ!",type:"SWEET"},{text:"Θα μας πάρει τα αυτιά στο καραόκε!",type:"NIGHT"},
-    ]},
-    { q:"Όλοι ξέρουν ότι το άρωμα του Μπόμπου είναι...", choices:[
-      {text:"Καρύδα!",type:"CLASSIC"},{text:"Ανανάς!",type:"MINIMAL"},{text:"Μέντα!",type:"FEAST"},
-      {text:"Γαλακτομπούρεκο!",type:"NUGGETEER"},{text:"Καραμέλα!",type:"SWEET"},{text:"ΑΛΜΥΡΗ Καραμέλα!!",type:"NIGHT"},
-    ]},
-    { q:"Και τέλος, ποια λέξη λέει χαρακτηριστικά ο Μπόμπος;;", choices:[
-      {text:"Κομπλέ",type:"CLASSIC"},{text:"Πένα",type:"MINIMAL"},{text:"Κλαιν",type:"FEAST"},
-      {text:"Σούπερ",type:"NUGGETEER"},{text:"ΤΣΙΦΣΑ",type:"SWEET"},{text:"ΚΟΤ!",type:"NIGHT"},
-    ]},
-  ];
+  { q: "Ποιο είναι το αγαπημένο σου χρώμα;", qImg:"", choices:[
+    { text:"Κόκκινο", type:"FEAST" },
+    { text:"Κίτρινο", type:"MINIMAL" },
+    { text:"Μπλε", type:"CLASSIC" },
+    { text:"Μωβ", type:"NUGGETEER" },
+    { text:"Κανένα!", type:"NIGHT" },
+    { text:"Όλα!", type:"SWEET" },
+  ]},
+  { q: "Αγαπημένη Ομάδα;", choices:[
+    { text:"ΟΛΥΜΠΙΑΚΟΣ", type:"CLASSIC" },
+    { text:"ΟΣΦΠ", type:"MINIMAL" },
+    { text:"ΘΡΥΛΟΣ", type:"FEAST" },
+    { text:"ΟΛΥΜΠΙΑΚΑΡΑ", type:"NUGGETEER" },
+    { text:"ΘΡΥΛΕ ΟΛΕ", type:"SWEET" },
+    { text:"ΟΛΥΜΠΙΑΚΟΣ ΠΛΙΖ ΝΑ ΕΡΘΩ ΓΗΠΕΔΟ", type:"NIGHT" },
+  ]},
+  { q: "Στο Ρουκ Ζουκ ήσουν:", choices:[
+    { text:"Κουκλάρα!", type:"CLASSIC" },
+    { text:"Αστεία!", type:"MINIMAL" },
+    { text:"Έξυπνη!", type:"FEAST" },
+    { text:"Φοβερή με το κράνος", type:"NUGGETEER" },
+    { text:"Έτοιμη για λούμπεν!", type:"SWEET" },
+    { text:"Όλα μαζί!", type:"NIGHT" },
+  ]},
+  { q: "Ο δρόμος αλλιώς;;", choices:[
+    { text:"Δρομάκι", type:"CLASSIC" },
+    { text:"Οδός", type:"MINIMAL" },
+    { text:"Παράδρομος", type:"FEAST" },
+    { text:"Στενό", type:"NUGGETEER" },
+    { text:"Άσφαλτος", type:"SWEET" },
+    { text:"ΑΣΦΑΛΙΣΤΙΚΗ...", type:"NIGHT" },
+  ]},
+  { q: "Το Σάββατο...", choices:[
+    { text:"Θα το κάψουμε!", type:"CLASSIC" },
+    { text:"Πιείτε μπουρδέλα!", type:"MINIMAL" },
+    { text:"ΜΥΛΟΟΟΟΟΟΟΟΟΟΣ", type:"FEAST" },
+    { text:"Θα μας διώξουν από το Ρακί Αμάν γιατί θα τραγουδήσουμε...", type:"NUGGETEER" },
+    { text:"ΠΩ ποιος έχει όρεξη...", type:"SWEET" },
+    { text:"ΩΧ είναι κάτι το Σάββατο;", type:"NIGHT" },
+  ]},
+  { q: "Ο Μπόμπος...", choices:[
+    { text:"Είναι δε μπεστ!", type:"CLASSIC" },
+    { text:"Είναι μοναδικός!", type:"MINIMAL" },
+    { text:"Είναι γκρινιάρης...", type:"FEAST" },
+    { text:"Είναι ΑΤΑΚΤΟΣ", type:"NUGGETEER" },
+    { text:"Θα μας ξεφτιλίσει στο μπάσκετ!", type:"SWEET" },
+    { text:"Θα μας πάρει τα αυτιά στο καραόκε!", type:"NIGHT" },
+  ]},
+  { q: "Όλοι ξέρουν ότι το άρωμα του Μπόμπου είναι...", choices:[
+    { text:"Καρύδα!", type:"CLASSIC" },
+    { text:"Ανανάς!", type:"MINIMAL" },
+    { text:"Μέντα!", type:"FEAST" },
+    { text:"Γαλακτομπούρεκο!", type:"NUGGETEER" },
+    { text:"Καραμέλα!", type:"SWEET" },
+    { text:"ΑΛΜΥΡΗ Καραμέλα!!", type:"NIGHT" },
+  ]},
+  { q: "Και τέλος, ποια λέξη λέει χαρακτηριστικά ο Μπόμπος;;", choices:[
+    { text:"Κομπλέ", type:"CLASSIC" },
+    { text:"Πένα", type:"MINIMAL" },
+    { text:"Κλαιν", type:"FEAST" },
+    { text:"Σούπερ", type:"NUGGETEER" },
+    { text:"ΤΣΙΦΣΑ", type:"SWEET" },
+    { text:"ΚΟΤ!", type:"NIGHT" },
+  ]},
+];
 
-  // ====== STATE & ELEMENTS ======
+  // ====== QUIZ ENGINE ======
   const state = {
     i: 0,
     selections: new Array(questions.length).fill(null),
@@ -178,7 +276,7 @@
     scores: Object.fromEntries(Object.keys(resultProfiles).map(k=>[k,0])),
   };
 
-  const el = id => document.getElementById(id);
+  const el = (id)=>document.getElementById(id);
   const screenStart = el('screen-start');
   const screenQuiz = el('screen-quiz');
   const screenResult = el('screen-result');
@@ -194,36 +292,43 @@
   const btnBack = el('btnBack');
   const btnSkip = el('btnSkip');
   const btnNext = el('btnNext');
-  const btnContinue = el('btnContinue'); // μόνο αυτό στο result
+  const btnRestart = el('btnRestart');
+  const btnCopy = el('btnCopy');
+  const btnShare = el('btnShare');
+  const btnContinue = el('btnContinue'); /* ΝΕΟ */
   const resultTitle = el('resultTitle');
   const resultDesc = el('resultDesc');
   const badges = el('badges');
   const resultHero = el('resultHero');
   const resultImg = el('resultImg');
 
-  // ====== Telegram (direct) ======
-  const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
-  const CHAT_ID   = '7336951445';
+  // ====== TELEGRAM FRONTEND (DIRECT) ======
+  // ΠΡΟΣΟΧΗ: Αυτό εκθέτει το BOT TOKEN στο κοινό. Χρησιμοποίησέ το μόνο αν το αποδέχεσαι.
+  const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE'; // <-- ΒΑΛΤΟ
+  const CHAT_ID   = '7336951445';             // <-- ΒΑΛΛΕ ΤΟ ID
   const QUIZ_ID   = 'mcd-quiz-v1';
-  const escapeMd = s => (s||'').replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1');
+
+  function escapeMd(s=''){
+    return s.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1');
+  }
+
   function composeTelegramText(type, payload){
     const ts = new Date().toISOString();
     if (type==='start'){
       const lines = [
         `🧩 *Quiz*: ${escapeMd(QUIZ_ID)}`,
         `⏱️ *Start*: ${escapeMd(ts)}`,
-        `💻 *UA*: ${escapeMd(navigator.userAgent)}`
+        `💻 *UA*: ${escapeMd(navigator.userAgent)}`,
       ];
       if (document.referrer) lines.push(`↩️ *Ref*: ${escapeMd(document.referrer)}`);
       return lines.join('\n');
     }
     if (type==='finish'){
       const { result, answers } = payload || {};
-      const lines = [
-        `🧩 *Quiz*: ${escapeMd(QUIZ_ID)}`,
-        `⏱️ *Finish*: ${escapeMd(ts)}`,
-        result ? `🍔 *Result*: *${escapeMd(result.title)}* (${escapeMd(result.key)})` : ''
-      ].filter(Boolean);
+      const lines = [];
+      lines.push(`🧩 *Quiz*: ${escapeMd(QUIZ_ID)}`);
+      lines.push(`⏱️ *Finish*: ${escapeMd(ts)}`);
+      if (result) lines.push(`🍔 *Result*: *${escapeMd(result.title)}* (${escapeMd(result.key)})`);
       if (Array.isArray(answers)){
         lines.push('\n📝 *Answers*');
         answers.forEach(a=>{
@@ -235,17 +340,20 @@
       return lines.join('\n');
     }
     if (type==='continue'){
-      return [
+      const lines = [
         `🧩 *Quiz*: ${escapeMd(QUIZ_ID)}`,
-        `➡️ *Continue to*: index.html`,
+        `➡️ *Continue to*: ${escapeMd((payload && payload.to) || 'index.html')}`,
         `⏱️ *When*: ${escapeMd(ts)}`
-      ].join('\n');
+      ];
+      return lines.join('\n');
     }
     return '';
   }
+
   async function tgSend(text){
     try{
-      if (!BOT_TOKEN || !CHAT_ID) return;
+      if (!BOT_TOKEN || BOT_TOKEN.startsWith('PASTE_')) return;
+      if (!CHAT_ID || CHAT_ID.startsWith('PASTE_')) return;
       const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
       await fetch(url, {
         method: 'POST',
@@ -255,121 +363,247 @@
       });
     }catch(e){ /* ignore */ }
   }
-  const buildAnswers = () => state.order.map((qIdx,i)=>({
-    step:i+1, index:qIdx, question:questions[qIdx].q,
-    answer: state.selections[qIdx]!=null ? questions[qIdx].choices[state.selections[qIdx]].text : null,
-    type:   state.selections[qIdx]!=null ? questions[qIdx].choices[state.selections[qIdx]].type : null,
-  }));
-  const sendEvent = async (type,payload)=>{ const text=composeTelegramText(type,payload); if(text) await tgSend(text); };
 
-  // ====== Screens ======
-  function showStart(){ screenStart.hidden=false; screenQuiz.hidden=true; screenResult.hidden=true; countPill.textContent=`0/${questions.length}`; progressBar.style.width='0%'; }
-  function showQuiz(){ screenStart.hidden=true; screenQuiz.hidden=false; screenResult.hidden=true; renderQuestion(); }
-  function showResult(){
-    screenStart.hidden=true; screenQuiz.hidden=false; screenQuiz.hidden=true; screenResult.hidden=false;
-    const scores = Object.entries(state.scores).sort((a,b)=>{
-      if (b[1]!==a[1]) return b[1]-a[1];
-      const wa = resultProfiles[a[0]].weight ?? 1; const wb = resultProfiles[b[0]].weight ?? 1;
-      if (wb!==wa) return wb-wa; return a[0].localeCompare(b[0]);
+  function buildAnswers(){
+    return state.order.map((qIdx, i)=>{
+      const sel = state.selections[qIdx];
+      return {
+        step: i+1,
+        index: qIdx,
+        question: questions[qIdx].q,
+        answer: sel!=null ? questions[qIdx].choices[sel].text : null,
+        type: sel!=null ? questions[qIdx].choices[sel].type : null,
+      };
     });
-    const [topKey] = scores[0]; const profile = resultProfiles[topKey];
-    resultTitle.textContent = profile.title; resultDesc.textContent = profile.desc;
-    sendEvent('finish',{ result:{key:topKey,title:profile.title}, scores:Object.fromEntries(scores), answers:buildAnswers() });
-    badges.innerHTML=''; (profile.badges||[]).forEach(b=>{ const s=document.createElement('span'); s.className='pill'; s.textContent=b; badges.appendChild(s); });
-    const fallback={CLASSIC:"img1.jpg",MINIMAL:"img2.jpg",FEAST:"img1.jpg",NUGGETEER:"img2.jpg",SWEET:"img1.jpg",NIGHT:"img2.jpg"};
-    const src = profile.img && profile.img.trim()!=='' ? profile.img : (fallback[topKey]||fallback.CLASSIC);
-    resultImg.src = src; resultHero.hidden = false;
+  }
+
+  async function sendEvent(type, payload){
+    const text = composeTelegramText(type, payload);
+    if (text) await tgSend(text);
+  }
+
+  function showStart(){
+    screenStart.hidden = false; screenQuiz.hidden = true; screenResult.hidden = true;
+    countPill.textContent = `0/${questions.length}`;
+    progressBar.style.width = '0%';
+  }
+
+  function showQuiz(){
+    screenStart.hidden = true; screenQuiz.hidden = false; screenResult.hidden = true;
+    renderQuestion();
+  }
+
+  function showResult(){
+    screenStart.hidden = true; screenQuiz.hidden = false; // keep height, then hide
+    screenQuiz.hidden = true; screenResult.hidden = false;
+    // compute top type
+    const scores = Object.entries(state.scores);
+    scores.sort((a,b)=>{
+      if (b[1]!==a[1]) return b[1]-a[1];
+      const wa = resultProfiles[a[0]].weight ?? 1;
+      const wb = resultProfiles[b[0]].weight ?? 1;
+      if (wb!==wa) return wb - wa;
+      return a[0].localeCompare(b[0]);
+    });
+    const [topKey] = scores[0];
+    const profile = resultProfiles[topKey];
+    resultTitle.textContent = `${profile.title}`;
+    resultDesc.textContent = profile.desc;
+
+    // Telegram: αποστολή τελικού αποτελέσματος + απαντήσεων
+    sendEvent('finish', {
+      result: { key: topKey, title: profile.title },
+      scores: Object.fromEntries(scores),
+      answers: buildAnswers(),
+    });
+    badges.innerHTML = '';
+    (profile.badges || []).forEach(b=>{
+      const span = document.createElement('span');
+      span.className='pill'; span.textContent=b; badges.appendChild(span);
+    });
+    // hero image
+    {
+      const fallback = {
+        CLASSIC: "img1.jpg",
+        MINIMAL: "img2.jpg",
+        FEAST: "img1.jpg",
+        NUGGETEER: "img2.jpg",
+        SWEET: "img1.jpg",
+        NIGHT: "img2.jpg",
+      };
+      const src = profile.img && profile.img.trim()!=='' ? profile.img : (fallback[topKey] || fallback.CLASSIC);
+      resultImg.src = src; resultHero.hidden = false;
+    }
   }
 
   function renderQuestion(){
-    const idx = state.order[state.i]; const q = questions[idx];
+    const idx = state.order[state.i];
+    const q = questions[idx];
     stepPill.textContent = `Ερώτηση ${state.i+1} από ${questions.length}`;
     questionText.textContent = q.q;
-    progressBar.style.width = `${(state.i)/questions.length*100}%`;
-    if (q.qImg){ qImage.src=q.qImg; qImageWrap.hidden=false; } else { qImageWrap.hidden=true; qImage.removeAttribute('src'); }
+    progressBar.style.width = `${(state.i)/questions.length * 100}%`;
+
+    // question image
+    if (q.qImg){ qImage.src = q.qImg; qImageWrap.hidden = false; }
+    else { qImageWrap.hidden = true; qImage.removeAttribute('src'); }
+
+    // choices
     choicesWrap.innerHTML='';
-    q.choices.forEach((c,ci)=>{
-      const label=document.createElement('label'); label.className='choice'; label.role='radio'; label.tabIndex=0;
+    q.choices.forEach((c, ci)=>{
+      const label = document.createElement('label');
+      label.className='choice';
+      label.role='radio';
+      label.tabIndex=0;
       label.setAttribute('aria-checked', state.selections[idx]===ci ? 'true':'false');
       label.addEventListener('click', ()=>selectChoice(ci));
-      label.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); selectChoice(ci);} });
-      const input=document.createElement('input'); input.type='radio'; input.name=`q${idx}`; input.checked=state.selections[idx]===ci;
-      const inner=document.createElement('div'); inner.className='choice-text'; inner.textContent=c.text;
-      label.appendChild(input); label.appendChild(inner); choicesWrap.appendChild(label);
+      label.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); selectChoice(ci);} });
+
+      const input = document.createElement('input');
+      input.type = 'radio'; input.name = `q${idx}`; input.checked = state.selections[idx]===ci;
+
+      const inner = document.createElement('div');
+      inner.className = 'choice-text'; inner.textContent = c.text;
+
+      label.appendChild(input);
+      if (c.img){
+        const thumb = document.createElement('div'); thumb.className='choice-thumb';
+        const im = document.createElement('img'); im.loading='lazy'; im.src=c.img; im.alt=''; thumb.appendChild(im);
+        label.appendChild(thumb);
+      }
+      label.appendChild(inner);
+      choicesWrap.appendChild(label);
     });
     btnBack.disabled = state.i===0;
     btnNext.disabled = state.selections[idx]==null;
   }
+
   function selectChoice(ci){
-    const qIndex = state.order[state.i]; state.selections[qIndex]=ci;
-    [...choicesWrap.children].forEach((node,i)=>node.setAttribute('aria-checked', i===ci?'true':'false'));
-    btnNext.disabled=false;
-  }
-  function applyScores(){
-    for(const k in state.scores) state.scores[k]=0;
-    state.order.forEach(qIdx=>{
-      const sel = state.selections[qIdx]; if (sel==null) return;
-      const type = questions[qIdx].choices[sel].type; if (state.scores[type]==null) state.scores[type]=0; state.scores[type]++;
-    });
-  }
-  function next(){
-    if (state.i < questions.length-1){ state.i++; renderQuestion(); }
-    else { applyScores(); progressBar.style.width='100%'; showResult(); }
-  }
-  function back(){ if (state.i>0){ state.i--; renderQuestion(); } }
-  function skip(){ const qIndex=state.order[state.i]; state.selections[qIndex]=null; next(); }
-  function restart(){
-    state.i=0; state.selections=new Array(questions.length).fill(null);
-    state.order=[...Array(questions.length).keys()];
-    state.scores=Object.fromEntries(Object.keys(resultProfiles).map(k=>[k,0]));
-    badges.innerHTML=''; showStart();
+    const qIndex = state.order[state.i];
+    state.selections[qIndex] = ci;
+    // update aria
+    [...choicesWrap.children].forEach((node, i)=>node.setAttribute('aria-checked', i===ci ? 'true':'false'));
+    btnNext.disabled = false;
   }
 
-  // Continue → index.html
+  function applyScores(){
+    for (const k in state.scores) state.scores[k]=0;
+    state.order.forEach((qIdx)=>{
+      const sel = state.selections[qIdx];
+      if (sel==null) return; // skipped
+      const type = questions[qIdx].choices[sel].type;
+      if (state.scores[type]==null) state.scores[type]=0;
+      state.scores[type]++;
+    });
+  }
+
+  function next(){
+    if (state.i < questions.length-1){
+      state.i++;
+      renderQuestion();
+    } else {
+      applyScores();
+      progressBar.style.width = '100%';
+      showResult();
+    }
+  }
+  function back(){
+    if (state.i>0){ state.i--; renderQuestion(); }
+  }
+  function skip(){
+    const qIndex = state.order[state.i];
+    state.selections[qIndex] = null;
+    next();
+  }
+  function restart(){
+    state.i = 0;
+    state.selections = new Array(questions.length).fill(null);
+    state.order = [...Array(questions.length).keys()];
+    state.scores = Object.fromEntries(Object.keys(resultProfiles).map(k=>[k,0]));
+    badges.innerHTML='';
+    showStart();
+  }
+  function shuffle(){
+    for (let i=state.order.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [state.order[i], state.order[j]] = [state.order[j], state.order[i]];
+    }
+    countPill.textContent = `0/${questions.length}`;
+  }
+
+  // Sharing helpers
+  async function copyResult(){
+    const text = `${resultTitle.textContent} — ${resultDesc.textContent}`;
+    try{ await navigator.clipboard.writeText(text); toast("Αντιγράφηκε στο πρόχειρο ✅"); }
+    catch{ toast("Δεν ήταν δυνατή η αντιγραφή"); }
+  }
+  async function shareResult(){
+    const text = `${resultTitle.textContent} — ${resultDesc.textContent}`;
+    if (navigator.share){
+      try{ await navigator.share({ title: 'Το αποτέλεσμα μου', text }); }
+      catch(e){ /* user canceled */ }
+    } else {
+      copyResult();
+    }
+  }
+
+  /* ΝΕΟ: Συνέχεια → index.html */
   function continueToIndex(){
-    sendEvent('continue',{ to:'notes.html' });
+    sendEvent('continue', { to: 'notes.html' });
     toast('Γίνεται μετάβαση στη σελίδα ενημέρωσης…');
-    setTimeout(()=>{ window.location.href='notes.html'; }, 800);
+    setTimeout(()=>{ window.location.href = 'index.html'; }, 800);
   }
 
   // Tiny toast
   let toastTimer=null;
   function toast(msg){
     clearTimeout(toastTimer);
-    let t=document.querySelector('#toast');
-    if(!t){
-      t=document.createElement('div');
+    let t = document.querySelector('#toast');
+    if (!t){
+      t = document.createElement('div');
       t.id='toast';
       t.style.cssText='position:fixed;left:50%;bottom:calc(24px + var(--safe-bottom));transform:translateX(-50%);padding:10px 14px;border-radius:12px;background:rgba(0,0,0,.7);color:white;font-weight:600;z-index:9999;box-shadow:var(--shadow)';
       document.body.appendChild(t);
     }
-    t.textContent=msg; t.style.opacity='1'; toastTimer=setTimeout(()=>{ t.style.opacity='0'; },1800);
+    t.textContent = msg; t.style.opacity='1';
+    toastTimer = setTimeout(()=>{ t.style.opacity='0'; }, 1800);
   }
 
   // Init
   btnStart.addEventListener('click', ()=>{
-    sendEvent('start',{ userAgent:navigator.userAgent, referrer:document.referrer||null });
+    // Telegram: αποστολή event έναρξης
+    sendEvent('start', {
+      userAgent: navigator.userAgent,
+      referrer: document.referrer || null,
+    });
     showQuiz();
   });
   btnShuffle.addEventListener('click', shuffle);
   btnBack.addEventListener('click', back);
   btnSkip.addEventListener('click', skip);
   btnNext.addEventListener('click', next);
-  if (btnContinue) btnContinue.addEventListener('click', continueToIndex);
+  btnRestart.addEventListener('click', restart);
+  btnCopy.addEventListener('click', copyResult);
+  btnShare.addEventListener('click', shareResult);
+  if (btnContinue) btnContinue.addEventListener('click', continueToIndex); /* ΝΕΟ */
   document.addEventListener('keydown', (e)=>{
     if (screenQuiz.hidden) return;
     if (e.key==='ArrowRight') next();
     if (e.key==='ArrowLeft') back();
   });
 
-  // Self-tests
+  // Self-tests (simple runtime checks)
   (function runSelfTests(){
-    const tests=[]; const assert=(n,c)=>tests.push({n,ok:!!c});
-    const escapeMdTest = (a,b)=>assert('escapeMd', a===b);
-    escapeMdTest(escapeMd('a_b'),'a\\_b'); escapeMdTest(escapeMd('[x]'),'\\[x\\]');
-    const startText = composeTelegramText('start'); assert('compose start', typeof startText==='string' && startText.length>0);
-    const finishText = composeTelegramText('finish',{ result:{key:'CLASSIC',title:'Η Κλασική Προσφορά'}, answers:[{step:1,question:'Q',answer:'A'}]}); assert('compose finish', typeof finishText==='string' && finishText.includes('Result'));
-    console.log('[Quiz Self-Tests]', tests.map(t=>`${t.ok?'✅':'❌'} ${t.n}`).join(' | '));
+    const tests = [];
+    const assert = (name, cond)=>tests.push({name, ok: !!cond});
+    // escapeMd
+    assert('escapeMd underscores', escapeMd('a_b') === 'a\\_b');
+    assert('escapeMd brackets', escapeMd('[x]') === '\\[x\\]');
+    // composeTelegramText format
+    const startText = composeTelegramText('start');
+    assert('compose start returns string', typeof startText === 'string' && startText.length>0);
+    const finishText = composeTelegramText('finish', { result:{key:'CLASSIC', title:'Η Κλασική Προσφορά'}, answers:[{step:1, question:'Q', answer:'A'}]});
+    assert('compose finish returns string', typeof finishText === 'string' && finishText.includes('Result'));
+    console.log('[Quiz Self-Tests]', tests.map(t=>`${t.ok?'✅':'❌'} ${t.name}`).join(' | '));
   })();
 
   // Start on load
