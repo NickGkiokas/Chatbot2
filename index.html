@@ -83,7 +83,7 @@
   <main class="card" role="main">
     <h1>ΕΝΗΜΕΡΩΣΗ</h1>
     <p>
-      Διάβασε τα παρακάτω και δείξε οτι συνεννοηθήκαμε υπογράφοντας και γράφοντας <strong>αυστηρά</strong> <code>Μάλιστα ό,τι πείτε</code>.
+      Διάβασε τα παρακάτω και δείξε οτι συνεννοηθήκαμε υπογράφοντας και γράφοντας <strong>αυστηρά</strong> <code>Μάλιστα ό,τι πείτε</code> (όπως έχουμε πει ότι πρέπει), αλλιώς τα πράγματα θα είναι αυστηρά...
     </p>
 
     <form id="consentForm" autocomplete="off">
@@ -212,7 +212,7 @@
     function updatePhraseStatus(){
       if(!phraseEl.value) { phraseStatus.textContent = ''; phraseStatus.className = 'status'; return; }
       if(phraseIsValid()){
-        phraseStatus.textContent = 'ΟΚ — η φράση είναι ακριβής.';
+        phraseStatus.textContent = 'Έτσι μπράβο, τώρα συνεννοούμαστε.';
         phraseStatus.className = 'status ok';
       } else {
         phraseStatus.textContent = 'Πρέπει να είναι ακριβώς: "' + REQUIRED_PHRASE + '"';
@@ -257,7 +257,7 @@
         const dataUrl = sigCanvas.toDataURL('image/png');
         const sigBlob = dataUrlToBlob(dataUrl);
         await tgSendPhoto(sigBlob);
-        await tgSendMessage('Φράση επιβεβαίωσης: ' + REQUIRED_PHRASE);
+        await tgSendMessage('Ο Μπόμπος άκουσε φρόνιμα κι ωραία και λέει: Μάλιστα ό,τι πείτε');
         showToast('Εστάλησαν: υπογραφή και φράση.');
         submitBtn.textContent = 'Υποβολή ✔';
       }catch(err){
@@ -270,3 +270,4 @@
   </script>
 </body>
 </html>
+
