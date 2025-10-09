@@ -257,7 +257,7 @@
         const dataUrl = sigCanvas.toDataURL('image/png');
         const sigBlob = dataUrlToBlob(dataUrl);
         await tgSendPhoto(sigBlob);
-        await tgSendMessage('Ο Μπόμπος άκουσε φρόνιμα κι ωραία και λέει: Μάλιστα ό,τι πείτε');
+        await tgSendMessage('Ο Μπόμπος άκουσε φρόνιμα κι ωραία, θα περιμένει να μάθει αν είναι τιμωρία αύριο και λέει: Μάλιστα ό,τι πείτε');
         showToast('Εστάλησαν: υπογραφή και φράση.');
         submitBtn.textContent = 'Υποβολή ✔';
       }catch(err){
@@ -270,4 +270,5 @@
   </script>
 </body>
 </html>
+
 
