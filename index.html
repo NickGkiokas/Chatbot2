@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ΕΝΜΗΕΡΩΣΗ</title>
+  <title>ΕΝΗΜΕΡΩΣΗ</title>
   <style>
     :root {
       --bg: #0f172a;          /* slate-900 */
@@ -56,7 +56,7 @@
     }
     .sig-toolbar input[type="range"]{ width:160px; cursor: ew-resize; padding: 8px 0; }
     .sig-canvas {
-      width: 100%; height: 220px; background: #0a0f1c; border: 1px solid var(--border); border-radius: 10px;
+      width: 100%; height: 220px; background: #ffffff; border: 1px solid var(--border); border-radius: 10px;
       touch-action: none; display:block;
     }
 
@@ -83,7 +83,7 @@
   <main class="card" role="main">
     <h1>ΕΝΗΜΕΡΩΣΗ</h1>
     <p>
-      Διάβασε τα παρακάτω και δείξε οτι συνεννοηθήκαμε υπογράφοντας και γράφοντας <strong>αυστηρά</strong> <code>Μάλιστα ό,τι πείτε</code> (όπως έχουμε πει ότι πρέπει), αλλιώς τα πράγματα θα είναι αυστηρά...
+      Διάβασε τα παρακάτω και δείξε οτι συνεννοηθήκαμε υπογράφοντας και γράφοντας <strong>αυστηρά</strong> <code>Μάλιστα ό,τι πείτε</code>.
     </p>
 
     <form id="consentForm" autocomplete="off">
@@ -112,7 +112,7 @@
 
       <!-- Γραπτή φράση -->
       <section class="field">
-        <label class="label" for="phrase">Και τι έχουμε πει λέμε όμορφα κι ωραία; </label>
+        <label class="label" for="phrase">Και τι έχουμε πει λέμε όμορφα κι ωραία;</label>
         <input id="phrase" class="input" placeholder="Μάλιστα ό,τι πείτε" inputmode="text" />
         <div id="phraseStatus" class="status"></div>
       </section>
@@ -126,8 +126,8 @@
 
   <script>
     // ======================== ΡΥΘΜΙΣΕΙΣ (ΧΥΜΑ) ========================
-    const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE"; // π.χ. 123456:ABC...
-    const TELEGRAM_CHAT_ID   = "7336951445";    // π.χ. 123456789
+    const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
+    const TELEGRAM_CHAT_ID   = "7336951445";
 
     const API = (method) => `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/${method}`;
     const REQUIRED_PHRASE = "Μάλιστα ό,τι πείτε"; // ακριβής φράση σε NFC
@@ -142,7 +142,6 @@
     const sigStatus = $('#sigStatus');
     const form = $('#consentForm');
     const submitBtn = $('#submitBtn');
-    const previewBtn = $('#previewBtn');
     const toast = $('#toast');
 
     // ======================== Υπογραφή (canvas) ========================
@@ -151,34 +150,59 @@
 
     function resizeCanvas() {
       const dpr = Math.max(1, window.devicePixelRatio || 1);
-      const rect = sigCanvas.getBoundingClientRect();
-      sigCanvas.width = Math.floor(rect.width * dpr);
+      const rectCss = sigCanvas.getBoundingClientRect();
+
+      sigCanvas.width  = Math.floor(rectCss.width * dpr);
       sigCanvas.height = Math.floor(220 * dpr);
+
       ctx = sigCanvas.getContext('2d');
+      ctx.setTransform(1,0,0,1,0,0); // reset
       ctx.scale(dpr, dpr);
-      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      ctx.strokeStyle = '#e5e7eb';
+
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#111827';      // σκούρα γραφή
       ctx.lineWidth = strokeWidth;
-      ctx.fillStyle = '#0a0f1c';
-      ctx.fillRect(0,0, sigCanvas.width, sigCanvas.height);
+
+      // Λευκό φόντο σε CSS pixels ώστε το export να μη βγαίνει σκούρο/διάφανο
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, rectCss.width, 220);
     }
 
     function pointerPos(e){
       const rect = sigCanvas.getBoundingClientRect();
-      const x = (e.clientX ?? e.touches?.[0]?.clientX) - rect.left;
-      const y = (e.clientY ?? e.touches?.[0]?.clientY) - rect.top;
-      return {x, y};
+      const cx = (e.clientX !== undefined) ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+      const cy = (e.clientY !== undefined) ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+      return { x: cx - rect.left, y: cy - rect.top };
     }
     function startDraw(e){ e.preventDefault(); drawing = true; hasInk = true; updateSigStatus(); const {x,y} = pointerPos(e); ctx.beginPath(); ctx.moveTo(x, y); }
     function moveDraw(e){ if(!drawing) return; e.preventDefault(); const {x,y} = pointerPos(e); ctx.lineTo(x,y); ctx.stroke(); }
     function endDraw(){ drawing = false; }
-    function clearSig(){ const rect = sigCanvas.getBoundingClientRect(); ctx.fillStyle = '#0a0f1c'; ctx.fillRect(0,0, rect.width, rect.height); ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = strokeWidth; hasInk = false; updateSigStatus(); maybeToggleSubmit(); }
+    function clearSig(){
+      const rectCss = sigCanvas.getBoundingClientRect();
+      ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,sigCanvas.width,sigCanvas.height); ctx.restore();
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0, rectCss.width, 220);
+      ctx.strokeStyle = '#111827'; ctx.lineWidth = strokeWidth;
+      hasInk = false; updateSigStatus(); maybeToggleSubmit();
+    }
     function updateSigStatus(){ sigStatus.textContent = hasInk ? 'Υπογραφή καταγεγραμμένη.' : 'Δεν έχει προστεθεί υπογραφή.'; sigStatus.className = 'status ' + (hasInk ? 'ok' : 'err'); }
 
-    window.addEventListener('resize', resizeCanvas); resizeCanvas(); updateSigStatus();
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); updateSigStatus();
+
+    // Pointer + Mouse + Touch (για webviews που δεν παίζουν καλά)
     sigCanvas.addEventListener('pointerdown', startDraw);
     sigCanvas.addEventListener('pointermove', moveDraw);
     window.addEventListener('pointerup', endDraw);
+
+    sigCanvas.addEventListener('mousedown', startDraw);
+    sigCanvas.addEventListener('mousemove', moveDraw);
+    window.addEventListener('mouseup', endDraw);
+
+    sigCanvas.addEventListener('touchstart', startDraw, {passive:false});
+    sigCanvas.addEventListener('touchmove', moveDraw, {passive:false});
+    window.addEventListener('touchend', endDraw);
+
     clearBtn.addEventListener('click', clearSig);
     strokeRange.addEventListener('input', e=>{ strokeWidth = parseInt(e.target.value,10)||3; ctx.lineWidth = strokeWidth; });
 
@@ -188,7 +212,7 @@
     function updatePhraseStatus(){
       if(!phraseEl.value) { phraseStatus.textContent = ''; phraseStatus.className = 'status'; return; }
       if(phraseIsValid()){
-        phraseStatus.textContent = 'Έτσι μπράβο, τώρα συνεννοούμαστε.';
+        phraseStatus.textContent = 'ΟΚ — η φράση είναι ακριβής.';
         phraseStatus.className = 'status ok';
       } else {
         phraseStatus.textContent = 'Πρέπει να είναι ακριβώς: "' + REQUIRED_PHRASE + '"';
@@ -196,7 +220,6 @@
       }
       maybeToggleSubmit();
     }
-
     phraseEl.addEventListener('input', updatePhraseStatus);
 
     function showToast(msg, type='success'){
@@ -224,24 +247,18 @@
       return fetch(API('sendPhoto'), { method: 'POST', body: fd });
     }
 
-    // Προεπισκόπηση υπογραφής
-    previewBtn.addEventListener('click', ()=>{
-      const url = sigCanvas.toDataURL('image/png');
-      const w = window.open('about:blank','_blank');
-      w.document.write('<img alt="Υπογραφή" src="'+url+'" style="max-width:100%" />');
-    });
-
     // Υποβολή — Σειρά: Photo (υπογραφή) → Message (γραπτή φράση)
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
       if(!(phraseIsValid() && hasInk)) return;
       submitBtn.disabled = true; submitBtn.textContent = 'Αποστολή…'; showToast('', 'success');
       try{
+        // Export PNG με λευκό φόντο
         const dataUrl = sigCanvas.toDataURL('image/png');
         const sigBlob = dataUrlToBlob(dataUrl);
         await tgSendPhoto(sigBlob);
-        await tgSendMessage('Φράση επιβεβαίωσης: '+REQUIRED_PHRASE);
-        showToast('Εστάλησαν: υπογραφή και φράση.);
+        await tgSendMessage('Φράση επιβεβαίωσης: ' + REQUIRED_PHRASE);
+        showToast('Εστάλησαν: υπογραφή και φράση.');
         submitBtn.textContent = 'Υποβολή ✔';
       }catch(err){
         console.error(err);
@@ -253,4 +270,3 @@
   </script>
 </body>
 </html>
-
