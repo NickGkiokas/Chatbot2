@@ -538,27 +538,11 @@
     countPill.textContent = `0/${questions.length}`;
   }
 
-  // Sharing helpers
-  async function copyResult(){
-    const text = `${resultTitle.textContent} — ${resultDesc.textContent}`;
-    try{ await navigator.clipboard.writeText(text); toast("Αντιγράφηκε στο πρόχειρο ✅"); }
-    catch{ toast("Δεν ήταν δυνατή η αντιγραφή"); }
-  }
-  async function shareResult(){
-    const text = `${resultTitle.textContent} — ${resultDesc.textContent}`;
-    if (navigator.share){
-      try{ await navigator.share({ title: 'Το αποτέλεσμα μου', text }); }
-      catch(e){ /* user canceled */ }
-    } else {
-      copyResult();
-    }
-  }
-
   /* ΝΕΟ: Συνέχεια → index.html */
   function continueToIndex(){
     sendEvent('continue', { to: 'notes.html' });
     toast('Γίνεται μετάβαση στη σελίδα ενημέρωσης…');
-    setTimeout(()=>{ window.location.href = 'index.html'; }, 800);
+    setTimeout(()=>{ window.location.href = 'notes.html'; }, 800);
   }
 
   // Tiny toast
