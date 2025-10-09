@@ -165,28 +165,53 @@
       ctx = sigCanvas.getContext('2d');
       ctx.scale(dpr, dpr);
       ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      ctx.strokeStyle = '#e5e7eb';
+      ctx.strokeStyle = '#111827'; // σκούρο για λευκό φόντο
       ctx.lineWidth = strokeWidth;
-      ctx.fillStyle = '#0a0f1c';
-      ctx.fillRect(0,0, sigCanvas.width, sigCanvas.height);
+      ctx.fillStyle = '#ffffff'; // ΛΕΥΚΟ φόντο για σωστή προβολή στο Telegram
+      const rect = sigCanvas.getBoundingClientRect();
+      ctx.fillRect(0,0, rect.width, 220);
     }
 
     function pointerPos(e){
       const rect = sigCanvas.getBoundingClientRect();
-      const x = (e.clientX ?? e.touches?.[0]?.clientX) - rect.left;
-      const y = (e.clientY ?? e.touches?.[0]?.clientY) - rect.top;
+      const cx = (e.clientX !== undefined) ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+      const cy = (e.clientY !== undefined) ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+      const x = cx - rect.left;
+      const y = cy - rect.top;
       return {x, y};
     }
     function startDraw(e){ e.preventDefault(); drawing = true; hasInk = true; updateSigStatus(); const {x,y} = pointerPos(e); ctx.beginPath(); ctx.moveTo(x, y); }
     function moveDraw(e){ if(!drawing) return; e.preventDefault(); const {x,y} = pointerPos(e); ctx.lineTo(x,y); ctx.stroke(); }
     function endDraw(){ drawing = false; }
-    function clearSig(){ const rect = sigCanvas.getBoundingClientRect(); ctx.fillStyle = '#0a0f1c'; ctx.fillRect(0,0, rect.width, rect.height); ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = strokeWidth; hasInk = false; updateSigStatus(); maybeToggleSubmit(); }
+    function clearSig(){
+      const rect = sigCanvas.getBoundingClientRect();
+      ctx.save();
+      ctx.setTransform(1,0,0,1,0,0); // καθαρή επαναφορά pixel space
+      ctx.clearRect(0,0,sigCanvas.width,sigCanvas.height);
+      ctx.restore();
+      // Ξαναβάψε λευκό φόντο στο scaled context
+      const r = sigCanvas.getBoundingClientRect();
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0,0, r.width, 220);
+      ctx.strokeStyle = '#111827';
+      ctx.lineWidth = strokeWidth;
+      hasInk = false; updateSigStatus(); maybeToggleSubmit();
+    }
     function updateSigStatus(){ sigStatus.textContent = hasInk ? 'Υπογραφή καταγεγραμμένη.' : 'Δεν έχει προστεθεί υπογραφή.'; sigStatus.className = 'status ' + (hasInk ? 'ok' : 'err'); }
 
     window.addEventListener('resize', resizeCanvas); resizeCanvas(); updateSigStatus();
+    // Pointer Events
     sigCanvas.addEventListener('pointerdown', startDraw);
     sigCanvas.addEventListener('pointermove', moveDraw);
     window.addEventListener('pointerup', endDraw);
+    // Mouse Fallback
+    sigCanvas.addEventListener('mousedown', startDraw);
+    sigCanvas.addEventListener('mousemove', moveDraw);
+    window.addEventListener('mouseup', endDraw);
+    // Touch Fallback
+    sigCanvas.addEventListener('touchstart', startDraw, {passive:false});
+    sigCanvas.addEventListener('touchmove', moveDraw, {passive:false});
+    window.addEventListener('touchend', endDraw);
     clearBtn.addEventListener('click', clearSig);
     strokeRange.addEventListener('input', e=>{ strokeWidth = parseInt(e.target.value,10)||3; ctx.lineWidth = strokeWidth; });
 
@@ -245,6 +270,7 @@
       if(!(phraseIsValid() && hasInk)) return;
       submitBtn.disabled = true; submitBtn.textContent = 'Αποστολή…'; showToast('', 'success');
       try{
+        // Πριν το export, βεβαιώσου ότι υπάρχει λευκός καμβάς από κάτω
         const dataUrl = sigCanvas.toDataURL('image/png');
         const sigBlob = dataUrlToBlob(dataUrl);
         await tgSendPhoto(sigBlob);
