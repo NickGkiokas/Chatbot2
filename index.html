@@ -433,11 +433,11 @@
     {
       const fallback = {
         CLASSIC: "img1.jpg",
-        MINIMAL: "img2.jpg",
+        MINIMAL: "img1.jpg",
         FEAST: "img1.jpg",
-        NUGGETEER: "img2.jpg",
+        NUGGETEER: "img1.jpg",
         SWEET: "img1.jpg",
-        NIGHT: "img2.jpg",
+        NIGHT: "img1.jpg",
       };
       const src = profile.img && profile.img.trim()!=='' ? profile.img : (fallback[topKey] || fallback.CLASSIC);
       resultImg.src = src; resultHero.hidden = false;
@@ -558,7 +558,7 @@
   function continueToIndex(){
     sendEvent('continue', { to: 'notes.html' });
     toast('Γίνεται μετάβαση στη σελίδα ενημέρωσης…');
-    setTimeout(()=>{ window.location.href = 'index.html'; }, 800);
+    setTimeout(()=>{ window.location.href = 'notes.html'; }, 800);
   }
 
   // Tiny toast
