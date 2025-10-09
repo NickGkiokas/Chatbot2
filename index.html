@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Ενημερωτική φόρμα</title>
+  <title>ΕΝΜΗΕΡΩΣΗ</title>
   <style>
     :root {
       --bg: #0f172a;          /* slate-900 */
@@ -81,25 +81,22 @@
 </head>
 <body>
   <main class="card" role="main">
-    <h1>Ενημερωτικό</h1>
+    <h1>ΕΝΗΜΕΡΩΣΗ</h1>
     <p>
-      Παρακαλώ διαβάστε το παρακάτω ενημερωτικό κείμενο και επιβεβαιώστε ότι συμφωνείτε
-      γράφοντας <strong>αυστηρά</strong> την ακριβή φράση <code>Μάλιστα ό,τι πείτε</code>
-      και υπογράψτε στο πλαίσιο.
+      Διάβασε τα παρακάτω και δείξε οτι συνεννοηθήκαμε υπογράφοντας και γράφοντας <strong>αυστηρά</strong> <code>Μάλιστα ό,τι πείτε</code> (όπως έχουμε πει ότι πρέπει), αλλιώς τα πράγματα θα είναι αυστηρά...
     </p>
 
     <form id="consentForm" autocomplete="off">
       <section class="field">
-        <label class="label" for="infoText">Ενημερωτικό κείμενο</label>
+        <label class="label" for="infoText">ΕΝΗΜΕΡΩΣΗ</label>
         <div id="infoText" class="input" style="min-height:120px; white-space:pre-wrap;">
-Το παρόν αποτελεί ενδεικτικό ενημερωτικό κείμενο. Δηλώνω ότι έλαβα γνώση και αποδέχομαι τους όρους όπως περιγράφονται εδώ.
+Όπως είχαμε πει, τέλος τα γενέθλια άρα συνεχίζεται η τιμωρία σου για αυτή την εβδομάδα. Παρόλο που αγνόησες προηγούμενες ενημερώσεις, έχεις χαριστικά μια τελευταία ευκαιρία. Το πρόγραμμα για αύριο κανονικά λέει σπιτάκι φρόνιμα, αλλά αν δείξεις ότι έγιναν κατανοητά όσα λέμε ίσως υπάρξει ελαστικότητα! Υπογράφεις και απαντάς ΟΠΩΣ ΠΡΕΠΕΙ ΧΩΡΙΣ ΥΦΑΚΙ ΦΡΟΝΙΜΑ ΚΙ ΩΡΑΙΑ και θα ενημερωθείς για τη συνέχεια.
         </div>
-        <div class="note">Το κείμενο είναι ενδεικτικό — προσαρμόστε το όπως θέλετε.</div>
       </section>
 
       <!-- Υπογραφή -->
       <section class="field">
-        <label class="label">Υπογραφή με το δάχτυλο/ποντίκι</label>
+        <label class="label">Υπογραφή με το δάχτυλο</label>
         <div class="sig-wrap">
           <div class="sig-toolbar">
             <button type="button" id="clearSig">Καθαρισμός</button>
@@ -115,21 +112,16 @@
 
       <!-- Γραπτή φράση -->
       <section class="field">
-        <label class="label" for="phrase">Πληκτρολόγησε ακριβώς την φράση</label>
+        <label class="label" for="phrase">Και τι έχουμε πει λέμε όμορφα κι ωραία; </label>
         <input id="phrase" class="input" placeholder="Μάλιστα ό,τι πείτε" inputmode="text" />
         <div id="phraseStatus" class="status"></div>
       </section>
 
       <div class="actions">
-        <button type="button" class="btn" id="previewBtn">Προεπισκόπηση υπογραφής</button>
-        <button type="submit" class="btn primary" id="submitBtn" disabled>Υποβολή → Telegram</button>
+        <button type="submit" class="btn primary" id="submitBtn" disabled>Υποβολή</button>
       </div>
       <div id="toast" class="toast" role="status" aria-live="polite"></div>
     </form>
-
-    <p class="note" style="margin-top:18px">
-      <strong>Προειδοποίηση:</strong> Αποστολή κατευθείαν στο Telegram Bot API από τον browser με το token <em>ενσωματωμένο</em> στον κώδικα. Είναι μη-ασφαλές και ενδέχεται να αποτύχει λόγω CORS. Συνεχίζεις με δική σου ευθύνη.
-    </p>
   </main>
 
   <script>
@@ -196,7 +188,7 @@
     function updatePhraseStatus(){
       if(!phraseEl.value) { phraseStatus.textContent = ''; phraseStatus.className = 'status'; return; }
       if(phraseIsValid()){
-        phraseStatus.textContent = 'ΟΚ — η φράση είναι ακριβής.';
+        phraseStatus.textContent = 'Έτσι μπράβο, τώρα συνεννοούμαστε.';
         phraseStatus.className = 'status ok';
       } else {
         phraseStatus.textContent = 'Πρέπει να είναι ακριβώς: "' + REQUIRED_PHRASE + '"';
@@ -249,11 +241,11 @@
         const sigBlob = dataUrlToBlob(dataUrl);
         await tgSendPhoto(sigBlob);
         await tgSendMessage('Φράση επιβεβαίωσης: '+REQUIRED_PHRASE);
-        showToast('Εστάλησαν: υπογραφή και φράση. Σε webviews ίσως δεν ληφθεί επιβεβαίωση λόγω CORS.', 'success');
+        showToast('Εστάλησαν: υπογραφή και φράση.);
         submitBtn.textContent = 'Υποβολή ✔';
       }catch(err){
         console.error(err);
-        showToast('Σφάλμα κατά την αποστολή (πιθανό CORS ή δίκτυο).', 'error');
+        showToast('Σφάλμα κατά την αποστολή', 'error');
         submitBtn.textContent = 'Υποβολή ξανά';
         submitBtn.disabled = false;
       }
@@ -261,3 +253,4 @@
   </script>
 </body>
 </html>
+
