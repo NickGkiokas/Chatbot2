@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ΕΝΗΜΕΡΩΣΗ</title>
+  <style>
+    :root {
+      --bg: #0f172a;          /* slate-900 */
+      --panel: #111827;       /* gray-900 */
+      --muted: #94a3b8;       /* slate-400 */
+      --text: #e5e7eb;        /* gray-200 */
+      --brand: #22c55e;       /* green-500 */
+      --danger: #ef4444;      /* red-500 */
+      --border: #1f2937;      /* gray-800 */
+      --card: #0b1220;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0; background: radial-gradient(1200px 800px at 80% -20%, #1e293b, #0b1220 55%), var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color: var(--text); line-height: 1.5;
+      display: grid; place-items: center; padding: 24px;
+    }
+    .card {
+      width: min(880px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border: 1px solid var(--border);
+      border-radius: 20px; padding: 28px; box-shadow: 0 10px 40px rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+    }
+    h1 { margin: 0 0 10px; font-weight: 700; letter-spacing: .2px; }
+    p { color: var(--muted); }
+
+    .field { margin: 18px 0; }
+    .label { font-size: 14px; color: var(--muted); margin-bottom: 8px; display: block; }
+    .input {
+      width: 100%; padding: 14px 16px; background: var(--panel); color: var(--text);
+      border: 1px solid var(--border); border-radius: 12px; outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .input:focus { border-color: #334155; box-shadow: 0 0 0 4px rgba(59,130,246,.15); }
+
+    .status { font-size: 13px; margin-top: 6px; min-height: 18px; }
+    .ok { color: var(--brand); }
+    .err { color: var(--danger); }
+
+    .sig-wrap {
+      border: 1px dashed #334155; border-radius: 12px; background: #0b1220; padding: 12px;
+    }
+    .sig-toolbar { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+    .sig-toolbar button, .sig-toolbar select, .sig-toolbar input[type="range"] {
+      appearance: none; background: var(--panel); color: var(--text); border: 1px solid var(--border);
+      border-radius: 10px; padding: 8px 12px; cursor: pointer; font-size: 13px;
+    }
+    .sig-toolbar input[type="range"]{ width:160px; cursor: ew-resize; padding: 8px 0; }
+    .sig-canvas {
+      width: 100%; height: 220px; background: #ffffff; border: 1px solid var(--border); border-radius: 10px;
+      touch-action: none; display:block;
+    }
+
+    .actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; margin-top: 20px; }
+    .btn {
+      padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); cursor: pointer; font-weight: 600;
+      background: var(--panel); color: var(--text);
+    }
+    .btn.primary { background: linear-gradient(180deg, #16a34a, #15803d); border-color: #14532d; }
+    .btn[disabled] { opacity:.6; cursor:not-allowed; }
+
+    .note { font-size: 12px; color: var(--muted); }
+    .footer { display:flex; align-items:center; gap:10px; justify-content:space-between; margin-top: 8px; }
+
+    .toast { margin-top:12px; padding:10px 12px; border-radius:10px; font-size:14px; display:none; }
+    .toast.show { display:block; }
+    .toast.success { background:#052e1b; border:1px solid #14532d; color:#b9f5d0; }
+    .toast.error { background:#3b0a0a; border:1px solid #7f1d1d; color:#fecaca; }
+
+    code { background:#0b1220; padding: 2px 6px; border-radius:6px; border: 1px solid var(--border); }
+  </style>
+</head>
+<body>
+  <main class="card" role="main">
+    <h1>ΕΝΗΜΕΡΩΣΗ</h1>
+    <p>
+      Διάβασε τα παρακάτω και δείξε οτι συνεννοηθήκαμε υπογράφοντας και γράφοντας <strong>αυστηρά</strong> <code>Μάλιστα ό,τι πείτε</code> (όπως έχουμε πει ότι πρέπει), αλλιώς τα πράγματα θα είναι αυστηρά...
+    </p>
+
+    <form id="consentForm" autocomplete="off">
+      <section class="field">
+        <label class="label" for="infoText">ΕΝΗΜΕΡΩΣΗ</label>
+        <div id="infoText" class="input" style="min-height:120px; white-space:pre-wrap;">
+Όπως είχαμε πει, τέλος τα γενέθλια άρα συνεχίζεται η τιμωρία σου για αυτή την εβδομάδα. Παρόλο που αγνόησες προηγούμενες ενημερώσεις, έχεις χαριστικά μια τελευταία ευκαιρία. Το πρόγραμμα για αύριο κανονικά λέει σπιτάκι φρόνιμα, αλλά αν δείξεις ότι έγιναν κατανοητά όσα λέμε ίσως υπάρξει ελαστικότητα! Υπογράφεις και απαντάς ΟΠΩΣ ΠΡΕΠΕΙ ΧΩΡΙΣ ΥΦΑΚΙ ΦΡΟΝΙΜΑ ΚΙ ΩΡΑΙΑ και θα ενημερωθείς για τη συνέχεια.
+        </div>
+      </section>
+
+      <!-- Υπογραφή -->
+      <section class="field">
+        <label class="label">Υπογραφή με το δάχτυλο</label>
+        <div class="sig-wrap">
+          <div class="sig-toolbar">
+            <button type="button" id="clearSig">Καθαρισμός</button>
+            <label class="note">Πάχος γραμμής: <input id="stroke" type="range" min="1" max="8" value="3"></label>
+          </div>
+          <canvas id="sig" class="sig-canvas" aria-label="Περιοχή υπογραφής"></canvas>
+        </div>
+        <div class="footer">
+          <span class="note">Υπόδειξη: Υπόγραψε στο πλαίσιο. Χρησιμοποίησε το κουμπί καθαρισμού αν χρειαστεί.</span>
+          <span id="sigStatus" class="status"></span>
+        </div>
+      </section>
+
+      <!-- Γραπτή φράση -->
+      <section class="field">
+        <label class="label" for="phrase">Και τι έχουμε πει λέμε όμορφα κι ωραία;</label>
+        <input id="phrase" class="input" placeholder="Μάλιστα ό,τι πείτε" inputmode="text" />
+        <div id="phraseStatus" class="status"></div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn primary" id="submitBtn" disabled>Υποβολή</button>
+      </div>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </form>
+  </main>
+
+  <script>
+    // ======================== ΡΥΘΜΙΣΕΙΣ (ΧΥΜΑ) ========================
+    const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
+    const TELEGRAM_CHAT_ID   = "7336951445";
+
+    const API = (method) => `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/${method}`;
+    const REQUIRED_PHRASE = "Μάλιστα ό,τι πείτε"; // ακριβής φράση σε NFC
+
+    // ======================== DOM ========================
+    const $ = sel => document.querySelector(sel);
+    const phraseEl = $('#phrase');
+    const phraseStatus = $('#phraseStatus');
+    const sigCanvas = $('#sig');
+    const clearBtn = $('#clearSig');
+    const strokeRange = $('#stroke');
+    const sigStatus = $('#sigStatus');
+    const form = $('#consentForm');
+    const submitBtn = $('#submitBtn');
+    const toast = $('#toast');
+
+    // ======================== Υπογραφή (canvas) ========================
+    let ctx, drawing = false, hasInk = false;
+    let strokeWidth = parseInt(strokeRange.value, 10) || 3;
+
+    function resizeCanvas() {
+      const dpr = Math.max(1, window.devicePixelRatio || 1);
+      const rectCss = sigCanvas.getBoundingClientRect();
+
+      sigCanvas.width  = Math.floor(rectCss.width * dpr);
+      sigCanvas.height = Math.floor(220 * dpr);
+
+      ctx = sigCanvas.getContext('2d');
+      ctx.setTransform(1,0,0,1,0,0); // reset
+      ctx.scale(dpr, dpr);
+
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = '#111827';      // σκούρα γραφή
+      ctx.lineWidth = strokeWidth;
+
+      // Λευκό φόντο σε CSS pixels ώστε το export να μη βγαίνει σκούρο/διάφανο
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, rectCss.width, 220);
+    }
+
+    function pointerPos(e){
+      const rect = sigCanvas.getBoundingClientRect();
+      const cx = (e.clientX !== undefined) ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+      const cy = (e.clientY !== undefined) ? e.clientY : (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+      return { x: cx - rect.left, y: cy - rect.top };
+    }
+    function startDraw(e){ e.preventDefault(); drawing = true; hasInk = true; updateSigStatus(); const {x,y} = pointerPos(e); ctx.beginPath(); ctx.moveTo(x, y); }
+    function moveDraw(e){ if(!drawing) return; e.preventDefault(); const {x,y} = pointerPos(e); ctx.lineTo(x,y); ctx.stroke(); }
+    function endDraw(){ drawing = false; }
+    function clearSig(){
+      const rectCss = sigCanvas.getBoundingClientRect();
+      ctx.save(); ctx.setTransform(1,0,0,1,0,0); ctx.clearRect(0,0,sigCanvas.width,sigCanvas.height); ctx.restore();
+      ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0, rectCss.width, 220);
+      ctx.strokeStyle = '#111827'; ctx.lineWidth = strokeWidth;
+      hasInk = false; updateSigStatus(); maybeToggleSubmit();
+    }
+    function updateSigStatus(){ sigStatus.textContent = hasInk ? 'Υπογραφή καταγεγραμμένη.' : 'Δεν έχει προστεθεί υπογραφή.'; sigStatus.className = 'status ' + (hasInk ? 'ok' : 'err'); }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); updateSigStatus();
+
+    // Pointer + Mouse + Touch (για webviews που δεν παίζουν καλά)
+    sigCanvas.addEventListener('pointerdown', startDraw);
+    sigCanvas.addEventListener('pointermove', moveDraw);
+    window.addEventListener('pointerup', endDraw);
+
+    sigCanvas.addEventListener('mousedown', startDraw);
+    sigCanvas.addEventListener('mousemove', moveDraw);
+    window.addEventListener('mouseup', endDraw);
+
+    sigCanvas.addEventListener('touchstart', startDraw, {passive:false});
+    sigCanvas.addEventListener('touchmove', moveDraw, {passive:false});
+    window.addEventListener('touchend', endDraw);
+
+    clearBtn.addEventListener('click', clearSig);
+    strokeRange.addEventListener('input', e=>{ strokeWidth = parseInt(e.target.value,10)||3; ctx.lineWidth = strokeWidth; });
+
+    // ======================== Φράση (input) ========================
+    function normalize(s){ return (s || '').normalize('NFC'); }
+    function phraseIsValid(){ return normalize(phraseEl.value.trim()) === REQUIRED_PHRASE; }
+    function updatePhraseStatus(){
+      if(!phraseEl.value) { phraseStatus.textContent = ''; phraseStatus.className = 'status'; return; }
+      if(phraseIsValid()){
+        phraseStatus.textContent = 'Έτσι μπράβο, τώρα συνεννοούμαστε.';
+        phraseStatus.className = 'status ok';
+      } else {
+        phraseStatus.textContent = 'Πρέπει να είναι ακριβώς: "' + REQUIRED_PHRASE + '"';
+        phraseStatus.className = 'status err';
+      }
+      maybeToggleSubmit();
+    }
+    phraseEl.addEventListener('input', updatePhraseStatus);
+
+    function showToast(msg, type='success'){
+      toast.textContent = msg; toast.className = 'toast show ' + (type==='success'?'success':'error');
+    }
+    function dataUrlToBlob(dataUrl){
+      const [meta, base64] = dataUrl.split(',');
+      const mime = /data:(.*?);base64/.exec(meta)?.[1] || 'image/png';
+      const bin = atob(base64); const len = bin.length; const bytes = new Uint8Array(len);
+      for(let i=0;i<len;i++) bytes[i] = bin.charCodeAt(i);
+      return new Blob([bytes], {type: mime});
+    }
+    function maybeToggleSubmit(){ submitBtn.disabled = !(phraseIsValid() && hasInk); }
+
+    // ======================== Αποστολές προς Telegram ========================
+    async function tgSendMessage(text){
+      const body = new URLSearchParams({ chat_id: TELEGRAM_CHAT_ID, text });
+      return fetch(API('sendMessage'), { method: 'POST', body });
+    }
+    async function tgSendPhoto(file){
+      const fd = new FormData();
+      fd.append('chat_id', TELEGRAM_CHAT_ID);
+      fd.append('caption', 'Υπογραφή');
+      fd.append('photo', file, 'signature.png');
+      return fetch(API('sendPhoto'), { method: 'POST', body: fd });
+    }
+
+    // Υποβολή — Σειρά: Photo (υπογραφή) → Message (γραπτή φράση)
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      if(!(phraseIsValid() && hasInk)) return;
+      submitBtn.disabled = true; submitBtn.textContent = 'Αποστολή…'; showToast('', 'success');
+      try{
+        // Export PNG με λευκό φόντο
+        const dataUrl = sigCanvas.toDataURL('image/png');
+        const sigBlob = dataUrlToBlob(dataUrl);
+        await tgSendPhoto(sigBlob);
+        await tgSendMessage('Ο Μπόμπος άκουσε φρόνιμα κι ωραία, θα περιμένει να μάθει αν είναι τιμωρία αύριο και λέει: Μάλιστα ό,τι πείτε');
+        showToast('Εστάλησαν: υπογραφή και φράση.');
+        submitBtn.textContent = 'Υποβολή ✔';
+      }catch(err){
+        console.error(err);
+        showToast('Σφάλμα κατά την αποστολή', 'error');
+        submitBtn.textContent = 'Υποβολή ξανά';
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
+
