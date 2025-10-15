@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Λίστα Παραβάσεων</title>
+<style>
+  :root{
+    --bg:#0f1226; --panel:#14183a; --panel-2:#0e1230; --muted:#8b90b5; --text:#e8ebff;
+    --accent:#ff6b6b; --accent-2:#ffd166; --ok:#22c55e; --radius:16px; --shadow:0 18px 45px rgba(0,0,0,.35);
+    --chip:#1b2047;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    background:
+      radial-gradient(1200px 800px at 10% -10%, rgba(255,107,107,.18), transparent),
+      radial-gradient(1200px 800px at 120% 120%, rgba(255,209,102,.16), transparent),
+      var(--bg);
+    color:var(--text); padding:18px; display:grid; place-items:start center;
+  }
+  .wrap{width:min(980px, 100%); display:grid; gap:16px}
+  header{display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between}
+  h1{margin:0; font-size:clamp(22px,5vw,32px)}
+  .sub{color:var(--muted)}
+  .panel{
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.1); border-radius:var(--radius); box-shadow:var(--shadow);
+  }
+  .filters{display:flex; flex-wrap:wrap; gap:10px; padding:12px}
+  .chip{
+    appearance:none; border:1px solid rgba(255,255,255,.18); background:var(--chip);
+    color:var(--text); padding:10px 12px; border-radius:999px; cursor:pointer; font-weight:700;
+  }
+  .chip.active{ border-color:var(--accent-2); background: linear-gradient(90deg, rgba(255,209,102,.24), rgba(255,209,102,.08)) }
+  .progress{
+    padding:12px; display:flex; align-items:center; gap:12px; color:var(--muted)
+  }
+  .bar{ flex:1; height:10px; background:rgba(255,255,255,.1); border-radius:999px; overflow:hidden }
+  .bar>span{display:block; height:100%; width:0%; background: linear-gradient(90deg, #22c55e, #2dd4bf); transition:width .3s}
+  .list{ padding:12px; display:grid; gap:10px }
+  .item{
+    border:1px solid rgba(255,255,255,.12);
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    border-radius:14px; overflow:hidden;
+  }
+  .item header{
+    display:grid; grid-template-columns: 1fr auto auto; gap:10px; align-items:center; padding:12px 12px;
+    cursor:pointer;
+  }
+  .name{ font-weight:800 }
+  .tag{ padding:6px 10px; border-radius:999px; font-size:12px; font-weight:800; border:1px solid rgba(255,255,255,.18) }
+  .sev-high{ background: rgba(255,107,107,.2); color:#ffdede; border-color: rgba(255,107,107,.5) }
+  .sev-med{ background: rgba(255,209,102,.2); color:#fff3d2; border-color: rgba(255,209,102,.5) }
+  .sev-low{ background: rgba(45,212,191,.18); color:#d7fffb; border-color: rgba(45,212,191,.4) }
+  .status{ padding:6px 10px; border-radius:999px; font-size:12px; border:1px solid rgba(255,255,255,.18) }
+  .done{ background: rgba(34,197,94,.18); color:#c9ffd8; border-color: rgba(34,197,94,.45) }
+  .open{ background: rgba(255,255,255,.06); color:#e8ebff }
+  .body{ padding:12px; border-top:1px dashed rgba(255,255,255,.12); display:none }
+  .actions{ display:flex; gap:10px; flex-wrap:wrap; padding:0 12px 12px }
+  .btn{
+    appearance:none; border:1px solid rgba(255,255,255,.18); background:rgba(255,255,255,.06);
+    color:var(--text); padding:10px 12px; border-radius:10px; cursor:pointer; font-weight:800;
+    transition:transform .08s ease, filter .15s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); filter:brightness(1.05) }
+  .btn.ok{ background: linear-gradient(90deg, #22c55e, #2dd4bf); border-color: transparent; color:white }
+  .empty{ color:var(--muted); text-align:center; padding:18px }
+  .footer{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px }
+  .link{ color:#fff; font-weight:800; text-decoration:none; border-bottom:2px solid rgba(255,255,255,.3) }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <div>
+      <h1>Λίστα Παραβάσεων</h1>
+      <div class="sub">Ενδεικτικό demo με φίλτρα, πρόοδο και ενέργειες.</div>
+    </div>
+    <a class="link" href="euxi.html">← Πίσω στο γράμμα</a>
+  </header>
+
+  <!-- Φίλτρα -->
+  <section class="panel">
+    <div class="filters">
+      <button class="chip active" data-filter="ALL">Όλες</button>
+      <button class="chip" data-filter="HIGH">Υψηλής σοβαρότητας</button>
+      <button class="chip" data-filter="MED">Μεσαίας</button>
+      <button class="chip" data-filter="LOW">Χαμηλής</button>
+      <button class="chip" data-filter="OPEN">Ανοικτές</button>
+      <button class="chip" data-filter="DONE">Ολοκληρωμένες</button>
+    </div>
+    <div class="progress">
+      Πρόοδος:
+      <div class="bar"><span id="bar"></span></div>
+      <div><span id="countDone">0</span>/<span id="countAll">0</span></div>
+    </div>
+  </section>
+
+  <!-- Λίστα -->
+  <section class="panel list" id="list"></section>
+
+  <footer class="footer panel">
+    <div class="sub">Τα δεδομένα αποθηκεύονται τοπικά (localStorage).</div>
+    <a class="link" href="euxi.html">↩️ Πίσω στο γράμμα</a>
+  </footer>
+</main>
+
+<script>
+  // --------- Δεδομένα (ενδεικτικά 5) ---------
+  const initial = [
+    { id:'v1', name:'Καθυστέρηση απάντησης σε μήνυμα', severity:'LOW',    details:'Άργησε να απαντήσει σε σημαντικό μήνυμα.', done:false },
+    { id:'v2', name:'Παράλειψη ενημέρωσης για αλλαγή προγράμματος', severity:'MED', details:'Δεν ενημερώθηκε εγκαίρως για αναπροσαρμογή.', done:false },
+    { id:'v3', name:'Απουσία χωρίς ειδοποίηση', severity:'HIGH',  details:'Έλειψε από υποχρέωση χωρίς ενημέρωση.', done:false },
+    { id:'v4', name:'Χρήση ακατάλληλου ύφους', severity:'LOW',    details:'Μήνυμα με όχι και τόσο ευγενικό τόνο.', done:true  },
+    { id:'v5', name:'Παράλειψη παράδοσης μικρής εργασίας', severity:'MED', details:'Καθυστέρηση/παράλειψη παράδοσης.', done:false },
+  ];
+  const STORAGE_KEY = 'paravaseis-demo-v1';
+
+  const state = {
+    items: load(),
+    filter: 'ALL'
+  };
+
+  function load(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return initial;
+      const parsed = JSON.parse(raw);
+      // Αν αλλάξαμε seed, κάνε merge ids που λείπουν
+      const known = new Map(parsed.map(x=>[x.id,x]));
+      initial.forEach(x=>{ if(!known.has(x.id)) parsed.push(x); });
+      return parsed;
+    }catch{ return initial; }
+  }
+  function save(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state.items)); }catch{}
+  }
+
+  // --------- Render ---------
+  const listEl = document.getElementById('list');
+  const bar = document.getElementById('bar');
+  const countDone = document.getElementById('countDone');
+  const countAll = document.getElementById('countAll');
+
+  function tagForSeverity(sev){
+    const map = {HIGH:'sev-high', MED:'sev-med', LOW:'sev-low'};
+    const label = {HIGH:'Υψηλή', MED:'Μεσαία', LOW:'Χαμηλή'}[sev] || sev;
+    return `<span class="tag ${map[sev]||''}">${label}</span>`;
+  }
+
+  function render(){
+    const items = filtered();
+    listEl.innerHTML = '';
+    if (!items.length){
+      listEl.innerHTML = `<div class="empty">Δεν υπάρχουν στοιχεία με αυτό το φίλτρο.</div>`;
+    } else {
+      items.forEach(item=>{
+        const statusClass = item.done ? 'done' : 'open';
+        const statusText = item.done ? 'Ολοκληρωμένη' : 'Ανοικτή';
+        const el = document.createElement('article');
+        el.className = 'item';
+        el.innerHTML = `
+          <header data-id="${item.id}">
+            <div class="name">${item.name}</div>
+            <div>${tagForSeverity(item.severity)}</div>
+            <div><span class="status ${statusClass}">${statusText}</span></div>
+          </header>
+          <div class="body" id="body-${item.id}">
+            <p style="margin:0 0 10px;color:#cdd4ff">${item.details}</p>
+            <div class="actions">
+              <button class="btn ok" data-act="toggle" data-id="${item.id}">${item.done?'Σήμανση ως ανοικτή':'Σήμανση ως ολοκληρωμένη'}</button>
+              <button class="btn" data-act="edit" data-id="${item.id}">Επεξεργασία τίτλου</button>
+              <button class="btn" data-act="desc" data-id="${item.id}">Επεξεργασία περιγραφής</button>
+              <button class="btn" data-act="del" data-id="${item.id}">Διαγραφή</button>
+            </div>
+          </div>
+        `;
+        listEl.appendChild(el);
+      });
+    }
+    // πρόοδος
+    const total = state.items.length;
+    const done = state.items.filter(x=>x.done).length;
+    countAll.textContent = total;
+    countDone.textContent = done;
+    bar.style.width = total ? (done/total*100).toFixed(0)+'%' : '0%';
+  }
+
+  function filtered(){
+    const f = state.filter;
+    return state.items.filter(x=>{
+      if (f==='ALL') return true;
+      if (f==='OPEN') return !x.done;
+      if (f==='DONE') return x.done;
+      return x.severity === f;
+    });
+  }
+
+  // --------- Interactions ---------
+  // expand/collapse
+  listEl.addEventListener('click', (e)=>{
+    const header = e.target.closest('header[data-id]');
+    if (!header) return;
+    const id = header.getAttribute('data-id');
+    const body = document.getElementById('body-'+id);
+    body.style.display = (body.style.display==='block') ? 'none' : 'block';
+  });
+
+  // actions
+  listEl.addEventListener('click', (e)=>{
+    const btn = e.target.closest('button[data-act]');
+    if (!btn) return;
+    const id = btn.getAttribute('data-id');
+    const act = btn.getAttribute('data-act');
+    const idx = state.items.findIndex(x=>x.id===id);
+    if (idx<0) return;
+
+    if (act==='toggle'){
+      state.items[idx].done = !state.items[idx].done;
+      save(); render();
+    }
+    if (act==='edit'){
+      const val = prompt('Νέος τίτλος:', state.items[idx].name);
+      if (val && val.trim()){ state.items[idx].name = val.trim(); save(); render(); }
+    }
+    if (act==='desc'){
+      const val = prompt('Νέα περιγραφή:', state.items[idx].details);
+      if (val && val.trim()){ state.items[idx].details = val.trim(); save(); render(); }
+    }
+    if (act==='del'){
+      if (confirm('Διαγραφή;')){ state.items.splice(idx,1); save(); render(); }
+    }
+  });
+
+  // filters
+  document.querySelectorAll('.chip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      chip.classList.add('active');
+      state.filter = chip.getAttribute('data-filter');
+      render();
+    });
+  });
+
+  // start
+  render();
+</script>
+</body>
+  </html>
