@@ -8,70 +8,90 @@
   :root{
     --bg:#0f1226; --paper:#fffaf2; --ink:#243b53; --accent:#7c5cff; --accent-2:#26d0ce;
     --shadow:0 18px 45px rgba(0,0,0,.35); --radius:20px; --muted:#7c86ab;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box}
   html,body{height:100%}
+  html{ -webkit-text-size-adjust:100% }
   body{
     margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    -webkit-tap-highlight-color: transparent;
     background:
       radial-gradient(1200px 800px at 10% -10%, rgba(124,92,255,.20), transparent),
       radial-gradient(1200px 800px at 120% 120%, rgba(38,208,206,.18), transparent),
       var(--bg);
-    color:#eef1ff; display:grid; place-items:center; padding:18px;
+    color:#eef1ff; display:grid; place-items:center; padding:18px; padding-bottom:calc(18px + var(--safe-bottom));
   }
   .wrap{width:min(920px, 100%); display:grid; gap:16px}
   .title{ text-align:center }
   h1{margin:.2rem 0 .4rem; font-size:clamp(22px, 5vw, 34px)}
   .sub{color:var(--muted)}
 
-  /* Envelope */
+  /* ===== Envelope (mobile-first) ===== */
   .envelope{
-    position:relative; margin-inline:auto; width:min(720px, 100%); aspect-ratio: 16/9;
+    position:relative;
+    width:min(720px, 100%);
+    height:clamp(280px, 56vh, 520px);   /* σταθερό ύψος για μικρά κινητά */
+    margin-inline:auto;
     perspective:1200px;
+    border-radius:var(--radius);
+    overflow:hidden;                    /* ΚΡΑΤΑΕΙ ΤΟ ΧΑΡΤΙ ΜΕΣΑ -> δεν ξεχειλίζει */
+    box-shadow:var(--shadow);
   }
   .env-body{
-    position:absolute; inset:0; background:linear-gradient(180deg, #1b1f42, #131736);
-    border:1px solid rgba(255,255,255,.1); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, #1b1f42, #131736);
+    border:1px solid rgba(255,255,255,.10);
   }
   .flap{
-    position:absolute; inset:0; background:linear-gradient(180deg, #2a2f64, #1b1f42);
-    transform-origin: top; transform: rotateX(0deg); transition: transform .9s cubic-bezier(.2,.8,.2,1);
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, #2a2f64, #1b1f42);
+    transform-origin: top;
+    transform: rotateX(0deg);
+    transition: transform .9s cubic-bezier(.2,.8,.2,1);
     border-bottom:1px solid rgba(255,255,255,.18);
+    will-change: transform;
+    z-index:2;
   }
   .paper{
-    position:absolute; left:6%; right:6%; top:8%; bottom:8%;
+    position:absolute; left:6%; right:6%; top:6%; bottom:6%;
     background: var(--paper); color: var(--ink);
     border-radius:14px; box-shadow: 0 10px 20px rgba(0,0,0,.18) inset;
-    transform: translateY(110%); transition: transform 1s cubic-bezier(.2,.8,.2,1) .15s;
     display:grid; grid-template-rows:auto 1fr auto;
-    padding:18px 18px 10px; overflow:hidden;
+    padding:18px 18px calc(10px + var(--safe-bottom));
+    overflow:auto;
+    transform: translateY(105%);          /* κρυμμένο μέσα στο φάκελο */
+    transition: transform 1s cubic-bezier(.2,.8,.2,1) .15s;
+    will-change: transform;
+    z-index:1;
   }
+  /* Κατά το άνοιγμα */
+  .envelope.open .flap{ transform: rotateX(-150deg) }
+  .envelope.open .paper{ transform: translateY(0%) }
+
   .paper header{display:flex; align-items:center; justify-content:space-between; gap:12px}
   .seal{
     width:44px; height:44px; border-radius:50%;
     background: radial-gradient(circle at 30% 30%, #ffd2d2, #ff7a7a);
     border:2px solid #802a2a; box-shadow: 0 4px 12px rgba(0,0,0,.25);
+    flex:0 0 44px;
   }
   .paper .body{margin:8px 2px; padding:12px 8px; border-radius:12px; background:#fff7ea}
   .paper .body p{margin:.3rem 0 1rem; line-height:1.65}
   .signature{display:flex; justify-content:flex-end; margin-top:6px; color:#7a6a52; font-style:italic}
 
-  .cta{
-    margin-top:12px; display:flex; justify-content:flex-end;
-  }
+  .cta{ margin-top:12px; display:flex; justify-content:flex-end; }
   .btn{
     appearance:none; cursor:pointer; border:none; font-weight:800; letter-spacing:.2px;
     padding:14px 18px; border-radius:999px; color:white;
     background:linear-gradient(90deg, var(--accent), var(--accent-2));
     box-shadow:0 10px 20px rgba(0,0,0,.25);
     transition: transform .08s ease, filter .15s ease;
+    touch-action:manipulation;
   }
   .btn:hover{ transform: translateY(-1px); filter:brightness(1.05) }
   .btn:active{ transform: translateY(0) scale(.99) }
-
-  /* Open states */
-  .envelope.open .flap{ transform: rotateX(-150deg) }
-  .envelope.open .paper{ transform: translateY(0%) }
 
   /* Hint */
   .hint{ text-align:center; color:var(--muted); font-size:14px }
@@ -82,6 +102,9 @@
 
   /* Confetti canvas */
   #confetti{ position:fixed; inset:0; pointer-events:none }
+  @media (prefers-reduced-motion: reduce){
+    .flap, .paper { transition:none }
+  }
 </style>
 </head>
 <body>
@@ -95,11 +118,11 @@
 
   <section class="envelope" id="envelope" aria-label="Φάκελος">
     <div class="env-body"></div>
-    <div class="flap"></div>
+    <div class="flap" aria-hidden="true"></div>
     <article class="paper" role="document" aria-live="polite">
       <header>
         <h2 style="margin:0;color:#3b4a64">ΓΡΑΜΜΑ ΕΥΧΗΣ</h2>
-        <div class="seal" aria-hidden="true" title="Σφραγίδα"></div>
+        <div class="seal" title="Σφραγίδα"></div>
       </header>
 
       <!-- ΠΕΡΙΕΧΟΜΕΝΟ ΠΡΟΣ ΣΥΜΠΛΗΡΩΣΗ -->
@@ -124,17 +147,20 @@
 </main>
 
 <script>
-  // --------- Envelope open + confetti ---------
-  const env = document.getElementById('envelope');
+  /* ========= Confetti (βελτιωμένο για κινητά) ========= */
   const confetti = document.getElementById('confetti');
   const ctx = confetti.getContext('2d');
-  const DPR = Math.max(1, window.devicePixelRatio || 1);
-  function resize(){
-    confetti.width = Math.floor(innerWidth * DPR);
-    confetti.height = Math.floor(innerHeight * DPR);
+  let DPR = Math.max(1, window.devicePixelRatio || 1);
+
+  function sizeCanvas(){
+    const vw = (window.visualViewport?.width || innerWidth);
+    const vh = (window.visualViewport?.height || innerHeight);
+    confetti.width  = Math.floor(vw * DPR);
+    confetti.height = Math.floor(vh * DPR);
   }
-  resize();
-  addEventListener('resize', resize);
+  sizeCanvas();
+  addEventListener('resize', sizeCanvas);
+  window.visualViewport && visualViewport.addEventListener('resize', sizeCanvas);
 
   let bits = [];
   function spawnConfetti(n=120){
@@ -148,35 +174,42 @@
       });
     }
   }
-  function loop(){
+  (function loop(){
     const W = confetti.width, H = confetti.height;
     ctx.clearRect(0,0,W,H);
     bits.forEach(b=>{
       b.x += b.vx; b.y += b.vy; b.rot += b.vr;
-      ctx.save();
-      ctx.translate(b.x, b.y);
-      ctx.rotate(b.rot);
-      ctx.fillStyle = b.c;
-      ctx.fillRect(-b.r, -b.r*0.3, b.r*2, b.r*0.6);
+      ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.rot);
+      ctx.fillStyle = b.c; ctx.fillRect(-b.r, -b.r*0.3, b.r*2, b.r*0.6);
       ctx.restore();
     });
     bits = bits.filter(b=>b.y < H+30);
     requestAnimationFrame(loop);
-  }
-  loop();
+  })();
 
-  env.addEventListener('click', ()=>{
-    if (!env.classList.contains('open')){
-      env.classList.add('open');
-      spawnConfetti(160);
-    }
+  /* ========= Envelope interactions ========= */
+  const env = document.getElementById('envelope');
+  let opened = false;
+
+  function openEnvelope(){
+    if (opened) return;
+    opened = true;
+    env.classList.add('open');
+    // σε μικρή οθόνη, κύλησε το φάκελο στο κέντρο
+    env.scrollIntoView({behavior:'smooth', block:'center'});
+    spawnConfetti(160);
+  }
+
+  env.addEventListener('click', openEnvelope, {passive:true});
+  // μικρή βοήθεια για όσους πατήσουν δύο φορές
+  env.addEventListener('touchend', e=>{
+    if (!opened) openEnvelope();
   }, {passive:true});
 
-  // --------- Continue button → παραβάσεις ---------
+  /* ========= Continue → παραβάσεις ========= */
   document.getElementById('continueBtn').addEventListener('click', ()=>{
-    // μικρό feedback πριν το redirect
-    spawnConfetti(50);
-    setTimeout(()=>{ window.location.href = 'paravaseis.html'; }, 650);
+    spawnConfetti(60);
+    setTimeout(()=>{ window.location.href = 'paravaseis.html'; }, 550);
   });
 </script>
 </body>
