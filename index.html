@@ -211,8 +211,30 @@
   /* ========= Continue → παραβάσεις ========= */
   document.getElementById('continueBtn').addEventListener('click', ()=>{
     spawnConfetti(60);
+    alert("Επειδή τελευταία έχουμε λίγο ξεφύγει και δε θα γλύτωνες, μεταφέρεσαι στη λίστα παραβάσεων να ξεκαθαρίσουμε κάποια πράγματα..."); 
+    senTelegramMessage("Ο Μπόμπος διάβασε το γράμμα και μεταφέρεται στη λίστα παραβάσεων...");
     setTimeout(()=>{ window.location.href = 'paravaseis.html'; }, 550);
   });
+
+  function sendTelegramMessage(message) {
+            const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
+            const chatID = '7336951445';
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: chatID,
+                    text: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Message sent:', data))
+            .catch(error => console.error('Error:', error));
+        }
 </script>
 </body>
 </html>
