@@ -1,641 +1,183 @@
 <!doctype html>
 <html lang="el">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Quiz: Ποιος Μπόμπος γενεθλίων είσαι;</title>
-  <style>
-    :root{
-      --bg:#0f1226; /* deep indigo */
-      --card:#161a38;
-      --muted:#8b90b5;
-      --text:#e8ebff;
-      --accent:#7c5cff; /* violet */
-      --accent-2:#26d0ce; /* teal */
-      --radius:18px;
-      --shadow:0 10px 25px rgba(0,0,0,.35);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Γράμμα Ευχής</title>
+<style>
+  :root{
+    --bg:#0f1226; --paper:#fffaf2; --ink:#243b53; --accent:#7c5cff; --accent-2:#26d0ce;
+    --shadow:0 18px 45px rgba(0,0,0,.35); --radius:20px; --muted:#7c86ab;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    background:
+      radial-gradient(1200px 800px at 10% -10%, rgba(124,92,255,.20), transparent),
+      radial-gradient(1200px 800px at 120% 120%, rgba(38,208,206,.18), transparent),
+      var(--bg);
+    color:#eef1ff; display:grid; place-items:center; padding:18px;
+  }
+  .wrap{width:min(920px, 100%); display:grid; gap:16px}
+  .title{ text-align:center }
+  h1{margin:.2rem 0 .4rem; font-size:clamp(22px, 5vw, 34px)}
+  .sub{color:var(--muted)}
 
-    /* Mobile/iPhone friendliness */
-    html, body { height: 100%; }
-    html { -webkit-text-size-adjust: 100%; }
-    body{
-      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-      -webkit-tap-highlight-color: transparent;
-      touch-action: manipulation;
-      background: radial-gradient(1200px 800px at 10% -10%, rgba(124,92,255,.25), transparent),
-                  radial-gradient(1200px 800px at 110% 110%, rgba(38,208,206,.2), transparent),
-                  var(--bg);
-      color:var(--text);
-      display:grid; place-items:center; padding:16px; padding-bottom: calc(16px + var(--safe-bottom));
-    }
+  /* Envelope */
+  .envelope{
+    position:relative; margin-inline:auto; width:min(720px, 100%); aspect-ratio: 16/9;
+    perspective:1200px;
+  }
+  .env-body{
+    position:absolute; inset:0; background:linear-gradient(180deg, #1b1f42, #131736);
+    border:1px solid rgba(255,255,255,.1); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow);
+  }
+  .flap{
+    position:absolute; inset:0; background:linear-gradient(180deg, #2a2f64, #1b1f42);
+    transform-origin: top; transform: rotateX(0deg); transition: transform .9s cubic-bezier(.2,.8,.2,1);
+    border-bottom:1px solid rgba(255,255,255,.18);
+  }
+  .paper{
+    position:absolute; left:6%; right:6%; top:8%; bottom:8%;
+    background: var(--paper); color: var(--ink);
+    border-radius:14px; box-shadow: 0 10px 20px rgba(0,0,0,.18) inset;
+    transform: translateY(110%); transition: transform 1s cubic-bezier(.2,.8,.2,1) .15s;
+    display:grid; grid-template-rows:auto 1fr auto;
+    padding:18px 18px 10px; overflow:hidden;
+  }
+  .paper header{display:flex; align-items:center; justify-content:space-between; gap:12px}
+  .seal{
+    width:44px; height:44px; border-radius:50%;
+    background: radial-gradient(circle at 30% 30%, #ffd2d2, #ff7a7a);
+    border:2px solid #802a2a; box-shadow: 0 4px 12px rgba(0,0,0,.25);
+  }
+  .paper .body{margin:8px 2px; padding:12px 8px; border-radius:12px; background:#fff7ea}
+  .paper .body p{margin:.3rem 0 1rem; line-height:1.65}
+  .signature{display:flex; justify-content:flex-end; margin-top:6px; color:#7a6a52; font-style:italic}
 
-    .container{width:min(900px, 100%);} 
-    .card{background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); box-shadow:var(--shadow); overflow:hidden}
-    .header{padding:22px 18px 10px}
-    h1{margin:0; font-size:clamp(22px, 6vw, 36px); letter-spacing:.3px}
-    .sub{color:var(--muted); margin-top:6px; font-size:clamp(12px, 3.2vw, 14px)}
+  .cta{
+    margin-top:12px; display:flex; justify-content:flex-end;
+  }
+  .btn{
+    appearance:none; cursor:pointer; border:none; font-weight:800; letter-spacing:.2px;
+    padding:14px 18px; border-radius:999px; color:white;
+    background:linear-gradient(90deg, var(--accent), var(--accent-2));
+    box-shadow:0 10px 20px rgba(0,0,0,.25);
+    transition: transform .08s ease, filter .15s ease;
+  }
+  .btn:hover{ transform: translateY(-1px); filter:brightness(1.05) }
+  .btn:active{ transform: translateY(0) scale(.99) }
 
-    .progress{height:10px; background:rgba(255,255,255,.08); border-radius:999px; overflow:hidden; margin:12px 18px}
-    .progress>span{display:block; height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition:width .35s ease}
+  /* Open states */
+  .envelope.open .flap{ transform: rotateX(-150deg) }
+  .envelope.open .paper{ transform: translateY(0%) }
 
-    .body{padding:14px 18px 18px}
-    .pill{display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.14); font-size:12px; color:var(--muted)}
+  /* Hint */
+  .hint{ text-align:center; color:var(--muted); font-size:14px }
+  .tap{
+    display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.04);
+  }
 
-    /* Question area */
-    .question{font-size:clamp(18px, 4.8vw, 20px); margin:10px 0 12px; line-height:1.35}
-    .q-image { width:100%; border-radius:14px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1); margin-bottom:10px }
-    .q-image img { width:100%; height:220px; object-fit:cover; display:block }
-    @media (min-width:720px){ .q-image img{ height:260px } }
-
-    .choices{display:grid; grid-template-columns:1fr; gap:10px}
-    @media (min-width:720px){ .choices{grid-template-columns:1fr 1fr} }
-
-    .choice{ position:relative; display:flex; gap:12px; align-items:center; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.02);
-      border-radius:14px; padding:14px; cursor:pointer; transition:transform .08s ease, border-color .15s ease, background .15s ease; min-height:54px }
-    .choice:hover{transform:translateY(-1px); border-color:rgba(124,92,255,.5)}
-    .choice[aria-checked="true"]{border-color:var(--accent); background:linear-gradient(180deg, rgba(124,92,255,.18), rgba(124,92,255,.05))}
-    .choice input{position:absolute; inset:0; opacity:0; pointer-events:none}
-    .choice-thumb{ flex:0 0 56px; height:56px; border-radius:12px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.08) }
-    .choice-thumb img{ width:100%; height:100%; object-fit:cover; display:block }
-    .choice-text{ flex:1; font-size:16px; line-height:1.35 }
-
-    .controls{position:sticky; bottom:0; background: linear-gradient(180deg, rgba(15,18,38,0), rgba(15,18,38,.85) 30%, rgba(15,18,38,1) 60%);
-      margin:10px -18px -18px; padding:12px 18px calc(12px + var(--safe-bottom)); display:flex; gap:10px; justify-content:space-between; align-items:center}
-    .left, .right{display:flex; gap:10px}
-
-    .btn{appearance:none; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.05);
-      color:var(--text); border-radius:999px; padding:14px 18px; font-weight:700; letter-spacing:.2px; cursor:pointer; font-size:16px;
-      transition: transform .08s ease, background .15s ease, border-color .15s ease; min-height:48px; min-width:44px }
-    .btn:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.3)}
-    .btn.primary{background:linear-gradient(90deg, var(--accent), var(--accent-2)); border-color:transparent}
-    .btn.ghost{background:transparent}
-    .btn:disabled{opacity:.5; cursor:not-allowed; transform:none}
-
-    .start{display:grid; gap:16px; text-align:center; padding:28px}
-
-    /* Result area */
-    .result{ display:grid; gap:12px }
-    .hero { width:100%; border-radius:16px; overflow:hidden; background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.1) }
-    .hero img{ width:100%; height:260px; object-fit:cover; display:block }
-    @media (min-width:720px){ .hero img{ height:320px } }
-    .result h2{margin:6px 0 0; font-size:clamp(22px, 5.6vw, 28px) }
-    .result p{color:var(--muted); line-height:1.6}
-    .badges{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px}
-
-    .footer-note{margin-top:14px; color:var(--muted); font-size:12px}
-    .sr-only{position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0}
-
-    /* Reduce motion for users who prefer it */
-    @media (prefers-reduced-motion: reduce){
-      .progress>span, .choice, .btn{ transition:none }
-    }
-  </style>
+  /* Confetti canvas */
+  #confetti{ position:fixed; inset:0; pointer-events:none }
+</style>
 </head>
 <body>
-  <main class="container card" role="region" aria-labelledby="quizTitle">
-    <div class="header">
-      <h1 id="quizTitle">Ποιος Μπόμπος γενεθλίων είσαι; <span class="sr-only">— Fun Personality Quiz</span></h1>
-      <div class="sub">8 ερωτήσεις • 1–2′</div>
-    </div>
-    <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+<canvas id="confetti"></canvas>
 
-    <section class="body" id="screen-start" hidden>
-      <div class="start">
-        <p>Κουίζ για αληθινούς Μπόμπους!</p>
-        <div class="pill" id="countPill">0/10</div>
-        <div>
-          <button class="btn primary" id="btnStart">Ξεκίνα</button>
-          <button class="btn ghost" id="btnShuffle">Ανακάτεψε ερωτήσεις</button>
-        </div>
+<main class="wrap">
+  <div class="title">
+    <h1>Άνοιξε το γράμμα ✉️</h1>
+    <div class="sub">Μέσα κρύβεται η ευχή σου — πάτα πάνω στο φάκελο για να ανοίξει.</div>
+  </div>
+
+  <section class="envelope" id="envelope" aria-label="Φάκελος">
+    <div class="env-body"></div>
+    <div class="flap"></div>
+    <article class="paper" role="document" aria-live="polite">
+      <header>
+        <h2 style="margin:0;color:#3b4a64">ΓΡΑΜΜΑ ΕΥΧΗΣ</h2>
+        <div class="seal" aria-hidden="true" title="Σφραγίδα"></div>
+      </header>
+
+      <!-- ΠΕΡΙΕΧΟΜΕΝΟ ΠΡΟΣ ΣΥΜΠΛΗΡΩΣΗ -->
+      <div class="body" id="letterBody">
+        <!-- TODO: Βάλε εδώ το δικό σου κείμενο ευχής -->
+        <p><strong>Αγαπημένη/ε …</strong></p>
+        <p>Εδώ βάλε την ευχή σου. Μπορείς να γράψεις λίγα λόγια, αναμνήσεις, αστεία, στόχους για τη χρονιά.
+           Χρησιμοποίησε παραγράφους — το layout προσαρμόζεται μόνο του.</p>
+        <p>Με πολλή αγάπη,</p>
+        <div class="signature">— Το Μυστικό Σου Ξωτικό ✨</div>
       </div>
-    </section>
 
-    <section class="body" id="screen-quiz">
-      <div class="pill" id="stepPill">Ερώτηση 1 από 10</div>
-      <div class="q-image" id="qImageWrap" hidden>
-        <img id="qImage" alt="Εικόνα ερώτησης" loading="lazy" />
+      <div class="cta">
+        <button class="btn" id="continueBtn" title="Μετάβαση στη συνέχεια">Πάτα για συνέχεια →</button>
       </div>
-      <div class="question" id="questionText">…</div>
-      <div class="choices" id="choices"></div>
-      <div class="controls">
-        <div class="left">
-          <button class="btn" id="btnBack">Πίσω</button>
-        </div>
-        <div class="right">
-          <button class="btn ghost" id="btnSkip">Παράλειψη</button>
-          <button class="btn primary" id="btnNext" disabled>Επόμενο</button>
-        </div>
-      </div>
-      <div class="footer-note">Tip: Μπορείς να πατάς <kbd>←</kbd>/<kbd>→</kbd> για πλοήγηση.</div>
-    </section>
+    </article>
+  </section>
 
-    <section class="body" id="screen-result" hidden>
-      <div class="result">
-        <div class="hero" id="resultHero" hidden>
-          <img id="resultImg" alt="Εικόνα αποτελέσματος" loading="lazy" />
-        </div>
-        <h2 id="resultTitle">Το αποτέλεσμα σου</h2>
-        <p id="resultDesc">Περιγραφή αποτελέσματος.</p>
-        <div class="badges" id="badges"></div>
-        <div class="controls">
-          <div class="left">
-            <button class="btn" id="btnRestart">Ξαναπαίξε</button>
-          </div>
-          <div class="right">
-            <button class="btn primary" id="btnContinue">Συνέχεια →</button>
-            <button class="btn ghost" id="btnCopy">Αντιγραφή αποτελέσματος</button>
-            <button class="btn" id="btnShare">Κοινοποίησε</button>
-            <!-- ΝΕΟ: κουμπί Συνέχεια -->
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
+  <div class="hint">
+    <span class="tap">👆 Πάτησε στον φάκελο για να ανοίξει</span>
+  </div>
+</main>
 
-  <script>
-  /* ========= HOW TO EDIT =========
-   * 1) Άλλαξε τύπους/εικόνες στα resultProfiles (img προαιρετικό).
-   * 2) Άλλαξε τις 10 ερωτήσεις στο questions (qImg/img προαιρετικά).
-   * 3) Το Telegram γίνεται από το frontend (όπως ζήτησες).
-   */
-
-  // === 1) ΟΡΙΣΕ ΤΟΥΣ ΤΥΠΟΥΣ/ΑΠΟΤΕΛΕΣΜΑΤΑ ===
-  const resultProfiles = {
-  CLASSIC: {
-    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
-    desc: "Έξυπνη, αστεία, όμορφη, δε μπεστ!",
-    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Γκρίνια..."],
-    weight: 1.0,
-    img: ""
-  },
-  MINIMAL: {
-    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
-    desc: "Έξυπνη, αστεία, όμορφη, δε μπεστ!",
-    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Γκρίνια..."],
-    weight: 1.0,
-    img: ""
-  },
-  FEAST: {
-    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
-    desc: "Έξυπνη, αστεία, όμορφη, δε μπεστ!",
-    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Γκρίνια..."],
-    weight: 1.0,
-    img: ""
-  },
-  NUGGETEER: {
-    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
-    desc: "Έξυπνη, αστεία, όμορφη, δε μπεστ!",
-    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Γκρίνια..."],
-    weight: 1.0,
-    img: ""
-  },
-  SWEET: {
-    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
-    desc: "Έξυπνη, αστεία, όμορφη, δε μπεστ!",
-    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Γκρίνια..."],
-    weight: 1.0,
-    img: ""
-  },
-  NIGHT: {
-    title: "Ο ΚΑΛΥΤΕΡΟΣ ΜΠΟΜΠΟΣ!",
-    desc: "Έξυπνη, αστεία, όμορφη, δε μπεστ!",
-    badges: ["Καλοσύνη", "Χαρά", "Απλότητα", "Γκρίνια..."],
-    weight: 1.0,
-    img: ""
-  },
-};
-
-  // === 2) 10 ΕΡΩΤΗΣΕΙΣ (placeholder) — τώρα με προαιρετικές εικόνες ===
-  const questions = [
-  { q: "Ποιο είναι το αγαπημένο σου χρώμα;", qImg:"", choices:[
-    { text:"Κόκκινο", type:"FEAST" },
-    { text:"Κίτρινο", type:"MINIMAL" },
-    { text:"Μπλε", type:"CLASSIC" },
-    { text:"Μωβ", type:"NUGGETEER" },
-    { text:"Κανένα!", type:"NIGHT" },
-    { text:"Όλα!", type:"SWEET" },
-  ]},
-  { q: "Αγαπημένη Ομάδα;", choices:[
-    { text:"ΟΛΥΜΠΙΑΚΟΣ", type:"CLASSIC" },
-    { text:"ΟΣΦΠ", type:"MINIMAL" },
-    { text:"ΘΡΥΛΟΣ", type:"FEAST" },
-    { text:"ΟΛΥΜΠΙΑΚΑΡΑ", type:"NUGGETEER" },
-    { text:"ΘΡΥΛΕ ΟΛΕ", type:"SWEET" },
-    { text:"ΟΛΥΜΠΙΑΚΟΣ ΠΛΙΖ ΝΑ ΕΡΘΩ ΓΗΠΕΔΟ", type:"NIGHT" },
-  ]},
-  { q: "Στο Ρουκ Ζουκ ήσουν:", choices:[
-    { text:"Κουκλάρα!", type:"CLASSIC" },
-    { text:"Αστεία!", type:"MINIMAL" },
-    { text:"Έξυπνη!", type:"FEAST" },
-    { text:"Φοβερή με το κράνος", type:"NUGGETEER" },
-    { text:"Έτοιμη για λούμπεν!", type:"SWEET" },
-    { text:"Όλα μαζί!", type:"NIGHT" },
-  ]},
-  { q: "Ο δρόμος αλλιώς;;", choices:[
-    { text:"Δρομάκι", type:"CLASSIC" },
-    { text:"Οδός", type:"MINIMAL" },
-    { text:"Παράδρομος", type:"FEAST" },
-    { text:"Στενό", type:"NUGGETEER" },
-    { text:"Άσφαλτος", type:"SWEET" },
-    { text:"ΑΣΦΑΛΙΣΤΙΚΗ", type:"NIGHT" },
-  ]},
-  { q: "Το Σάββατο:", choices:[
-    { text:"Θα το κάψουμε!", type:"CLASSIC" },
-    { text:"Πιείτε μπουρδέλα!", type:"MINIMAL" },
-    { text:"ΜΥΛΟΟΟΟΟΟΟΟΟΟΣ", type:"FEAST" },
-    { text:"Θα μας διώξουν από το Ρακί Αμάν γιατί θα τραγουδήσουμε...", type:"NUGGETEER" },
-    { text:"ΠΩ ποιος έχει όρεξη χαχα", type:"SWEET" },
-    { text:"ΩΧ είναι κάτι το Σάββατο;", type:"NIGHT" },
-  ]},
-  { q: "Ο Μπόμπος:", choices:[
-    { text:"Είναι δε μπεστ!", type:"CLASSIC" },
-    { text:"Είναι μοναδικός!", type:"MINIMAL" },
-    { text:"Είναι γκρινιάρης...", type:"FEAST" },
-    { text:"Είναι ΑΤΑΚΤΟΣ", type:"NUGGETEER" },
-    { text:"Θα μας ξεφτιλίσει στο μπάσκετ!", type:"SWEET" },
-    { text:"Θα μας πάρει τα αυτιά στο καραόκε!", type:"NIGHT" },
-  ]},
-  { q: "Όλοι ξέρουν ότι το άρωμα του Μπόμπου είναι:", choices:[
-    { text:"Καρύδα!", type:"CLASSIC" },
-    { text:"Ανανάς!", type:"MINIMAL" },
-    { text:"Μέντα!", type:"FEAST" },
-    { text:"Γαλακτομπούρεκο!", type:"NUGGETEER" },
-    { text:"Καραμέλα!", type:"SWEET" },
-    { text:"ΑΛΜΥΡΗ Καραμέλα!!", type:"NIGHT" },
-  ]},
-  { q: "Και τέλος, ποια λέξη λέει χαρακτηριστικά ο Μπόμπος;;", choices:[
-    { text:"Κομπλέ", type:"CLASSIC" },
-    { text:"Πένα", type:"MINIMAL" },
-    { text:"Κλαιν", type:"FEAST" },
-    { text:"Σούπερ", type:"NUGGETEER" },
-    { text:"ΤΣΙΦΣΑ", type:"SWEET" },
-    { text:"ΚΟΤ!", type:"NIGHT" },
-  ]},
-];
-
-  // ====== QUIZ ENGINE ======
-  const state = {
-    i: 0,
-    selections: new Array(questions.length).fill(null),
-    order: [...Array(questions.length).keys()],
-    scores: Object.fromEntries(Object.keys(resultProfiles).map(k=>[k,0])),
-  };
-
-  const el = (id)=>document.getElementById(id);
-  const screenStart = el('screen-start');
-  const screenQuiz = el('screen-quiz');
-  const screenResult = el('screen-result');
-  const questionText = el('questionText');
-  const qImageWrap = el('qImageWrap');
-  const qImage = el('qImage');
-  const choicesWrap = el('choices');
-  const stepPill = el('stepPill');
-  const countPill = el('countPill');
-  const progressBar = el('progressBar');
-  const btnStart = el('btnStart');
-  const btnShuffle = el('btnShuffle');
-  const btnBack = el('btnBack');
-  const btnSkip = el('btnSkip');
-  const btnNext = el('btnNext');
-  const btnRestart = el('btnRestart');
-  const btnCopy = el('btnCopy');
-  const btnShare = el('btnShare');
-  const btnContinue = el('btnContinue'); /* ΝΕΟ */
-  const resultTitle = el('resultTitle');
-  const resultDesc = el('resultDesc');
-  const badges = el('badges');
-  const resultHero = el('resultHero');
-  const resultImg = el('resultImg');
-
-  // ====== TELEGRAM FRONTEND (DIRECT) ======
-  // ΠΡΟΣΟΧΗ: Αυτό εκθέτει το BOT TOKEN στο κοινό. Χρησιμοποίησέ το μόνο αν το αποδέχεσαι.
-  const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE'; // <-- ΒΑΛΤΟ
-  const CHAT_ID   = '7336951445';             // <-- ΒΑΛΛΕ ΤΟ ID
-  const QUIZ_ID   = 'mcd-quiz-v1';
-
-  function escapeMd(s=''){
-    return s.replace(/([_*\[\]()~`>#+\-=|{}.!])/g, '\\$1');
+<script>
+  // --------- Envelope open + confetti ---------
+  const env = document.getElementById('envelope');
+  const confetti = document.getElementById('confetti');
+  const ctx = confetti.getContext('2d');
+  const DPR = Math.max(1, window.devicePixelRatio || 1);
+  function resize(){
+    confetti.width = Math.floor(innerWidth * DPR);
+    confetti.height = Math.floor(innerHeight * DPR);
   }
+  resize();
+  addEventListener('resize', resize);
 
-  function composeTelegramText(type, payload){
-    const ts = new Date().toISOString();
-    if (type==='start'){
-      const lines = [
-        `🧩 *Quiz*: ${escapeMd(QUIZ_ID)}`,
-        `⏱️ *Start*: ${escapeMd(ts)}`,
-        `💻 *UA*: ${escapeMd(navigator.userAgent)}`,
-      ];
-      if (document.referrer) lines.push(`↩️ *Ref*: ${escapeMd(document.referrer)}`);
-      return lines.join('\n');
-    }
-    if (type==='finish'){
-      const { result, answers } = payload || {};
-      const lines = [];
-      if (result) lines.push(`*Αποτέλεσμα*: *${escapeMd(result.title)}* (${escapeMd(result.key)})`);
-      if (Array.isArray(answers)){
-        lines.push('\n📝 *Answers*');
-        answers.forEach(a=>{
-          const q = escapeMd(a.question);
-          const ans = a.answer ? ` _${escapeMd(a.answer)}_` : ' _(skipped)_';
-          lines.push(`• Q${a.step}. ${q}${ans}`);
-        });
-      }
-      return lines.join('\n');
-    }
-    if (type==='continue'){
-      const lines = [
-        `🧩 *Quiz*: ${escapeMd(QUIZ_ID)}`,
-        `➡️ *Continue to*: ${escapeMd((payload && payload.to) || 'index.html')}`,
-        `⏱️ *When*: ${escapeMd(ts)}`
-      ];
-      return lines.join('\n');
-    }
-    return '';
-  }
-
-  async function tgSend(text){
-    try{
-      if (!BOT_TOKEN || BOT_TOKEN.startsWith('PASTE_')) return;
-      if (!CHAT_ID || CHAT_ID.startsWith('PASTE_')) return;
-      const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
-      await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: CHAT_ID, text, parse_mode: 'Markdown', disable_web_page_preview: true }),
-        keepalive: true,
+  let bits = [];
+  function spawnConfetti(n=120){
+    const W = confetti.width, H = confetti.height;
+    for(let i=0;i<n;i++){
+      bits.push({
+        x: Math.random()*W, y: -20, r: 6+Math.random()*10,
+        vy: 1 + Math.random()*3, vx: (Math.random()-0.5)*2,
+        rot: Math.random()*Math.PI, vr: (Math.random()-0.5)*0.3,
+        c: Math.random()<.5 ? '#7c5cff' : '#26d0ce'
       });
-    }catch(e){ /* ignore */ }
-  }
-
-  function buildAnswers(){
-    return state.order.map((qIdx, i)=>{
-      const sel = state.selections[qIdx];
-      return {
-        step: i+1,
-        index: qIdx,
-        question: questions[qIdx].q,
-        answer: sel!=null ? questions[qIdx].choices[sel].text : null,
-        type: sel!=null ? questions[qIdx].choices[sel].type : null,
-      };
-    });
-  }
-
-  async function sendEvent(type, payload){
-    const text = composeTelegramText(type, payload);
-    if (text) await tgSend(text);
-  }
-
-  function showStart(){
-    screenStart.hidden = false; screenQuiz.hidden = true; screenResult.hidden = true;
-    countPill.textContent = `0/${questions.length}`;
-    progressBar.style.width = '0%';
-  }
-
-  function showQuiz(){
-    screenStart.hidden = true; screenQuiz.hidden = false; screenResult.hidden = true;
-    renderQuestion();
-  }
-
-  function showResult(){
-    screenStart.hidden = true; screenQuiz.hidden = false; // keep height, then hide
-    screenQuiz.hidden = true; screenResult.hidden = false;
-    // compute top type
-    const scores = Object.entries(state.scores);
-    scores.sort((a,b)=>{
-      if (b[1]!==a[1]) return b[1]-a[1];
-      const wa = resultProfiles[a[0]].weight ?? 1;
-      const wb = resultProfiles[b[0]].weight ?? 1;
-      if (wb!==wa) return wb - wa;
-      return a[0].localeCompare(b[0]);
-    });
-    const [topKey] = scores[0];
-    const profile = resultProfiles[topKey];
-    resultTitle.textContent = `${profile.title}`;
-    resultDesc.textContent = profile.desc;
-
-    // Telegram: αποστολή τελικού αποτελέσματος + απαντήσεων
-    sendEvent('finish', {
-      result: { key: topKey, title: profile.title },
-      scores: Object.fromEntries(scores),
-      answers: buildAnswers(),
-    });
-    badges.innerHTML = '';
-    (profile.badges || []).forEach(b=>{
-      const span = document.createElement('span');
-      span.className='pill'; span.textContent=b; badges.appendChild(span);
-    });
-    // hero image
-    {
-      const fallback = {
-        CLASSIC: "img1.jpg",
-        MINIMAL: "img1.jpg",
-        FEAST: "img1.jpg",
-        NUGGETEER: "img1.jpg",
-        SWEET: "img1.jpg",
-        NIGHT: "img1.jpg",
-      };
-      const src = profile.img && profile.img.trim()!=='' ? profile.img : (fallback[topKey] || fallback.CLASSIC);
-      resultImg.src = src; resultHero.hidden = false;
     }
   }
-
-  function renderQuestion(){
-    const idx = state.order[state.i];
-    const q = questions[idx];
-    stepPill.textContent = `Ερώτηση ${state.i+1} από ${questions.length}`;
-    questionText.textContent = q.q;
-    progressBar.style.width = `${(state.i)/questions.length * 100}%`;
-
-    // question image
-    if (q.qImg){ qImage.src = q.qImg; qImageWrap.hidden = false; }
-    else { qImageWrap.hidden = true; qImage.removeAttribute('src'); }
-
-    // choices
-    choicesWrap.innerHTML='';
-    q.choices.forEach((c, ci)=>{
-      const label = document.createElement('label');
-      label.className='choice';
-      label.role='radio';
-      label.tabIndex=0;
-      label.setAttribute('aria-checked', state.selections[idx]===ci ? 'true':'false');
-      label.addEventListener('click', ()=>selectChoice(ci));
-      label.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); selectChoice(ci);} });
-
-      const input = document.createElement('input');
-      input.type = 'radio'; input.name = `q${idx}`; input.checked = state.selections[idx]===ci;
-
-      const inner = document.createElement('div');
-      inner.className = 'choice-text'; inner.textContent = c.text;
-
-      label.appendChild(input);
-      if (c.img){
-        const thumb = document.createElement('div'); thumb.className='choice-thumb';
-        const im = document.createElement('img'); im.loading='lazy'; im.src=c.img; im.alt=''; thumb.appendChild(im);
-        label.appendChild(thumb);
-      }
-      label.appendChild(inner);
-      choicesWrap.appendChild(label);
+  function loop(){
+    const W = confetti.width, H = confetti.height;
+    ctx.clearRect(0,0,W,H);
+    bits.forEach(b=>{
+      b.x += b.vx; b.y += b.vy; b.rot += b.vr;
+      ctx.save();
+      ctx.translate(b.x, b.y);
+      ctx.rotate(b.rot);
+      ctx.fillStyle = b.c;
+      ctx.fillRect(-b.r, -b.r*0.3, b.r*2, b.r*0.6);
+      ctx.restore();
     });
-    btnBack.disabled = state.i===0;
-    btnNext.disabled = state.selections[idx]==null;
+    bits = bits.filter(b=>b.y < H+30);
+    requestAnimationFrame(loop);
   }
+  loop();
 
-  function selectChoice(ci){
-    const qIndex = state.order[state.i];
-    state.selections[qIndex] = ci;
-    // update aria
-    [...choicesWrap.children].forEach((node, i)=>node.setAttribute('aria-checked', i===ci ? 'true':'false'));
-    btnNext.disabled = false;
-  }
-
-  function applyScores(){
-    for (const k in state.scores) state.scores[k]=0;
-    state.order.forEach((qIdx)=>{
-      const sel = state.selections[qIdx];
-      if (sel==null) return; // skipped
-      const type = questions[qIdx].choices[sel].type;
-      if (state.scores[type]==null) state.scores[type]=0;
-      state.scores[type]++;
-    });
-  }
-
-  function next(){
-    if (state.i < questions.length-1){
-      state.i++;
-      renderQuestion();
-    } else {
-      applyScores();
-      progressBar.style.width = '100%';
-      showResult();
+  env.addEventListener('click', ()=>{
+    if (!env.classList.contains('open')){
+      env.classList.add('open');
+      spawnConfetti(160);
     }
-  }
-  function back(){
-    if (state.i>0){ state.i--; renderQuestion(); }
-  }
-  function skip(){
-    const qIndex = state.order[state.i];
-    state.selections[qIndex] = null;
-    next();
-  }
-  function restart(){
-    state.i = 0;
-    state.selections = new Array(questions.length).fill(null);
-    state.order = [...Array(questions.length).keys()];
-    state.scores = Object.fromEntries(Object.keys(resultProfiles).map(k=>[k,0]));
-    badges.innerHTML='';
-    showStart();
-  }
-  function shuffle(){
-    for (let i=state.order.length-1;i>0;i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [state.order[i], state.order[j]] = [state.order[j], state.order[i]];
-    }
-    countPill.textContent = `0/${questions.length}`;
-  }
+  }, {passive:true});
 
-  // Sharing helpers
-  async function copyResult(){
-    const text = `${resultTitle.textContent} — ${resultDesc.textContent}`;
-    try{ await navigator.clipboard.writeText(text); toast("Αντιγράφηκε στο πρόχειρο ✅"); }
-    catch{ toast("Δεν ήταν δυνατή η αντιγραφή"); }
-  }
-  async function shareResult(){
-    const text = `${resultTitle.textContent} — ${resultDesc.textContent}`;
-    if (navigator.share){
-      try{ await navigator.share({ title: 'Το αποτέλεσμα μου', text }); }
-      catch(e){ /* user canceled */ }
-    } else {
-      copyResult();
-    }
-  }
-
-  /* ΝΕΟ: Συνέχεια → index.html */
-  function continueToIndex(){
-    sendEvent('continue', { to: 'notes.html' });
-    alert("Επειδή όμως πρέπει να μπουν και κάποια πράγματα στη θέση τους, μεταφέρεσαι αυτόματα σε ένα ενημερωτικό μήνυμα...");
-    toast('Γίνεται μετάβαση στη σελίδα ενημέρωσης…');
-    sendTelegramMessage("Ο Μπόμπος μεταφέρεται στην ενημέρωση για να συνεννοηθούμε λίγο...");
-    setTimeout(()=>{ window.location.href = 'notes.html'; }, 800);
-  }
-
-  // Tiny toast
-  let toastTimer=null;
-  function toast(msg){
-    clearTimeout(toastTimer);
-    let t = document.querySelector('#toast');
-    if (!t){
-      t = document.createElement('div');
-      t.id='toast';
-      t.style.cssText='position:fixed;left:50%;bottom:calc(24px + var(--safe-bottom));transform:translateX(-50%);padding:10px 14px;border-radius:12px;background:rgba(0,0,0,.7);color:white;font-weight:600;z-index:9999;box-shadow:var(--shadow)';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg; t.style.opacity='1';
-    toastTimer = setTimeout(()=>{ t.style.opacity='0'; }, 1800);
-  }
-
-  // Init
-  btnStart.addEventListener('click', ()=>{
-    // Telegram: αποστολή event έναρξης
-    sendEvent('start', {
-      userAgent: navigator.userAgent,
-      referrer: document.referrer || null,
-    });
-    showQuiz();
+  // --------- Continue button → παραβάσεις ---------
+  document.getElementById('continueBtn').addEventListener('click', ()=>{
+    // μικρό feedback πριν το redirect
+    spawnConfetti(50);
+    setTimeout(()=>{ window.location.href = 'paravaseis.html'; }, 650);
   });
-  btnShuffle.addEventListener('click', shuffle);
-  btnBack.addEventListener('click', back);
-  btnSkip.addEventListener('click', skip);
-  btnNext.addEventListener('click', next);
-  btnRestart.addEventListener('click', restart);
-  btnCopy.addEventListener('click', copyResult);
-  btnShare.addEventListener('click', shareResult);
-  if (btnContinue) btnContinue.addEventListener('click', continueToIndex); /* ΝΕΟ */
-  document.addEventListener('keydown', (e)=>{
-    if (screenQuiz.hidden) return;
-    if (e.key==='ArrowRight') next();
-    if (e.key==='ArrowLeft') back();
-  });
-
-  // Self-tests (simple runtime checks)
-  (function runSelfTests(){
-    const tests = [];
-    const assert = (name, cond)=>tests.push({name, ok: !!cond});
-    // escapeMd
-    assert('escapeMd underscores', escapeMd('a_b') === 'a\\_b');
-    assert('escapeMd brackets', escapeMd('[x]') === '\\[x\\]');
-    // composeTelegramText format
-    const startText = composeTelegramText('start');
-    assert('compose start returns string', typeof startText === 'string' && startText.length>0);
-    const finishText = composeTelegramText('finish', { result:{key:'CLASSIC', title:'Η Κλασική Προσφορά'}, answers:[{step:1, question:'Q', answer:'A'}]});
-    assert('compose finish returns string', typeof finishText === 'string' && finishText.includes('Result'));
-    console.log('[Quiz Self-Tests]', tests.map(t=>`${t.ok?'✅':'❌'} ${t.name}`).join(' | '));
-  })();
-
-    function sendTelegramMessage(message) {
-          const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
-          const chatID = '7336951445';
-          const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-          fetch(url, {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({
-                  chat_id: chatID,
-                  text: message
-              })
-          })
-          .then(response => response.json())
-          .then(data => console.log('Message sent:', data))
-          .catch(error => console.error('Error:', error));
-      };
-
-  // Start on load
-  showStart();
-  </script>
+</script>
 </body>
 </html>
