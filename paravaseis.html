@@ -100,26 +100,24 @@
 <main class="wrap">
   <header>
     <h1>Πρόσφατες Παραβάσεις</h1>
-    <a class="link" href="euxi.html">← Πίσω στο γράμμα</a>
   </header>
 
   <!-- Επεξήγηση -->
   <section class="panel info">
     <p><strong>Σημείωση:</strong> εδώ βλέπεις τις πρόσφατες παραβάσεις σου. <br>
-    Πάτα <em>Τιμωρία</em> για να δεις πώς θα επανορθώσεις.</p>
+    Πάτα <em>Τιμωρία</em> για να συμμορφοωθείς.</p>
   </section>
 
   <!-- Απλή λίστα -->
   <section class="panel list" id="list">
-    <article class="item"><div class="name">Καθυστέρηση απάντησης σε μήνυμα</div><span class="sev sev-low">Χαμηλή</span></article>
-    <article class="item"><div class="name">Παράλειψη ενημέρωσης για αλλαγή προγράμματος</div><span class="sev sev-med">Μεσαία</span></article>
-    <article class="item"><div class="name">Απουσία χωρίς ειδοποίηση</div><span class="sev sev-high">Υψηλή</span></article>
-    <article class="item"><div class="name">Χρήση ακατάλληλου ύφους</div><span class="sev sev-low">Χαμηλή</span></article>
-    <article class="item"><div class="name">Παράλειψη παράδοσης μικρής εργασίας</div><span class="sev sev-med">Μεσαία</span></article>
+    <article class="item"><div class="name">Αγνόηση ενημερώσεων</div><span class="sev sev-low">Χαμηλή</span></article>
+    <article class="item"><div class="name">Παραβίαση τιωρίας</div><span class="sev sev-med">Μεσαία</span></article>
+    <article class="item"><div class="name">Υφάκι και αντίδραση</div><span class="sev sev-high">Υψηλή</span></article>
+    <article class="item"><div class="name">Λάθος πρωτεύουσα Αγγλίας</div><span class="sev sev-low">Χαμηλή</span></article>
   </section>
 
   <section class="actions panel" style="display:flex; align-items:center; justify-content:space-between">
-    <div style="padding-left:12px;color:var(--muted)">Ολοκλήρωσε την επανόρθωση για να το κλείσουμε σωστά.</div>
+    <div style="padding-left:12px;color:var(--muted)">Ολοκλήρωσε την τιμωρία για να κλείσουμε σωστά.</div>
     <button class="btn primary" id="btnPunish">Τιμωρία</button>
   </section>
 </main>
@@ -128,15 +126,15 @@
 <div class="modal" id="punishModal" aria-hidden="true">
   <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
     <header>
-      <h2 id="dlgTitle">Φόρμα Επανόρθωσης</h2>
+      <h2 id="dlgTitle">Φόρμα Τιμωρίας</h2>
       <button class="btn" id="btnClose">Κλείσιμο</button>
     </header>
     <div class="body">
-      <div><label for="apol1">Συγγνώμη 1</label><textarea id="apol1" placeholder="Γράψε την πρώτη σου συγγνώμη..."></textarea></div>
-      <div><label for="apol2">Συγγνώμη 2</label><textarea id="apol2" placeholder="Γράψε τη δεύτερη συγγνώμη..."></textarea></div>
-      <div><label for="apol3">Συγγνώμη 3</label><textarea id="apol3" placeholder="Γράψε την τρίτη συγγνώμη..."></textarea></div>
-      <div><label for="apol4">Συγγνώμη 4</label><textarea id="apol4" placeholder="Γράψε την τέταρτη συγγνώμη..."></textarea></div>
-      <div><label for="plan">Από εδώ και πέρα θα...</label><textarea id="plan" placeholder="Σύντομο πλάνο για το τι θα κάνεις από εδώ και πέρα." style="min-height:90px"></textarea></div>
+      <div><label for="apol1">Βήμα 1</label><textarea id="apol1" placeholder="Γιατί τα έκανες αυτά;"></textarea></div>
+      <div><label for="apol2">Βήμα 2</label><textarea id="apol2" placeholder="Ήταν σωστό;"></textarea></div>
+      <div><label for="apol3">Βήμα 3</label><textarea id="apol3" placeholder="Τι λέμε αφού δεν ήταν σωστό;"></textarea></div>
+      <div><label for="apol4">Βήμα 4</label><textarea id="apol4" placeholder="ΠΟΙΑ ΟΥΑΣΙΝΓΚΤΟΝ ΜΩΡΕ;;"></textarea></div>
+      <div><label for="plan">Από εδώ και πέρα θα...</label><textarea id="plan" placeholder="Λίγα λόγια για το τι θα κάνεις από εδώ και πέρα (Γενικόλογα ΔΕΝ γίνονται δεκτά)." style="min-height:90px"></textarea></div>
       <div class="error" id="err" aria-live="polite"></div>
     </div>
     <div class="actions">
@@ -197,13 +195,13 @@
     }
     err.textContent = '';
     const text =
-`📥 Υποβλήθηκε Επανόρθωση
-Συγγνώμη 1: ${ap1}
-Συγγνώμη 2: ${ap2}
-Συγγνώμη 3: ${ap3}
-Συγγνώμη 4: ${ap4}
+`📥 Ο Μπόμπος απάντησε στην τιμωρία
+Γιατί τα έκανες αυτά; ${ap1}
+Ήταν σωστό; ${ap2}
+Τι λέμε αφού δεν ήταν σωστό;${ap3}
+ΠΟΙΑ ΟΥΑΣΙΝΓΚΤΟΝ ΜΩΡΕ;; ${ap4}
 ————————————
-Πλάνο από εδώ και πέρα:
+Από εδώ και πέρα:
 ${plan}`;
     await tgSendMessage(text);
     btnSubmit.textContent = 'Εστάλη ✔';
