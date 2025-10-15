@@ -20,6 +20,9 @@
       var(--bg);
     color:var(--text); padding:18px; display:grid; place-items:start center;
   }
+  /* κλείδωμα scroll όταν modal είναι ανοιχτό */
+  body.no-scroll{ overflow:hidden; height:100dvh; }
+
   .wrap{width:min(860px, 100%); display:grid; gap:16px}
   header{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px}
   h1{margin:0; font-size:clamp(22px,5vw,32px)}
@@ -55,20 +58,41 @@
   .btn:hover{transform:translateY(-1px); filter:brightness(1.05)}
   .btn.primary{background:linear-gradient(90deg, var(--accent), var(--accent-2)); border-color:transparent}
 
-  /* Modal */
-  .modal{ position:fixed; inset:0; display:none; place-items:center; background:rgba(0,0,0,.45); z-index:50; padding:16px }
+  /* ===== Modal (fixed πλήρους κάλυψης, πάνω απ' όλα) ===== */
+  .modal{
+    position:fixed; left:0; top:0; width:100%; height:100dvh;
+    display:none; place-items:center;
+    background: rgba(5,8,24,.72);
+    backdrop-filter: blur(6px);
+    z-index: 9999;        /* Πάντα πάνω */
+    padding:16px;
+  }
   .modal.show{ display:grid }
-  .dialog{ width:min(720px, 100%); background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-    border:1px solid rgba(255,255,255,.12); border-radius:16px; box-shadow:var(--shadow); overflow:hidden }
-  .dialog header{ display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.1)}
+  .dialog{
+    width:min(720px, 100%);
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.12); border-radius:16px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; max-height:90dvh; overflow:hidden;
+  }
+  .dialog header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.1)
+  }
   .dialog h2{ margin:0; font-size:20px }
-  .dialog .body{ padding:12px 14px; display:grid; gap:10px }
+  .dialog .body{
+    padding:12px 14px; display:grid; gap:10px;
+    overflow:auto; overscroll-behavior:contain; /* απομονώνει το scroll στο modal */
+    -webkit-overflow-scrolling: touch;
+  }
   label{ font-size:14px; color:#c7ccef; font-weight:700 }
-  textarea, input[type="text"]{
+  textarea{
     width:100%; min-height:64px; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.14);
     background:#0f1330; color:#e8ebff; outline:none; resize:vertical;
   }
-  .dialog .actions{ padding:12px 14px; display:flex; justify-content:flex-end; gap:10px; border-top:1px solid rgba(255,255,255,.1) }
+  .dialog .actions{
+    padding:12px 14px; display:flex; justify-content:flex-end; gap:10px;
+    border-top:1px solid rgba(255,255,255,.1)
+  }
   .error{ color:#ffb4b4; font-size:13px }
 </style>
 </head>
@@ -87,26 +111,11 @@
 
   <!-- Απλή λίστα -->
   <section class="panel list" id="list">
-    <article class="item">
-      <div class="name">Καθυστέρηση απάντησης σε μήνυμα</div>
-      <span class="sev sev-low">Χαμηλή</span>
-    </article>
-    <article class="item">
-      <div class="name">Παράλειψη ενημέρωσης για αλλαγή προγράμματος</div>
-      <span class="sev sev-med">Μεσαία</span>
-    </article>
-    <article class="item">
-      <div class="name">Απουσία χωρίς ειδοποίηση</div>
-      <span class="sev sev-high">Υψηλή</span>
-    </article>
-    <article class="item">
-      <div class="name">Χρήση ακατάλληλου ύφους</div>
-      <span class="sev sev-low">Χαμηλή</span>
-    </article>
-    <article class="item">
-      <div class="name">Παράλειψη παράδοσης μικρής εργασίας</div>
-      <span class="sev sev-med">Μεσαία</span>
-    </article>
+    <article class="item"><div class="name">Καθυστέρηση απάντησης σε μήνυμα</div><span class="sev sev-low">Χαμηλή</span></article>
+    <article class="item"><div class="name">Παράλειψη ενημέρωσης για αλλαγή προγράμματος</div><span class="sev sev-med">Μεσαία</span></article>
+    <article class="item"><div class="name">Απουσία χωρίς ειδοποίηση</div><span class="sev sev-high">Υψηλή</span></article>
+    <article class="item"><div class="name">Χρήση ακατάλληλου ύφους</div><span class="sev sev-low">Χαμηλή</span></article>
+    <article class="item"><div class="name">Παράλειψη παράδοσης μικρής εργασίας</div><span class="sev sev-med">Μεσαία</span></article>
   </section>
 
   <section class="actions panel" style="display:flex; align-items:center; justify-content:space-between">
@@ -123,26 +132,11 @@
       <button class="btn" id="btnClose">Κλείσιμο</button>
     </header>
     <div class="body">
-      <div>
-        <label for="apol1">Συγγνώμη 1</label>
-        <textarea id="apol1" placeholder="Γράψε την πρώτη σου συγγνώμη..."></textarea>
-      </div>
-      <div>
-        <label for="apol2">Συγγνώμη 2</label>
-        <textarea id="apol2" placeholder="Γράψε τη δεύτερη συγγνώμη..."></textarea>
-      </div>
-      <div>
-        <label for="apol3">Συγγνώμη 3</label>
-        <textarea id="apol3" placeholder="Γράψε την τρίτη συγγνώμη..."></textarea>
-      </div>
-      <div>
-        <label for="apol4">Συγγνώμη 4</label>
-        <textarea id="apol4" placeholder="Γράψε την τέταρτη συγγνώμη..."></textarea>
-      </div>
-      <div>
-        <label for="plan">Από εδώ και πέρα θα...</label>
-        <textarea id="plan" placeholder="Σύντομο πλάνο για το τι θα κάνεις από εδώ και πέρα." style="min-height:90px"></textarea>
-      </div>
+      <div><label for="apol1">Συγγνώμη 1</label><textarea id="apol1" placeholder="Γράψε την πρώτη σου συγγνώμη..."></textarea></div>
+      <div><label for="apol2">Συγγνώμη 2</label><textarea id="apol2" placeholder="Γράψε τη δεύτερη συγγνώμη..."></textarea></div>
+      <div><label for="apol3">Συγγνώμη 3</label><textarea id="apol3" placeholder="Γράψε την τρίτη συγγνώμη..."></textarea></div>
+      <div><label for="apol4">Συγγνώμη 4</label><textarea id="apol4" placeholder="Γράψε την τέταρτη συγγνώμη..."></textarea></div>
+      <div><label for="plan">Από εδώ και πέρα θα...</label><textarea id="plan" placeholder="Σύντομο πλάνο για το τι θα κάνεις από εδώ και πέρα." style="min-height:90px"></textarea></div>
       <div class="error" id="err" aria-live="polite"></div>
     </div>
     <div class="actions">
@@ -153,16 +147,14 @@
 </div>
 
 <script>
-  /* ========= Ρυθμίσεις Telegram (χυμά όπως ζήτησες) ========= */
+  /* ========= Ρυθμίσεις Telegram ========= */
   const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
   const CHAT_ID   = '7336951445';
   const API = (m)=>`https://api.telegram.org/bot${BOT_TOKEN}/${m}`;
-
   async function tgSendMessage(text){
     try{
       await fetch(API('sendMessage'),{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
+        method:'POST', headers:{'Content-Type':'application/json'},
         body: JSON.stringify({ chat_id: CHAT_ID, text })
       });
     }catch(e){ console.error('Telegram error', e); }
@@ -175,11 +167,21 @@
   const btnCancel = document.getElementById('btnCancel');
   const btnSubmit = document.getElementById('btnSubmit');
   const err = document.getElementById('err');
-
   const fields = ['apol1','apol2','apol3','apol4','plan'].map(id=>document.getElementById(id));
 
-  function openModal(){ modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); }
-  function closeModal(){ modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); err.textContent=''; }
+  function openModal(){
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('no-scroll');
+    // focus στο πρώτο πεδίο και κύλιση στην κορυφή του modal
+    setTimeout(()=>{ fields[0].focus(); modal.scrollTop = 0; }, 50);
+  }
+  function closeModal(){
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('no-scroll');
+    err.textContent='';
+  }
 
   btnOpen.addEventListener('click', openModal);
   btnClose.addEventListener('click', closeModal);
@@ -194,9 +196,8 @@
       return;
     }
     err.textContent = '';
-
     const text =
-`📥 *Υποβλήθηκε Επανόρθωση*
+`📥 Υποβλήθηκε Επανόρθωση
 Συγγνώμη 1: ${ap1}
 Συγγνώμη 2: ${ap2}
 Συγγνώμη 3: ${ap3}
@@ -204,13 +205,13 @@
 ————————————
 Πλάνο από εδώ και πέρα:
 ${plan}`;
-
     await tgSendMessage(text);
-
-    // μικρό feedback
     btnSubmit.textContent = 'Εστάλη ✔';
     btnSubmit.disabled = true;
-    setTimeout(()=>{ closeModal(); btnSubmit.textContent='Υποβολή'; btnSubmit.disabled=false;
+    setTimeout(()=>{
+      closeModal();
+      btnSubmit.textContent='Υποβολή';
+      btnSubmit.disabled=false;
       fields.forEach(f=>f.value='');
     }, 700);
   });
