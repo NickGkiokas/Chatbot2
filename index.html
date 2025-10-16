@@ -210,8 +210,6 @@
 
   /* ========= Continue → παραβάσεις ========= */
   document.getElementById('continueBtn').addEventListener('click', ()=>{
-    alert("Επειδή τελευταία έχουμε λίγο ξεφύγει και δε θα γλύτωνες, μεταφέρεσαι στη λίστα παραβάσεων να ξεκαθαρίσουμε κάποια πράγματα..."); 
-    spawnConfetti(60);
     sendTelegramMessage("Ο Μπόμπος διάβασε το γράμμα και μεταφέρεται στη λίστα παραβάσεων...");
     setTimeout(()=>{ window.location.href = 'paravaseis.html'; }, 550);
   });
