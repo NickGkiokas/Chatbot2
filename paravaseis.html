@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="el">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Πρόσφατες Παραβάσεις</title>
+<style>
+  :root{
+    --bg:#0f1226; --panel:#161a38; --panel-2:#0e1230; --muted:#8b90b5; --text:#e8ebff;
+    --accent:#7c5cff; --accent-2:#26d0ce; --radius:18px; --shadow:0 18px 45px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    background:
+      radial-gradient(1200px 800px at 10% -10%, rgba(124,92,255,.20), transparent),
+      radial-gradient(1200px 800px at 120% 120%, rgba(38,208,206,.18), transparent),
+      var(--bg);
+    color:var(--text); padding:18px; display:grid; place-items:start center;
+  }
+  /* κλείδωμα scroll όταν modal είναι ανοιχτό */
+  body.no-scroll{ overflow:hidden; height:100dvh; }
+
+  .wrap{width:min(860px, 100%); display:grid; gap:16px}
+  header{display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px}
+  h1{margin:0; font-size:clamp(22px,5vw,32px)}
+  a.link{color:#fff; font-weight:800; text-decoration:none; border-bottom:2px solid rgba(255,255,255,.35)}
+
+  .panel{
+    background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.1); border-radius:var(--radius); box-shadow:var(--shadow);
+  }
+  .info{padding:14px 16px; color:var(--muted); line-height:1.6}
+
+  /* Λίστα */
+  .list{padding:10px; display:grid; gap:10px}
+  .item{
+    border:1px solid rgba(255,255,255,.12);
+    background:linear-gradient(180deg, var(--panel), var(--panel-2));
+    border-radius:14px; padding:12px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .name{font-weight:800}
+  .sev{padding:6px 10px; border-radius:999px; font-size:12px; font-weight:800; border:1px solid rgba(255,255,255,.18)}
+  .sev-high{ background: rgba(255,107,107,.2); color:#ffdede; border-color: rgba(255,107,107,.5) }
+  .sev-med { background: rgba(255,209,102,.2); color:#fff3d2; border-color: rgba(255,209,102,.5) }
+  .sev-low { background: rgba(45,212,191,.18); color:#d7fffb; border-color: rgba(45,212,191,.4) }
+
+  /* Κουμπιά */
+  .actions{display:flex; justify-content:flex-end; gap:10px; padding:12px}
+  .btn{
+    appearance:none; border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.06);
+    color:var(--text); border-radius:999px; padding:12px 16px; font-weight:800; cursor:pointer;
+    transition: transform .08s ease, filter .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px); filter:brightness(1.05)}
+  .btn.primary{background:linear-gradient(90deg, var(--accent), var(--accent-2)); border-color:transparent}
+
+  /* ===== Modal (fixed πλήρους κάλυψης, πάνω απ' όλα) ===== */
+  .modal{
+    position:fixed; left:0; top:0; width:100%; height:100dvh;
+    display:none; place-items:center;
+    background: rgba(5,8,24,.72);
+    backdrop-filter: blur(6px);
+    z-index: 9999;        /* Πάντα πάνω */
+    padding:16px;
+  }
+  .modal.show{ display:grid }
+  .dialog{
+    width:min(720px, 100%);
+    background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+    border:1px solid rgba(255,255,255,.12); border-radius:16px; box-shadow:var(--shadow);
+    display:flex; flex-direction:column; max-height:90dvh; overflow:hidden;
+  }
+  .dialog header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.1)
+  }
+  .dialog h2{ margin:0; font-size:20px }
+  .dialog .body{
+    padding:12px 14px; display:grid; gap:10px;
+    overflow:auto; overscroll-behavior:contain; /* απομονώνει το scroll στο modal */
+    -webkit-overflow-scrolling: touch;
+  }
+  label{ font-size:14px; color:#c7ccef; font-weight:700 }
+  textarea{
+    width:100%; min-height:64px; padding:10px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.14);
+    background:#0f1330; color:#e8ebff; outline:none; resize:vertical;
+  }
+  .dialog .actions{
+    padding:12px 14px; display:flex; justify-content:flex-end; gap:10px;
+    border-top:1px solid rgba(255,255,255,.1)
+  }
+  .error{ color:#ffb4b4; font-size:13px }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header>
+    <h1>Πρόσφατες Παραβάσεις</h1>
+  </header>
+
+  <!-- Επεξήγηση -->
+  <section class="panel info">
+    <p><strong>Σημείωση:</strong> εδώ βλέπεις τις πρόσφατες παραβάσεις σου. <br>
+    Πάτα <em>Τιμωρία</em> για να συμμορφωθείς.</p>
+  </section>
+
+  <!-- Απλή λίστα -->
+  <section class="panel list" id="list">
+    <article class="item"><div class="name">Αγνόηση ενημερώσεων</div><span class="sev sev-low">Χαμηλή</span></article>
+    <article class="item"><div class="name">Παραβίαση τιμωρίας</div><span class="sev sev-med">Μεσαία</span></article>
+    <article class="item"><div class="name">Υφάκι και αντίδραση</div><span class="sev sev-high">Υψηλή</span></article>
+    <article class="item"><div class="name">Λάθος πρωτεύουσα Αγγλίας</div><span class="sev sev-low">Χαμηλή</span></article>
+  </section>
+
+  <section class="actions panel" style="display:flex; align-items:center; justify-content:space-between">
+    <div style="padding-left:12px;color:var(--muted)">Ολοκλήρωσε την τιμωρία για να μπεις στη θέση σου.</div>
+    <button class="btn primary" id="btnPunish">Τιμωρία</button>
+  </section>
+</main>
+
+<!-- Modal φόρμας -->
+<div class="modal" id="punishModal" aria-hidden="true">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlgTitle">
+    <header>
+      <h2 id="dlgTitle">Φόρμα Τιμωρίας</h2>
+      <button class="btn" id="btnClose">Κλείσιμο</button>
+    </header>
+    <div class="body">
+      <div><label for="apol1">Βήμα 1</label><textarea id="apol1" placeholder="Γιατί τα έκανες αυτά; Ήταν σωστό;"></textarea></div>
+      <div><label for="apol2">Βήμα 2</label><textarea id="apol2" placeholder="Τι πρέπει να πεις αφού ήσουν άτακτη;"></textarea></div>
+      <div><label for="apol3">Βήμα 3</label><textarea id="apol3" placeholder="Από δω και πέρα θα ακούς αλλιώς θα μπεις κι άλλο τιμωρία, κατανοητό; (σωστή και υπάκουη απάντηση)"></textarea></div>
+      <div><label for="apol4">Βήμα 4</label><textarea id="apol4" placeholder="ΑΓΓΛΙΑ ΠΡΩΤΕΥΟΥΣΑ;;"></textarea></div>
+      <div><label for="plan">Από εδώ και πέρα θα...</label><textarea id="plan" placeholder="Λίγα λόγια για να δείξεις ότι έμαθες το μαθημά σου και τι θα κάνεις από εδώ και πέρα (πχ θα είμαι φρόνιμη, δε θα έχω υφάκι, θα κάθομαι ήσυχα τιμωρία, θα μάθω τις πρωτεύουσες κλπ. Γενικόλογα ΔΕΝ γίνονται δεκτά)." style="min-height:90px"></textarea></div>
+      <div class="error" id="err" aria-live="polite"></div>
+    </div>
+    <div class="actions">
+      <button class="btn" id="btnCancel">Άκυρο</button>
+      <button class="btn primary" id="btnSubmit">Υποβολή</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ========= Ρυθμίσεις Telegram ========= */
+  const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
+  const CHAT_ID   = '7336951445';
+  const API = (m)=>`https://api.telegram.org/bot${BOT_TOKEN}/${m}`;
+  async function tgSendMessage(text){
+    try{
+      await fetch(API('sendMessage'),{
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ chat_id: CHAT_ID, text })
+      });
+    }catch(e){ console.error('Telegram error', e); }
+  }
+
+  /* ========= Modal ========= */
+  const modal = document.getElementById('punishModal');
+  const btnOpen = document.getElementById('btnPunish');
+  const btnClose = document.getElementById('btnClose');
+  const btnCancel = document.getElementById('btnCancel');
+  const btnSubmit = document.getElementById('btnSubmit');
+  const err = document.getElementById('err');
+  const fields = ['apol1','apol2','apol3','apol4','plan'].map(id=>document.getElementById(id));
+
+  function openModal(){
+    modal.classList.add('show');
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('no-scroll');
+    // focus στο πρώτο πεδίο και κύλιση στην κορυφή του modal
+    setTimeout(()=>{ fields[0].focus(); modal.scrollTop = 0; }, 50);
+  }
+  function closeModal(){
+    modal.classList.remove('show');
+    modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('no-scroll');
+    err.textContent='';
+  }
+
+  btnOpen.addEventListener('click', openModal);
+  btnClose.addEventListener('click', closeModal);
+  btnCancel.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e)=>{ if(e.target===modal) closeModal(); });
+
+  /* ========= Υποβολή ========= */
+  btnSubmit.addEventListener('click', async ()=>{
+    const [ap1, ap2, ap3, ap4, plan] = fields.map(f=>f.value.trim());
+    if (!ap1 || !ap2 || !ap3 || !ap4 || !plan){
+      err.textContent = 'Συμπλήρωσε όλα τα πεδία πριν την υποβολή.';
+      return;
+    }
+    err.textContent = '';
+    const text =
+`📥 Ο Μπόμπος απάντησε στην τιμωρία
+1.Γιατί τα έκανες αυτά; Ήταν σωστό; 
+${ap1}
+2.Τι πρέπει να πεις αφού ήσουν άτακτη; 
+${ap2}
+3.Από δω και πέρα θα ακούς αλλιώς θα μπεις κι άλλο τιμωρία, κατανοητό;
+${ap3}
+4.ΑΓΓΛΙΑ ΠΡΩΤΕΥΟΥΣΑ;; 
+${ap4}
+————————————————————————
+Από εδώ και πέρα:
+${plan}`;
+    await tgSendMessage(text);
+    alert("Έτσι μπράβο, φρόνιμα κι ωραία! Μπορείς τώρα να αποχωρήσεις και να κάτσεις ήσυχα!");
+    btnSubmit.textContent = 'Εστάλη ✔';
+    btnSubmit.disabled = true;
+    setTimeout(()=>{
+      closeModal();
+      btnSubmit.textContent='Υποβολή';
+      btnSubmit.disabled=false;
+      fields.forEach(f=>f.value='');
+    }, 700);
+  });
+</script>
+</body>
+</html>
