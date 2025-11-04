@@ -1,0 +1,175 @@
+<!DOCTYPE html><html lang="el">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Αίτηση Δωματίου</title>
+  <style>
+    :root{
+      --bg:#0b1220; --panel:#0f172a; --text:#e5e7eb; --muted:#94a3b8;
+      --accent:#38bdf8; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(1200px 600px at 90% -20%, #1f2937 0%, transparent 60%),
+        radial-gradient(800px 500px at -10% 110%, #0b1220 0%, transparent 60%),
+        var(--bg);
+      color:var(--text);
+      display:grid; place-items:center; padding:24px;
+    }
+    .wrap{width:min(900px,100%); display:grid; grid-template-columns: 1fr 86px; gap:22px;}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08); border-radius:22px; padding:22px; box-shadow:0 16px 50px rgba(0,0,0,.45);
+    }
+    h1{margin:0 0 10px; font-size:clamp(22px,3.4vw,34px)}
+    p.lead{margin:0 0 16px; color:var(--muted)}
+    label{display:block; margin:14px 0 8px; color:var(--muted); font-weight:600; font-size:14px}
+    textarea, input[type="text"]{
+      width:100%; border-radius:14px; background:#0b1120; color:var(--text);
+      border:1px solid rgba(255,255,255,.08); padding:14px; outline:none; font-size:15px; min-height:140px;
+    }
+    textarea:focus{box-shadow:0 0 0 3px rgba(56,189,248,.25)}
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}.barbox{ display:flex; align-items:flex-end; justify-content:center; }
+.bar{
+  position:relative; width:32px; height:340px; background:rgba(148,163,184,.16);
+  border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.08);
+}
+.fill{ position:absolute; bottom:0; left:0; right:0; height:0%; background:linear-gradient(180deg, #38bdf8, #22c55e); transition:height .35s ease }
+.ticks{ position:absolute; inset:6px; display:flex; flex-direction:column; justify-content:space-between; pointer-events:none; }
+.ticks span{ font-size:11px; color:var(--muted); transform:translateX(42px)}
+
+.status{ margin-top:12px; font-size:14px; color:var(--muted)}
+.badge{ display:inline-block; padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px; margin-right:6px;}
+.bad{background:rgba(239,68,68,.2); border:1px solid rgba(239,68,68,.35); color:#fecaca}
+.mid{background:rgba(245,158,11,.2); border:1px solid rgba(245,158,11,.35); color:#fde68a}
+.good{background:rgba(34,197,94,.2); border:1px solid rgba(34,197,94,.35); color:#bbf7d0}
+
+.result{
+  margin-top:16px; text-align:center; padding:16px; border-radius:16px; border:1px dashed rgba(148,163,184,.35);
+}
+.result h2{margin:6px 0 4px; font-size:clamp(24px,4vw,34px)}
+.result .desc{color:var(--muted); font-size:13px}
+
+.actions{margin-top:16px; display:flex; gap:10px; flex-wrap:wrap}
+.btn{appearance:none; border:0; border-radius:12px; padding:12px 14px; font-weight:700; cursor:pointer}
+.primary{background:linear-gradient(180deg,#7dd3fc,#38bdf8); color:#0b1220}
+.ghost{background:transparent; color:var(--text); border:1px dashed rgba(148,163,184,.45)}
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="card">
+      <h1>Αίτηση αναβάθμισης δωματίου</h1>
+      <p class="lead">Γράψε ένα <strong>ευγενικό</strong> μήνυμα που να εξηγεί γιατί αξίζεις καλύτερο δωμάτιο. Όσο εντοπίζουμε <em>λέξεις‑κλειδιά</em>, ανεβαίνει η μπάρα και βελτιώνεται το αποτέλεσμα.</p><label for="msg">Το μήνυμά σου</label>
+  <textarea id="msg" placeholder="Π.χ. Καλησπέρα, παρακαλώ αν υπάρχει διαθεσιμότητα... Θα είμαι φρόνιμη και υπάκουη!"></textarea>
+
+  <div class="status" id="status">
+    Λέξεις‑κλειδιά που ψάχνουμε: <code id="keys"></code>
+  </div>
+
+  <div class="result" id="resultBox">
+    <span class="badge bad">Κοτέτσι</span>
+    <span class="badge mid" style="display:none">Μαντρί</span>
+    <span class="badge good" style="display:none">Δωμάτιο με κρεβάτι και κουβέρτα!</span>
+    <h2 id="resultTitle">Κοτέτσι 🐔</h2>
+    <p class="desc" id="resultDesc">Προς το παρόν παραμένεις στο VIP… αγρόκτημα. Δοκίμασε πιο ευγενικό ύφος 😉</p>
+  </div>
+
+  <div class="actions">
+    <a class="btn ghost" href="index.html">⬅️ Πίσω</a>
+    <button class="btn primary" id="copyBtn">Αντιγραφή μηνύματος</button>
+  </div>
+</section>
+
+<aside class="card barbox" aria-label="Επίπεδο ευγένειας">
+  <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="barLabel">
+    <div class="fill" id="fill"></div>
+    <div class="ticks">
+      <span>Δωμάτιο</span>
+      <span>Μαντρί</span>
+      <span>Κοτέτσι</span>
+    </div>
+  </div>
+</aside>
+
+  </div>  <script>
+    // ➜ ΡΥΘΜΙΣΕ ΤΙΣ ΛΕΞΕΙΣ-ΚΛΕΙΔΙΑ ΕΔΩ
+    const KEYWORDS = ["παρακαλώ", "φρόνιμη", "υπάκουη"]; // μπορείς να προσθέσεις κι άλλες
+
+    // -------- ΒΟΗΘΗΤΙΚΑ --------
+    const normalize = (s) => s
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g,''); // αφαίρεση τόνων
+
+    const msgEl = document.getElementById('msg');
+    const fillEl = document.getElementById('fill');
+    const keysEl = document.getElementById('keys');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultDesc = document.getElementById('resultDesc');
+    const badges = {
+      bad: document.querySelector('.badge.bad'),
+      mid: document.querySelector('.badge.mid'),
+      good: document.querySelector('.badge.good'),
+    };
+
+    // Εμφάνισε τις λέξεις-κλειδιά
+    keysEl.textContent = KEYWORDS.join(', ');
+
+    function evaluate(){
+      const text = normalize(msgEl.value);
+      const found = new Set();
+      for (const kw of KEYWORDS){
+        const k = normalize(kw);
+        if (k && text.includes(k)) found.add(k);
+      }
+      const score = found.size; // πόσα keywords βρέθηκαν
+      const max = KEYWORDS.length;
+      const pct = max === 0 ? 0 : Math.round((score / max) * 100);
+
+      // ενημέρωση μπάρας
+      fillEl.style.height = pct + '%';
+      document.querySelector('.bar').setAttribute('aria-valuenow', pct);
+
+      // ενημέρωση αποτελέσματος (κατώφλια: 0 -> κοτέτσι, >0 -> μαντρί, πλήρες -> δωμάτιο)
+      if (pct === 100){
+        badges.bad.style.display = 'none';
+        badges.mid.style.display = 'none';
+        badges.good.style.display = 'inline-block';
+        resultTitle.textContent = 'Δωμάτιο με κρεβάτι και κουβέρτα! 🛏️';
+        resultDesc.textContent = 'Εύγε! Το επίπεδο ευγένειας ξεχείλισε. Παραλαμβάνεις κλειδί δωματίου.';
+      } else if (pct > 0){
+        badges.bad.style.display = 'none';
+        badges.mid.style.display = 'inline-block';
+        badges.good.style.display = 'none';
+        resultTitle.textContent = 'Μαντρί 🐑';
+        resultDesc.textContent = 'Καλύτερα από κοτέτσι, αλλά θέλει κι άλλο γλύψ… εε, ευγένεια! Πρόσθεσε ακόμη 1‑2 μαγικές λέξεις.';
+      } else {
+        badges.bad.style.display = 'inline-block';
+        badges.mid.style.display = 'none';
+        badges.good.style.display = 'none';
+        resultTitle.textContent = 'Κοτέτσι 🐔';
+        resultDesc.textContent = 'Προς το παρόν παραμένεις στο VIP… αγρόκτημα. Δοκίμασε πιο ευγενικό ύφος 😉';
+      }
+    }
+
+    msgEl.addEventListener('input', evaluate);
+
+    // Αντιγραφή στο πρόχειρο
+    document.getElementById('copyBtn').addEventListener('click', async ()=>{
+      try {
+        await navigator.clipboard.writeText(msgEl.value);
+        const orig = document.getElementById('copyBtn').textContent;
+        document.getElementById('copyBtn').textContent = '✅ Αντιγράφηκε!';
+        setTimeout(()=>document.getElementById('copyBtn').textContent = orig, 1400);
+      } catch (e) { alert('Δεν μπόρεσα να αντιγράψω 😕'); }
+    });
+
+    // Αρχική αξιολόγηση
+    evaluate();
+  </script></body>
+</html>
