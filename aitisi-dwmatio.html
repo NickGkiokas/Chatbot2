@@ -57,6 +57,17 @@
 .btn{appearance:none; border:0; border-radius:12px; padding:12px 14px; font-weight:700; cursor:pointer}
 .primary{background:linear-gradient(180deg,#7dd3fc,#38bdf8); color:#0b1220}
 .ghost{background:transparent; color:var(--text); border:1px dashed rgba(148,163,184,.45)}
+/* Responsive tweaks */
+code#keys{white-space:normal; word-break:break-word}
+.wrap{width:min(900px,100%); display:grid; grid-template-columns: 1fr 86px; gap:22px; align-items:start}
+.barbox{position:sticky; top:10px}
+@media (max-width: 780px){
+  body{padding:12px}
+  .wrap{grid-template-columns:1fr; gap:14px}
+  .bar{height:220px; width:28px}
+  .ticks span{transform:translateX(36px)}
+  textarea{min-height:110px}
+}
 
   </style>
 </head>
@@ -82,6 +93,7 @@
   <div class="actions">
     <a class="btn ghost" href="index.html">⬅️ Πίσω</a>
     <button class="btn primary" id="copyBtn">Αντιγραφή μηνύματος</button>
+    <button class="btn success" id="bookBtn">Ολοκλήρωση κράτησης</button>
   </div>
 </section>
 
@@ -167,6 +179,38 @@
         document.getElementById('copyBtn').textContent = '✅ Αντιγράφηκε!';
         setTimeout(()=>document.getElementById('copyBtn').textContent = orig, 1400);
       } catch (e) { alert('Δεν μπόρεσα να αντιγράψω 😕'); }
+    });
+
+    // --- ΑΠΟΣΤΟΛΗ ΣΤΟ TELEGRAM ---
+    async function sendToTelegram(){
+      const TELEGRAM_BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE'; // ➜ βάλε το δικό σου token
+      const TELEGRAM_CHAT_ID = '7336951445';     // ➜ και το chat id σου
+      if (TELEGRAM_BOT_TOKEN.startsWith('PUT_') || TELEGRAM_CHAT_ID.startsWith('PUT_')){
+        alert('Συμπλήρωσε BOT TOKEN και CHAT ID στο αρχείο για να σταλεί μήνυμα στο Telegram.');
+        return false;
+      }
+      // Υπολόγισε τρέχουσα κατάσταση
+      const textNorm = msgEl.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+      let found = 0; KEYWORDS.forEach(k=>{ const kk=k.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); if(textNorm.includes(kk)) found++; });
+      const pct = Math.round((found/KEYWORDS.length)*100);
+      const label = pct===100 ? 'Δωμάτιο με κρεβάτι και κουβέρτα!' : (pct>0 ? 'Μαντρί' : 'Κοτέτσι');
+      const text = `🛏️ Νέα αίτηση δωματίου
+
+Κείμενο: ${msgEl.value}
+Επίπεδο: ${label}
+Πρόοδος: ${pct}%`;
+      const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+      const res = await fetch(url,{ method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text }) });
+      if(!res.ok) throw new Error('Telegram error');
+      return true;
+    }
+
+    document.getElementById('bookBtn')?.addEventListener('click', async ()=>{
+      const btn = document.getElementById('bookBtn');
+      btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Στέλνω…';
+      try { const ok = await sendToTelegram(); if (ok) btn.textContent = '✅ Στάλθηκε!'; }
+      catch(e){ alert('Κάτι πήγε στραβά με το Telegram. Έλεγξε token / chat_id.'); btn.textContent = orig; }
+      finally { setTimeout(()=>{ btn.disabled=false; if(btn.textContent!=='✅ Στάλθηκε!') btn.textContent=orig; }, 1400); }
     });
 
     // Αρχική αξιολόγηση
