@@ -1,240 +1,175 @@
-<!doctype html>
-<html lang="el">
+<!DOCTYPE html><html lang="el">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Γράμμα Ευχής</title>
-<style>
-  :root{
-    --bg:#0f1226; --paper:#fffaf2; --ink:#243b53; --accent:#7c5cff; --accent-2:#26d0ce;
-    --shadow:0 18px 45px rgba(0,0,0,.35); --radius:20px; --muted:#7c86ab;
-    --safe-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  html{ -webkit-text-size-adjust:100% }
-  body{
-    margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
-    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
-    -webkit-tap-highlight-color: transparent;
-    background:
-      radial-gradient(1200px 800px at 10% -10%, rgba(124,92,255,.20), transparent),
-      radial-gradient(1200px 800px at 120% 120%, rgba(38,208,206,.18), transparent),
-      var(--bg);
-    color:#eef1ff; display:grid; place-items:center; padding:18px; padding-bottom:calc(18px + var(--safe-bottom));
-  }
-  .wrap{width:min(920px, 100%); display:grid; gap:16px}
-  .title{ text-align:center }
-  h1{margin:.2rem 0 .4rem; font-size:clamp(22px, 5vw, 34px)}
-  .sub{color:var(--muted)}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Αίτηση Δωματίου</title>
+  <style>
+    :root{
+      --bg:#0b1220; --panel:#0f172a; --text:#e5e7eb; --muted:#94a3b8;
+      --accent:#38bdf8; --ok:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(1200px 600px at 90% -20%, #1f2937 0%, transparent 60%),
+        radial-gradient(800px 500px at -10% 110%, #0b1220 0%, transparent 60%),
+        var(--bg);
+      color:var(--text);
+      display:grid; place-items:center; padding:24px;
+    }
+    .wrap{width:min(900px,100%); display:grid; grid-template-columns: 1fr 86px; gap:22px;}
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.08); border-radius:22px; padding:22px; box-shadow:0 16px 50px rgba(0,0,0,.45);
+    }
+    h1{margin:0 0 10px; font-size:clamp(22px,3.4vw,34px)}
+    p.lead{margin:0 0 16px; color:var(--muted)}
+    label{display:block; margin:14px 0 8px; color:var(--muted); font-weight:600; font-size:14px}
+    textarea, input[type="text"]{
+      width:100%; border-radius:14px; background:#0b1120; color:var(--text);
+      border:1px solid rgba(255,255,255,.08); padding:14px; outline:none; font-size:15px; min-height:140px;
+    }
+    textarea:focus{box-shadow:0 0 0 3px rgba(56,189,248,.25)}
+    .row{display:grid; grid-template-columns:1fr 1fr; gap:12px}.barbox{ display:flex; align-items:flex-end; justify-content:center; }
+.bar{
+  position:relative; width:32px; height:340px; background:rgba(148,163,184,.16);
+  border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,.08);
+}
+.fill{ position:absolute; bottom:0; left:0; right:0; height:0%; background:linear-gradient(180deg, #38bdf8, #22c55e); transition:height .35s ease }
+.ticks{ position:absolute; inset:6px; display:flex; flex-direction:column; justify-content:space-between; pointer-events:none; }
+.ticks span{ font-size:11px; color:var(--muted); transform:translateX(42px)}
 
-  /* ===== Envelope (mobile-first) ===== */
-  .envelope{
-    position:relative;
-    width:min(720px, 100%);
-    height:clamp(280px, 56vh, 520px);   /* σταθερό ύψος για μικρά κινητά */
-    margin-inline:auto;
-    perspective:1200px;
-    border-radius:var(--radius);
-    overflow:hidden;                    /* ΚΡΑΤΑΕΙ ΤΟ ΧΑΡΤΙ ΜΕΣΑ -> δεν ξεχειλίζει */
-    box-shadow:var(--shadow);
-  }
-  .env-body{
-    position:absolute; inset:0;
-    background:linear-gradient(180deg, #1b1f42, #131736);
-    border:1px solid rgba(255,255,255,.10);
-  }
-  .flap{
-    position:absolute; inset:0;
-    background:linear-gradient(180deg, #2a2f64, #1b1f42);
-    transform-origin: top;
-    transform: rotateX(0deg);
-    transition: transform .9s cubic-bezier(.2,.8,.2,1);
-    border-bottom:1px solid rgba(255,255,255,.18);
-    will-change: transform;
-    z-index:2;
-  }
-  .paper{
-    position:absolute; left:6%; right:6%; top:6%; bottom:6%;
-    background: var(--paper); color: var(--ink);
-    border-radius:14px; box-shadow: 0 10px 20px rgba(0,0,0,.18) inset;
-    display:grid; grid-template-rows:auto 1fr auto;
-    padding:18px 18px calc(10px + var(--safe-bottom));
-    overflow:auto;
-    transform: translateY(105%);          /* κρυμμένο μέσα στο φάκελο */
-    transition: transform 1s cubic-bezier(.2,.8,.2,1) .15s;
-    will-change: transform;
-    z-index:1;
-  }
-  /* Κατά το άνοιγμα */
-  .envelope.open .flap{ transform: rotateX(-150deg) }
-  .envelope.open .paper{ transform: translateY(0%) }
+.status{ margin-top:12px; font-size:14px; color:var(--muted)}
+.badge{ display:inline-block; padding:6px 10px; border-radius:999px; font-weight:700; font-size:12px; margin-right:6px;}
+.bad{background:rgba(239,68,68,.2); border:1px solid rgba(239,68,68,.35); color:#fecaca}
+.mid{background:rgba(245,158,11,.2); border:1px solid rgba(245,158,11,.35); color:#fde68a}
+.good{background:rgba(34,197,94,.2); border:1px solid rgba(34,197,94,.35); color:#bbf7d0}
 
-  .paper header{display:flex; align-items:center; justify-content:space-between; gap:12px}
-  .seal{
-    width:44px; height:44px; border-radius:50%;
-    background: radial-gradient(circle at 30% 30%, #ffd2d2, #ff7a7a);
-    border:2px solid #802a2a; box-shadow: 0 4px 12px rgba(0,0,0,.25);
-    flex:0 0 44px;
-  }
-  .paper .body{margin:8px 2px; padding:12px 8px; border-radius:12px; background:#fff7ea}
-  .paper .body p{margin:.3rem 0 1rem; line-height:1.65}
-  .signature{display:flex; justify-content:flex-end; margin-top:6px; color:#7a6a52; font-style:italic}
+.result{
+  margin-top:16px; text-align:center; padding:16px; border-radius:16px; border:1px dashed rgba(148,163,184,.35);
+}
+.result h2{margin:6px 0 4px; font-size:clamp(24px,4vw,34px)}
+.result .desc{color:var(--muted); font-size:13px}
 
-  .cta{ margin-top:12px; display:flex; justify-content:flex-end; }
-  .btn{
-    appearance:none; cursor:pointer; border:none; font-weight:800; letter-spacing:.2px;
-    padding:14px 18px; border-radius:999px; color:white;
-    background:linear-gradient(90deg, var(--accent), var(--accent-2));
-    box-shadow:0 10px 20px rgba(0,0,0,.25);
-    transition: transform .08s ease, filter .15s ease;
-    touch-action:manipulation;
-  }
-  .btn:hover{ transform: translateY(-1px); filter:brightness(1.05) }
-  .btn:active{ transform: translateY(0) scale(.99) }
+.actions{margin-top:16px; display:flex; gap:10px; flex-wrap:wrap}
+.btn{appearance:none; border:0; border-radius:12px; padding:12px 14px; font-weight:700; cursor:pointer}
+.primary{background:linear-gradient(180deg,#7dd3fc,#38bdf8); color:#0b1220}
+.ghost{background:transparent; color:var(--text); border:1px dashed rgba(148,163,184,.45)}
 
-  /* Hint */
-  .hint{ text-align:center; color:var(--muted); font-size:14px }
-  .tap{
-    display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
-    border:1px solid rgba(255,255,255,.14); background:rgba(255,255,255,.04);
-  }
-
-  /* Confetti canvas */
-  #confetti{ position:fixed; inset:0; pointer-events:none }
-  @media (prefers-reduced-motion: reduce){
-    .flap, .paper { transition:none }
-  }
-</style>
+  </style>
 </head>
 <body>
-<canvas id="confetti"></canvas>
+  <div class="wrap">
+    <section class="card">
+      <h1>Αίτηση αναβάθμισης δωματίου</h1>
+      <p class="lead">Γράψε ένα <strong>ευγενικό</strong> μήνυμα που να εξηγεί γιατί αξίζεις καλύτερο δωμάτιο. Όσο εντοπίζουμε <em>λέξεις‑κλειδιά</em>, ανεβαίνει η μπάρα και βελτιώνεται το αποτέλεσμα.</p><label for="msg">Το μήνυμά σου</label>
+  <textarea id="msg" placeholder="Π.χ. Καλησπέρα, παρακαλώ αν υπάρχει διαθεσιμότητα... Θα είμαι φρόνιμη και υπάκουη!"></textarea>
 
-<main class="wrap">
-  <div class="title">
-    <h1>Άνοιξε το γράμμα ✉️</h1>
-    <div class="sub">Έχει μέσα την ευχή σου!</div>
+  <div class="status" id="status">
+    Λέξεις‑κλειδιά που ψάχνουμε: <code id="keys"></code>
   </div>
 
-  <section class="envelope" id="envelope" aria-label="Φάκελος">
-    <div class="env-body"></div>
-    <div class="flap" aria-hidden="true"></div>
-    <article class="paper" role="document" aria-live="polite">
-      <header>
-        <h2 style="margin:0;color:#3b4a64">ΓΡΑΜΜΑ ΕΥΧΗΣ</h2>
-        <div class="seal" title="Σφραγίδα"></div>
-      </header>
-
-      <!-- ΠΕΡΙΕΧΟΜΕΝΟ ΠΡΟΣ ΣΥΜΠΛΗΡΩΣΗ -->
-      <div class="body" id="letterBody">
-        <!-- TODO: Βάλε εδώ το δικό σου κείμενο ευχής -->
-        <p><strong>Αγαπημένη (και διάσημη πλέον) Σάρα,</strong></p>
-        <p>Δεν έχω να πω πολλά μιας και τα ξέρεις ήδη, αλλά όπως σου έχω πει πάντα θα σου τα θυμίζω. Μου ήρθε η ιδέα για ένα χειμωνιάτικο δώρο και προσπάθησα να τα ταιριάξω όλα έτσι χρωματικά.
-        Ελπίζω να πέτυχα το γούστο σου και το τι χρειάζεσαι. Έβαλα και γλυκάκια και ένα φωτάκι για να μην ξεμείνεις! Και αν μπορούσα θα έβαζα μέσα κι άλλα χίλια πράγματα, γιατί αξίζεις τόσα κι άλλα τόσα όμορφα και χαρούμενα.
-        Είσαι ιδιαίτερη, σπάνια, χαρισματική και κάνεις τα πάντα γύρω σου καλύτερα. Μας ηρεμείς και δίνεις νόημα στα πράγματα με έναν μοναδικό τρόπο. Χαίρομαι που είμαι κοντά σου όσο ποτέ και όσο περνάει από το χέρι μου θα είμαι πάντα εδώ για σένα.
-        Σ' αγαπάω πάρα πολύ!</p>
-        <p>Με πολύ Ρουκ Ζουκ,</p>
-        <div class="signature">— Ο Φίλος σου Νίκος🫶🏻</div>
-      </div>
-
-      <div class="cta">
-        <button class="btn" id="continueBtn" title="Μετάβαση στη συνέχεια">Πάτα για συνέχεια →</button>
-      </div>
-    </article>
-  </section>
-
-  <div class="hint">
-    <span class="tap">👆 Πάτησε στον φάκελο για να ανοίξει</span>
+  <div class="result" id="resultBox">
+    <span class="badge bad">Κοτέτσι</span>
+    <span class="badge mid" style="display:none">Μαντρί</span>
+    <span class="badge good" style="display:none">Δωμάτιο με κρεβάτι και κουβέρτα!</span>
+    <h2 id="resultTitle">Κοτέτσι 🐔</h2>
+    <p class="desc" id="resultDesc">Προς το παρόν παραμένεις στο VIP… αγρόκτημα. Δοκίμασε πιο ευγενικό ύφος 😉</p>
   </div>
-</main>
 
-<script>
-  /* ========= Confetti (βελτιωμένο για κινητά) ========= */
-  const confetti = document.getElementById('confetti');
-  const ctx = confetti.getContext('2d');
-  let DPR = Math.max(1, window.devicePixelRatio || 1);
+  <div class="actions">
+    <a class="btn ghost" href="index.html">⬅️ Πίσω</a>
+    <button class="btn primary" id="copyBtn">Αντιγραφή μηνύματος</button>
+  </div>
+</section>
 
-  function sizeCanvas(){
-    const vw = (window.visualViewport?.width || innerWidth);
-    const vh = (window.visualViewport?.height || innerHeight);
-    confetti.width  = Math.floor(vw * DPR);
-    confetti.height = Math.floor(vh * DPR);
-  }
-  sizeCanvas();
-  addEventListener('resize', sizeCanvas);
-  window.visualViewport && visualViewport.addEventListener('resize', sizeCanvas);
+<aside class="card barbox" aria-label="Επίπεδο ευγένειας">
+  <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="barLabel">
+    <div class="fill" id="fill"></div>
+    <div class="ticks">
+      <span>Δωμάτιο</span>
+      <span>Μαντρί</span>
+      <span>Κοτέτσι</span>
+    </div>
+  </div>
+</aside>
 
-  let bits = [];
-  function spawnConfetti(n=120){
-    const W = confetti.width, H = confetti.height;
-    for(let i=0;i<n;i++){
-      bits.push({
-        x: Math.random()*W, y: -20, r: 6+Math.random()*10,
-        vy: 1 + Math.random()*3, vx: (Math.random()-0.5)*2,
-        rot: Math.random()*Math.PI, vr: (Math.random()-0.5)*0.3,
-        c: Math.random()<.5 ? '#7c5cff' : '#26d0ce'
-      });
+  </div>  <script>
+    // ➜ ΡΥΘΜΙΣΕ ΤΙΣ ΛΕΞΕΙΣ-ΚΛΕΙΔΙΑ ΕΔΩ
+    const KEYWORDS = ["παρακαλώ", "φρόνιμη", "υπάκουη"]; // μπορείς να προσθέσεις κι άλλες
+
+    // -------- ΒΟΗΘΗΤΙΚΑ --------
+    const normalize = (s) => s
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g,''); // αφαίρεση τόνων
+
+    const msgEl = document.getElementById('msg');
+    const fillEl = document.getElementById('fill');
+    const keysEl = document.getElementById('keys');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultDesc = document.getElementById('resultDesc');
+    const badges = {
+      bad: document.querySelector('.badge.bad'),
+      mid: document.querySelector('.badge.mid'),
+      good: document.querySelector('.badge.good'),
+    };
+
+    // Εμφάνισε τις λέξεις-κλειδιά
+    keysEl.textContent = KEYWORDS.join(', ');
+
+    function evaluate(){
+      const text = normalize(msgEl.value);
+      const found = new Set();
+      for (const kw of KEYWORDS){
+        const k = normalize(kw);
+        if (k && text.includes(k)) found.add(k);
+      }
+      const score = found.size; // πόσα keywords βρέθηκαν
+      const max = KEYWORDS.length;
+      const pct = max === 0 ? 0 : Math.round((score / max) * 100);
+
+      // ενημέρωση μπάρας
+      fillEl.style.height = pct + '%';
+      document.querySelector('.bar').setAttribute('aria-valuenow', pct);
+
+      // ενημέρωση αποτελέσματος (κατώφλια: 0 -> κοτέτσι, >0 -> μαντρί, πλήρες -> δωμάτιο)
+      if (pct === 100){
+        badges.bad.style.display = 'none';
+        badges.mid.style.display = 'none';
+        badges.good.style.display = 'inline-block';
+        resultTitle.textContent = 'Δωμάτιο με κρεβάτι και κουβέρτα! 🛏️';
+        resultDesc.textContent = 'Εύγε! Το επίπεδο ευγένειας ξεχείλισε. Παραλαμβάνεις κλειδί δωματίου.';
+      } else if (pct > 0){
+        badges.bad.style.display = 'none';
+        badges.mid.style.display = 'inline-block';
+        badges.good.style.display = 'none';
+        resultTitle.textContent = 'Μαντρί 🐑';
+        resultDesc.textContent = 'Καλύτερα από κοτέτσι, αλλά θέλει κι άλλο γλύψ… εε, ευγένεια! Πρόσθεσε ακόμη 1‑2 μαγικές λέξεις.';
+      } else {
+        badges.bad.style.display = 'inline-block';
+        badges.mid.style.display = 'none';
+        badges.good.style.display = 'none';
+        resultTitle.textContent = 'Κοτέτσι 🐔';
+        resultDesc.textContent = 'Προς το παρόν παραμένεις στο VIP… αγρόκτημα. Δοκίμασε πιο ευγενικό ύφος 😉';
+      }
     }
-  }
-  (function loop(){
-    const W = confetti.width, H = confetti.height;
-    ctx.clearRect(0,0,W,H);
-    bits.forEach(b=>{
-      b.x += b.vx; b.y += b.vy; b.rot += b.vr;
-      ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.rot);
-      ctx.fillStyle = b.c; ctx.fillRect(-b.r, -b.r*0.3, b.r*2, b.r*0.6);
-      ctx.restore();
+
+    msgEl.addEventListener('input', evaluate);
+
+    // Αντιγραφή στο πρόχειρο
+    document.getElementById('copyBtn').addEventListener('click', async ()=>{
+      try {
+        await navigator.clipboard.writeText(msgEl.value);
+        const orig = document.getElementById('copyBtn').textContent;
+        document.getElementById('copyBtn').textContent = '✅ Αντιγράφηκε!';
+        setTimeout(()=>document.getElementById('copyBtn').textContent = orig, 1400);
+      } catch (e) { alert('Δεν μπόρεσα να αντιγράψω 😕'); }
     });
-    bits = bits.filter(b=>b.y < H+30);
-    requestAnimationFrame(loop);
-  })();
 
-  /* ========= Envelope interactions ========= */
-  const env = document.getElementById('envelope');
-  let opened = false;
-
-  function openEnvelope(){
-    if (opened) return;
-    opened = true;
-    env.classList.add('open');
-    // σε μικρή οθόνη, κύλησε το φάκελο στο κέντρο
-    env.scrollIntoView({behavior:'smooth', block:'center'});
-    spawnConfetti(160);
-  }
-
-  env.addEventListener('click', openEnvelope, {passive:true});
-  // μικρή βοήθεια για όσους πατήσουν δύο φορές
-  env.addEventListener('touchend', e=>{
-    if (!opened) openEnvelope();
-  }, {passive:true});
-
-  /* ========= Continue → παραβάσεις ========= */
-  document.getElementById('continueBtn').addEventListener('click', ()=>{
-    alert("Επειδή τελευταία έχουμε λίγο ξεφύγει και δε θα γλύτωνες, μεταφέρεσαι στη λίστα παραβάσεων να ξεκαθαρίσουμε κάποια πράγματα..."); 
-    spawnConfetti(60);
-    sendTelegramMessage("Ο Μπόμπος διάβασε το γράμμα και μεταφέρεται στη λίστα παραβάσεων...");
-    setTimeout(()=>{ window.location.href = 'paravaseis.html'; }, 550);
-  });
-
-  function sendTelegramMessage(message) {
-            const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
-            const chatID = '7336951445';
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: chatID,
-                    text: message
-                })
-            })
-            .then(response => response.json())
-            .then(data => console.log('Message sent:', data))
-            .catch(error => console.error('Error:', error));
-        };
-</script>
-</body>
+    // Αρχική αξιολόγηση
+    evaluate();
+  </script></body>
 </html>
