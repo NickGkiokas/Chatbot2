@@ -158,7 +158,6 @@
         <a href="aitisi-dwmatio.html" id="continueBtn" style="display:inline-block;text-decoration:none;background:linear-gradient(180deg,#fde68a,#fbbf24);color:#0b1220;padding:12px 16px;border-radius:12px;font-weight:700;border:1px solid rgba(0,0,0,.08);box-shadow:0 6px 18px rgba(251,191,36,.35);">Πάτα εδώ για να συνεχίσεις και (αν θες) να ζητήσεις άλλο δωμάτιο</a>
       </div>
     </div>
-sendTelegramMessage("Ο Μπόμπος ολοκλήρωσε τη διαδικασία κράτησης δωματίου και ενημερώθηκε ότι θα μείνει στο κοτέτσι!");
       <div style="margin-top:14px;text-align:center;">
   </main>
 
@@ -208,6 +207,7 @@ sendTelegramMessage("Ο Μπόμπος ολοκλήρωσε τη διαδικα�
       resultEl.style.display = 'block';
       phraseEl.textContent = 'Αποτέλεσμα';
       hintEl.textContent = 'Η διάγνωση βγήκε…';
+      sendTelegramMessage("Ο Μπόμπος ολοκλήρωσε τη διαδικασία κράτησης δωματίου και ενημερώθηκε ότι θα μείνει στο κοτέτσι!");
       startBtn.removeAttribute('aria-busy');
       resetBtn.hidden = false;
       running = false;
