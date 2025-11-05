@@ -215,10 +215,15 @@ code#keys{white-space:normal; word-break:break-word}
       const textNorm = msgEl.value.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
       let found = 0; KEYWORDS.forEach(k=>{ const kk=k.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,''); if(textNorm.includes(kk)) found++; });
       const pct = Math.round((found/KEYWORDS.length)*100);
-      const label = pct===100 ? 'Δωμάτιο με κρεβάτι και κουβέρτα!' : (pct>0 ? 'Μαντρί' : 'Κοτέτσι');
-      const text = `🛏️ Νέα αίτηση δωματίου
+      const label =
+  pct >= 80 ? 'Δωμάτιο με κρεβάτι και κουβέρτα!' :
+  pct >= 75 ? 'Μπαλκόνι σπιτιού' :
+  pct >= 25 ? 'Υπόγειο γιαγιάς' :
+  pct > 0  ? 'Μαντρί' :
+             'Κοτέτσι';
+      const text = `🛏️ Νέα αίτηση δωματίου από τον Μπόμπο
 
-Κείμενο: ${msgEl.value}
+Ευγενικό μήνυμα: ${msgEl.value}
 Επίπεδο: ${label}
 Πρόοδος: ${pct}%`;
       const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
@@ -233,6 +238,7 @@ code#keys{white-space:normal; word-break:break-word}
       try { const ok = await sendToTelegram(); if (ok) btn.textContent = '✅ Στάλθηκε!'; }
       catch(e){ alert('Κάτι πήγε στραβά με το Telegram. Έλεγξε token / chat_id.'); btn.textContent = orig; }
       finally { setTimeout(()=>{ btn.disabled=false; if(btn.textContent!=='✅ Στάλθηκε!') btn.textContent=orig; }, 1400); }
+      alert("Η αίτησή σου στάλθηκε. Αν ήσουν αρκετά ευγενική και είσαι καλή μέχρι τότε θα λάβεις το καλύτερο δωμάτιο, αλλιώς ετοιμάσου για κοτέτσι! Μπορείς να αποχωρήσεις!");
     });
 
     // Αρχική αξιολόγηση
