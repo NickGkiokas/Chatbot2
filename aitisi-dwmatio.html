@@ -85,9 +85,11 @@ code#keys{white-space:normal; word-break:break-word}
   <div class="result" id="resultBox">
     <span class="badge bad">Κοτέτσι</span>
     <span class="badge mid" style="display:none">Μαντρί</span>
+    <span class="badge upper_mid">Υπόγειο γιαγιάς</span>
+    <span class="badge bad">Μπαλκόνι σπιτιού</span>
     <span class="badge good" style="display:none">Δωμάτιο με κρεβάτι και κουβέρτα!</span>
     <h2 id="resultTitle">Κοτέτσι 🐔</h2>
-    <p class="desc" id="resultDesc">Προς το παρόν παραμένεις στο VIP… αγρόκτημα. Δοκίμασε πιο ευγενικό ύφος 😉</p>
+    <p class="desc" id="resultDesc">Προς το παρόν παραμένεις με τις κοτούλες. Δοκίμασε πιο ευγενικά!</p>
   </div>
 
   <div class="actions">
@@ -100,11 +102,13 @@ code#keys{white-space:normal; word-break:break-word}
 <aside class="card barbox" aria-label="Επίπεδο ευγένειας">
   <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="barLabel">
     <div class="fill" id="fill"></div>
-    <div class="ticks">
-      <span>Δωμάτιο</span>
-      <span>Μαντρί</span>
-      <span>Κοτέτσι</span>
-    </div>
+   <div class="ticks">
+  <span>Δωμάτιο</span>
+  <span>Μπαλκόνι σπιτιού</span>
+  <span>Υπόγειο γιαγιάς</span>
+  <span>Μαντρί</span>
+  <span>Κοτέτσι</span>
+   </div>
   </div>
 </aside>
 
@@ -133,41 +137,63 @@ code#keys{white-space:normal; word-break:break-word}
     keysEl.textContent = KEYWORDS.join(', ');
 
     function evaluate(){
-      const text = normalize(msgEl.value);
-      const found = new Set();
-      for (const kw of KEYWORDS){
-        const k = normalize(kw);
-        if (k && text.includes(k)) found.add(k);
-      }
-      const score = found.size; // πόσα keywords βρέθηκαν
-      const max = KEYWORDS.length;
-      const pct = max === 0 ? 0 : Math.round((score / max) * 100);
+  const text = normalize(msgEl.value);
+  const found = new Set();
+  for (const kw of KEYWORDS){
+    const k = normalize(kw);
+    if (k && text.includes(k)) found.add(k);
+  }
+  const max = KEYWORDS.length || 1;
+  const pct = Math.round((found.size / max) * 100);
 
-      // ενημέρωση μπάρας
-      fillEl.style.height = pct + '%';
-      document.querySelector('.bar').setAttribute('aria-valuenow', pct);
+  // ενημέρωση μπάρας
+  fillEl.style.height = pct + '%';
+  document.querySelector('.bar').setAttribute('aria-valuenow', pct);
 
-      // ενημέρωση αποτελέσματος (κατώφλια: 0 -> κοτέτσι, >0 -> μαντρί, πλήρες -> δωμάτιο)
-      if (pct === 100){
-        badges.bad.style.display = 'none';
-        badges.mid.style.display = 'none';
-        badges.good.style.display = 'inline-block';
-        resultTitle.textContent = 'Δωμάτιο με κρεβάτι και κουβέρτα! 🛏️';
-        resultDesc.textContent = 'Εύγε! Το επίπεδο ευγένειας ξεχείλισε. Παραλαμβάνεις κλειδί δωματίου.';
-      } else if (pct > 0){
-        badges.bad.style.display = 'none';
-        badges.mid.style.display = 'inline-block';
-        badges.good.style.display = 'none';
-        resultTitle.textContent = 'Μαντρί 🐑';
-        resultDesc.textContent = 'Καλύτερα από κοτέτσι, αλλά θέλει κι άλλο γλύψ… εε, ευγένεια! Πρόσθεσε ακόμη 1‑2 μαγικές λέξεις.';
-      } else {
-        badges.bad.style.display = 'inline-block';
-        badges.mid.style.display = 'none';
-        badges.good.style.display = 'none';
-        resultTitle.textContent = 'Κοτέτσι 🐔';
-        resultDesc.textContent = 'Προς το παρόν παραμένεις στο VIP… αγρόκτημα. Δοκίμασε πιο ευγενικό ύφος 😉';
-      }
-    }
+  // ---- ΝΕΑ 5-επίπεδη κλιμάκωση (με τη σειρά των badges στο DOM) ----
+  // 0: Κοτέτσι | 1: Μαντρί | 2: Υπόγειο | 3: Μπαλκόνι | 4: Δωμάτιο
+  let levelIndex = 0;
+  if (pct === 100) {
+    levelIndex = 4; // Δωμάτιο
+  } else if (pct >= 75) {
+    levelIndex = 3; // Μπαλκόνι
+  } else if (pct >= 25) {
+    levelIndex = 2; // Υπόγειο
+  } else if (pct > 0) {
+    levelIndex = 1; // Μαντρί
+  } else {
+    levelIndex = 0; // Κοτέτσι
+  }
+
+  // εμφάνιση σωστού badge με βάση τη ΣΕΙΡΑ που έχεις βάλει στο HTML
+  const allBadges = Array.from(document.querySelectorAll('.result .badge'));
+  allBadges.forEach((b, i) => { b.style.display = (i === levelIndex) ? 'inline-block' : 'none'; });
+
+  // τίτλος + περιγραφή
+  switch (levelIndex) {
+    case 4:
+      resultTitle.textContent = 'Δωμάτιο με κρεβάτι και κουβέρτα! 🛏️';
+      resultDesc.textContent = 'Εύγε! Το επίπεδο ευγένειας ξεχείλισε. Παραλαμβάνεις κλειδί δωματίου.';
+      break;
+    case 3:
+      resultTitle.textContent = 'Μπαλκόνι σπιτιού 🌙';
+      resultDesc.textContent = 'Καλύτερα… αλλά έξω έχει δροσιά. Μία-δύο ακόμη μαγικές λέξεις και μπαίνεις μέσα!';
+      break;
+    case 2:
+      resultTitle.textContent = 'Υπόγειο γιαγιάς 🧶';
+      resultDesc.textContent = 'Ζεστασιά έχει, αλλά η ναφθαλίνη βαράει. Λίγη ακόμη ευγένεια ανεβάζει επίπεδο!';
+      break;
+    case 1:
+      resultTitle.textContent = 'Μαντρί 🐑';
+      resultDesc.textContent = 'Ανεβαίνεις! Πρόσθεσε ακόμη 1-2 λέξεις-κλειδιά για καλύτερα.';
+      break;
+    default:
+      resultTitle.textContent = 'Κοτέτσι 🐔';
+      resultDesc.textContent = 'Προς το παρόν μένεις με τις κοτούλες. Δοκίμασε πιο ευγενικά!';
+      break;
+  }
+}
+
 
     msgEl.addEventListener('input', evaluate);
 
