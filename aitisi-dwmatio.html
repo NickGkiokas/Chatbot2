@@ -120,7 +120,6 @@ code#keys{white-space:normal; word-break:break-word}
 
     const msgEl = document.getElementById('msg');
     const fillEl = document.getElementById('fill');
-    const keysEl = document.getElementById('keys');
     const resultTitle = document.getElementById('resultTitle');
     const resultDesc = document.getElementById('resultDesc');
     const badges = {
@@ -128,9 +127,6 @@ code#keys{white-space:normal; word-break:break-word}
       mid: document.querySelector('.badge.mid'),
       good: document.querySelector('.badge.good'),
     };
-
-    // Εμφάνισε τις λέξεις-κλειδιά
-    keysEl.textContent = KEYWORDS.join(', ');
 
     function evaluate(){
   const text = normalize(msgEl.value);
