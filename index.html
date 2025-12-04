@@ -2,113 +2,144 @@
 <html lang="el">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Πλατφόρμα Συμφωνίας</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Αίτηση Ταξιδιού</title>
 
 <style>
     body {
-        font-family: 'Arial', sans-serif;
-        background: #f4f6fa;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        background: #f2f3f7;
         margin: 0;
         padding: 0;
+        color: #333;
     }
 
-    /* MODAL Καλωσορίσματος */
+    /* --- MODALS --- */
     .modal, .noticeModal {
         position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.55);
+        inset: 0;
+        background: rgba(0,0,0,0.45);
         display: flex;
         justify-content: center;
         align-items: center;
         z-index: 9999;
-    }
-    .modal-content, .notice-content {
-        background: white;
-        padding: 25px;
-        width: 90%;
-        max-width: 450px;
-        border-radius: 14px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        text-align: center;
-        animation: fadeIn 0.4s ease;
+        backdrop-filter: blur(3px);
+        padding: 16px;
     }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: scale(0.95); }
+    .modal-content, .notice-content {
+        background: #ffffff;
+        padding: 24px 26px;
+        width: 100%;
+        max-width: 400px;
+        border-radius: 18px;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+        text-align: center;
+        animation: popIn 0.28s ease;
+    }
+
+    @keyframes popIn {
+        from { opacity: 0; transform: scale(0.88); }
         to { opacity: 1; transform: scale(1); }
     }
 
+    /* --- BUTTONS --- */
     button {
-        padding: 10px 20px;
-        background: #4a90e2;
+        width: 100%;
+        padding: 14px 18px;
+        background: #4c8bf5;
         border: none;
         color: white;
-        border-radius: 8px;
+        border-radius: 14px;
         cursor: pointer;
-        margin-top: 15px;
-        font-size: 16px;
-    }
-    button:hover {
-        background: #3579c7;
+        margin-top: 18px;
+        font-size: 17px;
+        font-weight: 600;
+        transition: 0.2s ease;
     }
 
+    button:hover {
+        background: #3c74d8;
+    }
+
+    /* --- MAIN MENU --- */
     .menu {
-        margin: 20px auto;
+        margin: 22px auto;
         max-width: 500px;
-        background: white;
-        padding: 20px;
-        border-radius: 14px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        background: #fff;
+        padding: 22px;
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.10);
     }
 
     .menu button {
-        width: 100%;
-        margin: 10px 0;
+        margin: 12px 0;
+        font-size: 18px;
     }
 
     .done {
-        color: green;
+        color: #1da851;
         font-weight: bold;
     }
 
-    /* Φόρμες */
+    /* --- FORMS --- */
     .formContainer {
         display: none;
-        background: white;
-        padding: 20px;
-        max-width: 550px;
+        background: #fff;
+        padding: 22px;
+        max-width: 520px;
         margin: 20px auto;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+    }
+
+    .formContainer h3 {
+        margin-top: 0;
+        font-size: 22px;
+        font-weight: 600;
     }
 
     .warning-box {
-        background: #fff3cd;
-        padding: 15px;
-        border-radius: 10px;
-        border-left: 6px solid #ffcd39;
-        margin-bottom: 15px;
+        background: #fff6d9;
+        padding: 16px;
+        border-radius: 14px;
+        border-left: 6px solid #ffd76b;
+        margin-bottom: 18px;
+        font-size: 15px;
+        line-height: 1.5;
+    }
+
+    label {
+        font-size: 16px;
+        display: block;
+        margin: 10px 0;
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.3);
+        margin-right: 10px;
     }
 
     textarea {
         width: 100%;
         resize: none;
-        height: 80px;
-        padding: 8px;
-        border-radius: 6px;
-        border: 1px solid #ccc;
-        margin-top: 10px;
+        height: 110px;
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid #c9c9c9;
+        margin-top: 14px;
+        font-size: 16px;
+        background: #fafafa;
     }
 
     .notice-image {
         width: 100%;
         margin: 12px 0;
-        border-radius: 12px;
+        border-radius: 14px;
         display: none;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+        box-shadow: 0 4px 18px rgba(0,0,0,0.2);
     }
+
 </style>
 </head>
 
@@ -117,9 +148,11 @@
 <!-- MODAL Καλωσορίσματος -->
 <div class="modal" id="welcomeModal">
   <div class="modal-content">
-      <h2>Καλωσήρθες στην πλατφόρμα συμφωνίας!</h2>
-      <p>Θα χρειαστεί να αποδεχτείς όρους για τα ταξίδια και να συμπληρώσεις ένα μικρό μήνυμα.  
-      Πάτα <b>Μάλιστα</b> για να ξεκινήσεις.</p>
+      <h2 style="font-size:22px; margin-top:0;">Καλωσήρθες στην πλατφόρμα συμφωνίας!</h2>
+      <p style="font-size:16px; line-height:1.5;">
+        Θα χρειαστεί να αποδεχτείς όρους για τα ταξίδια και να συμπληρώσεις ένα μικρό μήνυμα.<br>
+        Πάτα <b>Μάλιστα</b> για να ξεκινήσεις.
+      </p>
       <button onclick="closeWelcome()">Μάλιστα</button>
   </div>
 </div>
@@ -134,11 +167,12 @@
 <!-- Φόρμα Ταξιδιών -->
 <div class="formContainer" id="trip1">
     <h3>Όροι Ταξιδιού 1</h3>
-    <label><input type="checkbox" class="cbox"> Θα είμαι συνεπής</label><br>
-    <label><input type="checkbox" class="cbox"> Θα ενημερώνω έγκαιρα</label><br>
-    <label><input type="checkbox" class="cbox"> Θα κρατήσω ισορροπία</label><br>
-    <label><input type="checkbox" class="cbox"> Θα δείχνω σεβασμό</label><br>
-    <label><input type="checkbox" class="cbox"> Θα τηρώ όσα συμφωνήθηκαν</label><br>
+
+    <label><input type="checkbox" class="cbox"> Θα είμαι συνεπής</label>
+    <label><input type="checkbox" class="cbox"> Θα ενημερώνω έγκαιρα</label>
+    <label><input type="checkbox" class="cbox"> Θα κρατήσω ισορροπία</label>
+    <label><input type="checkbox" class="cbox"> Θα δείχνω σεβασμό</label>
+    <label><input type="checkbox" class="cbox"> Θα τηρώ όσα συμφωνήθηκαν</label>
 
     <textarea placeholder="Γράψε ένα δικό σου μήνυμα με ευγένεια..." id="trip1Text"></textarea>
 
@@ -147,11 +181,12 @@
 
 <div class="formContainer" id="trip2">
     <h3>Όροι Ταξιδιού 2</h3>
-    <label><input type="checkbox" class="cbox"> Θα είμαι συνεπής</label><br>
-    <label><input type="checkbox" class="cbox"> Θα ενημερώνω έγκαιρα</label><br>
-    <label><input type="checkbox" class="cbox"> Θα κρατήσω ισορροπία</label><br>
-    <label><input type="checkbox" class="cbox"> Θα δείχνω σεβασμό</label><br>
-    <label><input type="checkbox" class="cbox"> Θα τηρώ όσα συμφωνήθηκαν</label><br>
+
+    <label><input type="checkbox" class="cbox"> Θα είμαι συνεπής</label>
+    <label><input type="checkbox" class="cbox"> Θα ενημερώνω έγκαιρα</label>
+    <label><input type="checkbox" class="cbox"> Θα κρατήσω ισορροπία</label>
+    <label><input type="checkbox" class="cbox"> Θα δείχνω σεβασμό</label>
+    <label><input type="checkbox" class="cbox"> Θα τηρώ όσα συμφωνήθηκαν</label>
 
     <textarea placeholder="Γράψε ένα δικό σου μήνυμα με ευγένεια..." id="trip2Text"></textarea>
 
@@ -165,10 +200,9 @@
     <div class="warning-box">
         Σε ενημερώνουμε ότι κανονικά τώρα θα έμπαινε σε ισχύ μια υπενθύμιση για πιο οργανωμένη συμπεριφορά (βλέπε εικόνα).<br><br>
 
-        <!-- Εικόνα screenshot -->
         <img id="noticeScreenshot" class="notice-image" src="">
 
-        Παρόλα αυτά, λόγω γιορτών, μετατίθεται για το τέλος των ταξιδιών.  
+        Παρόλα αυτά, λόγω γιορτών, μετατίθεται για το τέλος των ταξιδιών.<br>
         Αν όλα πάνε καλά, μπορεί και να μην χρειαστεί καθόλου! 😊<br><br>
 
         Γράψε ότι έγιναν κατανοητά όλα, πρόσθεσε και ένα "Ευχαριστώ".
@@ -195,7 +229,7 @@ function openForm(id) {
     window.scrollTo(0,0);
 }
 
-/* Άνοιγμα Notice + έλεγχος για εικόνα */
+/* Άνοιγμα Notice */
 function openNotice() {
     openForm("noticeForm");
 
@@ -239,7 +273,6 @@ function submitTrip(id) {
 /* Υποβολή Ενημέρωσης */
 function submitNotice() {
     const text = document.getElementById("noticeText").value.trim();
-
 
     sendTelegram("Υποβλήθηκε η Σημαντική Ενημέρωση:\n" + text);
 
