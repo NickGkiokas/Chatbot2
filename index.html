@@ -216,11 +216,6 @@ function sendTelegram(msg) {
     });
 }
 
-/* Έλεγχος πληθυντικού & λέξης */
-function validateText(value) {
-    return value.includes("ευχαρισ") || value.includes("συμφων");
-}
-
 /* Υποβολή Ταξιδιού */
 function submitTrip(id) {
     const container = document.getElementById(id);
@@ -234,11 +229,6 @@ function submitTrip(id) {
         }
     }
 
-    if (!validateText(text)) {
-        alert("Το μήνυμα πρέπει να περιέχει έκφραση ευγένειας ή συμφωνίας.");
-        return;
-    }
-
     sendTelegram(`Υποβλήθηκε το ${id}.\nΜήνυμα χρήστη:\n${text}`);
 
     document.getElementById(id + "Status").innerHTML = "✔";
@@ -250,10 +240,6 @@ function submitTrip(id) {
 function submitNotice() {
     const text = document.getElementById("noticeText").value.trim();
 
-    if (!validateText(text)) {
-        alert("Το μήνυμα πρέπει να περιέχει έκφραση ευγένειας ή συμφωνίας.");
-        return;
-    }
 
     sendTelegram("Υποβλήθηκε η Σημαντική Ενημέρωση:\n" + text);
 
