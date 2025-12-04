@@ -2,284 +2,66 @@
 <html lang="el">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Αίτηση Ταξιδιού</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Πάτα το κουμπί</title>
 
 <style>
     body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-        background: #f2f3f7;
         margin: 0;
         padding: 0;
-        color: #333;
-    }
-
-    /* --- MODALS --- */
-    .modal, .noticeModal {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.45);
+        background: #f7f7f7;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 9999;
-        backdrop-filter: blur(3px);
-        padding: 16px;
-    }
-
-    .modal-content, .notice-content {
-        background: #ffffff;
-        padding: 24px 26px;
-        width: 100%;
-        max-width: 400px;
-        border-radius: 18px;
-        box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+        height: 100vh;
         text-align: center;
-        animation: popIn 0.28s ease;
     }
 
-    @keyframes popIn {
-        from { opacity: 0; transform: scale(0.88); }
-        to { opacity: 1; transform: scale(1); }
+    /* Pulse animation */
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.08); }
+        100% { transform: scale(1); }
     }
 
-    /* --- BUTTONS --- */
-    button {
-        width: 100%;
-        padding: 14px 18px;
-        background: #8e44ad;
-        border: none;
+    .button {
+        background: #ff3b30;
         color: white;
-        border-radius: 14px;
-        cursor: pointer;
-        margin-top: 18px;
-        font-size: 17px;
-        font-weight: 600;
-        transition: 0.2s ease;
-    }
-
-    button:hover {
-        background: #3c74d8;
-    }
-
-    /* --- MAIN MENU --- */
-    .menu {
-        margin: 22px auto;
-        max-width: 500px;
-        background: #fff;
-        padding: 22px;
-        border-radius: 20px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.10);
-    }
-
-    .menu button {
-        margin: 12px 0;
-        font-size: 18px;
-    }
-
-    .done {
-        color: #1da851;
+        padding: 22px 46px;
+        font-size: 28px;
         font-weight: bold;
-    }
-
-    /* --- FORMS --- */
-    .formContainer {
-        display: none;
-        background: #fff;
-        padding: 22px;
-        max-width: 520px;
-        margin: 20px auto;
+        border: none;
         border-radius: 20px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+        cursor: pointer;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.18);
+        animation: pulse 1.7s infinite ease-in-out;
+        transition: transform 0.15s ease, background 0.2s ease;
     }
 
-    .formContainer h3 {
-        margin-top: 0;
-        font-size: 22px;
-        font-weight: 600;
+    .button:active {
+        transform: scale(0.92);
+        background: #d9342b;
+        animation: none; /* σταματά το pulse όταν πατηθεί */
     }
-
-    .warning-box {
-        background: #fff6d9;
-        padding: 16px;
-        border-radius: 14px;
-        border-left: 6px solid #ffd76b;
-        margin-bottom: 18px;
-        font-size: 15px;
-        line-height: 1.5;
-    }
-
-    label {
-        font-size: 16px;
-        display: block;
-        margin: 10px 0;
-    }
-
-    input[type="checkbox"] {
-        transform: scale(1.3);
-        margin-right: 10px;
-    }
-
-    textarea {
-        width: 100%;
-        resize: none;
-        height: 110px;
-        padding: 12px;
-        border-radius: 14px;
-        border: 1px solid #c9c9c9;
-        margin-top: 14px;
-        font-size: 16px;
-        background: #fafafa;
-    }
-
-    .notice-image {
-        width: 100%;
-        margin: 12px 0;
-        border-radius: 14px;
-        display: none;
-        box-shadow: 0 4px 18px rgba(0,0,0,0.2);
-    }
-
 </style>
-</head>
 
+</head>
 <body>
 
-<!-- MODAL Καλωσορίσματος -->
-<div class="modal" id="welcomeModal">
-  <div class="modal-content">
-      <h2 style="font-size:22px; margin-top:0;">Καλωσήρθες στην Πλατφόρμα Αίτησης Ταξιδιού!</h2>
-      <p style="font-size:16px; line-height:1.5;">
-        Θα μπεις φρόνιμα κι ωραία να αποδεχτείς όρους (θα βάλεις τικ) και να συμφωνήσεις (γραπτά), για το διάστημα που θα λείπεις ταξίδι, τόσο εσύ, όσο και το Αφεντικό. Τέλος, θα διαβάσεις μια σημαντική ενημέρωση.<br>
-        Πάτα <b>Μάλιστα</b> και μετά πάτα ένα ένα τα πεδία για να ξεκινήσεις.
-      </p>
-      <button onclick="closeWelcome()">Μάλιστα</button>
-  </div>
-</div>
-
-<!-- ΜΕΝΟΥ -->
-<div class="menu" id="menu">
-    <button onclick="openForm('trip1')">Ταξίδι Μπόμπου (13-21/12) <span id="trip1Status"></span></button>
-    <button onclick="openForm('trip2')">Ταξίδι Αφεντικού (25-30/12) <span id="trip2Status"></span></button>
-    <button onclick="openNotice()">Σημαντική Ενημέρωση! <span id="noticeStatus"></span></button>
-</div>
-
-<!-- Φόρμα Ταξιδιών -->
-<div class="formContainer" id="trip1">
-    <h3>Όροι Ταξιδιού Μπόμπου</h3>
-
-    <label><input type="checkbox" class="cbox"> Θα είμαι φρόνιμη και υπάκουη</label>
-    <label><input type="checkbox" class="cbox"> Θα ενημερώνω όποτε μου ζητηθεί</label>
-    <label><input type="checkbox" class="cbox"> Θα προσέχω στην ξένη χώρα</label>
-    <label><input type="checkbox" class="cbox"> Θα στέλνω ωραία βίντεο και φωτογραφίες</label>
-    <label><input type="checkbox" class="cbox"> Θα περάσω τέλεια, θα φάω, θα πιω και δε θα αγχώνομαι για τίποτα!</label>
-
-    <textarea placeholder="Γράψε ένα δικό σου ευγενικό μήνυμα να δείξεις ότι κατάλαβες και ζήτα κάτι που ίσως θες" id="trip1Text"></textarea>
-
-    <button onclick="submitTrip('trip1')">Υποβολή</button>
-</div>
-
-<div class="formContainer" id="trip2">
-    <h3>Όροι Ταξιδιού Αφεντικού</h3>
-
-    <label><input type="checkbox" class="cbox"> Θα είμαι καλό κορίτσι όσο είμαι μόνη μου</label>
-    <label><input type="checkbox" class="cbox"> Θα ενημερώνω και θα ακούω</label>
-    <label><input type="checkbox" class="cbox"> Θα έχω 2 μέρες άδεια για το διάστημα 25-30 και ΙΣΩΣ 3 αν μέχρι τότε είμαι φρόνιμη</label>
-    <label><input type="checkbox" class="cbox"> Δε θα αντιμιλάω ούτε θα γκρινιάξω για τους όρους</label>
-    <label><input type="checkbox" class="cbox"> Θα είμαι έτοιμη να κάνουμε τέλεια Πρωτοχρονιά!</label>
-
-    <textarea placeholder="Γράψε ένα δικό σου ευγενικό μήνυμα για να δείξεις ότι κατάλαβες και ζήτα κάτι που ίσως θες" id="trip2Text"></textarea>
-
-    <button onclick="submitTrip('trip2')">Υποβολή</button>
-</div>
-
-<!-- ΣΗΜΑΝΤΙΚΗ ΕΝΗΜΕΡΩΣΗ -->
-<div class="formContainer" id="noticeForm">
-    <h3>Σημαντική Ενημέρωση!</h3>
-
-    <div class="warning-box">
-        Σε ενημερώνουμε ότι κανονικά τώρα θα έμπαινες τιμωρία, όπως είχες ενημερωθεί πρόσφατα, λόγω ανυπακοής (βλέπε εικόνα).<br><br>
-
-        <img id="noticeScreenshot" class="notice-image" src="myimg.jpg">
-
-        Παρόλα αυτά, λόγω γιορτών, η τιμωρία μετατίθεται για μετά τα ταξίδια, δηλαδή τέλος του χρόνου, για να ξεκινήσεις φρόνιμη τη νέα χρονιά!<br>
-        ΑΝ ΟΜΩΣ μέχρι τότε τηρήσεις όσα είπαμε πριν, μπορεί και να γλυτώσεις!<br><br>
-
-        Γράψε ότι έγιναν κατανοητά όλα κι ότι θα ακούς, πες ΕΥΧΑΡΙΣΤΩ, και μετά θα μπορείς να αποχωρήσεις.
-    </div>
-
-    <textarea id="noticeText"></textarea>
-
-    <button onclick="submitNotice()">Υποβολή</button>
-</div>
+<button class="button" onclick="pressButton()">Πάτα με</button>
 
 <script>
-const BOT = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
-const CHAT = "7336951445";
+function pressButton() {
+    const btn = document.querySelector('.button');
 
-/* Κλείσιμο Welcome Modal */
-function closeWelcome() {
-    document.getElementById("welcomeModal").style.display = "none";
-}
-
-/* Άνοιγμα Φόρμας */
-function openForm(id) {
-    document.querySelectorAll(".formContainer").forEach(f => f.style.display = "none");
-    document.getElementById(id).style.display = "block";
-    window.scrollTo(0,0);
-}
-
-/* Άνοιγμα Notice */
-function openNotice() {
-    openForm("noticeForm");
-
-    const img = document.getElementById("noticeScreenshot");
-    if (img.src && img.src.trim() !== "" && !img.src.includes("about:blank")) {
-        img.style.display = "block";
-    } else {
-        img.style.display = "none";
-    }
-}
-
-/* Αποστολή στο Telegram */
-function sendTelegram(msg) {
-    fetch(`https://api.telegram.org/bot${BOT}/sendMessage`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ chat_id: CHAT, text: msg })
-    });
-}
-
-/* Υποβολή Ταξιδιού */
-function submitTrip(id) {
-    const container = document.getElementById(id);
-    const checks = container.querySelectorAll(".cbox");
-    const text = container.querySelector("textarea").value.trim();
-
-    for (let c of checks) {
-        if (!c.checked) {
-            alert("Πρέπει να επιλεχθούν όλοι οι όροι!");
-            return;
-        }
-    }
-
-    sendTelegram(`Ο Μπόμπος συμφώνησε για το ${id}.\nΜήνυμα Μπόμπου:\n${text}`);
-
-    document.getElementById(id + "Status").innerHTML = "✔";
-    alert("Υποβλήθηκε! Συνέχισε στο επόμενο!");
-    document.getElementById(id).style.display = "none";
-}
-
-/* Υποβολή Ενημέρωσης */
-function submitNotice() {
-    const text = document.getElementById("noticeText").value.trim();
-
-    sendTelegram("Ο Μπόμπος διάβασε τη Σημαντική Ενημέρωση και λέει:\n" + text);
-
-    document.getElementById("noticeStatus").innerHTML = "✔";
-    alert("Υποβλήθηκε! Μπορείς να αποχωρήσεις!");
-
-    document.getElementById("noticeForm").style.display = "none";
+    // Μικρό visual feedback
+    btn.style.transform = "scale(0.9)";
+    
+    // Redirect με καθυστέρηση 500ms
+    setTimeout(() => {
+        window.location.href = "timoria.html";
+    }, 500);
 }
 </script>
 
