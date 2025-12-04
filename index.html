@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Πλατφόρμα Συμφωνίας</title>
 
 <style>
@@ -33,7 +33,6 @@
         max-width: 450px;
         border-radius: 15px;
         text-align: center;
-        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
     }
     #popupBox button {
         margin-top: 20px;
@@ -65,6 +64,11 @@
         font-size: 20px;
         cursor: pointer;
         transition: 0.2s;
+    }
+    .menu-btn.completed {
+        background: #b6f2b6 !important;
+        color: #2e7d32;
+        font-weight: bold;
     }
     .menu-btn:hover { background: #ff91c4; }
 
@@ -120,10 +124,10 @@
     <div id="popupBox">
         <h2>Καλωσήρθες στην Πλατφόρμα Συμφωνίας!</h2>
         <p>
-        Θα μπεις φρόνιμα κι ωραία να αποδεχτείς όρους και να συμφωνήσεις,<br>
-        πρώτα για το διάστημα του ταξιδιού σου<br>
-        και μετά για το διάστημα του ταξιδιού του Αφεντικού.<br><br>
-        Πάτα <b>Μάλιστα</b> και μετά επίλεξε το πρώτο πεδίο για να αρχίσεις.
+            Θα μπεις φρόνιμα κι ωραία να αποδεχτείς όρους και να συμφωνήσεις,<br>
+            πρώτα για το διάστημα του ταξιδιού σου<br>
+            και μετά για το διάστημα του ταξιδιού του Αφεντικού.<br><br>
+            Πάτα <b>Μάλιστα</b> και μετά επέλεξε το πρώτο πεδίο για να αρχίσεις.
         </p>
         <button onclick="closePopup()">Μάλιστα</button>
     </div>
@@ -132,8 +136,14 @@
 <!-- Menu -->
 <div id="menu">
     <h1>Επίλεξε Ταξίδι</h1>
-    <button class="menu-btn" onclick="openForm('Ταξίδι Μπόμπου')">Ταξίδι Μπόμπου</button>
-    <button class="menu-btn" onclick="openForm('Ταξίδι Αφεντικού')">Ταξίδι Αφεντικού</button>
+
+    <button class="menu-btn" id="btnTrip1" onclick="openForm('Ταξίδι Μπόμπου', 'trip1')">
+        Ταξίδι Μπόμπου
+    </button>
+
+    <button class="menu-btn" id="btnTrip2" onclick="openForm('Ταξίδι Αφεντικού', 'trip2')">
+        Ταξίδι Αφεντικού
+    </button>
 </div>
 
 <!-- Form Page -->
@@ -156,12 +166,20 @@
 </div>
 
 <script>
+/* === TELEGRAM SETTINGS === */
+const TELEGRAM_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
+const TELEGRAM_CHAT_ID = "7336951445";
+    
+let currentTripKey = null;
+
 function closePopup() {
     document.getElementById("welcomePopup").style.display = "none";
     document.getElementById("menu").style.display = "block";
 }
 
-function openForm(title) {
+function openForm(title, key) {
+    currentTripKey = key;
+
     document.getElementById("menu").style.display = "none";
     document.getElementById("formPage").style.display = "block";
     document.getElementById("formTitle").textContent = title;
@@ -171,7 +189,7 @@ function submitForm() {
     const checkboxes = document.querySelectorAll(".term");
     const text = document.getElementById("freeText").value.trim();
 
-    // Έλεγχος checkboxes
+    // Check all terms
     for (let cb of checkboxes) {
         if (!cb.checked) {
             alert("Πρέπει να αποδεχτείς όλους τους όρους!");
@@ -179,7 +197,6 @@ function submitForm() {
         }
     }
 
-    // Έλεγχος κειμένου
     if (text.length < 5) {
         alert("Γράψε λίγο πιο φρόνιμα και ολοκληρωμένα λόγια!");
         return;
@@ -187,11 +204,39 @@ function submitForm() {
 
     alert("Υποβλήθηκε με επιτυχία!");
 
-    // Reset
+    // Show ✓ on completed trip
+    const btn = document.getElementById(
+        currentTripKey === "trip1" ? "btnTrip1" : "btnTrip2"
+    );
+    btn.classList.add("completed");
+    btn.textContent += " ✓";
+
+    // === SEND TO TELEGRAM ===
+    const termsList = Array.from(checkboxes)
+        .map(cb => "• " + cb.parentElement.textContent.trim())
+        .join("\n");
+
+    const message =
+        `📋 *Υποβλήθηκε Συμφωνία*\n` +
+        `Ταξίδι: ${document.getElementById("formTitle").textContent}\n\n` +
+        `✔ Όροι που αποδέχτηκε:\n${termsList}\n\n` +
+        `✏ Μήνυμα που έγραψε:\n"${text}"`;
+
+    fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            chat_id: TELEGRAM_CHAT_ID,
+            text: message,
+            parse_mode: "Markdown"
+        })
+    });
+
+    // Reset form
     checkboxes.forEach(cb => cb.checked = false);
     document.getElementById("freeText").value = "";
 
-    // Επιστροφή στο μενού
+    // Return to menu
     document.getElementById("formPage").style.display = "none";
     document.getElementById("menu").style.display = "block";
 }
