@@ -1,252 +1,201 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Πού θα κοιμηθείς στο χωριό</title>
-  <style>
-    :root {
-      --bg: #0f172a;        /* slate-900 */
-      --panel: #111827ee;   /* gray-900 */
-      --soft: #1f2937;      /* gray-800 */
-      --text: #e5e7eb;      /* gray-200 */
-      --muted: #9ca3af;     /* gray-400 */
-      --accent: #38bdf8;    /* sky-400 */
-      --success: #22c55e;   /* green-500 */
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Πλατφόρμα Συμφωνίας</title>
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
+<style>
     body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 600px at 80% -10%, #1f2937 0%, transparent 60%),
-                  radial-gradient(800px 500px at -10% 110%, #0b1220 0%, transparent 60%),
-                  var(--bg);
-      color: var(--text);
-      display: grid;
-      place-items: center;
-      padding: 24px;
+        font-family: Arial, sans-serif;
+        background: #fcefd1;
+        margin: 0;
+        padding: 0;
     }
 
-    .card {
-      width: min(680px, 100%);
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 24px;
-      padding: 28px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.45);
+    /* Popup */
+    #welcomePopup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.55);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+    }
+    #popupBox {
+        background: white;
+        padding: 25px;
+        width: 80%;
+        max-width: 450px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    }
+    #popupBox button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #ff7eb8;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        cursor: pointer;
     }
 
-    h1 {
-      margin: 0 0 8px;
-      font-size: clamp(24px, 3.6vw, 36px);
-      line-height: 1.15;
-      letter-spacing: 0.2px;
+    /* Menu */
+    #menu {
+        display: none;
+        text-align: center;
+        padding-top: 40px;
     }
-
-    p.lead {
-      margin: 0 0 20px;
-      color: var(--muted);
-      font-size: clamp(14px, 2.2vw, 16px);
+    .menu-btn {
+        display: block;
+        margin: 15px auto;
+        padding: 15px 25px;
+        width: 70%;
+        max-width: 320px;
+        background: #ffb8d9;
+        color: #333;
+        border: none;
+        border-radius: 12px;
+        font-size: 20px;
+        cursor: pointer;
+        transition: 0.2s;
     }
+    .menu-btn:hover { background: #ff91c4; }
 
-    .actions { display: flex; gap: 12px; align-items: center; margin-top: 12px; }
-
-    button {
-      appearance: none;
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 18px;
-      font-size: 16px;
-      font-weight: 600;
-      color: #0b1220;
-      background: linear-gradient(180deg, #7dd3fc, #38bdf8);
-      box-shadow: 0 6px 20px rgba(56,189,248,0.35), inset 0 1px 0 rgba(255,255,255,0.35);
-      cursor: pointer;
-      transition: transform .08s ease, filter .2s ease, opacity .2s ease;
+    /* Form */
+    #formPage {
+        display: none;
+        padding: 20px;
+        max-width: 600px;
+        margin: auto;
     }
-    button:hover { filter: brightness(1.05); }
-    button:active { transform: translateY(1px) scale(0.99); }
-    button[disabled] { opacity: .6; cursor: not-allowed; }
-
-    .status {
-      margin-top: 18px;
-      min-height: 56px;
-      background: rgba(2,6,23,0.35);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px;
-      padding: 14px 16px;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: center;
-      gap: 12px;
+    .form-box {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
-
-    .dotloader {
-      width: 18px; height: 18px; position: relative;
+    .form-title {
+        font-size: 24px;
+        margin-bottom: 15px;
+        text-align: center;
     }
-    .dotloader span {
-      position: absolute; width: 100%; height: 100%; border-radius: 50%;
-      background: var(--accent); opacity: .85; filter: drop-shadow(0 6px 10px rgba(56,189,248,.45));
-      animation: ping 1.2s infinite ease-in-out;
+    .checkbox-group {
+        margin: 15px 0;
+        font-size: 18px;
     }
-    .dotloader span:nth-child(2) { animation-delay: .15s; opacity: .65; }
-    .dotloader span:nth-child(3) { animation-delay: .3s; opacity: .45; }
-    @keyframes ping { 0%{ transform: scale(.35); opacity: .9 } 80%{ transform: scale(1); opacity: .1 } 100%{ opacity: 0 } }
-
-    .phrase { font-size: 15px; color: var(--text); letter-spacing: .2px; }
-    .muted { color: var(--muted); font-size: 13px; }
-
-    .progress {
-      margin-top: 12px;
-      height: 10px;
-      width: 100%;
-      background: rgba(148,163,184,.15);
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.06);
+    textarea {
+        width: 100%;
+        margin-top: 12px;
+        padding: 8px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+        resize: none;
     }
-    .bar { height: 100%; width: 0%; background: linear-gradient(90deg, #38bdf8, #22c55e); transition: width .35s ease; }
-
-    .result {
-      margin-top: 18px;
-      display: none;
-      background: linear-gradient(180deg, rgba(34,197,94,0.15), rgba(34,197,94,0.08));
-      border: 1px solid rgba(34,197,94,0.35);
-      border-radius: 18px;
-      padding: 18px;
-      text-align: center;
+    #submitBtn {
+        margin-top: 20px;
+        padding: 12px 20px;
+        width: 100%;
+        background: #ff77a9;
+        color: white;
+        font-size: 18px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
     }
-    .result h2 { margin: 0; font-size: clamp(28px, 5vw, 40px); }
-    .result .emoji { font-size: 32px; display: block; margin-bottom: 8px; }
-
-    .footer {
-      margin-top: 16px; text-align: center; color: var(--muted); font-size: 12px;
-    }
-
-    .ghost {
-      background: transparent; border: 1px dashed rgba(148,163,184,.35);
-      color: var(--text);
-    }
-  </style>
+</style>
 </head>
+
 <body>
-  <main class="card" role="main">
-    <h1>Πάτα εδώ για να δεις πού θα κοιμηθείς στο χωριό</h1>
 
-    <div class="actions">
-      <button id="startBtn" aria-controls="status" aria-busy="false">ΔΕΣ ΤΟ ΑΠΟΤΕΛΕΣΜΑ</button>
-      <button id="resetBtn" class="ghost" hidden>Ξανά απ’ την αρχή</button>
+<!-- Popup -->
+<div id="welcomePopup">
+    <div id="popupBox">
+        <h2>Καλωσήρθες στην Πλατφόρμα Συμφωνίας!</h2>
+        <p>
+        Θα μπεις φρόνιμα κι ωραία να αποδεχτείς όρους και να συμφωνήσεις,<br>
+        πρώτα για το διάστημα του ταξιδιού σου<br>
+        και μετά για το διάστημα του ταξιδιού του Αφεντικού.<br><br>
+        Πάτα <b>Μάλιστα</b> και μετά επίλεξε το πρώτο πεδίο για να αρχίσεις.
+        </p>
+        <button onclick="closePopup()">Μάλιστα</button>
     </div>
+</div>
 
-    <section id="status" class="status" aria-live="polite">
-      <div class="dotloader" aria-hidden="true"><span></span><span></span><span></span></div>
-      <div>
-        <div id="phrase" class="phrase">Όταν είσαι έτοιμη…</div>
-        <div id="hint" class="muted">Πάτα το κουμπί για να ξεκινήσει ο υπολογισμός.</div>
-      </div>
-    </section>
+<!-- Menu -->
+<div id="menu">
+    <h1>Επίλεξε Ταξίδι</h1>
+    <button class="menu-btn" onclick="openForm('Ταξίδι Μπόμπου')">Ταξίδι Μπόμπου</button>
+    <button class="menu-btn" onclick="openForm('Ταξίδι Αφεντικού')">Ταξίδι Αφεντικού</button>
+</div>
 
-    <div class="progress" aria-hidden="true"><div id="bar" class="bar"></div></div>
+<!-- Form Page -->
+<div id="formPage">
+    <div class="form-box">
+        <div class="form-title" id="formTitle"></div>
 
-    <div id="result" class="result" role="status" aria-live="assertive">
-      <span class="emoji">🐔</span>
-      <h2>Κοτέτσι</h2>
-      <p class="muted">Συγχαρητήρια! Κερδίζεις μια θέση κλειδωμένη με τις κοτούλες!</p>
-        <a href="aitisi-dwmatio.html" id="continueBtn" style="display:inline-block;text-decoration:none;background:linear-gradient(180deg,#fde68a,#fbbf24);color:#0b1220;padding:12px 16px;border-radius:12px;font-weight:700;border:1px solid rgba(0,0,0,.08);box-shadow:0 6px 18px rgba(251,191,36,.35);">Πάτα εδώ για να συνεχίσεις και (αν θες) να ζητήσεις άλλο δωμάτιο</a>
-      </div>
+        <div class="checkbox-group">
+            <label><input type="checkbox" class="term"> Θα είμαι φρόνιμη και υπάκουη.</label><br>
+            <label><input type="checkbox" class="term"> Θα ενημερώνω σωστά και στην ώρα μου.</label><br>
+            <label><input type="checkbox" class="term"> Δεν θα κάνω του κεφαλιού μου.</label><br>
+            <label><input type="checkbox" class="term"> Θα συμπεριφέρομαι με πειθαρχία.</label><br>
+            <label><input type="checkbox" class="term"> Θα ακολουθώ κάθε συμφωνημένο όρο.</label>
+        </div>
+
+        <textarea id="freeText" rows="3" placeholder="Γράψε με δικά σου λόγια φρόνιμα και με πειθαρχία..."></textarea>
+
+        <button id="submitBtn" onclick="submitForm()">Υποβολή</button>
     </div>
-      <div style="margin-top:14px;text-align:center;">
-  </main>
+</div>
 
-  <script>
-    const phrases = [
-      "Υπολογισμός…",
-      "Ανάλυση δεδομένων…",
-      "Έλεγχος διαθεσιμότητας δωματίων…",
-      "Υπολογισμός γκρίνιας…",
-      "Επιβεβαίωση κρατήσης…",
-      "Έτοιμο!"
-    ];
+<script>
+function closePopup() {
+    document.getElementById("welcomePopup").style.display = "none";
+    document.getElementById("menu").style.display = "block";
+}
 
-    const startBtn = document.getElementById('startBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const phraseEl = document.getElementById('phrase');
-    const hintEl = document.getElementById('hint');
-    const barEl = document.getElementById('bar');
-    const resultEl = document.getElementById('result');
+function openForm(title) {
+    document.getElementById("menu").style.display = "none";
+    document.getElementById("formPage").style.display = "block";
+    document.getElementById("formTitle").textContent = title;
+}
 
-    let running = false;
+function submitForm() {
+    const checkboxes = document.querySelectorAll(".term");
+    const text = document.getElementById("freeText").value.trim();
 
-    function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
-
-    async function runSequence(){
-      if (running) return;
-      running = true;
-      startBtn.setAttribute('disabled', '');
-      startBtn.setAttribute('aria-busy', 'true');
-      resetBtn.hidden = true;
-      resultEl.style.display = 'none';
-      barEl.style.width = '0%';
-      hintEl.textContent = "Σε εξέλιξη…";
-
-      const total = phrases.length;
-      for (let i = 0; i < total; i++) {
-        phraseEl.textContent = phrases[i];
-        const progress = Math.round(((i+1) / total) * 100);
-        barEl.style.width = progress + '%';
-        // Προσομοίωση χρόνου κάθε βήματος (800–1300ms)
-        const step = 800 + Math.random()*500;
-        await sleep(step);
-      }
-
-      // Μικρή αγωνία πριν το τέλος
-      await sleep(450);
-      resultEl.style.display = 'block';
-      phraseEl.textContent = 'Αποτέλεσμα';
-      hintEl.textContent = 'Η διάγνωση βγήκε…';
-      sendTelegramMessage("Ο Μπόμπος ολοκλήρωσε τη διαδικασία κράτησης δωματίου και ενημερώθηκε ότι θα μείνει στο κοτέτσι!");
-      startBtn.removeAttribute('aria-busy');
-      resetBtn.hidden = false;
-      running = false;
+    // Έλεγχος checkboxes
+    for (let cb of checkboxes) {
+        if (!cb.checked) {
+            alert("Πρέπει να αποδεχτείς όλους τους όρους!");
+            return;
+        }
     }
 
-    function resetAll(){
-      phraseEl.textContent = 'Όταν είσαι έτοιμη…';
-      hintEl.textContent = 'Πάτα το κουμπί για να ξεκινήσει ο “υπολογισμός”.';
-      barEl.style.width = '0%';
-      resultEl.style.display = 'none';
-      startBtn.removeAttribute('disabled');
+    // Έλεγχος κειμένου
+    if (text.length < 5) {
+        alert("Γράψε λίγο πιο φρόνιμα και ολοκληρωμένα λόγια!");
+        return;
     }
 
-    startBtn.addEventListener('click', runSequence);
-    resetBtn.addEventListener('click', resetAll);
+    alert("Υποβλήθηκε με επιτυχία!");
 
-    // Bonus: Enter space triggers when button focused
-    startBtn.addEventListener('keydown', (e)=>{
-      if ((e.key === 'Enter' || e.key === ' ') && !running) runSequence();
-    });
-    function sendTelegramMessage(message) {
-            const botToken = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE';
-            const chatID = '7336951445';
-            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+    // Reset
+    checkboxes.forEach(cb => cb.checked = false);
+    document.getElementById("freeText").value = "";
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: chatID,
-                    text: message
-                })
-            })
-            .then(response => response.json())
-            .then(data => console.log('Message sent:', data))
-            .catch(error => console.error('Error:', error));
-    }
-  </script>
+    // Επιστροφή στο μενού
+    document.getElementById("formPage").style.display = "none";
+    document.getElementById("menu").style.display = "block";
+}
+</script>
+
 </body>
 </html>
