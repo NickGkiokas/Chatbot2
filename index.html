@@ -148,9 +148,9 @@
 <!-- MODAL Καλωσορίσματος -->
 <div class="modal" id="welcomeModal">
   <div class="modal-content">
-      <h2 style="font-size:22px; margin-top:0;">Καλωσήρθες στην πλατφόρμα συμφωνίας!</h2>
+      <h2 style="font-size:22px; margin-top:0;">Καλωσήρθες στην Πλατφόρμα Αίτησης Ταξιδιού!</h2>
       <p style="font-size:16px; line-height:1.5;">
-        Θα χρειαστεί να αποδεχτείς όρους για τα ταξίδια και να συμπληρώσεις ένα μικρό μήνυμα.<br>
+        Θα μπεις φρόνιμα κι ωραία να αποδεχτείς όρους (θα βάλεις τικ) και να συμφωνήσεις (γραπτά), για το διάστημα που θα λείπεις ταξίδι τόσο εσύ, όσο και το Αφεντικό. Τέλος, θα διαβάσεις μια σημαντική ενημέρωση. Πάτα Μάλιστα και μετά πάτα ένα ένα τα κουτάκια για να αρχίσεις.<br>
         Πάτα <b>Μάλιστα</b> για να ξεκινήσεις.
       </p>
       <button onclick="closeWelcome()">Μάλιστα</button>
@@ -159,53 +159,53 @@
 
 <!-- ΜΕΝΟΥ -->
 <div class="menu" id="menu">
-    <button onclick="openForm('trip1')">Ταξίδι 1 <span id="trip1Status"></span></button>
-    <button onclick="openForm('trip2')">Ταξίδι 2 <span id="trip2Status"></span></button>
-    <button onclick="openNotice()">Σημαντική Ενημέρωση <span id="noticeStatus"></span></button>
+    <button onclick="openForm('trip1')">Ταξίδι Μπόμπου (13-21/12) <span id="trip1Status"></span></button>
+    <button onclick="openForm('trip2')">Ταξίδι Αφεντικού (25-30/12) <span id="trip2Status"></span></button>
+    <button onclick="openNotice()">Σημαντική Ενημέρωση! <span id="noticeStatus"></span></button>
 </div>
 
 <!-- Φόρμα Ταξιδιών -->
 <div class="formContainer" id="trip1">
-    <h3>Όροι Ταξιδιού 1</h3>
+    <h3>Όροι Ταξιδιού Μπόμπου</h3>
 
-    <label><input type="checkbox" class="cbox"> Θα είμαι συνεπής</label>
-    <label><input type="checkbox" class="cbox"> Θα ενημερώνω έγκαιρα</label>
-    <label><input type="checkbox" class="cbox"> Θα κρατήσω ισορροπία</label>
-    <label><input type="checkbox" class="cbox"> Θα δείχνω σεβασμό</label>
-    <label><input type="checkbox" class="cbox"> Θα τηρώ όσα συμφωνήθηκαν</label>
+    <label><input type="checkbox" class="cbox"> Θα είμαι φρόνιμη και υπάκουη</label>
+    <label><input type="checkbox" class="cbox"> Θα ενημερώνω όποτε μου ζητηθεί</label>
+    <label><input type="checkbox" class="cbox"> Θα προσέχω στην ξένη χώρα</label>
+    <label><input type="checkbox" class="cbox"> Θα στέλνω ωραία βίντεο και φωτογραφίες</label>
+    <label><input type="checkbox" class="cbox"> Θα περάσω τέλεια, θα φάω, θα πιω και δε θα αγχώνομαι για τίποτα!</label>
 
-    <textarea placeholder="Γράψε ένα δικό σου μήνυμα με ευγένεια..." id="trip1Text"></textarea>
+    <textarea placeholder="Γράψε ένα δικό σου ευγενικό μήνυμα να δείξεις ότι κατάλαβες..." id="trip1Text"></textarea>
 
     <button onclick="submitTrip('trip1')">Υποβολή</button>
 </div>
 
 <div class="formContainer" id="trip2">
-    <h3>Όροι Ταξιδιού 2</h3>
+    <h3>Όροι Ταξιδιού Αφεντικού</h3>
 
-    <label><input type="checkbox" class="cbox"> Θα είμαι συνεπής</label>
-    <label><input type="checkbox" class="cbox"> Θα ενημερώνω έγκαιρα</label>
-    <label><input type="checkbox" class="cbox"> Θα κρατήσω ισορροπία</label>
-    <label><input type="checkbox" class="cbox"> Θα δείχνω σεβασμό</label>
-    <label><input type="checkbox" class="cbox"> Θα τηρώ όσα συμφωνήθηκαν</label>
+    <label><input type="checkbox" class="cbox"> Θα είμαι καλό κορίτσι όσο είμαι μόνη μου</label>
+    <label><input type="checkbox" class="cbox"> Θα ενημερώνω και θα ακούω</label>
+    <label><input type="checkbox" class="cbox"> Θα έχω 2 μέρες άδεια για το διάστημα 25-30 και ΙΣΩΣ 3 αν μέχρι τότε είμαι φρόνιμη</label>
+    <label><input type="checkbox" class="cbox"> Δε θα αντιμιλάω ούτε θα γκρινιάξω για τους όρους</label>
+    <label><input type="checkbox" class="cbox"> Θα είμαι έτοιμη να κάνουμε τέλεια Πρωτοχρονιά!</label>
 
-    <textarea placeholder="Γράψε ένα δικό σου μήνυμα με ευγένεια..." id="trip2Text"></textarea>
+    <textarea placeholder="Γράψε ένα δικό σου ευγενικό μήνυμα να δείξεις ότι κατάλαβες..." id="trip2Text"></textarea>
 
     <button onclick="submitTrip('trip2')">Υποβολή</button>
 </div>
 
 <!-- ΣΗΜΑΝΤΙΚΗ ΕΝΗΜΕΡΩΣΗ -->
 <div class="formContainer" id="noticeForm">
-    <h3>Σημαντική Ενημέρωση</h3>
+    <h3>Σημαντική Ενημέρωση!</h3>
 
     <div class="warning-box">
-        Σε ενημερώνουμε ότι κανονικά τώρα θα έμπαινε σε ισχύ μια υπενθύμιση για πιο οργανωμένη συμπεριφορά (βλέπε εικόνα).<br><br>
+        Σε ενημερώνουμε ότι κανονικά τώρα θα έμπαινες τιμωρία, όπως είχες ενημερωθεί πρόσφατα, λόγω πρόσφατης ανυπακοής (βλέπε εικόνα).<br><br>
 
         <img id="noticeScreenshot" class="notice-image" src="myimg.jpg">
 
         Παρόλα αυτά, λόγω γιορτών, μετατίθεται για το τέλος των ταξιδιών.<br>
-        Αν όλα πάνε καλά, μπορεί και να μην χρειαστεί καθόλου! 😊<br><br>
+        Κι αν μέχρι τότε τηρήσεις όσα είπαμε πριν, μπορεί και να γλυτώσεις!<br><br>
 
-        Γράψε ότι έγιναν κατανοητά όλα, πρόσθεσε και ένα "Ευχαριστώ".
+        Γράψε ότι έγιναν κατανοητά όλα κι ότι θα ακούς, πες ΕΥΧΑΡΙΣΤΩ, και μετά θα μπορείς να αποχωρήσεις.
     </div>
 
     <textarea id="noticeText"></textarea>
@@ -258,15 +258,15 @@ function submitTrip(id) {
 
     for (let c of checks) {
         if (!c.checked) {
-            alert("Πρέπει να επιλεχθούν όλοι οι όροι.");
+            alert("Πρέπει να επιλεχθούν όλοι οι όροι!");
             return;
         }
     }
 
-    sendTelegram(`Υποβλήθηκε το ${id}.\nΜήνυμα χρήστη:\n${text}`);
+    sendTelegram(`Ο Μπόμπος συμφώνησε για το ${id}.\nΜήνυμα Μπόμπου:\n${text}`);
 
     document.getElementById(id + "Status").innerHTML = "✔";
-    alert("Υποβλήθηκε!");
+    alert("Υποβλήθηκε! Συνέχισε στο επόμενο!");
     document.getElementById(id).style.display = "none";
 }
 
@@ -274,10 +274,10 @@ function submitTrip(id) {
 function submitNotice() {
     const text = document.getElementById("noticeText").value.trim();
 
-    sendTelegram("Υποβλήθηκε η Σημαντική Ενημέρωση:\n" + text);
+    sendTelegram("Ο Μπόμπος διάβασε τη Σημαντική Ενημέρωση και λέει:\n" + text);
 
     document.getElementById("noticeStatus").innerHTML = "✔";
-    alert("Υποβλήθηκε — μπορείς να αποχωρήσεις 😊");
+    alert("Υποβλήθηκε! Μπορείς να αποχωρήσεις!");
 
     document.getElementById("noticeForm").style.display = "none";
 }
