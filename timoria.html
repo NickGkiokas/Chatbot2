@@ -2,353 +2,284 @@
 <html lang="el">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🚨 Πλατφόρμα Τιμωρίας 🚨</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-<style>
-  body {
-    margin: 0;
-    font-family: 'Quicksand', sans-serif;
-    background: linear-gradient(to bottom, #ffe5e5, #ffcccc);
-    padding: 20px;
-    text-align: center;
-  }
-  .rules-box {
-    background: rgba(255,255,255,0.9);
-    border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-  textarea {
-    width: 80%;
-    max-width: 500px;
-    margin-top: 10px;
-    border-radius: 10px;
-    border: 1px solid #aaa;
-    padding: 8px;
-    font-family: inherit;
-  }
-  button {
-    background: #ff6666;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    margin-top: 15px;
-    border-radius: 10px;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  button:hover { background: #ff3333; }
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Αίτηση Ταξιδιού</title>
 
-  .wheel-container {
-    margin-top: 40px;
-    position: relative;
-    width: 320px;
-    height: 320px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .wheel {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    border: 6px solid #333;
-    position: relative;
-    transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
-    background: conic-gradient(
-      #FF6F61 0deg 72deg,
-      #FFB347 72deg 144deg,
-      #FFE156 144deg 216deg,
-      #6BCB77 216deg 288deg,
-      #4D96FF 288deg 360deg
-    );
-    box-shadow: 0 0 10px rgba(0,0,0,0.3) inset;
-  }
-  .pointer {
-    width: 0;
-    height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 40px solid red;
-    position: absolute;
-    top: -45px;
-    left: 50%;
-    transform: translateX(-50%);
-    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
-  }
-  .result-box {
-    margin-top: 20px;
-    font-size: 22px;
-    font-weight: bold;
-    color: #333;
-  }
+<style>
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        background: #f2f3f7;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    /* --- MODALS --- */
+    .modal, .noticeModal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        backdrop-filter: blur(3px);
+        padding: 16px;
+    }
+
+    .modal-content, .notice-content {
+        background: #ffffff;
+        padding: 24px 26px;
+        width: 100%;
+        max-width: 400px;
+        border-radius: 18px;
+        box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+        text-align: center;
+        animation: popIn 0.28s ease;
+    }
+
+    @keyframes popIn {
+        from { opacity: 0; transform: scale(0.88); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    /* --- BUTTONS --- */
+    button {
+        width: 100%;
+        padding: 14px 18px;
+        background: #8e44ad;
+        border: none;
+        color: white;
+        border-radius: 14px;
+        cursor: pointer;
+        margin-top: 18px;
+        font-size: 17px;
+        font-weight: 600;
+        transition: 0.2s ease;
+    }
+
+    button:hover {
+        background: #3c74d8;
+    }
+
+    /* --- MAIN MENU --- */
+    .menu {
+        margin: 22px auto;
+        max-width: 500px;
+        background: #fff;
+        padding: 22px;
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+    }
+
+    .menu button {
+        margin: 12px 0;
+        font-size: 18px;
+    }
+
+    .done {
+        color: #1da851;
+        font-weight: bold;
+    }
+
+    /* --- FORMS --- */
+    .formContainer {
+        display: none;
+        background: #fff;
+        padding: 22px;
+        max-width: 520px;
+        margin: 20px auto;
+        border-radius: 20px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+    }
+
+    .formContainer h3 {
+        margin-top: 0;
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    .warning-box {
+        background: #fff6d9;
+        padding: 16px;
+        border-radius: 14px;
+        border-left: 6px solid #ffd76b;
+        margin-bottom: 18px;
+        font-size: 15px;
+        line-height: 1.5;
+    }
+
+    label {
+        font-size: 16px;
+        display: block;
+        margin: 10px 0;
+    }
+
+    input[type="checkbox"] {
+        transform: scale(1.3);
+        margin-right: 10px;
+    }
+
+    textarea {
+        width: 100%;
+        resize: none;
+        height: 110px;
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid #c9c9c9;
+        margin-top: 14px;
+        font-size: 16px;
+        background: #fafafa;
+    }
+
+    .notice-image {
+        width: 100%;
+        margin: 12px 0;
+        border-radius: 14px;
+        display: none;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.2);
+    }
+
 </style>
 </head>
+
 <body>
 
-<h1>🚨 Πλατφόρμα Τιμωρίας 🚨</h1>
-
-<div class="rules-box">
-  <h2>📜 Κανόνες Συμπεριφοράς. Όσο βρίσκεσαι στην πλατφόρμα τιμωρίας δεν υπάρχουν αστεία, άρα τους ακολουθείς αυστηρά, αλλιώς η τιμωρία θα είναι πιο βαριά.</h2>
-  <p>1️⃣ Απαντάς ευγενικά και με ειλικρίνεια.</p>
-  <p>2️⃣ Υπακούς στις οδηγίες χωρίς αντιρρήσεις.</p>
+<!-- MODAL Καλωσορίσματος -->
+<div class="modal" id="welcomeModal">
+  <div class="modal-content">
+      <h2 style="font-size:22px; margin-top:0;">Καλωσήρθες στην Πλατφόρμα Αίτησης Ταξιδιού!</h2>
+      <p style="font-size:16px; line-height:1.5;">
+        Θα μπεις φρόνιμα κι ωραία να αποδεχτείς όρους (θα βάλεις τικ) και να συμφωνήσεις (γραπτά), για το διάστημα που θα λείπεις ταξίδι, τόσο εσύ, όσο και το Αφεντικό. Τέλος, θα διαβάσεις μια σημαντική ενημέρωση.<br>
+        Πάτα <b>Μάλιστα</b> και μετά πάτα ένα ένα τα πεδία για να ξεκινήσεις.
+      </p>
+      <button onclick="closeWelcome()">Μάλιστα</button>
+  </div>
 </div>
 
-<h2>📋 Ερωτήσεις πριν αποφασιστεί η τιμωρία σου:</h2>
-
-<form id="punishmentForm">
-  <div>
-    <label>1️⃣ Γιατί δεν ήσουν φρόνιμη πάλι; Πρόκειται για τη δεύτερη τιμωρία σου αυτό τον μήνα...</label><br>
-    <textarea name="q1" rows="2" placeholder="Γράψε εδώ..."></textarea>
-  </div>
-
-  <div>
-    <label>2️⃣ Την τελευταία φορά που μπήκες τιμωρία είπες "Μου αξίζει!". Τώρα, το θεωρείς σωστό που μπαίνεις τιμωρία;</label><br>
-    <textarea name="q2" rows="2" placeholder="Γράψε εδώ..."></textarea>
-  </div>
-
-  <div>
-    <label>3️⃣ Τι έχεις να πεις στο Αφεντικό για τις φορές που αγνόησες όσα έλεγε, δεν ενημέρωνες και είχες και υφάκι από πάνω;</label><br>
-    <textarea name="q3" rows="2" placeholder="Γράψε εδώ..."></textarea>
-  </div>
-  
-  <div>
-    <label>4️⃣ Έχεις να πεις κάτι που πάλι βγήκες χωρίς να ενημερώσεις σήμερα;</label><br>
-    <textarea name="q4" rows="2" placeholder="Γράψε εδώ..."></textarea>
-  </div>
-
-  <button type="submit">📨 Υποβολή απαντήσεων</button>
-</form>
-
-<div id="wheelSection" style="display:none;">
-  <h2>🎯 Ο Τροχός της Τιμωρίας</h2>
-  <div class="wheel-container">
-    <div class="pointer"></div>
-    <div class="wheel" id="wheel"></div>
-  </div>
-  <button onclick="spinWheel()">🎡 Γύρνα τον τροχό!</button>
-  <div class="result-box" id="resultBox"></div>
+<!-- ΜΕΝΟΥ -->
+<div class="menu" id="menu">
+    <button onclick="openForm('trip1')">Ταξίδι Μπόμπου (13-21/12) <span id="trip1Status"></span></button>
+    <button onclick="openForm('trip2')">Ταξίδι Αφεντικού (25-30/12) <span id="trip2Status"></span></button>
+    <button onclick="openNotice()">Σημαντική Ενημέρωση! <span id="noticeStatus"></span></button>
 </div>
 
-<div id="writingSection" style="display:none; margin-top:30px;">
-  <h2>✍️ Γράψιμο Φράσεων</h2>
-  <p id="phraseInstruction"></p>
-  <input type="text" id="phraseInput" placeholder="Γράψε ακριβώς τη φράση εδώ">
-  <button onclick="submitPhrase()">✅ Υποβολή</button>
-  <p id="progressText" style="margin-top:10px; font-weight:bold;"></p>
+<!-- Φόρμα Ταξιδιών -->
+<div class="formContainer" id="trip1">
+    <h3>Όροι Ταξιδιού Μπόμπου</h3>
+
+    <label><input type="checkbox" class="cbox"> Θα είμαι φρόνιμη και υπάκουη</label>
+    <label><input type="checkbox" class="cbox"> Θα ενημερώνω όποτε μου ζητηθεί</label>
+    <label><input type="checkbox" class="cbox"> Θα προσέχω στην ξένη χώρα</label>
+    <label><input type="checkbox" class="cbox"> Θα στέλνω ωραία βίντεο και φωτογραφίες</label>
+    <label><input type="checkbox" class="cbox"> Θα περάσω τέλεια, θα φάω, θα πιω και δε θα αγχώνομαι για τίποτα!</label>
+
+    <textarea placeholder="Γράψε ένα δικό σου ευγενικό μήνυμα να δείξεις ότι κατάλαβες και ζήτα κάτι που ίσως θες" id="trip1Text"></textarea>
+
+    <button onclick="submitTrip('trip1')">Υποβολή</button>
+</div>
+
+<div class="formContainer" id="trip2">
+    <h3>Όροι Ταξιδιού Αφεντικού</h3>
+
+    <label><input type="checkbox" class="cbox"> Θα είμαι καλό κορίτσι όσο είμαι μόνη μου</label>
+    <label><input type="checkbox" class="cbox"> Θα ενημερώνω και θα ακούω</label>
+    <label><input type="checkbox" class="cbox"> Θα έχω 2 μέρες άδεια για το διάστημα 25-30 και ΙΣΩΣ 3 αν μέχρι τότε είμαι φρόνιμη</label>
+    <label><input type="checkbox" class="cbox"> Δε θα αντιμιλάω ούτε θα γκρινιάξω για τους όρους</label>
+    <label><input type="checkbox" class="cbox"> Θα είμαι έτοιμη να κάνουμε τέλεια Πρωτοχρονιά!</label>
+
+    <textarea placeholder="Γράψε ένα δικό σου ευγενικό μήνυμα για να δείξεις ότι κατάλαβες και ζήτα κάτι που ίσως θες" id="trip2Text"></textarea>
+
+    <button onclick="submitTrip('trip2')">Υποβολή</button>
+</div>
+
+<!-- ΣΗΜΑΝΤΙΚΗ ΕΝΗΜΕΡΩΣΗ -->
+<div class="formContainer" id="noticeForm">
+    <h3>Σημαντική Ενημέρωση!</h3>
+
+    <div class="warning-box">
+        Σε ενημερώνουμε ότι κανονικά τώρα θα έμπαινες τιμωρία, όπως είχες ενημερωθεί πρόσφατα, λόγω ανυπακοής (βλέπε εικόνα).<br><br>
+
+        <img id="noticeScreenshot" class="notice-image" src="myimg.jpg">
+
+        Παρόλα αυτά, λόγω γιορτών, η τιμωρία μετατίθεται για μετά τα ταξίδια, δηλαδή τέλος του χρόνου, για να ξεκινήσεις φρόνιμη τη νέα χρονιά!<br>
+        ΑΝ ΟΜΩΣ μέχρι τότε τηρήσεις όσα είπαμε πριν, μπορεί και να γλυτώσεις!<br><br>
+
+        Γράψε ότι έγιναν κατανοητά όλα κι ότι θα ακούς, πες ΕΥΧΑΡΙΣΤΩ, και μετά θα μπορείς να αποχωρήσεις.
+    </div>
+
+    <textarea id="noticeText"></textarea>
+
+    <button onclick="submitNotice()">Υποβολή</button>
 </div>
 
 <script>
-const TELEGRAM_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
-const CHAT_ID = "7336951445";
+const BOT = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
+const CHAT = "7336951445";
 
-// ✍️ Οι 3 φράσεις
-const phrases = [
-  "Συγγνώμη Αφεντικούλη που ήμουν άτακτη και ανυπάκουη",
-  "Θα ζητάω άδεια και θα ενημερώνω το Αφεντικό",
-  "Δε θα αντιμιλάω και δε θα έχω υφάκι, αλλιώς θα μπαίνω αμέσως τιμωρία"
-];
-
-// 🔹 Προστέθηκε: αντιστοίχιση name -> εκφώνηση
-const questionTexts = {
-  q1: "1️⃣ Γιατί δεν ήσουν φρόνιμη πάλι; Πρόκειται για τη δεύτερη τιμωρία σου αυτό τον μήνα...",
-  q2: "2️⃣ Την τελευταία φορά που μπήκες τιμωρία είπες \"Μου αξίζει!\". Τώρα, το θεωρείς σωστό που μπαίνεις τιμωρία;",
-  q3: "3️⃣ Τι έχεις να πεις στο Αφεντικό για τις φορές που αγνόησες όσα έλεγε, δεν ενημέρωνες και είχες και υφάκι από πάνω;",
-  q4: "4️⃣ Έχεις να πεις κάτι που πάλι βγήκες χωρίς να ενημερώσεις σήμερα;"
-};
-
-let currentPhraseIndex = 0;
-let currentCount = 0;
-
-let wheel = document.getElementById("wheel");
-
-// 📩 Βοηθητική συνάρτηση αποστολής Telegram
-function sendTelegramMessage(text) {
-  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      chat_id: CHAT_ID,
-      text: text
-    })
-  });
+/* Κλείσιμο Welcome Modal */
+function closeWelcome() {
+    document.getElementById("welcomeModal").style.display = "none";
 }
 
-document.getElementById("punishmentForm").addEventListener("submit", function(e){
-  e.preventDefault();
-
-  // Παίρνουμε τις απαντήσεις ΚΑΙ περιλαμβάνουμε τις εκφωνήσεις
-  const formData = new FormData(this);
-  let message = "📋 *Απαντήσεις πριν την τιμωρία:*\n\n";
-  for (let [name, value] of formData.entries()) {
-    const qText = questionTexts[name] || `Ερώτηση:`;
-    message += `${qText}\nΑπάντηση: ${value}\n\n`;
-  }
-
-  // Στέλνουμε στο Telegram
-  sendTelegramMessage(message);
-  
-  alert("Πολύ ωραία. Ώρα να γυρίσεις τον τροχό και να μάθεις την τιμωρία σου!");
-  
-  // Κρύβουμε τη φόρμα και δείχνουμε τον τροχό
-  document.getElementById("punishmentForm").style.display = "none";
-  document.getElementById("wheelSection").style.display = "block";
-});
-
-// ... κρατάμε όλον τον υπόλοιπο κώδικα ίδιο μέχρι τη spinWheel()
-
-function spinWheel() {
-  // 📩 Στέλνουμε μήνυμα όταν πάει να γυρίσει τον τροχό
-  sendTelegramMessage("🎡 Ο Μπόμπος γύρισε τον Τροχό! Η Τιμωρία είναι: Επιλογή Μπόμπου!");
-
-  let randomDegree = Math.floor(Math.random() * 360) + 1080; // 3+ στροφές
-  wheel.style.transform = `rotate(${randomDegree}deg)`;
-
-  setTimeout(() => {
-    alert("⚖️ Η τιμωρία σου είναι: Επιλογή Μπόμπου!");
-
-    // Δείχνουμε παράθυρο επιλογών
-    showChoicePopup();
-
-  }, 4000);
+/* Άνοιγμα Φόρμας */
+function openForm(id) {
+    document.querySelectorAll(".formContainer").forEach(f => f.style.display = "none");
+    document.getElementById(id).style.display = "block";
+    window.scrollTo(0,0);
 }
 
-// ➡️ Popup επιλογών
-function showChoicePopup() {
-  const choiceDiv = document.createElement("div");
-  choiceDiv.style.position = "fixed";
-  choiceDiv.style.top = "0";
-  choiceDiv.style.left = "0";
-  choiceDiv.style.width = "100%";
-  choiceDiv.style.height = "100%";
-  choiceDiv.style.background = "rgba(0,0,0,0.6)";
-  choiceDiv.style.display = "flex";
-  choiceDiv.style.justifyContent = "center";
-  choiceDiv.style.alignItems = "center";
-  choiceDiv.innerHTML = `
-    <div style="background:#fff; padding:20px; border-radius:15px; max-width:400px; text-align:center;">
-      <h2>⚖️ Επιλογή Μπόμπου</h2>
-      <p>Διάλεξε την τιμωρία σου:</p>
-      <button id="optionNotebook" style="margin:10px; padding:10px 15px;">✍️ 3 φορές γράψιμο φράσεων στο Τετράδιο Μπόμπου + Τιμωρία στη Γωνία</button>
-      <button id="optionMobile" style="margin:10px; padding:10px 15px;">📱 5 φορές γράψιμο φράσεων στο κινητό + Τιμωρία στη Γωνία</button>
-    </div>
-  `;
-  document.body.appendChild(choiceDiv);
+/* Άνοιγμα Notice */
+function openNotice() {
+    openForm("noticeForm");
 
-  document.getElementById("optionNotebook").onclick = () => {
-    sendTelegramMessage("📒 Ο Μπόμπος διάλεξε: 3 φορές γράψιμο στο Τετράδιο + Γωνία!");
-    document.body.removeChild(choiceDiv);
-    showNotebookUpload();
-  };
-
-  document.getElementById("optionMobile").onclick = () => {
-    sendTelegramMessage("📱 Ο Μπόμπος διάλεξε: 5 φορές γράψιμο στο Κινητό + Τιμωρία στη Γωνία!");
-    document.body.removeChild(choiceDiv);
-
-    // Προσαρμόζουμε: χρειάζεται 5 φορές αντί για 3
-    startPhraseMobile();
-  };
-}
-
-// ➡️ Πεδίο ανεβάσματος φωτογραφίας (για τετράδιο)
-function showNotebookUpload() {
-  document.getElementById("wheelSection").style.display = "none";
-  const div = document.createElement("div");
-  div.style.marginTop = "30px";
-  div.innerHTML = `
-    <h2>📷 Απόδειξη Τιμωρίας</h2>
-    <p>Ανέβασε φωτογραφία από το τετράδιό σου που έγράψες 3 φορές τις εξής φράσεις: "Συγγνώμη Αφεντικούλη που ήμουν άτακτη και ανυπάκουη", "Θα ζητάω άδεια και θα ενημερώνω το Αφεντικό", "Δε θα αντιμιλάω και δε θα έχω υφάκι, αλλιώς θα μπαίνω αμέσως τιμωρία" (ΠΡΟΣΕΧΕ ΜΗΝ ΚΛΕΙΣΕΙΣ ΤΗ ΣΕΛΙΔΑ ΒΓΕΣ ΠΡΟΣΕΚΤΙΚΑ ΒΓΑΛΕ ΦΩΤΟ ΚΑΙ ΞΑΝΑΜΠΕΣ!!!).</p>
-    <input type="file" id="photoUpload" accept="image/*"><br><br>
-    <button onclick="submitNotebook()">✅ Υποβολή</button>
-  `;
-  document.body.appendChild(div);
-}
-
-function submitNotebook() {
-  const fileInput = document.getElementById("photoUpload");
-  if (!fileInput.files.length) {
-    alert("❌ Πρέπει να ανεβάσεις μια φωτογραφία!");
-    return;
-  }
-
-  const file = fileInput.files[0];
-  const formData = new FormData();
-  formData.append("chat_id", CHAT_ID);
-  formData.append("photo", file);
-  formData.append("caption", "📒 Απόδειξη τιμωρίας: Ο Μπόμπος ανέβασε το τετράδιο!");
-
-  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`, {
-    method: "POST",
-    body: formData
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log("Telegram response:", data);
-    if (data.ok) {
-      alert("✅Η φωτογραφία στάλθηκε στο Αφεντικό! Μεταφέρεσαι αυτόματα στη Γωνία Σκέψης για να μάθεις το μάθημά σου μια και καλή...");
-      window.location.href = "gwnia.html";
+    const img = document.getElementById("noticeScreenshot");
+    if (img.src && img.src.trim() !== "" && !img.src.includes("about:blank")) {
+        img.style.display = "block";
     } else {
-      alert("⚠️ Κάτι πήγε στραβά με την αποστολή στο Telegram!");
+        img.style.display = "none";
     }
-  })
-  .catch(err => {
-    console.error("Error uploading:", err);
-    alert("⚠️ Σφάλμα κατά την αποστολή!");
-  });
-}
-// ➡️ Flow για κινητό (5 φορές)
-function startPhraseMobile() {
-  currentPhraseIndex = 0;
-  currentCount = 0;
-  document.getElementById("wheelSection").style.display = "none";
-  document.getElementById("writingSection").style.display = "block";
-
-  // Τροποποιούμε οδηγία ώστε να ζητάει 5 φορές
-  document.getElementById("phraseInstruction").innerText =
-    `Γράψε ακριβώς αυτή τη φράση (5 φορές): \n"${phrases[currentPhraseIndex]}"`;
-  document.getElementById("progressText").innerText = `0/5`;
-  document.getElementById("phraseInput").value = "";
 }
 
-// Τροποποιούμε submitPhrase ώστε να ελέγχει 5 αντί για 3 όταν είναι για κινητό
-function submitPhrase() {
-  const userInput = document.getElementById("phraseInput").value.trim();
-  const correctPhrase = phrases[currentPhraseIndex];
+/* Αποστολή στο Telegram */
+function sendTelegram(msg) {
+    fetch(`https://api.telegram.org/bot${BOT}/sendMessage`, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ chat_id: CHAT, text: msg })
+    });
+}
 
-  const repetitions = (document.getElementById("phraseInstruction").innerText.includes("5 φορές")) ? 5 : 5;
+/* Υποβολή Ταξιδιού */
+function submitTrip(id) {
+    const container = document.getElementById(id);
+    const checks = container.querySelectorAll(".cbox");
+    const text = container.querySelector("textarea").value.trim();
 
-  if (userInput === correctPhrase) {
-    currentCount++;
-    document.getElementById("progressText").innerText = `${currentCount}/${repetitions}`;
-    document.getElementById("phraseInput").value = "";
-
-    if (currentCount === repetitions) {
-      sendTelegramMessage(`✅ Ο Μπόμπος έγραψε τη φράση ${currentPhraseIndex + 1}: "${correctPhrase}"`);
-
-      currentPhraseIndex++;
-      if (currentPhraseIndex < phrases.length) {
-        alert("✅ Τέλεια! Προχωράς στην επόμενη φράση.");
-        currentCount = 0;
-        document.getElementById("phraseInstruction").innerText =
-          `Γράψε ακριβώς αυτή τη φράση (${repetitions} φορές): \n"${phrases[currentPhraseIndex]}"`;
-        document.getElementById("progressText").innerText = `0/${repetitions}`;
-        document.getElementById("phraseInput").value = "";
-      } else {
-        alert("🎉 Μπράβο Μπόμπο! Ολοκλήρωσες όλες τις φράσεις!");
-        alert("Μεταφέρεσαι αυτόματα στη Γωνία Σκέψης για να μάθεις το μάθημά σου μια και καλή...");
-        document.getElementById("writingSection").innerHTML =
-          "<h2>🎉 Μπράβο! Ολοκλήρωσες την τιμωρία σου! 🎉</h2>";
-        window.location.href="gwnia.html";
-      }
+    for (let c of checks) {
+        if (!c.checked) {
+            alert("Πρέπει να επιλεχθούν όλοι οι όροι!");
+            return;
+        }
     }
-  } else {
-    alert("❌ Λάθος! Ξεκινάς πάλι τη συγκεκριμένη φράση.");
-    currentCount = 0;
-    document.getElementById("progressText").innerText = `0/${repetitions}`;
-    document.getElementById("phraseInput").value = "";
-  }
+
+    sendTelegram(`Ο Μπόμπος συμφώνησε για το ${id}.\nΜήνυμα Μπόμπου:\n${text}`);
+
+    document.getElementById(id + "Status").innerHTML = "✔";
+    alert("Υποβλήθηκε! Συνέχισε στο επόμενο!");
+    document.getElementById(id).style.display = "none";
+}
+
+/* Υποβολή Ενημέρωσης */
+function submitNotice() {
+    const text = document.getElementById("noticeText").value.trim();
+
+    sendTelegram("Ο Μπόμπος διάβασε τη Σημαντική Ενημέρωση και λέει:\n" + text);
+
+    document.getElementById("noticeStatus").innerHTML = "✔";
+    alert("Υποβλήθηκε! Μπορείς να αποχωρήσεις!");
+
+    document.getElementById("noticeForm").style.display = "none";
 }
 </script>
 
