@@ -285,7 +285,7 @@
                 <div class="menu-items" id="menu-purchases">
                     <div class="nav-item" onclick="filterCategory('gifts', 'Δώρα'); toggleNav();"><i class="fas fa-gift"></i> Δώρα</div>
                     <div class="nav-item" onclick="filterCategory('requests', 'Άδειες'); toggleNav();"><i class="fas fa-pray"></i> Άδειες</div>
-                    <div class="nav-item" onclick="filterCategory('extra', 'Custom'); toggleNav();"><i class="fas fa-magic"></i> Custom</div>
+                    <div class="nav-item" onclick="filterCategory('extra', 'Custom'); toggleNav();"><i class="fas fa-magic"></i> Γραπτά Αιτήματα</div>
                 </div>
             </div>
             <div class="menu-group">
@@ -293,7 +293,7 @@
                     <span>📜 Υποχρεώσεις</span> <i class="fas fa-chevron-down arrow"></i>
                 </div>
                 <div class="menu-items" id="menu-obligations">
-                    <div class="nav-item" onclick="filterCategory('rules', 'Κανόνες'); toggleNav();"><i class="fas fa-clipboard-check"></i> Κανόνες (Earn)</div>
+                    <div class="nav-item" onclick="filterCategory('rules', 'Κανόνες'); toggleNav();"><i class="fas fa-clipboard-check"></i> Κανόνες & Δεσμεύσεις</div>
                 </div>
             </div>
         </div>
@@ -321,8 +321,8 @@
         <div class="pay-card">
             <div class="welcome-icon">🎄</div>
             <h2>Καλώς ήρθες!</h2>
-            <p>Καλωσόρισες στο <strong>Argos Beauty Christmas Store</strong>.</p>
-            <p style="color:#666;">Εδώ θα βρεις όλα όσα χρειάζεσαι για το ταξίδι. Προσοχή στις χρεώσεις και καλά ψώνια!</p>
+            <p>Καλωσόρισες στο <strong>Mpompos Christmas Store</strong>.</p>
+            <p style="color:#666;">Εδώ θα βρεις όλα όσα θέλεις (και όσα πρέπει) να κάνεις, για το διάστημα 25-30 που θα είσαι μόνη σου. Περιηγήσου ελεύθερα, δώσε προσοχή και καλά ψώνια!</p>
             <button class="btn btn-buy" onclick="closeWelcome()">Επόμενο</button>
         </div>
     </div>
@@ -331,7 +331,7 @@
         <div class="pay-card">
             <div class="welcome-icon">🎟️</div>
             <h2>Bonus Εγγραφής</h2>
-            <p>Οι πόντοι σου είναι 0. Βάλε τον κωδικό για να ξεκινήσεις με 50 πόντους!</p>
+            <p>Οι πόντοι σου είναι 0. Βάλε τον κωδικό του κουπονιού που έχεις λάβει για να ξεκινήσεις με 50 πόντους!</p>
             <input type="text" id="coupon-input" class="form-input" placeholder="Κωδικός Κουπονιού" style="text-align:center; text-transform:uppercase; margin-bottom:15px;">
             <button class="btn btn-earn" onclick="checkCoupon()">Εξαργύρωση</button>
             <button class="btn" style="margin-top:10px; background:#ddd;" onclick="closeModal('coupon-modal')">Ακύρωση</button>
@@ -369,7 +369,7 @@
                     <div class="form-group" style="flex:1"><label class="form-label">HM/NIA</label><input type="text" class="form-input" placeholder="12/30"></div>
                     <div class="form-group" style="flex:1"><label class="form-label">CVC</label><input type="text" class="form-input" placeholder="123"></div>
                 </div>
-                <div class="form-group"><label class="form-label">PIN Κάρτας (1234)</label><input type="password" id="secret-pin" class="form-input" required></div>
+                <div class="form-group"><label class="form-label">PIN Κάρτας</label><input type="password" id="secret-pin" class="form-input" required></div>
                 <button type="submit" class="btn btn-earn" style="margin-top:10px;">Πληρωμή</button>
                 <button type="button" class="btn" style="margin-top:10px; background:#ddd;" onclick="closeModal('payment-modal')">Ακύρωση</button>
             </form>
@@ -380,7 +380,7 @@
         <div class="receipt">
             <div style="text-align:center; border-bottom:2px dashed #333; padding-bottom:10px; margin-bottom:15px;">
                 <h3>MPOMPOS STORE</h3>
-                <small>RECEIPT</small>
+                <small>ΑΠΟΔΕΙΞΗ</small>
             </div>
             <div id="receipt-content"></div>
             <div style="border-top:2px dashed #333; margin-top:15px; padding-top:10px; text-align:center;">
@@ -400,13 +400,13 @@
 
             <div class="important-note">
                 <strong>⚠️ ΠΡΟΣΟΧΗ:</strong><br>
-                Οι πόντοι που κερδίζεις θα προστίθενται <u>σταδιακά</u>, όσο ακολουθείς τη συμφωνία.<br><br>
-                Εάν δεν τηρηθούν όπως πρέπει, δεν προστίθενται πόντοι, το υπόλοιπο θα μείνει αρνητικό και θα ενεργοποιηθεί η <strong>Τιμωρία</strong> (που αυτή τη στιγμή αν πατήσεις πάνω στους πόντους σου γράφει ότι είναι ανενεργή).
+                Οι πόντοι που κερδίζεις θα προστίθενται <u>σταδιακά</u>, όσο τηρείς τη συμφωνία.<br><br>
+                Εάν δεν τηρηθούν όλα όπως πρέπει, δεν προστίθενται πόντοι, άρα το υπόλοιπο θα μείνει αρνητικό και θα ενεργοποιηθεί η <strong>Τιμωρία</strong> (που αυτή τη στιγμή αν πατήσεις πάνω στους πόντους σου γράφει ότι είναι ανενεργή).
             </div>
 
             <div style="margin-top:20px;">
-                <p style="font-size:0.9rem; color:#555;">Αφού διάβασες και κατανόησες τα παραπάνω:</p>
-                <button class="btn btn-earn" onclick="goToFinal()">Μάλιστα (Τελική Επιβεβαίωση)</button>
+                <p style="font-size:0.9rem; color:#555;">Αφού διάβασες και κατανόησες τα παραπάνω, πάτα το κουμπί για να προχωρήσεις:</p>
+                <button class="btn btn-earn" onclick="goToFinal()">Μάλιστα</button>
             </div>
         </div>
     </div>
@@ -546,11 +546,11 @@
             document.getElementById('main-content').innerHTML = `
                 <div class="hero">
                     <h1>🎅🏻 Καλώς ήρθες, Μπόμπο!</h1>
-                    <p>Το Χριστουγεννιάτικο κατάστημα είναι ανοιχτό.</p>
+                    <p>Το Χριστουγεννιάτικο κατάστημα είναι ανοιχτό και σε περιμένει!</p>
                     <p style="font-size:1.2rem; margin-top:10px;">Διαθέσιμο Υπόλοιπο: <strong>${currentBalance} pts</strong></p>
                     <button class="btn btn-buy" style="width:200px; background:white; color:var(--primary); margin-top:20px;" onclick="filterCategory('gifts', 'Δώρα')">Ξεκίνα τα Ψώνια</button>
                 </div>
-                <h3 style="margin-left:10px;">🔥 Επιλογές</h3>
+                <h3 style="margin-left:10px;">🔥 Δημοφιλείς Επιλογές</h3>
                 <div class="grid">
                     ${renderCard(db.requests[0], 'requests')}
                     ${renderCard(db.gifts[0], 'gifts')}
@@ -641,7 +641,7 @@
             btn.classList.add('btn-added');
             
             // Αλλάζουμε το κείμενο για επιβεβαίωση
-            btn.innerText = "✓ Μπήκε";
+            btn.innerText = "✓ Προστέθηκε";
             
             // Μετά από 1 δευτερόλεπτο, το επαναφέρουμε
             setTimeout(() => {
@@ -742,7 +742,7 @@
                     else html += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${i.qty}x ${i.name}</span><span>${i.price*i.qty}</span></div>`;
                 });
             }
-            html += '<br><strong>-- EARNINGS --</strong><br>';
+            html += '<br><strong>-- ΥΠΟΧΡΕΩΣΕΙΣ --</strong><br>';
             const inc = cart.filter(i => i.price > 0);
             inc.forEach(i => html += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>${i.qty}x ${i.name}</span><span>+${i.price*i.qty}</span></div>`);
             
