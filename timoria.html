@@ -1,303 +1,266 @@
 <!DOCTYPE html>
 <html lang="el">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Αίτηση Ταξιδιού</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Τελική Επιβεβαίωση ✅</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #c0392b;
+            --secondary: #27ae60;
+            --dark: #2c3e50;
+            --bg: #f5f7fa;
+        }
 
-<style>
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-        background: #f2f3f7;
-        margin: 0;
-        padding: 0;
-        color: #333;
-    }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--dark); }
+        
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        
+        h1 { text-align: center; color: var(--primary); }
+        .subtitle { text-align: center; color: #777; margin-bottom: 30px; }
 
-    /* --- MODALS --- */
-    .modal, .noticeModal {
-        position: fixed;
-        inset: 0;
-        background: rgba(0,0,0,0.45);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-        backdrop-filter: blur(3px);
-        padding: 16px;
-    }
+        /* Mode Selection Buttons */
+        .mode-selection { display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; }
+        .mode-btn {
+            padding: 20px; width: 45%; border: 2px solid #ddd; border-radius: 12px; 
+            background: white; cursor: pointer; transition: 0.3s; text-align: center;
+        }
+        .mode-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
+        .mode-btn.active { border-color: var(--primary); background: #fff5f5; }
+        .mode-icon { font-size: 2rem; display: block; margin-bottom: 10px; }
+        .mode-title { font-weight: bold; font-size: 1.1rem; }
+        .mode-desc { font-size: 0.85rem; color: #666; }
 
-    .modal-content, .notice-content {
-        background: #ffffff;
-        padding: 24px 26px;
-        width: 100%;
-        max-width: 400px;
-        border-radius: 18px;
-        box-shadow: 0 8px 28px rgba(0,0,0,0.15);
-        text-align: center;
-        animation: popIn 0.28s ease;
-    }
+        /* Questions Form */
+        #quiz-section { display: none; animation: fadeIn 0.5s; }
+        .question-card { margin-bottom: 25px; border-bottom: 1px dashed #eee; padding-bottom: 20px; }
+        .q-title { font-weight: bold; margin-bottom: 10px; display: block; color: var(--dark); font-size: 1.1rem; }
+        
+        /* Written Input */
+        .q-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
+        
+        /* Audio Input */
+        .audio-controls { display: flex; align-items: center; gap: 15px; }
+        .record-btn {
+            background: var(--dark); color: white; border: none; padding: 10px 20px; 
+            border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            transition: 0.2s;
+        }
+        .record-btn.recording { background: red; animation: pulse 1.5s infinite; }
+        .rec-status { font-size: 0.9rem; color: var(--secondary); display: none; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
-    @keyframes popIn {
-        from { opacity: 0; transform: scale(0.88); }
-        to { opacity: 1; transform: scale(1); }
-    }
+        /* Final Submit */
+        .submit-section { text-align: center; margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px; display: none; }
+        .final-btn { background: var(--secondary); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-size: 1.2rem; cursor: pointer; font-weight: bold; }
+        .final-btn:hover { opacity: 0.9; }
 
-    /* --- BUTTONS --- */
-    button {
-        width: 100%;
-        padding: 14px 18px;
-        background: #8e44ad;
-        border: none;
-        color: white;
-        border-radius: 14px;
-        cursor: pointer;
-        margin-top: 18px;
-        font-size: 17px;
-        font-weight: 600;
-        transition: 0.2s ease;
-    }
+        /* Success Overlay */
+        #success-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--secondary);
+            z-index: 5000; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
+        }
+        .success-icon { font-size: 5rem; margin-bottom: 20px; }
 
-    button:hover {
-        background: #3c74d8;
-    }
-
-    /* --- MAIN MENU --- */
-    .menu {
-        margin: 22px auto;
-        max-width: 500px;
-        background: #fff;
-        padding: 22px;
-        border-radius: 20px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.10);
-    }
-
-    .menu button {
-        margin: 12px 0;
-        font-size: 18px;
-    }
-
-    .done {
-        color: #1da851;
-        font-weight: bold;
-    }
-
-    /* --- FORMS --- */
-    .formContainer {
-        display: none;
-        background: #fff;
-        padding: 22px;
-        max-width: 520px;
-        margin: 20px auto;
-        border-radius: 20px;
-        box-shadow: 0 6px 20px rgba(0,0,0,0.10);
-    }
-
-    .formContainer h3 {
-        margin-top: 0;
-        font-size: 22px;
-        font-weight: 600;
-    }
-
-    .warning-box {
-        background: #fff6d9;
-        padding: 16px;
-        border-radius: 14px;
-        border-left: 6px solid #ffd76b;
-        margin-bottom: 18px;
-        font-size: 15px;
-        line-height: 1.5;
-    }
-
-    label {
-        font-size: 16px;
-        display: block;
-        margin: 10px 0;
-    }
-
-    input[type="checkbox"] {
-        transform: scale(1.3);
-        margin-right: 10px;
-    }
-
-    textarea {
-        width: 100%;
-        resize: none;
-        height: 110px;
-        padding: 12px;
-        border-radius: 14px;
-        border: 1px solid #c9c9c9;
-        margin-top: 14px;
-        font-size: 16px;
-        background: #fafafa;
-    }
-
-    .notice-image {
-        width: 100%;
-        margin: 12px 0;
-        border-radius: 14px;
-        display: none;
-        box-shadow: 0 4px 18px rgba(0,0,0,0.2);
-    }
-
-</style>
+    </style>
 </head>
-
 <body>
 
-<!-- MODAL Καλωσορίσματος -->
-<div class="modal" id="welcomeModal">
-  <div class="modal-content">
-      <h2 style="font-size:22px; margin-top:0;">Καλωσήρθες στην Πλατφόρμα Αίτησης Ταξιδιού!</h2>
-      <p style="font-size:16px; line-height:1.5;">
-        Θα μπεις φρόνιμα κι ωραία να αποδεχτείς όρους (θα βάλεις τικ) και να συμφωνήσεις (γραπτά), για το διάστημα που θα λείπεις ταξίδι, τόσο εσύ, όσο και το Αφεντικό. Τέλος, θα διαβάσεις μια σημαντική ενημέρωση.<br>
-        Πάτα <b>Μάλιστα</b> και μετά πάτα ένα ένα τα πεδία για να ξεκινήσεις.
-      </p>
-      <button onclick="closeWelcome()">Μάλιστα</button>
-  </div>
-</div>
+    <div class="container" id="main-container">
+        <h1>🔍 Έλεγχος Κατανόησης</h1>
+        <p class="subtitle">Για να ολοκληρωθεί η συμφωνία, πρέπει να απαντήσεις σωστά στις παρακάτω ερωτήσεις.</p>
 
-<!-- ΜΕΝΟΥ -->
-<div class="menu" id="menu">
-    <button onclick="openForm('trip1')">Ταξίδι Μπόμπου (13-21/12) <span id="trip1Status"></span></button>
-    <button onclick="openForm('trip2')">Ταξίδι Αφεντικού (25-30/12) <span id="trip2Status"></span></button>
-    <button onclick="openNotice()">Σημαντική Ενημέρωση! <span id="noticeStatus"></span></button>
-</div>
+        <div class="mode-selection">
+            <button class="mode-btn" onclick="selectMode('written')">
+                <span class="mode-icon">📝</span>
+                <span class="mode-title">Γραπτά</span>
+                <span class="mode-desc">(Επιλογή αν είσαι μόνη σου)</span>
+            </button>
+            <button class="mode-btn" onclick="selectMode('oral')">
+                <span class="mode-icon">🎙️</span>
+                <span class="mode-title">Προφορικά</span>
+                <span class="mode-desc">(Επιλογή αν είσαι με τον κ. Γκιώκα)</span>
+            </button>
+        </div>
 
-<!-- Φόρμα Ταξιδιών -->
-<div class="formContainer" id="trip1">
-    <h3>Όροι Ταξιδιού Μπόμπου</h3>
+        <div id="quiz-section">
+            <div id="questions-container">
+                </div>
+        </div>
 
-    <label><input type="checkbox" class="cbox"> Θα είμαι φρόνιμη και υπάκουη</label>
-    <label><input type="checkbox" class="cbox"> Θα ενημερώνω ότι είμαι καλά</label>
-    <label><input type="checkbox" class="cbox"> Θα προσέχω στην ξένη χώρα</label>
-    <label><input type="checkbox" class="cbox"> Θα στέλνω ωραία βίντεο και φωτογραφίες</label>
-    <label><input type="checkbox" class="cbox"> Θα περάσω τέλεια, θα φάω, θα πιω και δε θα αγχώνομαι για τίποτα!</label>
-
-    <textarea placeholder="Γράψε ένα δικό σου ευγενικό μήνυμα για να δείξεις ότι κατάλαβες και ζήτα κάτι αν θες" id="trip1Text"></textarea>
-
-    <button onclick="submitTrip('trip1')">Υποβολή</button>
-</div>
-
-<div class="formContainer" id="trip2">
-    <h3>Όροι Ταξιδιού Αφεντικού</h3>
-
-    <label><input type="checkbox" class="cbox"> Θα είμαι καλό κορίτσι όσο είμαι μόνη μου</label>
-    <label><input type="checkbox" class="cbox"> Θα ενημερώνω και θα ακούω</label>
-    <label><input type="checkbox" class="cbox"> Θα έχω 2 μέρες άδεια για το διάστημα 25-30, ΙΣΩΣ 3 αν μέχρι τότε είμαι φρόνιμη και ΚΑΜΙΑ αν δεν κάθομαι καλά</label>
-    <label><input type="checkbox" class="cbox"> Δε θα αντιμιλάω ούτε θα γκρινιάξω για τους όρους</label>
-    <label><input type="checkbox" class="cbox"> Θα είμαι έτοιμη να κάνουμε τέλεια Πρωτοχρονιά!</label>
-
-    <textarea placeholder="Γράψε ένα δικό σου ευγενικό μήνυμα για να δείξεις ότι κατάλαβες και ζήτα κάτι αν θες" id="trip2Text"></textarea>
-
-    <button onclick="submitTrip('trip2')">Υποβολή</button>
-</div>
-
-<!-- ΣΗΜΑΝΤΙΚΗ ΕΝΗΜΕΡΩΣΗ -->
-<div class="formContainer" id="noticeForm">
-    <h3>Σημαντική Ενημέρωση!</h3>
-
-    <div class="warning-box">
-        Κανονικά τώρα θα έμπαινες τιμωρία, όπως είχες ενημερωθεί πρόσφατα, λόγω ανυπακοής (βλέπε εικόνα).<br><br>
-
-        <img id="noticeScreenshot" class="notice-image" src="myimg.jpg">
-
-        Παρόλα αυτά, λόγω γιορτών, η τιμωρία μετατίθεται για μετά τα ταξίδια, δηλαδή τέλος του χρόνου, για να ξεκινήσεις φρόνιμη τη νέα χρονιά!<br>
-        ΑΝ ΟΜΩΣ μέχρι τότε τηρήσεις όσα είπαμε πριν, μπορεί και να γλυτώσεις!<br><br>
-
-        Γράψε ότι έγιναν κατανοητά όλα κι ότι θα ακούς, πες ΕΥΧΑΡΙΣΤΩ, και μετά θα μπορείς να αποχωρήσεις.
+        <div class="submit-section" id="submit-section">
+            <p style="margin-bottom:15px; font-size:0.9rem; color:#666;">
+                Πατώντας υποβολή, επιβεβαιώνεις ότι κατάλαβες πλήρως τους όρους.
+            </p>
+            <button class="final-btn" onclick="finalSubmit()">Τελική Υποβολή</button>
+        </div>
     </div>
 
-    <textarea id="noticeText"></textarea>
+    <div id="success-screen">
+        <div class="success-icon">✅</div>
+        <h1>Τέλος!</h1>
+        <p style="font-size:1.5rem;">Μπορείς να αποχωρήσεις.</p>
+        <p style="margin-top:20px; opacity:0.8;">Η συμφωνία κατοχυρώθηκε.</p>
+        <p style="margin-top:50px; font-size:0.8rem;">Argos System v2.0</p>
+    </div>
 
-    <button onclick="submitNotice()">Υποβολή</button>
-</div>
+    <script>
+        // --- ΡΥΘΜΙΣΕΙΣ TELEGRAM (ΙΔΙΕΣ ΜΕ ΠΡΙΝ) ---
+        const TG_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE"; 
+        const TG_CHAT_ID = "7336951445"; 
 
-<script>
-const BOT = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE";
-const CHAT = "7336951445";
+        const questions = [
+            "1. Τι συμβαίνει στο καλάθι αν το υπόλοιπο των πόντων γίνει αρνητικό;",
+            "2. Πώς μπορείς να κερδίσεις πόντους για να ξεμπλοκάρεις τις αγορές;",
+            "3. Τι ισχύει για το όριο αγορών στην '1 Μέρα Άδεια';",
+            "4. Αν δεν τηρηθεί η συμφωνία (π.χ. μεθύσι), τι συμβαίνει με την Τιμωρία;",
+            "5. Ποιος έχει πάντα δίκιο σε περίπτωση διαφωνίας;"
+        ];
 
-/* Κλείσιμο Welcome Modal */
-function closeWelcome() {
-    document.getElementById("welcomeModal").style.display = "none";
-}
+        let currentMode = null;
+        let mediaRecorders = {}; // Store recorders per question
 
-/* Άνοιγμα Φόρμας */
-function openForm(id) {
-    document.querySelectorAll(".formContainer").forEach(f => f.style.display = "none");
-    document.getElementById(id).style.display = "block";
-    window.scrollTo(0,0);
-}
-
-/* Άνοιγμα Notice */
-function openNotice() {
-    openForm("noticeForm");
-
-    const img = document.getElementById("noticeScreenshot");
-    if (img.src && img.src.trim() !== "" && !img.src.includes("about:blank")) {
-        img.style.display = "block";
-    } else {
-        img.style.display = "none";
-    }
-}
-
-/* Αποστολή στο Telegram */
-function sendTelegram(msg) {
-    fetch(`https://api.telegram.org/bot${BOT}/sendMessage`, {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ chat_id: CHAT, text: msg })
-    });
-}
-
-/* Υποβολή Ταξιδιού */
-function submitTrip(id) {
-    const container = document.getElementById(id);
-    const checks = container.querySelectorAll(".cbox");
-    const text = container.querySelector("textarea").value.trim();
-
-    // Έλεγχος αν όλα τα checkbox είναι επιλεγμένα
-    for (let c of checks) {
-        if (!c.checked) {
-            alert("Πρέπει να επιλεχθούν όλοι οι όροι!");
-            return;
+        function selectMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            renderQuestions();
+            document.getElementById('quiz-section').style.display = 'block';
+            document.getElementById('submit-section').style.display = 'block';
         }
-    }
 
-    // Συλλογή των επιλεγμένων όρων
-    let selectedTerms = [];
-    checks.forEach(c => {
-        if (c.checked) {
-            selectedTerms.push("• " + c.parentElement.innerText.trim());
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const div = document.createElement('div');
+                div.className = 'question-card';
+                
+                let inputHTML = '';
+                if (currentMode === 'written') {
+                    inputHTML = `<input type="text" id="ans-${index}" class="q-input" placeholder="Γράψε την απάντησή σου...">`;
+                } else {
+                    inputHTML = `
+                        <div class="audio-controls">
+                            <button class="record-btn" id="btn-rec-${index}" onmousedown="startRecording(${index})" onmouseup="stopRecording(${index})" ontouchstart="startRecording(${index})" ontouchend="stopRecording(${index})">
+                                <i class="fas fa-microphone"></i> Κράτα για εγγραφή
+                            </button>
+                            <span class="rec-status" id="status-${index}"><i class="fas fa-check"></i> Εστάλη!</span>
+                        </div>
+                        <small style="color:#888; display:block; margin-top:5px;">* Κράτα πατημένο το κουμπί, μίλα, και άσε το για αποστολή.</small>
+                    `;
+                }
+
+                div.innerHTML = `
+                    <label class="q-title">${q}</label>
+                    ${inputHTML}
+                `;
+                container.appendChild(div);
+            });
         }
-    });
 
-    // Δημιουργία μηνύματος
-    const message =
-        `Ο Μπόμπος συμφώνησε για το ${id}.\n\n` +
-        `📌 Όροι που θα υπακούσει:\n${selectedTerms.join("\n")}\n\n` +
-        `💬 Μήνυμα Μπόμπου:\n${text}`;
+        // --- WRITTEN SUBMISSION ---
+        function submitWritten() {
+            let msg = "📝 *ΑΠΑΝΤΗΣΕΙΣ ΚΑΤΑΝΟΗΣΗΣ (ΓΡΑΠΤΑ)*\n\n";
+            let allFilled = true;
 
-    // Αποστολή στο Telegram
-    sendTelegram(message);
+            questions.forEach((q, index) => {
+                const ans = document.getElementById(`ans-${index}`).value;
+                if(!ans) allFilled = false;
+                msg += `*Q${index+1}:* ${q}\n*A:* ${ans}\n\n`;
+            });
 
-    document.getElementById(id + "Status").innerHTML = "✔";
-    alert("Υποβλήθηκε! Συνέχισε στο επόμενο!");
-    container.style.display = "none";
-}
+            if(!allFilled) return alert("Παρακαλώ απάντησε σε όλες τις ερωτήσεις!");
 
-/* Υποβολή Ενημέρωσης */
-function submitNotice() {
-    const text = document.getElementById("noticeText").value.trim();
+            sendTelegramText(msg);
+            showSuccess();
+        }
 
-    sendTelegram("Ο Μπόμπος διάβασε τη Σημαντική Ενημέρωση και λέει:\n" + text);
+        // --- ORAL LOGIC (VOICE RECORDING) ---
+        let activeRecorder = null;
+        let audioChunks = [];
 
-    document.getElementById("noticeStatus").innerHTML = "✔";
-    alert("Υποβλήθηκε! Μπορείς να αποχωρήσεις!");
+        async function startRecording(index) {
+            if (activeRecorder) return; // Prevent double click
 
-    document.getElementById("noticeForm").style.display = "none";
-}
-</script>
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const btn = document.getElementById(`btn-rec-${index}`);
+                
+                activeRecorder = new MediaRecorder(stream);
+                audioChunks = [];
 
+                activeRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+
+                activeRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/ogg; codecs=opus' });
+                    sendTelegramVoice(audioBlob, `Question ${index+1}`);
+                    
+                    // Update UI
+                    document.getElementById(`status-${index}`).style.display = 'inline';
+                    btn.classList.remove('recording');
+                    btn.innerHTML = '<i class="fas fa-microphone"></i> Ηχογραφήθηκε';
+                    btn.style.background = '#27ae60';
+                };
+
+                activeRecorder.start();
+                btn.classList.add('recording');
+                btn.innerHTML = '<i class="fas fa-circle"></i> Εγγραφή...';
+
+            } catch (err) {
+                alert("Δεν βρέθηκε μικρόφωνο ή δεν δόθηκε άδεια! " + err);
+            }
+        }
+
+        function stopRecording(index) {
+            if (activeRecorder && activeRecorder.state !== "inactive") {
+                activeRecorder.stop();
+                activeRecorder.stream.getTracks().forEach(track => track.stop()); // Stop stream
+                activeRecorder = null;
+            }
+        }
+
+        // --- TELEGRAM FUNCTIONS ---
+        function sendTelegramText(text) {
+            const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(text)}&parse_mode=Markdown`;
+            fetch(url, { mode: 'no-cors' }).catch(e => console.error(e));
+        }
+
+        function sendTelegramVoice(blob, caption) {
+            const formData = new FormData();
+            formData.append('chat_id', TG_CHAT_ID);
+            formData.append('voice', blob, 'voice.ogg');
+            formData.append('caption', `🎙️ Απάντηση στην: ${caption}`);
+
+            fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendVoice`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => console.log("Voice sent"))
+            .catch(err => console.error("Voice failed", err));
+        }
+
+        // --- FINAL SUBMIT ---
+        function finalSubmit() {
+            if (currentMode === 'written') {
+                submitWritten();
+            } else {
+                // For oral, answers are sent instantly. We just confirm end of session.
+                sendTelegramText("🏁 *Η Όμορφη του Άργους ολοκλήρωσε την προφορική εξέταση.*");
+                showSuccess();
+            }
+        }
+
+        function showSuccess() {
+            document.getElementById('success-screen').style.display = 'flex';
+        }
+
+    </script>
 </body>
 </html>
