@@ -76,12 +76,12 @@
             <button class="mode-btn" onclick="selectMode('written')">
                 <span class="mode-icon">📝</span>
                 <span class="mode-title">Γραπτά</span>
-                <span class="mode-desc">(Επιλογή αν είσαι μόνη σου)</span>
+                <span class="mode-desc">(Απαντάς γραπτά τις ερωτήσεις)</span>
             </button>
             <button class="mode-btn" onclick="selectMode('oral')">
                 <span class="mode-icon">🎙️</span>
                 <span class="mode-title">Προφορικά</span>
-                <span class="mode-desc">(Επιλογή αν είσαι με τον κ. Γκιώκα)</span>
+                <span class="mode-desc">(Απαντάς στέλνοντας φωνητικά)</span>
             </button>
         </div>
 
@@ -174,7 +174,7 @@
                 msg += `*Q${index+1}:* ${q}\n*A:* ${ans}\n\n`;
             });
 
-            if(!allFilled) return alert("Παρακαλώ απάντησε σε όλες τις ερωτήσεις!");
+            if(!allFilled) return alert("Απαντάς σε όλες τις ερωτήσεις!");
 
             sendTelegramText(msg);
             showSuccess();
@@ -252,7 +252,7 @@
                 submitWritten();
             } else {
                 // For oral, answers are sent instantly. We just confirm end of session.
-                sendTelegramText("🏁 *Η Όμορφη του Άργους ολοκλήρωσε την προφορική εξέταση.*");
+                sendTelegramText("🏁 *Ο Μπόμπος ολοκλήρωσε τις προφορικές απαντήσεις.*");
                 showSuccess();
             }
         }
