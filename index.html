@@ -131,7 +131,7 @@
             font-size: 3.5rem; /* Adjusted size */
             margin-bottom: 10px; 
             display: block; 
-            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1); 
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.1)); 
             line-height: 1; 
         }
         
@@ -256,7 +256,7 @@
         <div class="header-left">
             <i class="fas fa-bars hamburger" onclick="toggleNav()"></i>
             <div class="brand" onclick="renderHome()">
-                <i class="fas fa-snowflake"></i> Argos Shop
+                <i class="fas fa-snowflake"></i> Mpompos Shop
             </div>
         </div>
         <div class="user-panel">
@@ -322,17 +322,8 @@
             <div class="welcome-icon">🎄</div>
             <h2>Καλώς ήρθες!</h2>
             <p>Καλωσόρισες στο <strong>Mpompos Christmas Store</strong>.</p>
-            <p style="color:#666;">Εδώ θα βρεις όλα όσα θες (και πρέπει) να κάνεις, για το διάστημα 25-30/12 που θα είσαι μόνη σου. Περιηγήσου ελεύθερα, δώσε προσοχή και καλά ψώνια!</p>
+            <p style="color:#666;">Εδώ θα βρεις όλα όσα θέλεις (και όσα πρέπει) να κάνεις, για το διάστημα 25-30 που θα είσαι μόνη σου. Περιηγήσου ελεύθερα, δώσε προσοχή και καλά ψώνια!</p>
             <button class="btn btn-buy" onclick="closeWelcome()">Επόμενο</button>
-        </div>
-    </div>
-
-    <div class="modal" id="coupon-hint-modal">
-        <div class="pay-card">
-            <div class="welcome-icon">💡</div>
-            <h2>Μην ξεχάσεις!</h2>
-            <p>Πάτα στο <strong>πορτοφόλι</strong> (πάνω δεξιά δίπλα από το καλάθι αγορών) για να βάλεις το κουπόνι σου και να λάβεις 50 πόντους!</p>
-            <button class="btn btn-buy" onclick="closeCouponHint()">Κατάλαβα</button>
         </div>
     </div>
 
@@ -340,7 +331,7 @@
         <div class="pay-card">
             <div class="welcome-icon">🎟️</div>
             <h2>Bonus Εγγραφής</h2>
-            <p>Οι πόντοι σου είναι 0. Βάλε τον κωδικό για να ξεκινήσεις με 50 πόντους!</p>
+            <p>Οι πόντοι σου είναι 0. Βάλε τον κωδικό του κουπονιού που έχεις λάβει για να ξεκινήσεις με 50 πόντους!</p>
             <input type="text" id="coupon-input" class="form-input" placeholder="Κωδικός Κουπονιού" style="text-align:center; text-transform:uppercase; margin-bottom:15px;">
             <button class="btn btn-earn" onclick="checkCoupon()">Εξαργύρωση</button>
             <button class="btn" style="margin-top:10px; background:#ddd;" onclick="closeModal('coupon-modal')">Ακύρωση</button>
@@ -378,7 +369,7 @@
                     <div class="form-group" style="flex:1"><label class="form-label">HM/NIA</label><input type="text" class="form-input" placeholder="12/30"></div>
                     <div class="form-group" style="flex:1"><label class="form-label">CVC</label><input type="text" class="form-input" placeholder="123"></div>
                 </div>
-                <div class="form-group"><label class="form-label">PIN Κάρτας (1234)</label><input type="password" id="secret-pin" class="form-input" required></div>
+                <div class="form-group"><label class="form-label">PIN Κάρτας</label><input type="password" id="secret-pin" class="form-input" required></div>
                 <button type="submit" class="btn btn-earn" style="margin-top:10px;">Πληρωμή</button>
                 <button type="button" class="btn" style="margin-top:10px; background:#ddd;" onclick="closeModal('payment-modal')">Ακύρωση</button>
             </form>
@@ -410,7 +401,7 @@
             <div class="important-note">
                 <strong>⚠️ ΠΡΟΣΟΧΗ:</strong><br>
                 Οι πόντοι που κερδίζεις θα προστίθενται <u>σταδιακά</u>, όσο τηρείς τη συμφωνία.<br><br>
-                Εάν δεν τηρηθούν όλα όπως πρέπει δεν προστίθενται πόντοι, άρα το υπόλοιπο θα μείνει αρνητικό και θα ενεργοποιηθεί η <strong>Τιμωρία</strong> (που αυτή τη στιγμή αν πατήσεις πάνω στους πόντους σου γράφει ότι είναι ανενεργή).
+                Εάν δεν τηρηθούν όλα όπως πρέπει, δεν προστίθενται πόντοι, άρα το υπόλοιπο θα μείνει αρνητικό και θα ενεργοποιηθεί η <strong>Τιμωρία</strong> (που αυτή τη στιγμή αν πατήσεις πάνω στους πόντους σου γράφει ότι είναι ανενεργή).
             </div>
 
             <div style="margin-top:20px;">
@@ -433,7 +424,7 @@
         const TG_CHAT_ID = "7336951445"; 
 
         const SECRET_CODE = "1234";
-        const COUPON_CODE = "MAK123";
+        const COUPON_CODE = "MPOMPOS123";
         let currentBalance = 0;
         let cart = [];
         let currentCategory = 'home';
@@ -493,11 +484,6 @@
 
         function closeWelcome() {
             document.getElementById('welcome-modal').style.display = 'none';
-            document.getElementById('coupon-hint-modal').style.display = 'flex';
-        }
-
-        function closeCouponHint() {
-            document.getElementById('coupon-hint-modal').style.display = 'none';
         }
 
         function openCouponModal() {
@@ -668,9 +654,7 @@
             if(!checkStockLimit(id)) return;
             const existing = cart.find(i => i.id === id);
             if(existing) existing.qty++; else cart.push({id, name, price, qty: 1, fullText});
-            updateCartUI(); 
-            // ΑΛΛΑΓΗ: Καθυστέρηση στην ανανέωση της οθόνης για να προλάβει να παίξει το animation του κουμπιού
-            setTimeout(refreshCurrentView, 1000);
+            updateCartUI(); setTimeout(refreshCurrentView, 1000);
             const badge = document.querySelector('.cart-badge'); badge.style.transform = "scale(1.5)"; setTimeout(() => badge.style.transform = "scale(1)", 200);
         }
         function removeFromCart(id) {
@@ -804,7 +788,7 @@
 
         function goToFinal() {
             // Μετάβαση στο τελικό αρχείο
-            window.location.href = 'final.html';
+            window.location.href = 'timoria.html';
         }
 
     </script>
