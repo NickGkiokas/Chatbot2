@@ -496,11 +496,12 @@
         }
 
         function openCouponModal() {
-            closeModal('profile-modal');
+            closeModal('coupon-hint-modal');
             document.getElementById('coupon-modal').style.display = 'flex';
         }
 
         function closeCouponHint() {
+            closeModal('profile-modal');
             document.getElementById('coupon-hint-modal').style.display = 'none';
         }
 
