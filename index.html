@@ -321,8 +321,8 @@
         <div class="pay-card">
             <div class="welcome-icon">🎄</div>
             <h2>Καλώς ήρθες!</h2>
-            <p>Καλωσόρισες στο <strong>Mpompos Christmas Store</strong>.</p>
-            <p style="color:#666;">Εδώ θα βρεις όλα όσα θέλεις (και όσα πρέπει) να κάνεις, για το διάστημα 25-30 που θα είσαι μόνη σου. Περιηγήσου ελεύθερα, δώσε προσοχή και καλά ψώνια!</p>
+            <p>Καλωσόρισες στο <strong>Mpompos Christmas Store</strong>!</p>
+            <p style="color:#666;">Εδώ θα βρεις όλα όσα θέλεις (και όσα πρέπει) να κάνεις, για το διάστημα 25-30/12 που θα είσαι μόνη σου. Περιηγήσου ελεύθερα, δώσε προσοχή και καλά ψώνια!</p>
             <button class="btn btn-buy" onclick="closeWelcome()">Επόμενο</button>
         </div>
     </div>
@@ -493,6 +493,7 @@
 
         function closeWelcome() {
             document.getElementById('welcome-modal').style.display = 'none';
+            document.getElementById('coupon-hint-modal').style.display = 'flex';
         }
 
         function openCouponModal() {
@@ -501,7 +502,6 @@
         }
 
         function closeCouponHint() {
-            closeModal('profile-modal');
             document.getElementById('coupon-hint-modal').style.display = 'none';
         }
 
