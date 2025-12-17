@@ -327,6 +327,15 @@
         </div>
     </div>
 
+    <div class="modal" id="coupon-hint-modal">
+        <div class="pay-card">
+            <div class="welcome-icon">💡</div>
+            <h2>Μην ξεχάσεις!</h2>
+            <p>Πάτα στο <strong>πορτοφόλι</strong> (πάνω δεξιά) για να βάλεις το κουπόνι!</p>
+            <button class="btn btn-buy" onclick="closeCouponHint()">Κατάλαβα</button>
+        </div>
+    </div>
+
     <div class="modal" id="coupon-modal">
         <div class="pay-card">
             <div class="welcome-icon">🎟️</div>
@@ -489,6 +498,10 @@
         function openCouponModal() {
             closeModal('profile-modal');
             document.getElementById('coupon-modal').style.display = 'flex';
+        }
+
+        function closeCouponHint() {
+            document.getElementById('coupon-hint-modal').style.display = 'none';
         }
 
         function checkCoupon() {
