@@ -445,11 +445,11 @@
         let currentBalance = 0;
         let cart = [];
         let currentCategory = 'home';
-        let currentFilters = { tag: 'all', maxPrice: 100 };
+        let currentFilters = { tag: 'all', maxPrice: 200 };
 
         const db = {
             gifts: [
-                { id: 'g1', name: "Μαγνητάκι", price: -25, icon: "🖼️", desc: "Για το ψυγείο", tag: 'items' },
+                { id: 'g1', name: "Μαγνητάκι", price: -20, icon: "🖼️", desc: "Για το ψυγείο", tag: 'items' },
                 { id: 'g2', name: "Γλυκάκια", price: -15, icon: "🍫", desc: "(Αν δε τα φάω...)", tag: 'food' },
                 { id: 'g3', name: "Κάλτσες", price: -10, icon: "🧦", desc: "Χριστουγεννιάτικες!", tag: 'clothes' },
                 { id: 'g4', name: "Εσώρουχα", price: -30, icon: "👙", desc: "Χριστουγεννιάτικα!", tag: 'clothes' },
@@ -460,26 +460,26 @@
                     id: 'r1', name: "1 Μέρα Άδεια", price: -20, icon: "📅", desc: "Μέγιστο: 1 φορά", tag: 'leave',
                     hasOptions: true,
                     options: [
-                        { id: 'r1_s', name: "1 Μέρα (Μικρή - έως 02:00 το βράδυ)", price: -20 },
-                        { id: 'r1_b', name: "1 Μέρα (Μεγάλη - έως 05:00 το πρωί)", price: -40 }
+                        { id: 'r1_s', name: "1 Μέρα (Μικρή - έως 02:00 το βράδυ)", price: -40 },
+                        { id: 'r1_b', name: "1 Μέρα (Μεγάλη - έως 05:00 το πρωί)", price: -80 }
                     ]
                 },
                 { 
                     id: 'r2', name: "2 Μέρες Άδεια", price: -50, icon: "📆", desc: "Μέγιστο: 2 φορές", tag: 'leave',
                     hasOptions: true,
                     options: [
-                        { id: 'r2_s', name: "2 Μέρες (Μικρές - έως 02:00 το βράδυ)", price: -50 },
-                        { id: 'r2_b', name: "2 Μέρες (Μεγάλες - έως 05:00 το πρωί)", price: -80 }
+                        { id: 'r2_s', name: "2 Μέρες (Μικρές - έως 02:00 το βράδυ)", price: -60 },
+                        { id: 'r2_b', name: "2 Μέρες (Μεγάλες - έως 05:00 το πρωί)", price: -100 }
                     ]
                 },
                 { id: 'r3', name: "Ελεύθερη Μέρα", price: -30, icon: "🛑", desc: "Μην ενοχλείτε", tag: 'hobby' }
             ],
             rules: [
-                { id: 'rl1', name: "Βίντεο", price: 20, icon: "📹", desc: "Που περνάς καλά!", tag: 'content' },
-                { id: 'rl2', name: "Ενημέρωση", price: 10, icon: "🫡", desc: "Όποτε ζητηθεί χωρίς γκρίνια", tag: 'behavior' },
-                { id: 'rl3', name: "Φωτογραφία", price: 15, icon: "📸", desc: "Που περνάς καλά!", tag: 'content' },
-                { id: 'rl4', name: "Τάξη και Αλφαδιά", price: 50, icon: "❗", desc: "Φρόνιμη, καλή και προσεκτική!", tag: 'behavior' },
-                { id: 'rl5', name: "Έτοιμη για Πρωτοχρονιά!", price: 30, icon: "🍺", desc: "Θα περάσουμε τέλεια!", tag: 'hobby' }
+                { id: 'rl1', name: "Βίντεο", price: 30, icon: "📹", desc: "Που περνάς καλά!", tag: 'content' },
+                { id: 'rl2', name: "Ενημέρωση", price: 100, icon: "🫡", desc: "Όποτε ζητηθεί χωρίς γκρίνια", tag: 'behavior' },
+                { id: 'rl3', name: "Φωτογραφία", price: 20, icon: "📸", desc: "Που περνάς καλά!", tag: 'content' },
+                { id: 'rl4', name: "Τάξη και Αλφαδιά", price: 130, icon: "❗", desc: "Φρόνιμη, καλή και προσεκτική!", tag: 'behavior' },
+                { id: 'rl5', name: "Έτοιμη για Πρωτοχρονιά!", price: 150, icon: "🍺", desc: "Θα περάσουμε τέλεια!", tag: 'hobby' }
             ]
         };
 
@@ -550,7 +550,7 @@
             return `
                 <div class="filter-bar">
                     <div class="filter-group"><label class="filter-label">Κατηγορία</label><select id="filter-tag" class="filter-select" onchange="applyFilters()">${options}</select></div>
-                    <div class="filter-group"><label class="filter-label">Εύρος Πόντων (Max: <span id="price-val">100</span>)</label><input type="range" id="filter-price" class="filter-range" min="0" max="100" value="100" oninput="applyFilters()"></div>
+                    <div class="filter-group"><label class="filter-label">Εύρος Πόντων (Max: <span id="price-val">200</span>)</label><input type="range" id="filter-price" class="filter-range" min="0" max="200" value="200" oninput="applyFilters()"></div>
                 </div>
                 <div id="grid-container" class="grid"></div>
             `;
