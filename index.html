@@ -386,7 +386,7 @@
                     <div class="form-group" style="flex:1"><label class="form-label">HM/NIA</label><input type="text" id="card-date" class="form-input" placeholder="12/30"></div>
                     <div class="form-group" style="flex:1"><label class="form-label">CVC</label><input type="text" id="card-cvc" class="form-input" placeholder="123"></div>
                 </div>
-                <div class="form-group"><label class="form-label">PIN Κάρτας</label><input type="password" id="secret-pin" class="form-input" required></div>
+                <div class="form-group"><label class="form-label">PIN Κάρτας (1234)</label><input type="password" id="secret-pin" class="form-input" required></div>
                 <button type="submit" class="btn btn-earn" style="margin-top:10px;">Πληρωμή</button>
                 <button type="button" class="btn" style="margin-top:10px; background:#ddd;" onclick="closeModal('payment-modal')">Ακύρωση</button>
             </form>
@@ -449,43 +449,43 @@
 
         const db = {
             gifts: [
-                { id: 'g1', name: "Κασκόλ", price: -25, icon: "🧣", desc: "Ζεστό και μαλακό", tag: 'clothes' },
-                { id: 'g2', name: "Σοκολατάκια", price: -15, icon: "🍫", desc: "Βελγική σοκολάτα", tag: 'food' },
-                { id: 'g3', name: "Κάλτσες", price: -10, icon: "🧦", desc: "Χριστουγεννιάτικες", tag: 'clothes' },
-                { id: 'g4', name: "Εσώρουχα", price: -30, icon: "👙", desc: "Έκπληξη", tag: 'clothes' },
-                { id: 'g5', name: "Άρωμα", price: -40, icon: "🧴", desc: "Η μυρωδιά που αγαπάς", tag: 'beauty' }
+                { id: 'g1', name: "Μαγνητάκι", price: -25, icon: "🖼️", desc: "Για το ψυγείο", tag: 'items' },
+                { id: 'g2', name: "Γλυκάκια", price: -15, icon: "🍫", desc: "(Αν δε τα φάω...)", tag: 'food' },
+                { id: 'g3', name: "Κάλτσες", price: -10, icon: "🧦", desc: "Χριστουγεννιάτικες!", tag: 'clothes' },
+                { id: 'g4', name: "Εσώρουχα", price: -30, icon: "👙", desc: "Χριστουγεννιάτικα!", tag: 'clothes' },
+                { id: 'g5', name: "Πίτσα", price: -40, icon: "🍕", desc: "Mamma Mia!", tag: 'food' }
             ],
             requests: [
                 { 
                     id: 'r1', name: "1 Μέρα Άδεια", price: -20, icon: "📅", desc: "Μέγιστο: 1 φορά", tag: 'leave',
                     hasOptions: true,
                     options: [
-                        { id: 'r1_s', name: "1 Μέρα (Μικρή - 02:00)", price: -20 },
-                        { id: 'r1_b', name: "1 Μέρα (Μεγάλη - 05:00)", price: -40 }
+                        { id: 'r1_s', name: "1 Μέρα (Μικρή - έως 02:00 το βράδυ)", price: -20 },
+                        { id: 'r1_b', name: "1 Μέρα (Μεγάλη - έως 05:00 το πρωί)", price: -40 }
                     ]
                 },
                 { 
                     id: 'r2', name: "2 Μέρες Άδεια", price: -50, icon: "📆", desc: "Μέγιστο: 2 φορές", tag: 'leave',
                     hasOptions: true,
                     options: [
-                        { id: 'r2_s', name: "2 Μέρες (Μικρές - 02:00)", price: -50 },
-                        { id: 'r2_b', name: "2 Μέρες (Μεγάλες - 05:00)", price: -80 }
+                        { id: 'r2_s', name: "2 Μέρες (Μικρές - έως 02:00 το βράδυ)", price: -50 },
+                        { id: 'r2_b', name: "2 Μέρες (Μεγάλες - έως 05:00 το πρωί)", price: -80 }
                     ]
                 },
-                { id: 'r3', name: "Gaming Night", price: -30, icon: "🎮", desc: "Μην ενοχλείτε", tag: 'hobby' }
+                { id: 'r3', name: "Ελεύθερη Μέρα", price: -30, icon: "🛑", desc: "Μην ενοχλείτε", tag: 'hobby' }
             ],
             rules: [
-                { id: 'rl1', name: "Βιντεοκλήση", price: 20, icon: "📹", desc: "Κάθε βράδυ", tag: 'comm' },
-                { id: 'rl2', name: "Καλημέρα SMS", price: 10, icon: "☀️", desc: "Πρωινό", tag: 'comm' },
-                { id: 'rl3', name: "Φώτο Τώρα", price: 15, icon: "📸", desc: "Όποτε ζητηθεί", tag: 'content' },
-                { id: 'rl4', name: "Όχι μεθύσι", price: 50, icon: "🍺", desc: "Κύριος", tag: 'behavior' },
-                { id: 'rl5', name: "Απαντάω άμεσα", price: 30, icon: "💬", desc: "Στα μηνύματα", tag: 'comm' }
+                { id: 'rl1', name: "Βίντεο", price: 20, icon: "📹", desc: "Που περνάς καλά!", tag: 'content' },
+                { id: 'rl2', name: "Ενημέρωση", price: 10, icon: "🫡", desc: "Όποτε ζητηθεί χωρίς γκρίνια", tag: 'behavior' },
+                { id: 'rl3', name: "Φωτογραφία", price: 15, icon: "📸", desc: "Που περνάς καλά!", tag: 'content' },
+                { id: 'rl4', name: "Τάξη και Αλφαδιά", price: 50, icon: "❗", desc: "Φρόνιμη, καλή και προσεκτική!", tag: 'behavior' },
+                { id: 'rl5', name: "Έτοιμη για Πρωτοχρονιά!", price: 30, icon: "🍺", desc: "Θα περάσουμε τέλεια!", tag: 'hobby' }
             ]
         };
 
         const tagLabels = {
-            'all': 'Όλα', 'clothes': 'Ρούχα', 'food': 'Φαγητό', 'beauty': 'Ομορφιά',
-            'leave': 'Άδειες', 'hobby': 'Hobby', 'comm': 'Επικοινωνία', 'content': 'Content', 'behavior': 'Συμπεριφορά'
+            'all': 'Όλα', 'clothes': 'Ρούχα', 'food': 'Φαγητό', 'items': 'Άλλα',
+            'leave': 'Άδειες', 'hobby': 'Έξτρα', 'comm': 'Επικοινωνία', 'content': 'Content', 'behavior': 'Συμπεριφορά'
         };
 
         window.onload = function() {
@@ -519,7 +519,7 @@
                 document.getElementById('coupon-modal').style.display = 'none';
                 alert("🎉 Επιτυχία! Έλαβες 50 πόντους."); 
                 document.getElementById('balance-display').innerText = currentBalance;
-            } else { alert("❌ Λάθος κωδικός! (MAK...)"); }
+            } else { alert("❌ Λάθος κωδικός! (MPOMPOS...)"); }
         }
 
         function applyFilters() {
@@ -629,7 +629,7 @@
             container.innerHTML = `
                 <div class="extra-container">
                     <h2><i class="fas fa-magic"></i> Custom Αίτημα</h2>
-                    <p>Λέξεις όπως "παρακαλώ" και "αγάπη" μειώνουν το κόστος!</p>
+                    <p>Λέξεις όπως "παρακαλώ" και "ευχαριστώ" μειώνουν το κόστος!</p>
                     <textarea id="custom-text" placeholder="Γράψε εδώ..."></textarea>
                     <div id="custom-price-preview" style="font-size:1.2rem; margin:15px 0; display:none;"></div>
                     <div class="custom-actions">
@@ -645,7 +645,7 @@
             let cost = -40;
             const l = txt.toLowerCase();
             if(l.includes('παρακαλώ') || l.includes('please')) cost += 15;
-            if(l.includes('αγάπη') || l.includes('love')) cost += 15;
+            if(l.includes('ευχαριστώ') || l.includes('love')) cost += 15;
             if(cost > -5) cost = -5;
             tempCustomItem = { price: cost, text: txt, shortName: 'Custom: ' + txt.substring(0,10) + '...' };
             const prev = document.getElementById('custom-price-preview');
