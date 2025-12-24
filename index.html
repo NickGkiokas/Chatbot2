@@ -373,10 +373,18 @@
             <h2 style="margin-top:0;"><i class="far fa-credit-card"></i> Πληρωμή</h2>
             <form onsubmit="processPayment(event)">
                 <div class="form-group"><label class="form-label">Κάτοχος</label><input type="text" class="form-input" value="Μπόμπος" readonly style="background:#f9f9f9;"></div>
-                <div class="form-group"><label class="form-label">Αριθμός Κάρτας</label><input type="text" class="form-input" placeholder="XXXX-XXXX-XXXX-XXXX" required pattern=".{10,}"></div>
+                
+                <div class="form-group">
+                    <label class="form-label">Επίλεξε Κάρτα</label>
+                    <select class="form-input" onchange="autoFillCard(this)">
+                        <option value="">-- Νέα Κάρτα --</option>
+                        <option value="mpompocard">💳 Mpompocard Gold</option>
+                    </select>
+                </div>
+                <div class="form-group"><label class="form-label">Αριθμός Κάρτας</label><input type="text" id="card-num" class="form-input" placeholder="XXXX-XXXX-XXXX-XXXX" required pattern=".{10,}"></div>
                 <div class="row">
-                    <div class="form-group" style="flex:1"><label class="form-label">HM/NIA</label><input type="text" class="form-input" placeholder="12/30"></div>
-                    <div class="form-group" style="flex:1"><label class="form-label">CVC</label><input type="text" class="form-input" placeholder="123"></div>
+                    <div class="form-group" style="flex:1"><label class="form-label">HM/NIA</label><input type="text" id="card-date" class="form-input" placeholder="12/30"></div>
+                    <div class="form-group" style="flex:1"><label class="form-label">CVC</label><input type="text" id="card-cvc" class="form-input" placeholder="123"></div>
                 </div>
                 <div class="form-group"><label class="form-label">PIN Κάρτας</label><input type="password" id="secret-pin" class="form-input" required></div>
                 <button type="submit" class="btn btn-earn" style="margin-top:10px;">Πληρωμή</button>
@@ -496,13 +504,13 @@
             document.getElementById('coupon-hint-modal').style.display = 'flex';
         }
 
+        function closeCouponHint() {
+            document.getElementById('coupon-hint-modal').style.display = 'none';
+        }
+
         function openCouponModal() {
             closeModal('profile-modal');
             document.getElementById('coupon-modal').style.display = 'flex';
-        }
-
-        function closeCouponHint() {
-            document.getElementById('coupon-hint-modal').style.display = 'none';
         }
 
         function checkCoupon() {
@@ -601,7 +609,6 @@
             const btnClass = isSoldOut ? 'btn sold-out' : (isEarn ? 'btn-earn' : 'btn-buy');
             const btnText = isSoldOut ? 'Εξαντλήθηκε' : (isEarn ? 'Συμφωνώ (+)' : 'Προσθήκη');
             
-            // Προσθέσαμε το "animateBtn(this);" πριν το addToCart
             let handler = (!isSoldOut) ? (item.hasOptions ? `openOptions('${type}', '${item.id}')` : `animateBtn(this); addToCart('${item.id}', '${item.name}', ${item.price})`) : "";
         
             return `
@@ -648,16 +655,9 @@
         function confirmAddCustom() { addToCart('cust_'+Date.now(), tempCustomItem.shortName, tempCustomItem.price, tempCustomItem.text); renderExtra(document.getElementById('main-content')); }
         
         function animateBtn(btn) {
-            // Κρατάμε το αρχικό κείμενο (π.χ. "Προσθήκη")
             const originalText = btn.innerText;
-            
-            // Προσθέτουμε την κλάση του εφέ
             btn.classList.add('btn-added');
-            
-            // Αλλάζουμε το κείμενο για επιβεβαίωση
             btn.innerText = "✓ Προστέθηκε";
-            
-            // Μετά από 1 δευτερόλεπτο, το επαναφέρουμε
             setTimeout(() => {
                 btn.classList.remove('btn-added');
                 btn.innerText = originalText;
@@ -709,6 +709,18 @@
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         // --- PAYMENT & TELEGRAM & OVERVIEW ---
+        function autoFillCard(select) {
+            if(select.value === 'mpompocard') {
+                document.getElementById('card-num').value = '4111 2222 3333 4444';
+                document.getElementById('card-date').value = '12/30';
+                document.getElementById('card-cvc').value = '123';
+            } else {
+                document.getElementById('card-num').value = '';
+                document.getElementById('card-date').value = '';
+                document.getElementById('card-cvc').value = '';
+            }
+        }
+
         function processPayment(e) {
             e.preventDefault();
             if(document.getElementById('secret-pin').value !== SECRET_CODE) return alert("❌ Λάθος PIN!");
