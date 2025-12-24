@@ -20,40 +20,18 @@
         h1 { text-align: center; color: var(--primary); }
         .subtitle { text-align: center; color: #777; margin-bottom: 30px; }
 
-        /* Mode Selection Buttons */
-        .mode-selection { display: flex; gap: 20px; justify-content: center; margin-bottom: 30px; }
-        .mode-btn {
-            padding: 20px; width: 45%; border: 2px solid #ddd; border-radius: 12px; 
-            background: white; cursor: pointer; transition: 0.3s; text-align: center;
-        }
-        .mode-btn:hover { border-color: var(--primary); transform: translateY(-3px); }
-        .mode-btn.active { border-color: var(--primary); background: #fff5f5; }
-        .mode-icon { font-size: 2rem; display: block; margin-bottom: 10px; }
-        .mode-title { font-weight: bold; font-size: 1.1rem; }
-        .mode-desc { font-size: 0.85rem; color: #666; }
-
         /* Questions Form */
-        #quiz-section { display: none; animation: fadeIn 0.5s; }
+        #quiz-section { display: block; animation: fadeIn 0.5s; }
         .question-card { margin-bottom: 25px; border-bottom: 1px dashed #eee; padding-bottom: 20px; }
         .q-title { font-weight: bold; margin-bottom: 10px; display: block; color: var(--dark); font-size: 1.1rem; }
         
         /* Written Input */
         .q-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
         
-        /* Audio Input */
-        .audio-controls { display: flex; align-items: center; gap: 15px; }
-        .record-btn {
-            background: var(--dark); color: white; border: none; padding: 10px 20px; 
-            border-radius: 30px; cursor: pointer; display: flex; align-items: center; gap: 8px;
-            transition: 0.2s;
-        }
-        .record-btn.recording { background: red; animation: pulse 1.5s infinite; }
-        .rec-status { font-size: 0.9rem; color: var(--secondary); display: none; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 0, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); } }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
         /* Final Submit */
-        .submit-section { text-align: center; margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px; display: none; }
+        .submit-section { text-align: center; margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px; display: block; }
         .final-btn { background: var(--secondary); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-size: 1.2rem; cursor: pointer; font-weight: bold; }
         .final-btn:hover { opacity: 0.9; }
 
@@ -71,19 +49,6 @@
     <div class="container" id="main-container">
         <h1>🔍 Έλεγχος Κατανόησης</h1>
         <p class="subtitle">Για να ολοκληρωθεί η συμφωνία, πρέπει να απαντήσεις σωστά στις παρακάτω ερωτήσεις.</p>
-
-        <div class="mode-selection">
-            <button class="mode-btn" onclick="selectMode('written')">
-                <span class="mode-icon">📝</span>
-                <span class="mode-title">Γραπτά</span>
-                <span class="mode-desc">(Απαντάς γραπτά τις ερωτήσεις)</span>
-            </button>
-            <button class="mode-btn" onclick="selectMode('oral')">
-                <span class="mode-icon">🎙️</span>
-                <span class="mode-title">Προφορικά</span>
-                <span class="mode-desc">(Απαντάς στέλνοντας φωνητικά)</span>
-            </button>
-        </div>
 
         <div id="quiz-section">
             <div id="questions-container">
@@ -107,7 +72,7 @@
     </div>
 
     <script>
-        // --- ΡΥΘΜΙΣΕΙΣ TELEGRAM (ΙΔΙΕΣ ΜΕ ΠΡΙΝ) ---
+        // --- ΡΥΘΜΙΣΕΙΣ TELEGRAM ---
         const TG_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE"; 
         const TG_CHAT_ID = "7336951445"; 
 
@@ -119,18 +84,10 @@
             "5. Ποιος έχει πάντα δίκιο σε περίπτωση διαφωνίας;"
         ];
 
-        let currentMode = null;
-        let mediaRecorders = {}; // Store recorders per question
-
-        function selectMode(mode) {
-            currentMode = mode;
-            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            
+        // Initialize on load
+        window.onload = function() {
             renderQuestions();
-            document.getElementById('quiz-section').style.display = 'block';
-            document.getElementById('submit-section').style.display = 'block';
-        }
+        };
 
         function renderQuestions() {
             const container = document.getElementById('questions-container');
@@ -140,31 +97,16 @@
                 const div = document.createElement('div');
                 div.className = 'question-card';
                 
-                let inputHTML = '';
-                if (currentMode === 'written') {
-                    inputHTML = `<input type="text" id="ans-${index}" class="q-input" placeholder="Γράψε την απάντησή σου...">`;
-                } else {
-                    inputHTML = `
-                        <div class="audio-controls">
-                            <button class="record-btn" id="btn-rec-${index}" onmousedown="startRecording(${index})" onmouseup="stopRecording(${index})" ontouchstart="startRecording(${index})" ontouchend="stopRecording(${index})">
-                                <i class="fas fa-microphone"></i> Κράτα για εγγραφή
-                            </button>
-                            <span class="rec-status" id="status-${index}"><i class="fas fa-check"></i> Εστάλη!</span>
-                        </div>
-                        <small style="color:#888; display:block; margin-top:5px;">* Κράτα πατημένο το κουμπί, μίλα, και άσε το για αποστολή.</small>
-                    `;
-                }
-
                 div.innerHTML = `
                     <label class="q-title">${q}</label>
-                    ${inputHTML}
+                    <input type="text" id="ans-${index}" class="q-input" placeholder="Γράψε την απάντησή σου...">
                 `;
                 container.appendChild(div);
             });
         }
 
-        // --- WRITTEN SUBMISSION ---
-        function submitWritten() {
+        // --- SUBMISSION LOGIC ---
+        function finalSubmit() {
             let msg = "📝 *ΑΠΑΝΤΗΣΕΙΣ ΚΑΤΑΝΟΗΣΗΣ (ΓΡΑΠΤΑ)*\n\n";
             let allFilled = true;
 
@@ -174,87 +116,16 @@
                 msg += `*Q${index+1}:* ${q}\n*A:* ${ans}\n\n`;
             });
 
-            if(!allFilled) return alert("Απαντάς σε όλες τις ερωτήσεις!");
+            if(!allFilled) return alert("Παρακαλώ απάντησε σε όλες τις ερωτήσεις!");
 
             sendTelegramText(msg);
             showSuccess();
-        }
-
-        // --- ORAL LOGIC (VOICE RECORDING) ---
-        let activeRecorder = null;
-        let audioChunks = [];
-
-        async function startRecording(index) {
-            if (activeRecorder) return; // Prevent double click
-
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                const btn = document.getElementById(`btn-rec-${index}`);
-                
-                activeRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-
-                activeRecorder.ondataavailable = event => {
-                    audioChunks.push(event.data);
-                };
-
-                activeRecorder.onstop = () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/ogg; codecs=opus' });
-                    sendTelegramVoice(audioBlob, `Question ${index+1}`);
-                    
-                    // Update UI
-                    document.getElementById(`status-${index}`).style.display = 'inline';
-                    btn.classList.remove('recording');
-                    btn.innerHTML = '<i class="fas fa-microphone"></i> Ηχογραφήθηκε';
-                    btn.style.background = '#27ae60';
-                };
-
-                activeRecorder.start();
-                btn.classList.add('recording');
-                btn.innerHTML = '<i class="fas fa-circle"></i> Εγγραφή...';
-
-            } catch (err) {
-                alert("Δεν βρέθηκε μικρόφωνο ή δεν δόθηκε άδεια! " + err);
-            }
-        }
-
-        function stopRecording(index) {
-            if (activeRecorder && activeRecorder.state !== "inactive") {
-                activeRecorder.stop();
-                activeRecorder.stream.getTracks().forEach(track => track.stop()); // Stop stream
-                activeRecorder = null;
-            }
         }
 
         // --- TELEGRAM FUNCTIONS ---
         function sendTelegramText(text) {
             const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(text)}&parse_mode=Markdown`;
             fetch(url, { mode: 'no-cors' }).catch(e => console.error(e));
-        }
-
-        function sendTelegramVoice(blob, caption) {
-            const formData = new FormData();
-            formData.append('chat_id', TG_CHAT_ID);
-            formData.append('voice', blob, 'voice.ogg');
-            formData.append('caption', `🎙️ Απάντηση στην: ${caption}`);
-
-            fetch(`https://api.telegram.org/bot${TG_BOT_TOKEN}/sendVoice`, {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => console.log("Voice sent"))
-            .catch(err => console.error("Voice failed", err));
-        }
-
-        // --- FINAL SUBMIT ---
-        function finalSubmit() {
-            if (currentMode === 'written') {
-                submitWritten();
-            } else {
-                // For oral, answers are sent instantly. We just confirm end of session.
-                sendTelegramText("🏁 *Ο Μπόμπος ολοκλήρωσε τις προφορικές απαντήσεις.*");
-                showSuccess();
-            }
         }
 
         function showSuccess() {
