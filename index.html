@@ -38,7 +38,7 @@
             position: relative;
             width: 95%;
             max-width: 500px;
-            height: 750px; /* Αυξήθηκε για να χωρέσει και η Αθήνα */
+            height: 800px; /* Λίγο πιο ψηλό για να χωρέσουν όλα άνετα */
             background-color: var(--map-bg);
             background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
             border-radius: 20px;
@@ -70,13 +70,6 @@
             transition: all 1.5s ease;
         }
         
-        /* Ειδική γραμμή πτήσης */
-        .flight-line {
-            stroke: #333;
-            opacity: 0.3;
-            stroke-width: 3;
-        }
-
         /* City Nodes */
         .city-node {
             position: absolute;
@@ -86,15 +79,15 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            width: 100px; /* Μεγάλο πλάτος για εύκολο κλικ */
-            height: 100px; /* Μεγάλο ύψος */
+            width: 100px;
+            height: 100px;
             justify-content: center;
-            /* Debug border: border: 1px solid red; */ 
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .marker-wrapper {
             position: relative;
-            pointer-events: none; /* Το κλικ το παίρνει το .city-node */
+            pointer-events: none;
         }
 
         .marker-icon {
@@ -123,7 +116,7 @@
         }
 
         .stage-label {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
             color: #777;
             font-weight: 700;
@@ -159,8 +152,8 @@
             100% { box-shadow: 0 0 0 0 rgba(0,146,70, 0); transform: scale(1); }
         }
 
-        /* The Car */
-        #travel-car {
+        /* The Vehicle */
+        #travel-vehicle {
             position: absolute;
             font-size: 45px;
             z-index: 20;
@@ -194,7 +187,7 @@
 
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 30px; cursor: pointer; color: #ccc;}
         
-        /* Game Specifics */
+        /* Game Elements */
         #gameCanvas { background: #333; display: block; margin: 15px auto; border-radius: 10px; max-width: 100%; }
         .msg-btn {
             background: var(--flag-green); color: white; border: none;
@@ -211,17 +204,17 @@
     <h1>🇮🇹 ITALO TRIP 🇮🇹</h1>
 
     <div id="map-stage">
-        <svg class="svg-paths" viewBox="0 0 500 750" preserveAspectRatio="none">
-             <line x1="50%" y1="90%" x2="20%" y2="10%" class="connection-line flight-line" id="line-0"></line>
-             <line x1="20%" y1="10%" x2="80%" y2="28%" class="connection-line" id="line-1"></line>
-             <line x1="80%" y1="28%" x2="20%" y2="48%" class="connection-line" id="line-2"></line>
-             <line x1="20%" y1="48%" x2="80%" y2="68%" class="connection-line" id="line-3"></line>
-             <line x1="80%" y1="68%" x2="50%" y2="85%" class="connection-line" id="line-4"></line>
+        <svg class="svg-paths" viewBox="0 0 500 800" preserveAspectRatio="none">
+             <line x1="50%" y1="6%" x2="20%" y2="20%" class="connection-line" id="line-0" style="stroke-dasharray: 5,5; opacity:0.4;"></line>
+             <line x1="20%" y1="20%" x2="80%" y2="35%" class="connection-line" id="line-1"></line>
+             <line x1="80%" y1="35%" x2="20%" y2="50%" class="connection-line" id="line-2"></line>
+             <line x1="20%" y1="50%" x2="80%" y2="65%" class="connection-line" id="line-3"></line>
+             <line x1="80%" y1="65%" x2="50%" y2="85%" class="connection-line" id="line-4"></line>
         </svg>
 
-        <div id="travel-car" style="top: 90%; left: 50%;">✈️</div>
+        <div id="travel-vehicle" style="top: 6%; left: 50%;">✈️</div>
 
-        <div id="city-0" class="city-node active" style="top: 90%; left: 50%;" onclick="handleCityClick(0)">
+        <div id="city-0" class="city-node active" style="top: 6%; left: 50%;" onclick="handleCityClick(0)">
             <div class="marker-wrapper"><div class="marker-icon">0</div></div>
             <div class="city-info">
                 <span class="stage-label">Αφετηρια</span>
@@ -229,7 +222,7 @@
             </div>
         </div>
 
-        <div id="city-1" class="city-node locked" style="top: 10%; left: 20%;" onclick="handleCityClick(1)">
+        <div id="city-1" class="city-node locked" style="top: 20%; left: 20%;" onclick="handleCityClick(1)">
             <div class="marker-wrapper"><div class="marker-icon">1</div></div>
             <div class="city-info">
                 <span class="stage-label">Σταση 1</span>
@@ -237,7 +230,7 @@
             </div>
         </div>
 
-        <div id="city-2" class="city-node locked" style="top: 28%; left: 80%;" onclick="handleCityClick(2)">
+        <div id="city-2" class="city-node locked" style="top: 35%; left: 80%;" onclick="handleCityClick(2)">
             <div class="marker-wrapper"><div class="marker-icon">2</div></div>
             <div class="city-info">
                 <span class="stage-label">Σταση 2</span>
@@ -245,7 +238,7 @@
             </div>
         </div>
 
-        <div id="city-3" class="city-node locked" style="top: 48%; left: 20%;" onclick="handleCityClick(3)">
+        <div id="city-3" class="city-node locked" style="top: 50%; left: 20%;" onclick="handleCityClick(3)">
             <div class="marker-wrapper"><div class="marker-icon">3</div></div>
             <div class="city-info">
                 <span class="stage-label">Σταση 3</span>
@@ -253,7 +246,7 @@
             </div>
         </div>
 
-        <div id="city-4" class="city-node locked" style="top: 68%; left: 80%;" onclick="handleCityClick(4)">
+        <div id="city-4" class="city-node locked" style="top: 65%; left: 80%;" onclick="handleCityClick(4)">
             <div class="marker-wrapper"><div class="marker-icon">4</div></div>
             <div class="city-info">
                 <span class="stage-label">Σταση 4</span>
@@ -289,25 +282,23 @@
 
     <script>
         const totalLevels = 5;
-        let currentLevel = 0; // Starts at Athens
-        const car = document.getElementById('travel-car');
+        let currentLevel = 0; 
+        const vehicle = document.getElementById('travel-vehicle');
 
-        // Coordinates mapping
+        // New Coordinates mapping (must match CSS)
         const cityCoords = {
-            0: { top: '90%', left: '50%' }, // Athens
-            1: { top: '10%', left: '20%' }, // Milano
-            2: { top: '28%', left: '80%' }, // Maranello
-            3: { top: '48%', left: '20%' }, // Modena
-            4: { top: '68%', left: '80%' }, // Florence
+            0: { top: '6%', left: '50%' },  // Athens
+            1: { top: '20%', left: '20%' }, // Milano
+            2: { top: '35%', left: '80%' }, // Maranello
+            3: { top: '50%', left: '20%' }, // Modena
+            4: { top: '65%', left: '80%' }, // Florence
             5: { top: '85%', left: '50%' }  // Bologna
         };
 
         // --- INIT: CHECK FOR RETURN FROM ATHENS ---
         window.onload = function() {
-            // Check if URL has ?completed=0
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('completed') === '0') {
-                // User returned from Athens page!
                 markLevelComplete(0);
             }
         };
@@ -316,22 +307,16 @@
         function handleCityClick(level) {
             if(level !== currentLevel) return;
 
-            // SPECIAL CASE: LEVEL 0 (ATHENS)
+            // STAGE 0: ATHENS REDIRECT
             if (level === 0) {
-                // Here you redirect to your other page.
-                // For testing, I link back to this page with the parameter.
-                // Replace the URL below with your real second page.
-                // IMPORTANT: Your second page must have a "Back" button linking to: index.html?completed=0
-                
-                if(confirm("Πάμε στην ειδική σελίδα της Αθήνας;")) {
-                    // ΠΡΟΣΩΡΙΝΑ: Επαναφόρτωση της ίδιας σελίδας σαν να γύρισε
-                    // Στην πραγματικότητα βάλε: window.location.href = 'athens.html';
+                // IMPORTANT: Replace '?completed=0' with your actual Athens page URL
+                // e.g., window.location.href = 'athens.html';
+                if(confirm("Πάμε στην Αθήνα για το πρώτο στοιχείο;")) {
                     window.location.href = '?completed=0'; 
                 }
                 return;
             }
 
-            // NORMAL LEVELS
             setupGame(level);
         }
 
@@ -347,7 +332,7 @@
 
             if (level === 1) {
                 title.innerText = "Μιλάνο: Traffic!";
-                instr.innerText = "Κινήσου (κλικ) για να αποφύγεις τα εμπόδια. Εμφανίζονται παντού!";
+                instr.innerText = "Κινήσου (κλικ) για να αποφύγεις τα εμπόδια.";
                 area.innerHTML = '<canvas id="gameCanvas" width="280" height="350"></canvas>';
                 runCarGame(level);
             } 
@@ -386,8 +371,7 @@
             }
         }
 
-        // --- WIN & ANIMATION LOGIC ---
-        
+        // --- WIN LOGIC ---
         function winLevel(level) {
             closeModal();
             showMsg("🎉 BRAVISSIMO! 🎉", "Κέρδισες! Άνοιξε το δώρο της Στάσης " + level, () => {
@@ -406,104 +390,110 @@
                 const nextLevel = level + 1;
                 const nextCoords = cityCoords[nextLevel];
 
-                // Change vehicle icon: Plane for level 0, Car for rest
-                if (level === 0) {
-                    car.innerText = "🚗"; // Switch to car after landing in Milan
-                }
-
-                // Move Vehicle
-                car.style.top = nextCoords.top;
-                car.style.left = nextCoords.left;
+                // 1. Move Vehicle to next city
+                vehicle.style.top = nextCoords.top;
+                vehicle.style.left = nextCoords.left;
                 
                 // Color Line
                 const line = document.getElementById('line-' + level);
                 if(line) line.classList.add('traveled');
 
-                // Unlock next city
-                setTimeout(() => {
-                    const nextDiv = document.getElementById('city-' + nextLevel);
-                    nextDiv.classList.remove('locked');
-                    nextDiv.classList.add('active');
-                    currentLevel = nextLevel;
-                }, 2000);
+                // 2. SPECIAL EVENT: AFTER MILANO (Level 1) -> BECOME CAR
+                if (level === 1) {
+                    setTimeout(() => {
+                        // Change icon
+                        vehicle.innerText = "🚗";
+                        vehicle.style.transform = "translate(-50%, -50%) scale(1.2)";
+                        
+                        // Show Message
+                        showMsg("🚗 ΝΕΟ ΟΧΗΜΑ! 🚗", "Πήρες το δώρο του Μιλάνου! Τώρα έχεις δικό σου αμαξάκι για να συνεχίσεις!", () => {
+                            // Resume normal flow
+                            unlockNextLevel(nextLevel);
+                        });
+                    }, 1500); // Wait for movement to finish mostly
+                } else {
+                    // Normal flow for other levels
+                    setTimeout(() => {
+                        unlockNextLevel(nextLevel);
+                    }, 2000);
+                }
+
             } else {
                 // FINALE
-                car.style.transform = "translate(-50%, -50%) scale(1.5) rotate(360deg)";
+                vehicle.style.transform = "translate(-50%, -50%) scale(1.5) rotate(360deg)";
                 setTimeout(() => {
                     showMsg("❤️ FELICITÀ! ❤️", "Το ταξίδι ολοκληρώθηκε! Σ' αγαπώ!", null);
                 }, 1500);
             }
         }
 
-        // --- FIXED CAR GAME LOGIC ---
+        function unlockNextLevel(nextLevel) {
+            const nextDiv = document.getElementById('city-' + nextLevel);
+            nextDiv.classList.remove('locked');
+            nextDiv.classList.add('active');
+            currentLevel = nextLevel;
+        }
+
+        // --- GAMES LOGIC ---
         function runCarGame(level) {
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
-            let carX = 115; // Center
-            let obstacles = []; 
-            let running = true; 
-            let score = 0;
+            let carX = 115; let obstacles = []; let running = true; let score = 0;
 
             function draw() {
                 if (!running) return;
                 ctx.clearRect(0,0,280,350); 
-                
-                // Road
                 ctx.fillStyle = "#444"; ctx.fillRect(0,0,280,350);
-                // Dashed Line
                 ctx.strokeStyle = "#fff"; ctx.setLineDash([20, 20]); 
                 ctx.beginPath(); ctx.moveTo(140, 0); ctx.lineTo(140, 350); ctx.stroke();
 
-                // Car
                 ctx.font = "35px Arial"; ctx.fillText("🚗", carX, 320);
 
-                // Obstacles - Spawn logic fix
                 if (Math.random() < 0.05) {
-                    // Random X between 10 and 230 so it covers everywhere
                     const randomX = Math.random() * 220 + 10;
                     obstacles.push({x: randomX, y: -40});
                 }
                 
                 obstacles.forEach((obs) => { 
-                    obs.y += 5; // Speed
+                    obs.y += 5; 
                     ctx.fillText("🚧", obs.x, obs.y);
-                    
-                    // Collision Logic (Area overlap)
-                    // Car is approx 40px wide. Obstacle is approx 30px.
-                    // We check if rectangles overlap.
                     if (obs.y > 280 && obs.y < 330) {
                         if (Math.abs(obs.x - carX) < 35) {
                             running = false; 
-                            showMsg("💥 Crash!", "Πρέπει να κινείσαι συνέχεια! Πάμε πάλι.", () => setupGame(level));
+                            showMsg("💥 Crash!", "Πρέπει να κινείσαι! Πάμε πάλι.", () => setupGame(level));
                         }
                     }
                 });
-
                 score++;
                 ctx.fillStyle = "#fff"; ctx.font = "20px Arial"; ctx.fillText("Score: " + score, 10, 30);
-
                 if (score > 400) { running = false; winLevel(level); } 
                 else { requestAnimationFrame(draw); }
             }
-
             canvas.onclick = (e) => { 
                 const rect = canvas.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
-                // Move towards click
                 if(clickX < 140) carX = 50; else carX = 190;
             };
             draw();
         }
 
-        // --- OTHER GAMES ---
         function runReflexGame(level) {
             const light = document.getElementById('light'); 
             const btn = document.getElementById('reflexBtn');
             let ready = false; let tooEarly = false; let timeoutId;
-
             btn.onclick = () => { 
                 if (tooEarly) return; 
                 if (ready) winLevel(level); 
                 else { 
                     tooEarly = true; clearTimeout(timeoutId);
-        
+                    showMsg("🚫 Πολύ νωρίς!", "Περίμενε το Πράσινο!", () => setupGame(level));
+                }
+            };
+            timeoutId = setTimeout(() => { 
+                if(!tooEarly) { light.style.background = '#00ff00'; light.style.boxShadow = '0 0 20px #00ff00'; ready = true; }
+            }, 1500 + Math.random() * 2000);
+        }
+
+        function runWarmUpGame(level) {
+            let clicks = 0; const btn = document.getElementById('warmBtn');
+            btn.onclick = () => { clicks++; btn.innerText = clicks; if (clicks >= 
