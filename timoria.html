@@ -3,133 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Τελική Επιβεβαίωση ✅</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>Santa's List Check 🎅</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #c0392b;
-            --secondary: #27ae60;
-            --dark: #2c3e50;
-            --bg: #f5f7fa;
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background: #333;
+            color: white;
+            display: flex;
+            flex-direction: column;
         }
 
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--dark); }
-        
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        
-        h1 { text-align: center; color: var(--primary); }
-        .subtitle { text-align: center; color: #777; margin-bottom: 30px; }
-
-        /* Questions Form */
-        #quiz-section { display: block; animation: fadeIn 0.5s; }
-        .question-card { margin-bottom: 25px; border-bottom: 1px dashed #eee; padding-bottom: 20px; }
-        .q-title { font-weight: bold; margin-bottom: 10px; display: block; color: var(--dark); font-size: 1.1rem; }
-        
-        /* Written Input */
-        .q-input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 8px; font-family: inherit; box-sizing: border-box; }
-        
-        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-
-        /* Final Submit */
-        .submit-section { text-align: center; margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px; display: block; }
-        .final-btn { background: var(--secondary); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-size: 1.2rem; cursor: pointer; font-weight: bold; }
-        .final-btn:hover { opacity: 0.9; }
-
-        /* Success Overlay */
-        #success-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--secondary);
-            z-index: 5000; display: none; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center;
+        h1 {
+            text-align: center;
+            margin: 10px 0;
+            z-index: 10;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            position: absolute;
+            width: 100%;
+            top: 20px;
+            pointer-events: none;
         }
-        .success-icon { font-size: 5rem; margin-bottom: 20px; }
+
+        /* --- SPLIT SCREEN --- */
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .zone {
+            width: 50%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.3s;
+        }
+
+        .naughty {
+            background: linear-gradient(135deg, #8b0000, #500000);
+            border-right: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .nice {
+            background: linear-gradient(135deg, #006400, #004d00);
+        }
+
+        .zone-title {
+            font-size: 2rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            opacity: 0.6;
+            margin-bottom: 20px;
+        }
+
+        .icon {
+            font-size: 4rem;
+            opacity: 0.6;
+        }
+
+        /* --- DRAGGABLE NAME --- */
+        #draggable-name {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            color: #333;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            cursor: grab;
+            z-index: 100;
+            touch-action: none; /* Important for mobile drag */
+            user-select: none;
+            border: 4px solid #d4af37; /* Gold border */
+        }
+
+        #draggable-name:active {
+            cursor: grabbing;
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .instruction {
+            position: absolute;
+            bottom: 50px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* --- MODALS --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 200;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Loading / Evaluation Text */
+        .eval-text {
+            font-size: 1.5rem;
+            color: #00ff00; /* Hacker green */
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+        }
+
+        /* Punishment Text */
+        .punish-title {
+            font-size: 3rem;
+            color: #ff0000;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px red;
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
+        }
+
+        .punish-desc {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .btn-return {
+            background: white;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 0 15px white;
+        }
 
     </style>
 </head>
 <body>
 
-    <div class="container" id="main-container">
-        <h1>🔍 Έλεγχος Κατανόησης</h1>
-        <p class="subtitle">Για να ολοκληρωθεί η συμφωνία, πρέπει να απαντήσεις σωστά στις παρακάτω ερωτήσεις.</p>
+    <h1>Η ΛΙΣΤΑ ΤΟΥ ΑΪ ΒΑΣΙΛΗ 📜</h1>
 
-        <div id="quiz-section">
-            <div id="questions-container">
-                </div>
+    <div class="container">
+        <div class="zone naughty" id="zone-naughty">
+            <div class="icon">😈</div>
+            <div class="zone-title">NAUGHTY</div>
         </div>
 
-        <div class="submit-section" id="submit-section">
-            <p style="margin-bottom:15px; font-size:0.9rem; color:#666;">
-                Πατώντας υποβολή, επιβεβαιώνεις ότι κατάλαβες πλήρως τους όρους.
-            </p>
-            <button class="final-btn" onclick="finalSubmit()">Τελική Υποβολή</button>
+        <div class="zone nice" id="zone-nice">
+            <div class="icon">😇</div>
+            <div class="zone-title">NICE</div>
         </div>
     </div>
 
-    <div id="success-screen">
-        <div class="success-icon">✅</div>
-        <h1>Τέλος!</h1>
-        <p style="font-size:1.5rem;">Μπορείς να αποχωρήσεις.</p>
-        <p style="margin-top:20px; opacity:0.8;">Η συμφωνία κατοχυρώθηκε.</p>
-        <p style="margin-top:50px; font-size:0.8rem;">Mpompos System v2.0</p>
+    <div id="draggable-name">ΣΑΡΑ</div>
+    
+    <div class="instruction">Σύρε το όνομα στην πλευρά που πιστεύεις ότι ανήκεις...</div>
+
+    <div id="evalModal" class="modal">
+        <div style="font-size: 50px; margin-bottom: 20px;">🤖</div>
+        <div id="evalText" class="eval-text">Εκκίνηση Συστήματος Αξιολόγησης...</div>
+        <div class="loader" style="width: 200px; height: 10px; background: #333; border-radius: 5px; overflow:hidden; margin-top:20px;">
+            <div id="progressBar" style="width: 0%; height: 100%; background: #00ff00;"></div>
+        </div>
+    </div>
+
+    <div id="punishModal" class="modal">
+        <div class="punish-title">ΤΙΜΩΡΙΑ!</div>
+        <p id="punishReason" class="punish-desc">Λόγος...</p>
+        
+        <a href="index.html?completed=0" class="btn-return">Επιστροφή στον Χάρτη</a>
     </div>
 
     <script>
-        // --- ΡΥΘΜΙΣΕΙΣ TELEGRAM ---
-        const TG_BOT_TOKEN = "7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE"; 
-        const TG_CHAT_ID = "7336951445"; 
+        const dragger = document.getElementById('draggable-name');
+        let isDragging = false;
+        let startX, currentX;
+        const screenWidth = window.innerWidth;
+        const centerX = screenWidth / 2;
 
-        const questions = [
-            "1. Τι αγόρασες (από άδειες δώρα κλπ) και σε τι συμφώνησες (από κανόνες);",
-            "2. Θα περάσεις τέλεια αυτές τις μέρες;",
-            "3. Τι θα γίνει αν δεν τηρηθεί η συμφωνία;",
-            "4. ΘΑ ΕΙΣΑΙ ΕΤΟΙΜΗ ΓΙΑ ΠΡΩΤΟΧΡΟΝΙΑ;😎",
-            "5. ΚΑΤΑΝΟΗΤΑ ΟΛΑ;"
-        ];
+        // --- DRAG LOGIC (Touch & Mouse) ---
+        
+        // Touch Events
+        dragger.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            startX = e.touches[0].clientX;
+            dragger.style.transition = 'none';
+        });
 
-        // Initialize on load
-        window.onload = function() {
-            renderQuestions();
-        };
+        dragger.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
+            updatePosition(currentX);
+        });
 
-        function renderQuestions() {
-            const container = document.getElementById('questions-container');
-            container.innerHTML = '';
+        dragger.addEventListener('touchend', endDrag);
 
-            questions.forEach((q, index) => {
-                const div = document.createElement('div');
-                div.className = 'question-card';
-                
-                div.innerHTML = `
-                    <label class="q-title">${q}</label>
-                    <input type="text" id="ans-${index}" class="q-input" placeholder="Γράψε την απάντησή σου...">
-                `;
-                container.appendChild(div);
-            });
+        // Mouse Events (για testing σε PC)
+        dragger.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            dragger.style.transition = 'none';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            currentX = e.clientX;
+            updatePosition(currentX);
+        });
+
+        window.addEventListener('mouseup', endDrag);
+
+        function updatePosition(xPos) {
+            // Move the element visually
+            const delta = xPos - (screenWidth / 2);
+            dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`;
+
+            // Visual feedback on zones
+            if (xPos < screenWidth / 2) {
+                document.getElementById('zone-naughty').style.opacity = '1';
+                document.getElementById('zone-nice').style.opacity = '0.4';
+            } else {
+                document.getElementById('zone-naughty').style.opacity = '0.4';
+                document.getElementById('zone-nice').style.opacity = '1';
+            }
         }
 
-        // --- SUBMISSION LOGIC ---
-        function finalSubmit() {
-            let msg = "📝 *ΑΠΑΝΤΗΣΕΙΣ ΚΑΤΑΝΟΗΣΗΣ (ΓΡΑΠΤΑ)*\n\n";
-            let allFilled = true;
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            dragger.style.transition = 'all 0.5s ease';
 
-            questions.forEach((q, index) => {
-                const ans = document.getElementById(`ans-${index}`).value;
-                if(!ans) allFilled = false;
-                msg += `*Q${index+1}:* ${q}\n*A:* ${ans}\n\n`;
-            });
-
-            if(!allFilled) return alert("Παρακαλώ απάντησε σε όλες τις ερωτήσεις!");
-
-            sendTelegramText(msg);
-            showSuccess();
+            // Check final position
+            if (currentX < screenWidth * 0.3) {
+                // Dropped in NAUGHTY (Left)
+                triggerNaughty();
+            } else if (currentX > screenWidth * 0.7) {
+                // Dropped in NICE (Right)
+                triggerNice();
+            } else {
+                // Reset to center
+                dragger.style.transform = `translate(-50%, -50%)`;
+                document.getElementById('zone-naughty').style.opacity = '1';
+                document.getElementById('zone-nice').style.opacity = '1';
+            }
         }
 
-        // --- TELEGRAM FUNCTIONS ---
-        function sendTelegramText(text) {
-            const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage?chat_id=${TG_CHAT_ID}&text=${encodeURIComponent(text)}&parse_mode=Markdown`;
-            fetch(url, { mode: 'no-cors' }).catch(e => console.error(e));
+        // --- SCENARIO 1: NAUGHTY (Immediate) ---
+        function triggerNaughty() {
+            dragger.style.display = 'none';
+            showPunishment("Τουλάχιστον έχεις αυτογνωσία!<br>Αλλά οι κανόνες είναι κανόνες.<br>Μπαίνεις Τιμωρία!");
         }
 
-        function showSuccess() {
-            document.getElementById('success-screen').style.display = 'flex';
+        // --- SCENARIO 2: NICE (Evaluation -> Fail) ---
+        function triggerNice() {
+            dragger.style.display = 'none';
+            const modal = document.getElementById('evalModal');
+            const txt = document.getElementById('evalText');
+            const bar = document.getElementById('progressBar');
+            modal.style.display = 'flex';
+
+            // Fake loading sequence
+            const steps = [
+                { t: "Σάρωση Ιστορικού...", p: 20 },
+                { t: "Έλεγχος συμπεριφοράς...", p: 40 },
+                { t: "Ανάλυση γκρίνιας...", p: 60 },
+                { t: "Υπολογισμός εξόδων...", p: 80 },
+                { t: "Εντοπισμός ύποπτων κινήσεων...", p: 90 },
+                { t: "ΑΠΟΤΕΛΕΣΜΑ: ΑΡΝΗΤΙΚΟ ❌", p: 100 }
+            ];
+
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < steps.length) {
+                    txt.innerText = steps[i].t;
+                    bar.style.width = steps[i].p + "%";
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                        showPunishment("Η αξιολόγηση ολοκληρώθηκε.<br>Προσπάθησες να μας ξεγελάσεις!<br>Το σύστημα εντόπισε παραβάσεις.<br><br>Μπαίνεις Τιμωρία!");
+                    }, 2000);
+                }
+            }, 1200); // Speed of updates
+        }
+
+        function showPunishment(reason) {
+            const modal = document.getElementById('punishModal');
+            document.getElementById('punishReason').innerHTML = reason;
+            modal.style.display = 'flex';
         }
 
     </script>
