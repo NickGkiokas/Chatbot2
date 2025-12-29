@@ -2,7 +2,7 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Έλεγχος Συμπεριφοράς</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -10,12 +10,15 @@
             font-family: 'Montserrat', sans-serif;
             margin: 0; padding: 0; height: 100vh; overflow: hidden;
             background: #222; color: white; display: flex; flex-direction: column;
+            /* Prevent pull-to-refresh on mobile */
+            overscroll-behavior: none;
         }
 
         h1 {
             text-align: center; margin: 10px 0; z-index: 10;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            position: absolute; width: 100%; top: 20px; pointer-events: none;
+            position: absolute; width: 100%; top: 10px; pointer-events: none;
+            font-size: 1.5rem;
         }
 
         .container { display: flex; width: 100%; height: 100%; }
@@ -25,21 +28,21 @@
         }
         .naughty { background: linear-gradient(135deg, #8b0000, #500000); border-right: 2px solid rgba(255,255,255,0.2); }
         .nice { background: linear-gradient(135deg, #006400, #004d00); }
-        .zone-title { font-size: 2rem; font-weight: 900; opacity: 0.6; margin-bottom: 20px; }
-        .icon { font-size: 4rem; opacity: 0.6; }
+        .zone-title { font-size: 1.5rem; font-weight: 900; opacity: 0.6; margin-bottom: 20px; }
+        .icon { font-size: 3rem; opacity: 0.6; }
 
         #draggable-name {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: white; color: #333; padding: 20px 40px; border-radius: 50px;
-            font-size: 1.5rem; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            background: white; color: #333; padding: 15px 30px; border-radius: 50px;
+            font-size: 1.2rem; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
             cursor: grab; z-index: 100; touch-action: none; user-select: none;
-            border: 4px solid #d4af37;
+            border: 4px solid #d4af37; white-space: nowrap;
         }
         #draggable-name:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.1); }
 
         .instruction {
-            position: absolute; bottom: 50px; width: 100%; text-align: center;
-            font-size: 0.9rem; opacity: 0.8; pointer-events: none; animation: bounce 2s infinite;
+            position: absolute; bottom: 30px; width: 100%; text-align: center;
+            font-size: 0.8rem; opacity: 0.8; pointer-events: none; animation: bounce 2s infinite;
         }
         @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
@@ -52,29 +55,31 @@
 
         /* Quiz */
         .quiz-box {
-            background: white; color: #333; padding: 30px; border-radius: 20px;
-            width: 90%; max-width: 400px;
+            background: white; color: #333; padding: 25px; border-radius: 20px;
+            width: 100%; max-width: 350px;
         }
         .answer-btn {
-            display: block; width: 100%; padding: 15px; margin: 10px 0;
-            background: #f0f0f0; border: 2px solid #ddd; border-radius: 10px; font-size: 1rem; cursor: pointer;
+            display: block; width: 100%; padding: 12px; margin: 10px 0;
+            background: #f0f0f0; border: 2px solid #ddd; border-radius: 10px; 
+            font-size: 0.95rem; cursor: pointer; font-weight: bold;
         }
+        .answer-btn:active { background: #ddd; transform: scale(0.98); }
 
         /* Loading */
-        .eval-text { font-size: 1.2rem; color: #00ff00; font-family: 'Courier New', monospace; margin-bottom: 20px; }
+        .eval-text { font-size: 1.1rem; color: #00ff00; font-family: 'Courier New', monospace; margin-bottom: 20px; }
         
         /* Punishment */
         .punish-title {
-            font-size: 3rem; color: #ff0000; font-weight: 900; margin-bottom: 20px;
+            font-size: 2.5rem; color: #ff0000; font-weight: 900; margin-bottom: 15px;
             text-shadow: 0 0 20px red; animation: shake 0.5s infinite;
         }
         @keyframes shake { 0% { transform: translate(1px, 1px); } 25% { transform: translate(-1px, -2px); } 50% { transform: translate(-1px, 2px); } 100% { transform: translate(1px, -2px); } }
 
-        .punish-desc { font-size: 1.2rem; margin-bottom: 40px; color: #ddd; max-width: 400px; line-height: 1.6;}
+        .punish-desc { font-size: 1.1rem; margin-bottom: 30px; color: #ddd; max-width: 350px; line-height: 1.5;}
 
         .btn-return {
-            background: white; color: black; border: none; padding: 15px 30px;
-            font-size: 1.1rem; font-weight: bold; border-radius: 30px; cursor: pointer;
+            background: white; color: black; border: none; padding: 12px 25px;
+            font-size: 1rem; font-weight: bold; border-radius: 30px; cursor: pointer;
             text-decoration: none; box-shadow: 0 0 15px white;
         }
     </style>
@@ -99,15 +104,15 @@
 
     <div id="quizModal" class="modal">
         <div class="quiz-box">
-            <div style="font-size:3rem; margin-bottom:10px;">🧐</div>
-            <h2 style="margin-top:0; color:#ce2b37;">Ανάκριση</h2>
-            <div id="questionText" style="font-weight:bold; margin-bottom:20px;"></div>
+            <div style="font-size:2.5rem; margin-bottom:10px;">🧐</div>
+            <h2 style="margin-top:0; color:#ce2b37; font-size: 1.5rem;">Ανάκριση</h2>
+            <div id="questionText" style="font-weight:bold; margin-bottom:20px; font-size: 1.1rem;"></div>
             <div id="answersArea"></div>
         </div>
     </div>
 
     <div id="evalModal" class="modal">
-        <div style="font-size: 50px; margin-bottom: 20px;">🤖</div>
+        <div style="font-size: 40px; margin-bottom: 20px;">🤖</div>
         <div id="evalText" class="eval-text">Εκκίνηση Συστήματος...</div>
         <div style="width: 200px; height: 10px; background: #333; border-radius: 5px; overflow:hidden; margin-top:20px;">
             <div id="progressBar" style="width: 0%; height: 100%; background: #00ff00;"></div>
@@ -127,7 +132,6 @@
         let startX, currentX;
         const screenWidth = window.innerWidth;
 
-        // ΕΡΩΤΗΣΕΙΣ
         const questions = [
             { q: "Ήσουν φρόνιμη;", a: ["Ναι, αγγελούδι 😇", "Εχμ... ίσως; 😈"] },
             { q: "Πόσα λεφτά ξόδεψες φέτος;", a: ["Τίποτα! (Ψέμα)", "Τα μαλλιοκέφαλά μου 💸"] },
@@ -137,21 +141,24 @@
         ];
         let currentQIndex = 0;
 
-        // DRAG EVENTS
-        dragger.addEventListener('touchstart', startDrag);
-        dragger.addEventListener('touchmove', drag);
+        // DRAG EVENTS (Mobile Touch Support)
+        dragger.addEventListener('touchstart', startDrag, {passive: false});
+        dragger.addEventListener('touchmove', drag, {passive: false});
         dragger.addEventListener('touchend', endDrag);
+        // PC Mouse Support
         dragger.addEventListener('mousedown', startDrag);
         window.addEventListener('mousemove', drag);
         window.addEventListener('mouseup', endDrag);
 
         function startDrag(e) {
             isDragging = true;
+            if (e.type === 'touchstart') e.preventDefault();
             startX = (e.touches ? e.touches[0].clientX : e.clientX);
             dragger.style.transition = 'none';
         }
         function drag(e) {
             if (!isDragging) return;
+            if (e.type === 'touchmove') e.preventDefault();
             currentX = (e.touches ? e.touches[0].clientX : e.clientX);
             const delta = currentX - (screenWidth / 2);
             dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`;
