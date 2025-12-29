@@ -3,468 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Το Μεγάλο Ιταλικό Ταξίδι 🇮🇹</title>
+    <title>Έλεγχος Συμπεριφοράς</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --flag-green: #009246;
-            --flag-red: #ce2b37;
-            --map-bg: #fdf6e3;
-            --path-color: #d4c5a3;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         body {
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298, #ce2b37);
-            text-align: center;
-            margin: 0;
-            padding: 10px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: white;
-            overflow-x: hidden;
+            margin: 0; padding: 0; height: 100vh; overflow: hidden;
+            background: #222; color: white; display: flex; flex-direction: column;
+            /* Prevent pull-to-refresh on mobile */
+            overscroll-behavior: none;
         }
 
-        h1 { 
-            margin: 5px 0 15px 0; 
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5); 
+        h1 {
+            text-align: center; margin: 10px 0; z-index: 10;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            position: absolute; width: 100%; top: 10px; pointer-events: none;
             font-size: 1.5rem;
         }
 
-        /* MAP CONTAINER */
-        #map-stage {
-            position: relative;
-            width: 100%;
-            max-width: 450px;
-            height: 75vh;
-            min-height: 550px;
-            max-height: 800px;
-            background-color: var(--map-bg);
-            background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-            border: 5px solid #5d4037;
-            margin-bottom: 20px;
-            overflow: hidden;
+        .container { display: flex; width: 100%; height: 100%; }
+        .zone {
+            width: 50%; height: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; transition: opacity 0.3s;
         }
+        .naughty { background: linear-gradient(135deg, #8b0000, #500000); border-right: 2px solid rgba(255,255,255,0.2); }
+        .nice { background: linear-gradient(135deg, #006400, #004d00); }
+        .zone-title { font-size: 1.5rem; font-weight: 900; opacity: 0.6; margin-bottom: 20px; }
+        .icon { font-size: 3rem; opacity: 0.6; }
 
-        /* SVG Paths */
-        .svg-paths {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1;
-            pointer-events: none;
+        #draggable-name {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; color: #333; padding: 15px 30px; border-radius: 50px;
+            font-size: 1.2rem; font-weight: 800; box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            cursor: grab; z-index: 100; touch-action: none; user-select: none;
+            border: 4px solid #d4af37; white-space: nowrap;
         }
-        .connection-line {
-            stroke: var(--path-color);
-            stroke-width: 4;
-            stroke-dasharray: 10, 10;
-            fill: none;
-            opacity: 0.6;
-            stroke-linecap: round;
-        }
-        .connection-line.traveled {
-            stroke: var(--flag-red);
-            stroke-dasharray: none;
-            opacity: 1;
-            transition: all 1.5s ease;
-        }
+        #draggable-name:active { cursor: grabbing; transform: translate(-50%, -50%) scale(1.1); }
 
-        /* City Nodes */
-        .city-node {
-            position: absolute;
-            z-index: 3;
-            transform: translate(-50%, -50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            width: 80px; height: 80px;
-            justify-content: center;
+        .instruction {
+            position: absolute; bottom: 30px; width: 100%; text-align: center;
+            font-size: 0.8rem; opacity: 0.8; pointer-events: none; animation: bounce 2s infinite;
         }
-
-        .marker-icon {
-            width: 45px; height: 45px;
-            background: #e0e0e0;
-            border-radius: 50%;
-            border: 3px solid #bbb;
-            display: flex; justify-content: center; align-items: center;
-            font-size: 20px;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-            color: #888;
-            transition: all 0.3s;
-        }
-
-        .city-info {
-            background: white; color: #333;
-            padding: 3px 8px; border-radius: 8px; margin-top: 4px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #eee;
-            text-align: center; pointer-events: none;
-            white-space: nowrap;
-        }
-        .stage-label { font-size: 0.6rem; text-transform: uppercase; color: #777; font-weight: 700; display: block; }
-        .city-name { font-weight: 800; font-size: 0.75rem; display: block; }
-
-        /* States */
-        .city-node.locked { filter: grayscale(1); opacity: 0.7; pointer-events: none; }
-        .city-node.active { z-index: 10; cursor: pointer; }
-        .city-node.active .marker-icon { border-color: var(--flag-green); background: white; color: #333; animation: pulse 2s infinite; }
-        .city-node.completed .marker-icon { background: var(--flag-green); border-color: white; color: white; }
-        .city-node.completed .city-name { color: var(--flag-green); }
-
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,146,70, 0.7); transform: scale(1); } 50% { transform: scale(1.1); } 100% { box-shadow: 0 0 0 0 rgba(0,146,70, 0); transform: scale(1); } }
-
-        /* Vehicle */
-        #travel-vehicle {
-            position: absolute; font-size: 40px; z-index: 20;
-            transform: translate(-50%, -50%);
-            transition: top 2s ease-in-out, left 2s ease-in-out;
-            filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
-            display: none; 
-        }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
 
         /* MODALS */
-        #gameModal, #msgModal {
+        .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px);
-            padding: 20px;
+            background: rgba(0,0,0,0.95); z-index: 200;
+            flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px;
         }
+
+        /* Quiz */
+        .quiz-box {
+            background: white; color: #333; padding: 25px; border-radius: 20px;
+            width: 100%; max-width: 350px;
+        }
+        .answer-btn {
+            display: block; width: 100%; padding: 12px; margin: 10px 0;
+            background: #f0f0f0; border: 2px solid #ddd; border-radius: 10px; 
+            font-size: 0.95rem; cursor: pointer; font-weight: bold;
+        }
+        .answer-btn:active { background: #ddd; transform: scale(0.98); }
+
+        /* Loading */
+        .eval-text { font-size: 1.1rem; color: #00ff00; font-family: 'Courier New', monospace; margin-bottom: 20px; }
         
-        /* START MODAL - Visible by default (Flex) */
-        #startModal {
-            display: flex; /* Changed from none to flex */
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 3000; justify-content: center; align-items: center; 
-            background: rgba(0,0,0,0.95); /* Darker background */
-            padding: 20px;
+        /* Punishment */
+        .punish-title {
+            font-size: 2.5rem; color: #ff0000; font-weight: 900; margin-bottom: 15px;
+            text-shadow: 0 0 20px red; animation: shake 0.5s infinite;
         }
+        @keyframes shake { 0% { transform: translate(1px, 1px); } 25% { transform: translate(-1px, -2px); } 50% { transform: translate(-1px, 2px); } 100% { transform: translate(1px, -2px); } }
 
-        #gameModal { background: rgba(20, 20, 40, 0.95); }
-        #msgModal { background: rgba(0,0,0,0.6); z-index: 2000; }
+        .punish-desc { font-size: 1.1rem; margin-bottom: 30px; color: #ddd; max-width: 350px; line-height: 1.5;}
 
-        .modal-content, .msg-box {
-            background: white; color: #333; text-align: center; padding: 20px;
-            border-radius: 20px; width: 100%; max-width: 340px; position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            max-height: 90vh; overflow-y: auto;
-        }
-        .msg-box { border-bottom: 6px solid var(--flag-green); }
-        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 28px; cursor: pointer; color: #ccc; padding: 5px;}
-        
-        #gameCanvas { background: #333; display: block; margin: 10px auto; border-radius: 10px; max-width: 100%; touch-action: none; }
-        
-        .action-btn {
-            background: var(--flag-red); color: white; border: none;
-            padding: 15px; border-radius: 50px; font-weight: bold; font-size: 1.1rem;
-            margin-top: 15px; cursor: pointer; width: 100%;
-            box-shadow: 0 4px 10px rgba(206,43,55,0.3);
-            animation: bounceBtn 2s infinite;
-        }
-        @keyframes bounceBtn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-
-        .msg-btn { 
-            background: var(--flag-green); color: white; border: none; 
-            padding: 12px 30px; border-radius: 50px; font-weight: bold; 
-            cursor: pointer; margin-top: 15px; font-size: 1rem;
-        }
-        .choice-btn { 
-            display: block; width: 100%; padding: 12px; margin: 8px 0; 
-            background: #f4f4f4; border: none; border-radius: 12px; 
-            font-weight: bold; font-size: 0.95rem; color: #444; 
-        }
-        .choice-btn:active { background: #ddd; }
-        .game-btn-big { font-size: 3rem; width: 90px; height: 90px; border-radius: 50%; border: none; background: var(--flag-red); color: white; margin-top: 20px; }
-
-        @media (max-height: 650px) {
-            #map-stage { height: 70vh; min-height: 450px; }
-            .city-node { transform: translate(-50%, -50%) scale(0.9); }
+        .btn-return {
+            background: white; color: black; border: none; padding: 12px 25px;
+            font-size: 1rem; font-weight: bold; border-radius: 30px; cursor: pointer;
+            text-decoration: none; box-shadow: 0 0 15px white;
         }
     </style>
 </head>
 <body>
 
-    <h1>🇮🇹 ITALO TRIP 🇮🇹</h1>
+    <h1>ΕΛΕΓΧΟΣ ΣΥΜΠΕΡΙΦΟΡΑΣ 📜</h1>
 
-    <div id="map-stage">
-        <svg class="svg-paths" viewBox="0 0 350 600" preserveAspectRatio="none">
-             <line x1="20%" y1="15%" x2="80%" y2="32%" class="connection-line" id="line-1"></line>
-             <line x1="80%" y1="32%" x2="20%" y2="50%" class="connection-line" id="line-2"></line>
-             <line x1="20%" y1="50%" x2="80%" y2="68%" class="connection-line" id="line-3"></line>
-             <line x1="80%" y1="68%" x2="50%" y2="88%" class="connection-line" id="line-4"></line>
-        </svg>
-
-        <div id="travel-vehicle" style="top: 15%; left: 20%;">🚗</div>
-
-        <div id="city-1" class="city-node locked" style="top: 15%; left: 20%;" onclick="handleCityClick(1)">
-            <div class="marker-icon">1</div>
-            <div class="city-info"><span class="stage-label">Σταση 1</span><span class="city-name">Μιλάνο 👠</span></div>
+    <div class="container">
+        <div class="zone naughty" id="zone-naughty">
+            <div class="icon">😈</div>
+            <div class="zone-title">BAD</div>
         </div>
-
-        <div id="city-2" class="city-node locked" style="top: 32%; left: 80%;" onclick="handleCityClick(2)">
-            <div class="marker-icon">2</div>
-            <div class="city-info"><span class="stage-label">Σταση 2</span><span class="city-name">Μαρανέλο 🏎️</span></div>
-        </div>
-
-        <div id="city-3" class="city-node locked" style="top: 50%; left: 20%;" onclick="handleCityClick(3)">
-            <div class="marker-icon">3</div>
-            <div class="city-info"><span class="stage-label">Σταση 3</span><span class="city-name">Μόντενα 🧦</span></div>
-        </div>
-
-        <div id="city-4" class="city-node locked" style="top: 68%; left: 80%;" onclick="handleCityClick(4)">
-            <div class="marker-icon">4</div>
-            <div class="city-info"><span class="stage-label">Σταση 4</span><span class="city-name">Φλωρεντία 🧙‍♀️</span></div>
-        </div>
-
-        <div id="city-5" class="city-node locked" style="top: 88%; left: 50%;" onclick="handleCityClick(5)">
-            <div class="marker-icon">🏁</div>
-            <div class="city-info"><span class="stage-label">Σταση 5</span><span class="city-name">Μπολόνια 🍝</span></div>
+        <div class="zone nice" id="zone-nice">
+            <div class="icon">😇</div>
+            <div class="zone-title">GOOD</div>
         </div>
     </div>
 
-    <div id="startModal">
-        <div class="modal-content" style="border-bottom: 6px solid #ce2b37;">
-            <div style="font-size: 50px;">🛑</div>
-            <h2 style="color: #ce2b37; margin-top: 10px;">Check-in</h2>
-            <p>Για να μπεις στην Ιταλία και να ξεκινήσεις το ταξίδι, πρέπει πρώτα να περάσεις από <strong>Αξιολόγηση</strong>!</p>
-            <button class="action-btn" onclick="goToEvaluation()">Πάμε για Έλεγχο</button>
+    <div id="draggable-name">ΣΑΡΑ</div>
+    <div class="instruction">Σύρε το όνομα εκεί που πιστεύεις ότι ανήκει...</div>
+
+    <div id="quizModal" class="modal">
+        <div class="quiz-box">
+            <div style="font-size:2.5rem; margin-bottom:10px;">🧐</div>
+            <h2 style="margin-top:0; color:#ce2b37; font-size: 1.5rem;">Ανάκριση</h2>
+            <div id="questionText" style="font-weight:bold; margin-bottom:20px; font-size: 1.1rem;"></div>
+            <div id="answersArea"></div>
         </div>
     </div>
 
-    <div id="gameModal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">×</span>
-            <h2 id="gTitle" style="font-size: 1.2rem; color: var(--flag-green);">Game Title</h2>
-            <p id="gInstr" style="color:#666; font-size:0.85rem; margin-bottom: 10px;">Instructions</p>
-            <div id="gameArea"></div>
+    <div id="evalModal" class="modal">
+        <div style="font-size: 40px; margin-bottom: 20px;">🤖</div>
+        <div id="evalText" class="eval-text">Εκκίνηση Συστήματος...</div>
+        <div style="width: 200px; height: 10px; background: #333; border-radius: 5px; overflow:hidden; margin-top:20px;">
+            <div id="progressBar" style="width: 0%; height: 100%; background: #00ff00;"></div>
         </div>
     </div>
 
-    <div id="msgModal">
-        <div class="msg-box">
-            <h2 id="msgTitle" style="margin-top:0; color:var(--flag-red);">Τίτλος</h2>
-            <div id="msgText" style="margin-bottom:20px;">Μήνυμα</div>
-            <button id="msgBtn" class="msg-btn">OK</button>
-        </div>
+    <div id="punishModal" class="modal">
+        <div class="punish-title">ΤΙΜΩΡΙΑ!</div>
+        <p id="punishReason" class="punish-desc">Λόγος...</p>
+        
+        <a href="index.html?evaluated=true" class="btn-return">Επιστροφή στο Ταξίδι</a>
     </div>
 
     <script>
-        const totalLevels = 5;
-        let currentLevel = 1; 
-        const vehicle = document.getElementById('travel-vehicle');
+        const dragger = document.getElementById('draggable-name');
+        let isDragging = false;
+        let startX, currentX;
+        const screenWidth = window.innerWidth;
 
-        const cityCoords = {
-            1: { top: '15%', left: '20%' }, // Milano
-            2: { top: '32%', left: '80%' }, // Maranello
-            3: { top: '50%', left: '20%' }, // Modena
-            4: { top: '68%', left: '80%' }, // Florence
-            5: { top: '88%', left: '50%' }  // Bologna
-        };
+        const questions = [
+            { q: "Ήσουν φρόνιμη;", a: ["Ναι, αγγελούδι 😇", "Εχμ... ίσως; 😈"] },
+            { q: "Πόσα λεφτά ξόδεψες φέτος;", a: ["Τίποτα! (Ψέμα)", "Τα μαλλιοκέφαλά μου 💸"] },
+            { q: "Ποιος είναι ο πιο ωραίος;", a: ["Εσύ αγάπη μου ❤️", "Ο Brad Pitt"] },
+            { q: "Έφαγες όλα τα γλυκά;", a: ["Όχι βέβαια!", "Μόνο μια σοκολάτα... 🍫"] },
+            { q: "Θα μου πάρεις καλό δώρο;", a: ["Το καλύτερο! 🎁", "Θα δείξει..."] }
+        ];
+        let currentQIndex = 0;
 
-        // --- INIT: CHECK STATUS ---
-        // Χρησιμοποιούμε DOMContentLoaded για να τρέξει ο κώδικας αμέσως
-        document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const isEvaluated = urlParams.get('evaluated');
-            const startModal = document.getElementById('startModal');
-            const milan = document.getElementById('city-1');
+        // DRAG EVENTS (Mobile Touch Support)
+        dragger.addEventListener('touchstart', startDrag, {passive: false});
+        dragger.addEventListener('touchmove', drag, {passive: false});
+        dragger.addEventListener('touchend', endDrag);
+        // PC Mouse Support
+        dragger.addEventListener('mousedown', startDrag);
+        window.addEventListener('mousemove', drag);
+        window.addEventListener('mouseup', endDrag);
 
-            if (isEvaluated === 'true') {
-                // Αν έχεις αξιολογηθεί, ΚΡΥΨΕ το modal
-                startModal.style.display = 'none';
-                
-                vehicle.style.display = 'block'; // Εμφάνισε αμάξι
-                milan.classList.remove('locked');
-                milan.classList.add('active');
+        function startDrag(e) {
+            isDragging = true;
+            if (e.type === 'touchstart') e.preventDefault();
+            startX = (e.touches ? e.touches[0].clientX : e.clientX);
+            dragger.style.transition = 'none';
+        }
+        function drag(e) {
+            if (!isDragging) return;
+            if (e.type === 'touchmove') e.preventDefault();
+            currentX = (e.touches ? e.touches[0].clientX : e.clientX);
+            const delta = currentX - (screenWidth / 2);
+            dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`;
+            
+            if (currentX < screenWidth * 0.3) {
+                document.getElementById('zone-naughty').style.opacity = '1';
+                document.getElementById('zone-nice').style.opacity = '0.4';
+            } else if (currentX > screenWidth * 0.7) {
+                document.getElementById('zone-naughty').style.opacity = '0.4';
+                document.getElementById('zone-nice').style.opacity = '1';
             } else {
-                // Αν ΟΧΙ, βεβαιώσου ότι το modal φαίνεται
-                startModal.style.display = 'flex';
+                document.getElementById('zone-naughty').style.opacity = '1';
+                document.getElementById('zone-nice').style.opacity = '1';
             }
-        });
-
-        function goToEvaluation() {
-            window.location.href = 'timoria.html';
+        }
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            dragger.style.transition = 'all 0.5s ease';
+            if (currentX < screenWidth * 0.3) triggerNaughty();
+            else if (currentX > screenWidth * 0.7) triggerNiceQuiz();
+            else {
+                dragger.style.transform = `translate(-50%, -50%)`;
+                document.getElementById('zone-naughty').style.opacity = '1';
+                document.getElementById('zone-nice').style.opacity = '1';
+            }
         }
 
-        function handleCityClick(level) {
-            if(level !== currentLevel) return;
-            setupGame(level);
+        function triggerNaughty() {
+            dragger.style.display = 'none';
+            showPunishment("Τουλάχιστον έχεις αυτογνωσία!<br>Αλλά οι κανόνες είναι κανόνες.<br>Έχεις ποινή 5 φιλάκια μόλις με δεις!");
         }
 
-        // --- GAME SETUP ---
-        function setupGame(level) {
-            const modal = document.getElementById('gameModal');
-            const title = document.getElementById('gTitle');
-            const instr = document.getElementById('gInstr');
-            const area = document.getElementById('gameArea');
+        function triggerNiceQuiz() {
+            dragger.style.display = 'none';
+            currentQIndex = 0;
+            showQuestion();
+            document.getElementById('quizModal').style.display = 'flex';
+        }
 
-            modal.style.display = 'flex';
+        function showQuestion() {
+            if (currentQIndex >= questions.length) {
+                document.getElementById('quizModal').style.display = 'none';
+                triggerEvaluation();
+                return;
+            }
+            const q = questions[currentQIndex];
+            document.getElementById('questionText').innerText = q.q;
+            const area = document.getElementById('answersArea');
             area.innerHTML = '';
-
-            if (level === 1) {
-                title.innerText = "Μιλάνο: Traffic!";
-                instr.innerText = "Πάτα Αριστερά, Κέντρο ή Δεξιά για να αποφύγεις τα εμπόδια.";
-                area.innerHTML = '<canvas id="gameCanvas" width="280" height="320"></canvas>';
-                runCarGame(level);
-            } 
-            else if (level === 2) {
-                title.innerText = "Μαρανέλο: Reflex";
-                instr.innerText = "Πάτα το 'GO' μόλις ανάψει ΠΡΑΣΙΝΟ!";
-                area.innerHTML = `
-                    <div id="light" style="width:70px; height:70px; background:#ce2b37; border-radius:50%; margin:15px auto; border: 4px solid #333; transition: background 0.2s;"></div>
-                    <button id="reflexBtn" class="action-btn">GO!</button>
-                `;
-                runReflexGame(level);
-            }
-            else if (level === 3) {
-                title.innerText = "Μόντενα: Warm Up";
-                instr.innerText = "Πάτα το κουμπί γρήγορα 10 φορές!";
-                area.innerHTML = `<button class="game-btn-big" id="warmBtn">❄️</button>`;
-                runWarmUpGame(level);
-            }
-            else if (level === 4) {
-                title.innerText = "Φλωρεντία: Befana";
-                instr.innerText = "Η μάγισσα πετάει... Πιάσε το δώρο!";
-                area.innerHTML = `
-                    <div style="font-size:70px; margin:20px 0; animation: float 2s infinite ease-in-out;">🧙‍♀️</div>
-                    <style>@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-20px);} }</style>
-                    <button class="msg-btn" onclick="winLevel(4)" style="width:100%;">Πιάσε το!</button>
-                `;
-            }
-            else if (level === 5) {
-                title.innerText = "Μπολόνια: Quiz";
-                instr.innerText = "Ποιο είναι το μυστικό της Ιταλίας;";
-                area.innerHTML = `
-                    <button class="choice-btn" onclick="showMsg('Λάθος!', 'Πολύ άγχος...', null)">Δουλειά</button>
-                    <button class="choice-btn" onclick="winLevel(5)" style="background:var(--flag-green); color:white;">Pasta & Amore</button>
-                    <button class="choice-btn" onclick="showMsg('Όχι...', 'Αμερικανιά!', null)">Καφές Φίλτρου</button>
-                `;
-            }
-        }
-
-        // --- WIN LOGIC ---
-        function winLevel(level) {
-            closeModal();
-            showMsg("🎉 BRAVISSIMO! 🎉", "Κέρδισες! Άνοιξε το δώρο της Στάσης " + level, () => {
-                markLevelComplete(level);
+            q.a.forEach(ans => {
+                const btn = document.createElement('button');
+                btn.className = 'answer-btn';
+                btn.innerText = ans;
+                btn.onclick = () => { currentQIndex++; showQuestion(); };
+                area.appendChild(btn);
             });
         }
 
-        function markLevelComplete(level) {
-            const currentDiv = document.getElementById('city-' + level);
-            currentDiv.classList.remove('active');
-            currentDiv.classList.add('completed');
-            currentDiv.querySelector('.marker-icon').innerHTML = '🎁';
-
-            if (level < totalLevels) {
-                const nextLevel = level + 1;
-                const nextCoords = cityCoords[nextLevel];
-
-                vehicle.style.top = nextCoords.top;
-                vehicle.style.left = nextCoords.left;
-                
-                const line = document.getElementById('line-' + level);
-                if(line) line.classList.add('traveled');
-
-                setTimeout(() => {
-                    const nextDiv = document.getElementById('city-' + nextLevel);
-                    nextDiv.classList.remove('locked');
-                    nextDiv.classList.add('active');
-                    currentLevel = nextLevel;
-                    nextDiv.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
-                }, 2000);
-
-            } else {
-                vehicle.style.transform = "translate(-50%, -50%) scale(1.5) rotate(360deg)";
-                setTimeout(() => {
-                    showMsg("❤️ FELICITÀ! ❤️", "Το ταξίδι ολοκληρώθηκε! Σ' αγαπώ!", null);
-                }, 1500);
-            }
-        }
-
-        // --- UPDATED CAR GAME LOGIC (3 LANES) ---
-        function runCarGame(level) {
-            const canvas = document.getElementById('gameCanvas');
-            const ctx = canvas.getContext('2d');
-            
-            // Lane positions (Canvas width 280)
-            const lanes = [50, 140, 230];
-            let currentLaneIndex = 1; // Start in Center
-            let carX = lanes[1]; 
-            
-            let obstacles = []; 
-            let running = true; 
-            let score = 0;
-
-            function draw() {
-                if (!running) return;
-                ctx.clearRect(0,0,280,320); 
-                
-                // Road
-                ctx.fillStyle = "#444"; ctx.fillRect(0,0,280,320);
-                
-                // Lane dividers
-                ctx.strokeStyle = "#fff"; ctx.setLineDash([20, 20]); 
-                ctx.beginPath(); ctx.moveTo(93, 0); ctx.lineTo(93, 320); ctx.stroke();
-                ctx.beginPath(); ctx.moveTo(186, 0); ctx.lineTo(186, 320); ctx.stroke();
-
-                // Car
-                ctx.font = "35px Arial"; 
-                ctx.fillText("🚗", carX - 17, 290); 
-
-                // Spawn Obstacles (Reduced Rate)
-                if (Math.random() < 0.02) { 
-                    const randomLane = Math.floor(Math.random() * 3);
-                    obstacles.push({x: lanes[randomLane], y: -40});
+        function triggerEvaluation() {
+            const modal = document.getElementById('evalModal');
+            const txt = document.getElementById('evalText');
+            const bar = document.getElementById('progressBar');
+            modal.style.display = 'flex';
+            const steps = [
+                { t: "Ανάλυση...", p: 20 },
+                { t: "Διασταύρωση στοιχείων...", p: 50 },
+                { t: "Εντοπισμός αντιφάσεων...", p: 75 },
+                { t: "Εκτίμηση ποινής...", p: 90 },
+                { t: "ΑΠΟΤΕΛΕΣΜΑ: ΕΝΟΧΗ ❌", p: 100 }
+            ];
+            let i = 0;
+            const interval = setInterval(() => {
+                if (i < steps.length) {
+                    txt.innerText = steps[i].t;
+                    bar.style.width = steps[i].p + "%";
+                    i++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                        showPunishment("Οι απαντήσεις σου κρίθηκαν... ύποπτες!<br>Το σύστημα δεν πείστηκε.<br><br>Έχεις ποινή 5 φιλάκια μόλις με δεις!");
+                    }, 1500);
                 }
-                
-                obstacles.forEach((obs) => { 
-                    obs.y += 4; // Moderate speed
-                    ctx.fillText("🚧", obs.x - 17, obs.y);
-                    
-                    // Collision
-                    if (obs.y > 250 && obs.y < 300) {
-                        if (Math.abs(obs.x - carX) < 10) {
-                            running = false; 
-                            showMsg("💥 Crash!", "Πρόσεχε! Πάμε πάλι;", () => setupGame(level));
-                        }
-                    }
-                });
-
-                score++;
-                ctx.fillStyle = "#fff"; ctx.font = "18px Arial"; ctx.fillText("Score: " + score + "/400", 10, 25);
-                if (score > 400) { running = false; winLevel(level); } 
-                else { requestAnimationFrame(draw); }
-            }
-
-            canvas.addEventListener('mousedown', handleInput);
-            canvas.addEventListener('touchstart', handleInput, {passive: false});
-
-            function handleInput(e) {
-                if(!running) return;
-                e.preventDefault(); 
-                
-                const rect = canvas.getBoundingClientRect();
-                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                const clickX = clientX - rect.left;
-                
-                if (clickX < 93) currentLaneIndex = 0; 
-                else if (clickX < 186) currentLaneIndex = 1; 
-                else currentLaneIndex = 2; 
-                carX = lanes[currentLaneIndex];
-            }
-
-            draw();
+            }, 1000);
         }
 
-        function runReflexGame(level) {
-            const light = document.getElementById('light'); 
-            const btn = document.getElementById('reflexBtn');
-            let ready = false; let tooEarly = false; let timeoutId;
-            
-            btn.onclick = () => { 
-                if (tooEarly) return; 
-                if (ready) winLevel(
+        function showPunishment(reason) {
+            const modal = document.getElementById('punishModal');
+            document.getElementById('punishReason').innerHTML = reason;
+            modal.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
