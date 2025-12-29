@@ -10,6 +10,7 @@
             --bg-color: #1a1a1a;
             --accent-red: #ff3333;
             --text-color: #f0f0f0;
+            --flag-green: #009246;
         }
 
         body {
@@ -26,7 +27,7 @@
             position: absolute; width: 100%; top: 0; pointer-events: none;
         }
 
-        /* DRAG GAME STYLES */
+        /* CONTAINER ZONES */
         .container { display: flex; width: 100%; height: 100%; }
         .zone {
             width: 50%; height: 100%; display: flex; flex-direction: column;
@@ -37,6 +38,7 @@
         .icon { font-size: 3rem; opacity: 0.6; margin-bottom: 10px; }
         .zone-title { font-size: 1.2rem; font-weight: 900; opacity: 0.8; letter-spacing: 2px; }
 
+        /* DRAGGABLE */
         #draggable-name {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: white; color: #333; padding: 15px 30px; border-radius: 50px;
@@ -44,7 +46,7 @@
             cursor: grab; z-index: 100; touch-action: none; border: 4px solid #d4af37;
         }
 
-        /* MODALS - Responsive & Scrollable */
+        /* MODALS */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 200;
@@ -58,10 +60,11 @@
             max-height: 85vh; overflow-y: auto; position: relative;
         }
 
+        /* TEXT & BUTTONS */
         h2 { color: var(--accent-red); margin-top: 0; font-size: 1.5rem; }
+        h3 { color: #aaa; font-size: 1.1rem; margin-bottom: 15px; }
         p { line-height: 1.6; color: #ccc; font-size: 0.95rem; margin-bottom: 20px; }
 
-        /* BUTTONS */
         .btn {
             background: white; color: black; border: none; padding: 15px 30px;
             font-size: 1rem; font-weight: bold; border-radius: 50px; cursor: pointer;
@@ -70,20 +73,16 @@
         }
         .btn:active { transform: scale(0.95); }
         .btn-red { background: var(--accent-red); color: white; }
-        .btn-green { background: #009246; color: white; }
-
-        /* INPUTS */
-        input[type="file"] { margin: 20px 0; color: white; }
+        .btn-green { background: var(--flag-green); color: white; }
         .quiz-btn { background: #333; color: white; border: 1px solid #555; text-align: left; }
         
-        /* THE CORNER (TIMEOUT) STYLES */
+        /* CORNER UI */
         #cornerUI {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: black; z-index: 500; flex-direction: column;
             justify-content: center; align-items: center; color: white;
         }
-        #timerDisplay { font-size: 5rem; font-weight: 900; font-family: monospace; color: var(--accent-red); }
-        .corner-msg { font-size: 1.2rem; color: #666; margin-top: 20px; text-align: center; padding: 0 20px;}
+        #timerDisplay { font-size: 5rem; font-weight: 900; font-family: monospace; color: var(--accent-red); transition: color 0.3s; }
         .keep-awake-btn {
             margin-top: 50px; padding: 20px; border-radius: 50%; width: 100px; height: 100px;
             background: #333; border: 2px solid #555; color: #888; font-size: 0.8rem;
@@ -92,6 +91,9 @@
         /* LOADING BAR */
         .progress-container { width: 100%; height: 10px; background: #444; border-radius: 5px; margin-top: 15px; overflow: hidden; }
         .progress-bar { width: 0%; height: 100%; background: var(--accent-red); transition: width 0.3s; }
+        
+        /* INFO MODAL TEXTAREA (Optional styling for neatness) */
+        .info-text { font-style: italic; color: #ddd; margin-bottom: 20px; }
 
     </style>
 </head>
@@ -109,52 +111,98 @@
             <div class="zone-title">NICE</div>
         </div>
     </div>
-
     <div id="draggable-name">ΣΑΡΑ</div>
+
+
+    <div id="evalQuizModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color:var(--flag-green);">ΑΞΙΟΛΟΓΗΣΗ</h2>
+            <div id="evalQuestion" style="font-weight:bold; font-size:1.1rem; margin-bottom:15px; color:#fff;"></div>
+            <div id="evalOptions"></div>
+        </div>
+    </div>
+
+    <div id="analysisModal" class="modal">
+        <div class="modal-content">
+            <div style="font-size: 3rem;">🤖</div>
+            <h2 style="color: #00ff00;">ΑΝΑΛΥΣΗ</h2>
+            <p id="analysisText">Επεξεργασία απαντήσεων...</p>
+            <div class="progress-container"><div class="progress-bar" id="analysisBar"></div></div>
+        </div>
+    </div>
+
 
     <div id="punishIntroModal" class="modal">
         <div class="modal-content">
             <div style="font-size: 4rem;">🚨</div>
             <h2>ΕΧΕΙΣ ΚΡΙΘΕΙ ΕΝΟΧΗ!</h2>
             <p>Το σύστημα εντόπισε πολλαπλές παραβάσεις. Δεν μπορείς να συνεχίσεις το ταξίδι αν δεν εκτίσεις την ποινή σου.</p>
-            <p>Η τιμωρία αποτελείται από <strong>4 Στάδια</strong>.</p>
-            <button class="btn btn-red" onclick="startPunishment()">Αποδοχή Τιμωρίας</button>
+            <button class="btn btn-red" onclick="startPunishmentPath()">Αποδοχή Τιμωρίας</button>
         </div>
     </div>
 
-    <div id="stage1Modal" class="modal">
+    <div id="infoPreQuiz" class="modal">
+        <div class="modal-content">
+            <h3>Βήμα 1</h3>
+            <p class="info-text">"Εδώ γράφεις ότι θέλεις να της πεις πριν τις ερωτήσεις τιμωρίας..."</p>
+            <button class="btn" onclick="startPunishQuiz()">Συνέχεια</button>
+        </div>
+    </div>
+
+    <div id="punishQuizModal" class="modal">
         <div class="modal-content">
             <h2>ΣΤΑΔΙΟ 1: ΑΝΑΚΡΙΣΗ</h2>
-            <p>Απάντησε σωστά για να συνεχίσεις.</p>
-            <div id="quizQuestion" style="font-weight:bold; font-size:1.1rem; margin-bottom:15px; color:#fff;"></div>
-            <div id="quizOptions"></div>
-            <div style="margin-top:10px; font-size:0.8rem; color:#666;">Ερώτηση <span id="qNum">1</span>/5</div>
+            <div id="punishQuestion" style="font-weight:bold; font-size:1.1rem; margin-bottom:15px; color:#fff;"></div>
+            <div id="punishOptions"></div>
         </div>
     </div>
 
-    <div id="stage2Modal" class="modal">
+    <div id="infoPreWrite" class="modal">
+        <div class="modal-content">
+            <h3>Βήμα 2</h3>
+            <p class="info-text">"Εδώ γράφεις ότι θέλεις για το γράψιμο... πχ. Πάρε χαρτί και μολύβι τώρα!"</p>
+            <button class="btn" onclick="startHandwriting()">Συνέχεια</button>
+        </div>
+    </div>
+
+    <div id="handwritingModal" class="modal">
         <div class="modal-content">
             <h2>ΣΤΑΔΙΟ 2: ΓΡΑΦΗ</h2>
-            <p>Πάρε χαρτί και στυλό. Γράψε <strong>10 φορές</strong> την παρακάτω φράση στα Ιταλικά:</p>
+            <p>Γράψε <strong>10 φορές</strong>:</p>
             <div style="background:#333; padding:10px; border-radius:10px; margin:10px 0; color:#00ff00; font-family:monospace;">
                 "Sarò una brava ragazza quest'anno"
             </div>
-            <p>Βγάλε φωτογραφία το χαρτί και ανέβασέ την εδώ για έλεγχο.</p>
-            <input type="file" id="photoInput" accept="image/*">
-            <button class="btn btn-red" id="uploadPhotoBtn" onclick="uploadPhoto()">Αποστολή Αποδεικτικού</button>
-            <div id="photoStatus" style="margin-top:10px; font-size:0.9rem;"></div>
+            <p>Ανέβασε φωτογραφία:</p>
+            <input type="file" id="photoInput" accept="image/*" style="color:white;">
+            <button class="btn btn-red" onclick="uploadPhoto()">Αποστολή</button>
+            <div id="photoStatus" style="margin-top:10px;"></div>
         </div>
     </div>
 
-    <div id="stage3Modal" class="modal">
+    <div id="infoPreVoice" class="modal">
+        <div class="modal-content">
+            <h3>Βήμα 3</h3>
+            <p class="info-text">"Εδώ γράφεις για το φωνητικό... πχ. Καθάρισε τη φωνή σου και πες την αλήθεια."</p>
+            <button class="btn" onclick="startVoice()">Συνέχεια</button>
+        </div>
+    </div>
+
+    <div id="voiceModal" class="modal">
         <div class="modal-content">
             <h2>ΣΤΑΔΙΟ 3: ΟΜΟΛΟΓΙΑ</h2>
-            <p>Πάτα το κουμπί, διάβασε το κείμενο καθαρά και στείλε το φωνητικό.</p>
-            <div style="background:#333; padding:10px; border-radius:10px; margin:10px 0; font-style:italic;">
+            <p>Διάβασε και στείλε φωνητικό:</p>
+            <div style="background:#333; padding:10px; border-radius:10px; margin:10px 0; font-style:italic; font-size: 0.9rem;">
                 "Αναγνωρίζω ότι ήμουν άτακτη. Υπόσχομαι να μην ξοδεύω αλόγιστα, να μην γκρινιάζω χωρίς λόγο και να εκτιμώ τα δώρα μου."
             </div>
-            <button class="btn" id="recordBtn" onmousedown="startRecording()" onmouseup="stopRecording()" ontouchstart="startRecording()" ontouchend="stopRecording()">🎙️ Κράτα πατημένο για εγγραφή</button>
-            <div id="voiceStatus" style="margin-top:15px;"></div>
+            <button class="btn" id="recordBtn" onmousedown="startRecording()" onmouseup="stopRecording()" ontouchstart="startRecording()" ontouchend="stopRecording()">🎙️ Κράτα πατημένο</button>
+        </div>
+    </div>
+
+    <div id="infoPreCorner" class="modal">
+        <div class="modal-content">
+            <h3>Βήμα 4</h3>
+            <p class="info-text">"Εδώ γράφεις για τη γωνία... πχ. Τώρα θα κάτσεις να σκεφτείς τι έκανες."</p>
+            <button class="btn btn-red" onclick="startCorner(120)">Πήγαινε στη Γωνία</button>
         </div>
     </div>
 
@@ -162,21 +210,20 @@
         <div style="font-size:3rem;">🧱</div>
         <h2 style="color:var(--accent-red); margin:10px;">Η ΓΩΝΙΑ</h2>
         <div id="timerDisplay">02:00</div>
-        <p class="corner-msg">Μην κλείσεις την οθόνη. Μην βγεις από τον browser.<br>Αν πατήσεις οπουδήποτε αλλού, ο χρόνος αυξάνεται.</p>
-        
-        <button class="keep-awake-btn" onclick="pokeCorner()">Πάτα εδώ<br>αν αραιά</button>
-        
+        <p style="color:#666; font-size:0.9rem; text-align:center; padding:0 20px;">
+            Μην κλείσεις την οθόνη.<br>Αν βγεις από εδώ, προστίθεται χρόνος (+10s).
+        </p>
+        <button class="keep-awake-btn" onclick="pokeCorner()">Touch me</button>
         <button id="endCornerBtn" class="btn btn-green" style="display:none; width: 200px; margin-top: 30px;" onclick="finishCorner()">Έμαθα το μάθημά μου</button>
     </div>
 
     <div id="apologyModal" class="modal">
         <div class="modal-content">
             <h2>ΤΕΛΙΚΟΣ ΕΛΕΓΧΟΣ</h2>
-            <p>Ζήτα ευγενικά να βγεις από την τιμωρία. Στείλε ένα ταπεινό φωνητικό μήνυμα.</p>
-            <button class="btn" id="apologyRecBtn" onmousedown="startApologyRec()" onmouseup="stopApologyRec()" ontouchstart="startApologyRec()" ontouchend="stopApologyRec()">🎙️ Κράτα πατημένο για συγγνώμη</button>
-            
+            <p>Ζήτα ευγενικά να βγεις. Στείλε ταπεινό φωνητικό.</p>
+            <button class="btn" id="apologyRecBtn" onmousedown="startApologyRec()" onmouseup="stopApologyRec()" ontouchstart="startApologyRec()" ontouchend="stopApologyRec()">🎙️ Συγγνώμη</button>
             <div id="analysisUI" style="display:none; margin-top:20px;">
-                <p style="color:#00ff00; font-family:monospace;">Ανάλυση τόνου φωνής...</p>
+                <p style="color:#00ff00; font-family:monospace; font-size:0.8rem;">Ανάλυση ειλικρίνειας...</p>
                 <div class="progress-container"><div class="progress-bar" id="apologyBar"></div></div>
             </div>
         </div>
@@ -186,18 +233,18 @@
         <div class="modal-content">
             <div style="font-size:3rem;">🤨</div>
             <h2>ΔΕΝ ΠΕΙΣΤΗΚΑΜΕ</h2>
-            <p>Ο τόνος της φωνής σου έδειξε <strong>12% ειρωνεία</strong>.</p>
-            <p>Θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία για σιγουριά.</p>
-            <button class="btn btn-red" onclick="startExtraCorner()">Επιστροφή στη Γωνία</button>
+            <p>Ο τόνος της φωνής σου έδειξε <strong>ειρωνεία</strong>.</p>
+            <p>Θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία.</p>
+            <button class="btn btn-red" onclick="startExtraCorner()">Πίσω στη Γωνία</button>
         </div>
     </div>
 
     <script>
         // ==========================================
-        // ΡΥΘΜΙΣΕΙΣ TELEGRAM (ΒΑΛΕ ΤΑ ΔΙΚΑ ΣΟΥ!)
+        // ⚠️ ΒΑΛΕ ΤΑ ΣΤΟΙΧΕΙΑ ΣΟΥ ΕΔΩ ⚠️
         // ==========================================
-        const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE'; // Π.χ. 712345678:AAH...
-        const CHAT_ID = '7336951445';     // Π.χ. 123456789
+        const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE'; 
+        const CHAT_ID = '7336951445';    
         // ==========================================
 
         const dragger = document.getElementById('draggable-name');
@@ -205,7 +252,7 @@
         let startX, currentX;
         const screenWidth = window.innerWidth;
 
-        // DRAG LOGIC (Απλοποιημένο για συντομία)
+        // --- DRAG LOGIC ---
         dragger.addEventListener('touchstart', (e) => { e.preventDefault(); isDragging = true; startX = e.touches[0].clientX; });
         dragger.addEventListener('touchmove', (e) => { 
             if(!isDragging) return; 
@@ -213,102 +260,171 @@
             let delta = currentX - (screenWidth/2);
             dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`;
         });
-        dragger.addEventListener('touchend', () => {
+        dragger.addEventListener('touchend', endDrag);
+        // Mouse for testing
+        dragger.addEventListener('mousedown', () => isDragging = true);
+        window.addEventListener('mousemove', (e) => { if(isDragging) { currentX = e.clientX; let delta = currentX - (screenWidth/2); dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`; }});
+        window.addEventListener('mouseup', endDrag);
+
+        function endDrag() {
+            if(!isDragging) return;
             isDragging = false;
-            // Όπου και να το πάει, πάει τιμωρία
-            if(Math.abs(currentX - screenWidth/2) > 50) {
+            // Logic: Left (<30%) = Naughty, Right (>70%) = Nice
+            if(currentX < screenWidth * 0.3) {
+                // Naughty Path -> Straight to Punishment Intro
                 document.getElementById('punishIntroModal').style.display = 'flex';
+            } else if(currentX > screenWidth * 0.7) {
+                // Nice Path -> Start Evaluation Quiz
+                startEvalQuiz();
             } else {
                 dragger.style.transform = `translate(-50%, -50%)`;
             }
-        });
-        // Mouse support for testing
-        dragger.addEventListener('mousedown', () => isDragging = true);
-        window.addEventListener('mousemove', (e) => { if(isDragging) { currentX = e.clientX; let delta = currentX - (screenWidth/2); dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`; }});
-        window.addEventListener('mouseup', () => { if(isDragging) { isDragging = false; document.getElementById('punishIntroModal').style.display = 'flex'; }});
-
-
-        // --- PUNISHMENT FLOW ---
-        
-        function startPunishment() {
-            document.getElementById('punishIntroModal').style.display = 'none';
-            startQuiz();
         }
 
-        // --- STAGE 1: QUIZ ---
-        const questions = [
-            { q: "Ποια είναι η πιο σημαντική αρετή;", a: ["Η Υπομονή", "Το Shopping"], correct: 0 },
-            { q: "Ποιος έχει πάντα δίκιο;", a: ["Εγώ", "Εσύ (ο Άντρας)"], correct: 1 },
-            { q: "Τι θα κάνεις φέτος;", a: ["Θα είμαι καλή", "Θα κάνω σκανταλιές"], correct: 0 },
-            { q: "Αξίζεις τα δώρα;", a: ["Ναι, είμαι θεά", "Θα προσπαθήσω να τα αξίζω"], correct: 1 },
-            { q: "Πώς λες συγγνώμη;", a: ["Με σοκολάτα", "Με πράξεις"], correct: 1 }
+        // ==========================================
+        // PATH B: EVALUATION (QUIZ -> ANALYSIS)
+        // ==========================================
+        const evalQuestions = [
+            { q: "Ήσουν φρόνιμη;", a: ["Ναι, αγγελούδι 😇", "Εχμ... ίσως; 😈"] },
+            { q: "Ξόδεψες πολλά;", a: ["Όχι βέβαια", "Τα πάντα 💸"] },
+            { q: "Ποιος είναι ο πιο ωραίος;", a: ["Εσύ ❤️", "Ο Brad Pitt"] },
+            { q: "Έφαγες γλυκά;", a: ["Μπα...", "Όλα! 🍫"] },
+            { q: "Μου πήρες δώρο;", a: ["Το καλύτερο 🎁", "Θα δούμε"] }
         ];
-        let qIdx = 0;
+        let evalIdx = 0;
 
-        function startQuiz() {
-            document.getElementById('stage1Modal').style.display = 'flex';
-            showQuestion();
+        function startEvalQuiz() {
+            document.getElementById('evalQuizModal').style.display = 'flex';
+            showEvalQuestion();
         }
 
-        function showQuestion() {
-            if(qIdx >= questions.length) {
-                document.getElementById('stage1Modal').style.display = 'none';
-                document.getElementById('stage2Modal').style.display = 'flex'; // Go to Writing
+        function showEvalQuestion() {
+            if(evalIdx >= evalQuestions.length) {
+                document.getElementById('evalQuizModal').style.display = 'none';
+                startAnalysis();
                 return;
             }
-            const q = questions[qIdx];
-            document.getElementById('quizQuestion').innerText = q.q;
-            document.getElementById('qNum').innerText = qIdx + 1;
-            const opts = document.getElementById('quizOptions');
+            const q = evalQuestions[evalIdx];
+            document.getElementById('evalQuestion').innerText = q.q;
+            const opts = document.getElementById('evalOptions');
+            opts.innerHTML = '';
+            q.a.forEach((ans) => {
+                const btn = document.createElement('button');
+                btn.className = 'btn quiz-btn';
+                btn.style.color = 'black'; // Better visibility
+                btn.style.background = '#f0f0f0';
+                btn.innerText = ans;
+                btn.onclick = () => { evalIdx++; showEvalQuestion(); };
+                opts.appendChild(btn);
+            });
+        }
+
+        function startAnalysis() {
+            const modal = document.getElementById('analysisModal');
+            const txt = document.getElementById('analysisText');
+            const bar = document.getElementById('analysisBar');
+            modal.style.display = 'flex';
+
+            let progress = 0;
+            const steps = ["Σάρωση...", "Έλεγχος Instagram...", "Υπολογισμός εξόδων...", "Ανάλυση γκρίνιας...", "ΑΠΟΤΕΛΕΣΜΑ: ΕΝΟΧΗ ❌"];
+            
+            const interval = setInterval(() => {
+                progress += 20;
+                bar.style.width = progress + "%";
+                if(progress/20 < steps.length) txt.innerText = steps[progress/20];
+                
+                if(progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        modal.style.display = 'none';
+                        document.getElementById('punishIntroModal').style.display = 'flex';
+                    }, 1500);
+                }
+            }, 1000);
+        }
+
+        // ==========================================
+        // PUNISHMENT SEQUENCE
+        // ==========================================
+        
+        function startPunishmentPath() {
+            document.getElementById('punishIntroModal').style.display = 'none';
+            document.getElementById('infoPreQuiz').style.display = 'flex';
+        }
+
+        function startPunishQuiz() {
+            document.getElementById('infoPreQuiz').style.display = 'none';
+            document.getElementById('punishQuizModal').style.display = 'flex';
+            showPunishQuestion();
+        }
+
+        // PUNISHMENT QUESTIONS
+        const punishQuestions = [
+            { q: "Ποια είναι η σημαντικότερη αρετή;", a: ["Υπομονή", "Shopping"], c:0 },
+            { q: "Ποιος έχει πάντα δίκιο;", a: ["Εγώ", "Εσύ"], c:1 },
+            { q: "Τι θα κάνεις φέτος;", a: ["Θα είμαι καλή", "Σκανταλιές"], c:0 },
+            { q: "Αξίζεις δώρα;", a: ["Ναι!", "Θα προσπαθήσω"], c:1 },
+            { q: "Πώς ζητάμε συγγνώμη;", a: ["Με λόγια", "Με πράξεις"], c:1 }
+        ];
+        let pIdx = 0;
+
+        function showPunishQuestion() {
+            if(pIdx >= punishQuestions.length) {
+                document.getElementById('punishQuizModal').style.display = 'none';
+                document.getElementById('infoPreWrite').style.display = 'flex';
+                return;
+            }
+            const q = punishQuestions[pIdx];
+            document.getElementById('punishQuestion').innerText = q.q;
+            const opts = document.getElementById('punishOptions');
             opts.innerHTML = '';
             q.a.forEach((ans, i) => {
                 const btn = document.createElement('button');
                 btn.className = 'btn quiz-btn';
                 btn.innerText = ans;
                 btn.onclick = () => {
-                    if(i === q.correct) {
-                        qIdx++; showQuestion();
-                    } else {
-                        alert("ΛΑΘΟΣ ΑΠΑΝΤΗΣΗ! Ξανασκέψου το.");
-                    }
+                    if(i === q.c) { pIdx++; showPunishQuestion(); }
+                    else { alert("ΛΑΘΟΣ! Ξαναπροσπάθησε."); }
                 };
                 opts.appendChild(btn);
             });
         }
 
-        // --- STAGE 2: PHOTO UPLOAD ---
+        function startHandwriting() {
+            document.getElementById('infoPreWrite').style.display = 'none';
+            document.getElementById('handwritingModal').style.display = 'flex';
+        }
+
         function uploadPhoto() {
             const input = document.getElementById('photoInput');
             const status = document.getElementById('photoStatus');
+            if(input.files.length === 0) { alert("Βάλε φώτο!"); return; }
             
-            if(input.files.length === 0) { alert("Διάλεξε φωτογραφία!"); return; }
-            
-            status.innerText = "Αποστολή στο Telegram...";
+            status.innerText = "Αποστολή...";
             const formData = new FormData();
             formData.append('chat_id', CHAT_ID);
             formData.append('photo', input.files[0]);
-            formData.append('caption', 'Αποδεικτικό Τιμωρίας: Γραφή');
+            formData.append('caption', 'Αποδεικτικό Γραφής');
 
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-                method: 'POST',
-                body: formData
-            })
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData })
             .then(res => res.json())
             .then(data => {
                 if(data.ok) {
-                    status.innerText = "Εστάλη επιτυχώς! ✅";
+                    status.innerText = "OK ✅";
                     setTimeout(() => {
-                        document.getElementById('stage2Modal').style.display = 'none';
-                        document.getElementById('stage3Modal').style.display = 'flex';
+                        document.getElementById('handwritingModal').style.display = 'none';
+                        document.getElementById('infoPreVoice').style.display = 'flex';
                     }, 1000);
-                } else {
-                    alert("Σφάλμα αποστολής. Έλεγξε το Token/Internet.");
-                }
-            })
-            .catch(err => alert("Error: " + err));
+                } else alert("Error uploading.");
+            });
         }
 
-        // --- STAGE 3: VOICE ---
+        function startVoice() {
+            document.getElementById('infoPreVoice').style.display = 'none';
+            document.getElementById('voiceModal').style.display = 'flex';
+        }
+
+        // RECORDING LOGIC
         let mediaRecorder;
         let audioChunks = [];
 
@@ -317,15 +433,11 @@
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 mediaRecorder = new MediaRecorder(stream);
                 audioChunks = [];
-                mediaRecorder.addEventListener("dataavailable", event => {
-                    audioChunks.push(event.data);
-                });
+                mediaRecorder.addEventListener("dataavailable", e => audioChunks.push(e.data));
                 mediaRecorder.start();
                 document.getElementById('recordBtn').style.background = 'red';
                 document.getElementById('recordBtn').innerText = '🔴 Εγγραφή...';
-            } catch (err) {
-                alert("Χρειάζεται πρόσβαση στο μικρόφωνο!");
-            }
+            } catch(e) { alert("Mic Error"); }
         }
 
         function stopRecording() {
@@ -335,48 +447,45 @@
             document.getElementById('recordBtn').innerText = '⏳ Αποστολή...';
             
             mediaRecorder.addEventListener("stop", () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/ogg' });
-                sendVoiceToTelegram(audioBlob, "Ομολογία");
+                const blob = new Blob(audioChunks, { type: 'audio/ogg' });
+                sendVoice(blob, "Ομολογία", () => {
+                    document.getElementById('voiceModal').style.display = 'none';
+                    document.getElementById('infoPreCorner').style.display = 'flex';
+                });
             });
         }
 
-        function sendVoiceToTelegram(blob, captionText) {
+        function sendVoice(blob, caption, callback) {
             const formData = new FormData();
             formData.append('chat_id', CHAT_ID);
             formData.append('voice', blob);
-            formData.append('caption', captionText);
-
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`, {
-                method: 'POST',
-                body: formData
-            }).then(res => {
-                if(captionText === "Ομολογία") {
-                    document.getElementById('stage3Modal').style.display = 'none';
-                    startCorner(120); // 2 λεπτά (120 δευτερόλεπτα)
-                } else {
-                    // Apology logic
-                    handleApologySent();
-                }
-            });
+            formData.append('caption', caption);
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`, { method: 'POST', body: formData })
+            .then(() => callback());
         }
 
-        // --- STAGE 4: THE CORNER ---
+        // ==========================================
+        // THE CORNER LOGIC
+        // ==========================================
         let cornerTime = 0;
         let cornerInterval;
         let servedExtra = false;
 
         function startCorner(seconds) {
+            document.getElementById('infoPreCorner').style.display = 'none';
+            document.getElementById('extraTimeModal').style.display = 'none'; // Ensure extra modal is closed
             document.getElementById('cornerUI').style.display = 'flex';
-            cornerTime = seconds;
-            updateTimerDisplay();
             
-            // Anti-cheat Listeners
+            cornerTime = seconds;
+            updateTimer();
+
+            // LISTENERS
             document.addEventListener('visibilitychange', handleVisibilityChange);
             document.getElementById('cornerUI').addEventListener('click', handleBadClick);
 
             cornerInterval = setInterval(() => {
                 cornerTime--;
-                updateTimerDisplay();
+                updateTimer();
                 if(cornerTime <= 0) {
                     clearInterval(cornerInterval);
                     document.getElementById('endCornerBtn').style.display = 'block';
@@ -385,105 +494,97 @@
             }, 1000);
         }
 
-        function updateTimerDisplay() {
+        function updateTimer() {
             const m = Math.floor(cornerTime / 60).toString().padStart(2, '0');
             const s = (cornerTime % 60).toString().padStart(2, '0');
             document.getElementById('timerDisplay').innerText = `${m}:${s}`;
         }
 
         function handleVisibilityChange() {
+            // ONLY ADD 10 SECONDS (No Reset)
             if(document.hidden && document.getElementById('cornerUI').style.display === 'flex') {
-                cornerTime = 120; // Reset to full time
-                alert("Πού πας; Απαγορεύεται να βγεις! Ο χρόνος ξεκινάει από την αρχή!");
+                cornerTime += 10;
+                const t = document.getElementById('timerDisplay');
+                t.style.color = 'red';
+                setTimeout(() => t.style.color = 'var(--accent-red)', 1000);
             }
         }
 
         function handleBadClick(e) {
-            // Αν πατήσει στο background και όχι στα κουμπιά
             if(e.target.id === 'cornerUI') {
                 cornerTime += 10;
-                // Visual feedback (shake)
-                const timer = document.getElementById('timerDisplay');
-                timer.style.color = 'red';
-                setTimeout(() => timer.style.color = 'white', 200);
+                const t = document.getElementById('timerDisplay');
+                t.style.color = 'red';
+                setTimeout(() => t.style.color = 'var(--accent-red)', 200);
             }
         }
 
-        function pokeCorner() {
-            // Just a dummy button to keep interaction alive
-            console.log("Still here");
-        }
+        function pokeCorner() { /* Dummy */ }
 
         function finishCorner() {
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             document.getElementById('cornerUI').removeEventListener('click', handleBadClick);
+            clearInterval(cornerInterval);
             document.getElementById('cornerUI').style.display = 'none';
             document.getElementById('apologyModal').style.display = 'flex';
         }
 
-        // --- FINAL APOLOGY & EXTRA TIME ---
-        
-        // Wrapper functions for the apology button
-        async function startApologyRec() { startRecording(); } 
-        // Note: startRecording is generic, but we need to override the stop logic or pass a flag.
-        // Simplified: reusing logic but we need to know context.
-        // Let's create specific handlers for apology to be safe.
-
-        let apologyRecorder;
-        let apologyChunks = [];
+        // ==========================================
+        // APOLOGY LOGIC
+        // ==========================================
+        let apolRecorder;
+        let apolChunks = [];
 
         async function startApologyRec() {
             try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                apologyRecorder = new MediaRecorder(stream);
-                apologyChunks = [];
-                apologyRecorder.addEventListener("dataavailable", e => apologyChunks.push(e.data));
-
-                apologyRecorder.start();
+                const s = await navigator.mediaDevices.getUserMedia({ audio: true });
+                apolRecorder = new MediaRecorder(s);
+                apolChunks = [];
+                apolRecorder.addEventListener("dataavailable", e => apolChunks.push(e.data));
+                apolRecorder.start();
                 document.getElementById('apologyRecBtn').style.background = 'red';
-            } catch(e) { alert("Mic error"); }
+            } catch(e) { alert("Mic Error"); }
         }
 
         function stopApologyRec() {
-            if(!apologyRecorder) return;
-            apologyRecorder.stop();
+            if(!apolRecorder) return;
+            apolRecorder.stop();
             document.getElementById('apologyRecBtn').style.background = 'white';
             
-            apologyRecorder.addEventListener("stop", () => {
-                const blob = new Blob(apologyChunks, {type: 'audio/ogg'});
-                // Fake UI Analysis
+            apolRecorder.addEventListener("stop", () => {
+                const blob = new Blob(apolChunks, { type: 'audio/ogg' });
+                // Fake UI
                 document.getElementById('analysisUI').style.display = 'block';
                 document.getElementById('apologyBar').style.width = '100%';
-                
-                // Upload in background
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                formData.append('voice', blob);
-                formData.append('caption', servedExtra ? "Τελική Συγγνώμη (Approved)" : "Πρώτη Συγγνώμη (Rejected)");
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`, { method: 'POST', body: formData });
 
-                setTimeout(() => {
-                    handleApologyResult();
-                }, 2000);
+                const cap = servedExtra ? "Τελική Συγγνώμη (Approved)" : "Πρώτη Συγγνώμη (Rejected)";
+                
+                sendVoice(blob, cap, () => {
+                    setTimeout(() => {
+                        handleApologyResult();
+                    }, 2000);
+                });
             });
         }
 
         function handleApologyResult() {
             document.getElementById('apologyModal').style.display = 'none';
-            
+            document.getElementById('analysisUI').style.display = 'none';
+            document.getElementById('apologyBar').style.width = '0%';
+
             if(!servedExtra) {
                 // First time -> Fail -> Extra Time
                 document.getElementById('extraTimeModal').style.display = 'flex';
                 servedExtra = true;
             } else {
-                // Second time -> Success -> Return to Map
+                // Second time -> Success -> Map
                 window.location.href = 'index.html?evaluated=true';
             }
         }
 
         function startExtraCorner() {
-            document.getElementById('extraTimeModal').style.display = 'none';
-            document.getElementById('endCornerBtn').style.display = 'none'; // Hide finish button again
+            // Reset button for next time
+            document.getElementById('endCornerBtn').style.display = 'none';
             document.getElementById('timerDisplay').style.color = 'var(--accent-red)';
             startCorner(60); // 1 minute extra
         }
@@ -491,4 +592,3 @@
     </script>
 </body>
 </html>
-          
