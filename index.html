@@ -467,4 +467,34 @@
             
             btn.onclick = () => { 
                 if (tooEarly) return; 
-                if (ready) winLevel(
+                if (ready) winLevel(level); 
+                else { 
+                    tooEarly = true; clearTimeout(timeoutId);
+                    showMsg("🚫 Πολύ νωρίς!", "Περίμενε το Πράσινο!", () => setupGame(level));
+                }
+            };
+            timeoutId = setTimeout(() => { 
+                if(!tooEarly) { light.style.background = '#00ff00'; light.style.boxShadow = '0 0 20px #00ff00'; ready = true; }
+            }, 1500 + Math.random() * 2000);
+        }
+
+        function runWarmUpGame(level) {
+            let clicks = 0; const btn = document.getElementById('warmBtn');
+            btn.onclick = () => { clicks++; btn.innerText = clicks; if (clicks >= 10) { btn.innerText = "🔥"; winLevel(level); }};
+        }
+
+        let msgCallback = null;
+        function showMsg(title, text, callback) {
+            document.getElementById('msgTitle').innerText = title;
+            document.getElementById('msgText').innerText = text;
+            msgCallback = callback;
+            document.getElementById('msgModal').style.display = 'flex';
+        }
+        document.getElementById('msgBtn').onclick = () => {
+            document.getElementById('msgModal').style.display = 'none';
+            if (msgCallback) { msgCallback(); msgCallback = null; }
+        };
+        function closeModal() { document.getElementById('gameModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
