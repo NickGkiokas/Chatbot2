@@ -9,7 +9,6 @@
         :root {
             --flag-green: #009246;
             --flag-red: #ce2b37;
-            --flag-white: #f1f2f1;
             --map-bg: #fdf6e3;
             --path-color: #d4c5a3;
         }
@@ -25,7 +24,7 @@
             flex-direction: column;
             align-items: center;
             color: white;
-            overflow-x: hidden; /* Prevent horizontal scroll */
+            overflow-x: hidden;
         }
 
         h1 {
@@ -33,19 +32,13 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             margin: 10px 0;
         }
-        
-        p.subtitle {
-            font-size: 0.9rem;
-            margin-bottom: 20px;
-            opacity: 0.9;
-        }
 
         /* --- MAP CONTAINER --- */
         #map-stage {
             position: relative;
             width: 95%;
-            max-width: 500px; /* Mobile focused */
-            height: 650px; /* Increased height for breathing room */
+            max-width: 500px;
+            height: 750px; /* Αυξήθηκε για να χωρέσει και η Αθήνα */
             background-color: var(--map-bg);
             background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
             border-radius: 20px;
@@ -76,6 +69,13 @@
             opacity: 1;
             transition: all 1.5s ease;
         }
+        
+        /* Ειδική γραμμή πτήσης */
+        .flight-line {
+            stroke: #333;
+            opacity: 0.3;
+            stroke-width: 3;
+        }
 
         /* City Nodes */
         .city-node {
@@ -86,8 +86,15 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            width: 80px; /* Fixed width for touch targets */
+            width: 100px; /* Μεγάλο πλάτος για εύκολο κλικ */
+            height: 100px; /* Μεγάλο ύψος */
+            justify-content: center;
+            /* Debug border: border: 1px solid red; */ 
+        }
+
+        .marker-wrapper {
+            position: relative;
+            pointer-events: none; /* Το κλικ το παίρνει το .city-node */
         }
 
         .marker-icon {
@@ -100,26 +107,38 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             color: #888;
             transition: all 0.3s;
-            position: relative;
+            margin: 0 auto;
         }
 
-        .city-name {
+        .city-info {
             background: white;
             color: #333;
-            padding: 4px 10px;
+            padding: 5px 10px;
             border-radius: 12px;
-            font-weight: 700;
             margin-top: 8px;
-            font-size: 0.8rem;
-            white-space: nowrap;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             border: 1px solid #eee;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .stage-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #777;
+            font-weight: 700;
+            display: block;
+        }
+        .city-name {
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: block;
         }
 
         /* States */
-        .city-node.locked { filter: grayscale(1); opacity: 0.8; }
+        .city-node.locked { filter: grayscale(1); opacity: 0.7; pointer-events: none; }
         
-        .city-node.active { z-index: 10; }
+        .city-node.active { z-index: 10; cursor: pointer; }
         .city-node.active .marker-icon {
             border-color: var(--flag-green);
             background: white;
@@ -132,15 +151,11 @@
             border-color: white;
             color: white;
         }
-        .city-node.completed .city-name {
-            background: var(--flag-green);
-            color: white;
-        }
+        .city-node.completed .city-name { color: var(--flag-green); }
 
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(0,146,70, 0.7); transform: scale(1); }
             50% { transform: scale(1.1); }
-            70% { box-shadow: 0 0 0 15px rgba(0,146,70, 0); transform: scale(1); }
             100% { box-shadow: 0 0 0 0 rgba(0,146,70, 0); transform: scale(1); }
         }
 
@@ -154,126 +169,104 @@
             filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.3));
         }
 
-        /* --- GAME MODAL (Full Screen) --- */
-        #gameModal {
+        /* MODALS */
+        #gameModal, #msgModal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(20, 20, 40, 0.95);
             z-index: 100;
             justify-content: center;
             align-items: center;
-            flex-direction: column;
             backdrop-filter: blur(5px);
-            animation: fadeIn 0.3s;
         }
+        #gameModal { background: rgba(20, 20, 40, 0.95); }
+        #msgModal { background: rgba(0,0,0,0.6); z-index: 200; }
         
-        .modal-content {
+        .modal-content, .msg-box {
             background: white; color: #333;
             text-align: center; padding: 25px;
             border-radius: 25px; 
             width: 85%; max-width: 350px;
             position: relative;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            border-bottom: 6px solid var(--flag-green);
         }
+        .msg-box { border-bottom: 6px solid var(--flag-green); }
 
-        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 30px; cursor: pointer; color: #ccc; line-height: 20px;}
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 30px; cursor: pointer; color: #ccc;}
         
-        h2 { color: var(--flag-green); margin-top: 0; }
-        
+        /* Game Specifics */
         #gameCanvas { background: #333; display: block; margin: 15px auto; border-radius: 10px; max-width: 100%; }
-        
-        /* --- CUSTOM ALERT / MESSAGE MODAL --- */
-        #msgModal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 200; /* Higher than game modal */
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.2s;
-        }
-
-        .msg-box {
-            background: #fff;
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            width: 80%;
-            max-width: 300px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-            transform: scale(0.8);
-            animation: popIn 0.3s forwards cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        .msg-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; color: var(--flag-red); }
-        .msg-text { font-size: 1rem; color: #555; margin-bottom: 20px; line-height: 1.5; }
-        
         .msg-btn {
-            background: var(--flag-green);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,146,70,0.3);
-            transition: transform 0.2s;
+            background: var(--flag-green); color: white; border: none;
+            padding: 12px 30px; border-radius: 50px; font-weight: bold; font-size: 1rem;
+            margin-top: 15px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,146,70,0.3);
         }
-        .msg-btn:active { transform: scale(0.95); }
-
-        /* Animations */
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes popIn { to { transform: scale(1); } }
-
-        /* Game Elements */
         .choice-btn { display: block; width: 100%; padding: 15px; margin: 10px 0; background: #f4f4f4; border: none; border-radius: 12px; font-weight: bold; font-size: 1rem; color: #444; }
-        .choice-btn:active { background: #ddd; }
-        .game-btn-big { font-size: 3rem; width: 100px; height: 100px; border-radius: 50%; border: none; background: var(--flag-red); color: white; margin-top: 20px; box-shadow: 0 10px 20px rgba(206, 43, 55, 0.3); }
+        .game-btn-big { font-size: 3rem; width: 100px; height: 100px; border-radius: 50%; border: none; background: var(--flag-red); color: white; margin-top: 20px; }
 
     </style>
 </head>
 <body>
 
     <h1>🇮🇹 ITALO TRIP 🇮🇹</h1>
-    <p class="subtitle">Ξεκλείδωσε τις πόλεις για να ανοίξεις τα δώρα!</p>
 
     <div id="map-stage">
-        <svg class="svg-paths" viewBox="0 0 500 650" preserveAspectRatio="none">
+        <svg class="svg-paths" viewBox="0 0 500 750" preserveAspectRatio="none">
+             <line x1="50%" y1="90%" x2="20%" y2="10%" class="connection-line flight-line" id="line-0"></line>
              <line x1="20%" y1="10%" x2="80%" y2="28%" class="connection-line" id="line-1"></line>
              <line x1="80%" y1="28%" x2="20%" y2="48%" class="connection-line" id="line-2"></line>
              <line x1="20%" y1="48%" x2="80%" y2="68%" class="connection-line" id="line-3"></line>
-             <line x1="80%" y1="68%" x2="50%" y2="90%" class="connection-line" id="line-4"></line>
+             <line x1="80%" y1="68%" x2="50%" y2="85%" class="connection-line" id="line-4"></line>
         </svg>
 
-        <div id="travel-car" style="top: 10%; left: 20%;">🚗</div>
+        <div id="travel-car" style="top: 90%; left: 50%;">✈️</div>
 
-        <div id="city-1" class="city-node active" style="top: 10%; left: 20%;" onclick="setupGame(1)">
-            <div class="marker-icon">1</div>
-            <div class="city-name">Μιλάνο</div>
+        <div id="city-0" class="city-node active" style="top: 90%; left: 50%;" onclick="handleCityClick(0)">
+            <div class="marker-wrapper"><div class="marker-icon">0</div></div>
+            <div class="city-info">
+                <span class="stage-label">Αφετηρια</span>
+                <span class="city-name">Αθήνα 🏛️</span>
+            </div>
         </div>
 
-        <div id="city-2" class="city-node locked" style="top: 28%; left: 80%;" onclick="setupGame(2)">
-            <div class="marker-icon">2</div>
-            <div class="city-name">Μαρανέλο</div>
+        <div id="city-1" class="city-node locked" style="top: 10%; left: 20%;" onclick="handleCityClick(1)">
+            <div class="marker-wrapper"><div class="marker-icon">1</div></div>
+            <div class="city-info">
+                <span class="stage-label">Σταση 1</span>
+                <span class="city-name">Μιλάνο 👠</span>
+            </div>
         </div>
 
-        <div id="city-3" class="city-node locked" style="top: 48%; left: 20%;" onclick="setupGame(3)">
-            <div class="marker-icon">3</div>
-            <div class="city-name">Μόντενα</div>
+        <div id="city-2" class="city-node locked" style="top: 28%; left: 80%;" onclick="handleCityClick(2)">
+            <div class="marker-wrapper"><div class="marker-icon">2</div></div>
+            <div class="city-info">
+                <span class="stage-label">Σταση 2</span>
+                <span class="city-name">Μαρανέλο 🏎️</span>
+            </div>
         </div>
 
-        <div id="city-4" class="city-node locked" style="top: 68%; left: 80%;" onclick="setupGame(4)">
-            <div class="marker-icon">4</div>
-            <div class="city-name">Φλωρεντία</div>
+        <div id="city-3" class="city-node locked" style="top: 48%; left: 20%;" onclick="handleCityClick(3)">
+            <div class="marker-wrapper"><div class="marker-icon">3</div></div>
+            <div class="city-info">
+                <span class="stage-label">Σταση 3</span>
+                <span class="city-name">Μόντενα 🧦</span>
+            </div>
         </div>
 
-        <div id="city-5" class="city-node locked" style="top: 90%; left: 50%;" onclick="setupGame(5)">
-            <div class="marker-icon">🏁</div>
-            <div class="city-name">Μπολόνια</div>
+        <div id="city-4" class="city-node locked" style="top: 68%; left: 80%;" onclick="handleCityClick(4)">
+            <div class="marker-wrapper"><div class="marker-icon">4</div></div>
+            <div class="city-info">
+                <span class="stage-label">Σταση 4</span>
+                <span class="city-name">Φλωρεντία 🧙‍♀️</span>
+            </div>
+        </div>
+
+        <div id="city-5" class="city-node locked" style="top: 85%; left: 50%;" onclick="handleCityClick(5)">
+            <div class="marker-wrapper"><div class="marker-icon">🏁</div></div>
+            <div class="city-info">
+                <span class="stage-label">Σταση 5</span>
+                <span class="city-name">Μπολόνια 🍝</span>
+            </div>
         </div>
     </div>
 
@@ -283,57 +276,67 @@
             <h2 id="gTitle">Game Title</h2>
             <p id="gInstr" style="color:#666; font-size:0.9rem;">Instructions</p>
             <div id="gameArea"></div>
-            </div>
+        </div>
     </div>
 
     <div id="msgModal">
         <div class="msg-box">
-            <div id="msgTitle" class="msg-title">Τίτλος</div>
-            <div id="msgText" class="msg-text">Μήνυμα εδώ...</div>
+            <h2 id="msgTitle" style="margin-top:0; color:var(--flag-red);">Τίτλος</h2>
+            <div id="msgText" style="margin-bottom:20px;">Μήνυμα</div>
             <button id="msgBtn" class="msg-btn">OK</button>
         </div>
     </div>
 
     <script>
         const totalLevels = 5;
-        let currentLevel = 1;
+        let currentLevel = 0; // Starts at Athens
         const car = document.getElementById('travel-car');
 
-        // New Coordinates mapping (must match CSS %)
+        // Coordinates mapping
         const cityCoords = {
-            1: { top: '10%', left: '20%' },
-            2: { top: '28%', left: '80%' },
-            3: { top: '48%', left: '20%' },
-            4: { top: '68%', left: '80%' },
-            5: { top: '90%', left: '50%' }
+            0: { top: '90%', left: '50%' }, // Athens
+            1: { top: '10%', left: '20%' }, // Milano
+            2: { top: '28%', left: '80%' }, // Maranello
+            3: { top: '48%', left: '20%' }, // Modena
+            4: { top: '68%', left: '80%' }, // Florence
+            5: { top: '85%', left: '50%' }  // Bologna
         };
 
-        // --- CUSTOM ALERT FUNCTION ---
-        let msgCallback = null;
-        const msgModal = document.getElementById('msgModal');
-        const msgTitle = document.getElementById('msgTitle');
-        const msgText = document.getElementById('msgText');
-        const msgBtn = document.getElementById('msgBtn');
-
-        function showMsg(title, text, callback) {
-            msgTitle.innerText = title;
-            msgText.innerText = text;
-            msgCallback = callback;
-            msgModal.style.display = 'flex';
-        }
-
-        msgBtn.onclick = () => {
-            msgModal.style.display = 'none';
-            if (msgCallback) {
-                msgCallback();
-                msgCallback = null;
+        // --- INIT: CHECK FOR RETURN FROM ATHENS ---
+        window.onload = function() {
+            // Check if URL has ?completed=0
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('completed') === '0') {
+                // User returned from Athens page!
+                markLevelComplete(0);
             }
         };
 
-        // --- GAME LAUNCHER ---
-        function setupGame(level) {
+        // --- CLICK HANDLER ---
+        function handleCityClick(level) {
             if(level !== currentLevel) return;
 
+            // SPECIAL CASE: LEVEL 0 (ATHENS)
+            if (level === 0) {
+                // Here you redirect to your other page.
+                // For testing, I link back to this page with the parameter.
+                // Replace the URL below with your real second page.
+                // IMPORTANT: Your second page must have a "Back" button linking to: index.html?completed=0
+                
+                if(confirm("Πάμε στην ειδική σελίδα της Αθήνας;")) {
+                    // ΠΡΟΣΩΡΙΝΑ: Επαναφόρτωση της ίδιας σελίδας σαν να γύρισε
+                    // Στην πραγματικότητα βάλε: window.location.href = 'athens.html';
+                    window.location.href = '?completed=0'; 
+                }
+                return;
+            }
+
+            // NORMAL LEVELS
+            setupGame(level);
+        }
+
+        // --- GAME SETUP ---
+        function setupGame(level) {
             const modal = document.getElementById('gameModal');
             const title = document.getElementById('gTitle');
             const instr = document.getElementById('gInstr');
@@ -342,10 +345,9 @@
             modal.style.display = 'flex';
             area.innerHTML = '';
 
-            // --- LOAD GAMES ---
             if (level === 1) {
                 title.innerText = "Μιλάνο: Traffic!";
-                instr.innerText = "Οδήγησε (κλικ αριστερά/δεξιά) και απόφυγε τα εμπόδια!";
+                instr.innerText = "Κινήσου (κλικ) για να αποφύγεις τα εμπόδια. Εμφανίζονται παντού!";
                 area.innerHTML = '<canvas id="gameCanvas" width="280" height="350"></canvas>';
                 runCarGame(level);
             } 
@@ -384,51 +386,63 @@
             }
         }
 
-        // --- WIN LOGIC ---
+        // --- WIN & ANIMATION LOGIC ---
+        
         function winLevel(level) {
             closeModal();
-            
-            showMsg("🎉 BRAVISSIMO! 🎉", "Κέρδισες! Άνοιξε το δώρο Νο." + level, () => {
-                // Update City Icon
-                const currentDiv = document.getElementById('city-' + level);
-                currentDiv.classList.remove('active');
-                currentDiv.classList.add('completed');
-                currentDiv.querySelector('.marker-icon').innerHTML = '🎁'; // Gift icon when done
-
-                if (level < totalLevels) {
-                    const nextLevel = level + 1;
-                    const nextCoords = cityCoords[nextLevel];
-
-                    // Move Car
-                    car.style.top = nextCoords.top;
-                    car.style.left = nextCoords.left;
-                    
-                    // Color Line
-                    document.getElementById('line-' + level).classList.add('traveled');
-
-                    // Activate next city after delay
-                    setTimeout(() => {
-                        const nextDiv = document.getElementById('city-' + nextLevel);
-                        nextDiv.classList.remove('locked');
-                        nextDiv.classList.add('active');
-                        currentLevel = nextLevel;
-                    }, 2000);
-                } else {
-                    // FINALE
-                    car.style.transform = "translate(-50%, -50%) scale(1.5) rotate(360deg)";
-                    setTimeout(() => {
-                        showMsg("❤️ FELICITÀ! ❤️", "Ολοκλήρωσες το Μεγάλο Ιταλικό Ταξίδι! Σ' αγαπώ!", null);
-                    }, 1500);
-                }
+            showMsg("🎉 BRAVISSIMO! 🎉", "Κέρδισες! Άνοιξε το δώρο της Στάσης " + level, () => {
+                markLevelComplete(level);
             });
         }
 
-        // --- MINI GAMES (Updated with custom alerts) ---
-        
+        function markLevelComplete(level) {
+            // Update Icon state
+            const currentDiv = document.getElementById('city-' + level);
+            currentDiv.classList.remove('active');
+            currentDiv.classList.add('completed');
+            currentDiv.querySelector('.marker-icon').innerHTML = '🎁';
+
+            if (level < totalLevels) {
+                const nextLevel = level + 1;
+                const nextCoords = cityCoords[nextLevel];
+
+                // Change vehicle icon: Plane for level 0, Car for rest
+                if (level === 0) {
+                    car.innerText = "🚗"; // Switch to car after landing in Milan
+                }
+
+                // Move Vehicle
+                car.style.top = nextCoords.top;
+                car.style.left = nextCoords.left;
+                
+                // Color Line
+                const line = document.getElementById('line-' + level);
+                if(line) line.classList.add('traveled');
+
+                // Unlock next city
+                setTimeout(() => {
+                    const nextDiv = document.getElementById('city-' + nextLevel);
+                    nextDiv.classList.remove('locked');
+                    nextDiv.classList.add('active');
+                    currentLevel = nextLevel;
+                }, 2000);
+            } else {
+                // FINALE
+                car.style.transform = "translate(-50%, -50%) scale(1.5) rotate(360deg)";
+                setTimeout(() => {
+                    showMsg("❤️ FELICITÀ! ❤️", "Το ταξίδι ολοκληρώθηκε! Σ' αγαπώ!", null);
+                }, 1500);
+            }
+        }
+
+        // --- FIXED CAR GAME LOGIC ---
         function runCarGame(level) {
             const canvas = document.getElementById('gameCanvas');
             const ctx = canvas.getContext('2d');
-            let carX = 115; let obstacles = []; let running = true; let score = 0;
+            let carX = 115; // Center
+            let obstacles = []; 
+            let running = true; 
+            let score = 0;
 
             function draw() {
                 if (!running) return;
@@ -436,81 +450,60 @@
                 
                 // Road
                 ctx.fillStyle = "#444"; ctx.fillRect(0,0,280,350);
-                ctx.fillStyle = "#fff"; ctx.fillRect(135, 0, 10, 350); // Line
+                // Dashed Line
+                ctx.strokeStyle = "#fff"; ctx.setLineDash([20, 20]); 
+                ctx.beginPath(); ctx.moveTo(140, 0); ctx.lineTo(140, 350); ctx.stroke();
 
                 // Car
                 ctx.font = "35px Arial"; ctx.fillText("🚗", carX, 320);
 
-                // Obstacles
-                if (Math.random() < 0.04) obstacles.push({x: Math.random() < 0.5 ? 40 : 180, y: -40});
+                // Obstacles - Spawn logic fix
+                if (Math.random() < 0.05) {
+                    // Random X between 10 and 230 so it covers everywhere
+                    const randomX = Math.random() * 220 + 10;
+                    obstacles.push({x: randomX, y: -40});
+                }
                 
                 obstacles.forEach((obs) => { 
-                    obs.y += 5; 
+                    obs.y += 5; // Speed
                     ctx.fillText("🚧", obs.x, obs.y);
-                    // Collision
-                    if (obs.y > 280 && obs.y < 330 && Math.abs(obs.x - carX) < 50) { 
-                        running = false; 
-                        showMsg("💥 Crash!", "Πρόσεχε τα εμπόδια! Πάμε πάλι.", () => setupGame(level));
+                    
+                    // Collision Logic (Area overlap)
+                    // Car is approx 40px wide. Obstacle is approx 30px.
+                    // We check if rectangles overlap.
+                    if (obs.y > 280 && obs.y < 330) {
+                        if (Math.abs(obs.x - carX) < 35) {
+                            running = false; 
+                            showMsg("💥 Crash!", "Πρέπει να κινείσαι συνέχεια! Πάμε πάλι.", () => setupGame(level));
+                        }
                     }
                 });
 
                 score++;
                 ctx.fillStyle = "#fff"; ctx.font = "20px Arial"; ctx.fillText("Score: " + score, 10, 30);
 
-                if (score > 300) { running = false; winLevel(level); } 
+                if (score > 400) { running = false; winLevel(level); } 
                 else { requestAnimationFrame(draw); }
             }
 
             canvas.onclick = (e) => { 
-                // Toggle position left/right
                 const rect = canvas.getBoundingClientRect();
                 const clickX = e.clientX - rect.left;
-                if(clickX < 140) carX = 40; else carX = 180;
+                // Move towards click
+                if(clickX < 140) carX = 50; else carX = 190;
             };
             draw();
         }
 
+        // --- OTHER GAMES ---
         function runReflexGame(level) {
             const light = document.getElementById('light'); 
             const btn = document.getElementById('reflexBtn');
-            let ready = false; 
-            let tooEarly = false;
-            let timeoutId;
+            let ready = false; let tooEarly = false; let timeoutId;
 
             btn.onclick = () => { 
                 if (tooEarly) return; 
-                if (ready) {
-                    winLevel(level); 
-                } else { 
-                    tooEarly = true;
-                    clearTimeout(timeoutId);
-                    showMsg("🚫 Πολύ νωρίς!", "Πρέπει να περιμένεις το Πράσινο!", () => setupGame(level));
-                }
-            };
-
-            timeoutId = setTimeout(() => { 
-                if(!tooEarly) { 
-                    light.style.background = '#00ff00'; 
-                    light.style.boxShadow = '0 0 20px #00ff00';
-                    ready = true; 
-                }
-            }, 1500 + Math.random() * 2000);
-        }
-
-        function runWarmUpGame(level) {
-            let clicks = 0; const btn = document.getElementById('warmBtn');
-            btn.onclick = () => { 
-                clicks++; 
-                btn.innerText = clicks; 
-                if (clicks >= 10) { 
-                    btn.innerText = "🔥"; 
-                    winLevel(level); 
-                }
-            };
-        }
-
-        function closeModal() { document.getElementById('gameModal').style.display = 'none'; }
-
-    </script>
-</body>
-</html>
+                if (ready) winLevel(level); 
+                else { 
+                    tooEarly = true; clearTimeout(timeoutId);
+        
