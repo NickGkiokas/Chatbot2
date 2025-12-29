@@ -40,7 +40,7 @@
             position: relative;
             width: 100%;
             max-width: 450px;
-            height: 75vh; /* Προσαρμόζεται στο ύψος της οθόνης */
+            height: 75vh;
             min-height: 550px;
             max-height: 800px;
             background-color: var(--map-bg);
@@ -61,7 +61,7 @@
         }
         .connection-line {
             stroke: var(--path-color);
-            stroke-width: 4; /* Λίγο πιο λεπτή για κινητά */
+            stroke-width: 4;
             stroke-dasharray: 10, 10;
             fill: none;
             opacity: 0.6;
@@ -74,7 +74,7 @@
             transition: all 1.5s ease;
         }
 
-        /* City Nodes - Optimized for Mobile */
+        /* City Nodes */
         .city-node {
             position: absolute;
             z-index: 3;
@@ -83,12 +83,12 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            width: 80px; height: 80px; /* Μικρότερο touch area */
+            width: 80px; height: 80px;
             justify-content: center;
         }
 
         .marker-icon {
-            width: 45px; height: 45px; /* Μικρότεροι κύκλοι */
+            width: 45px; height: 45px;
             background: #e0e0e0;
             border-radius: 50%;
             border: 3px solid #bbb;
@@ -127,15 +127,24 @@
             display: none; 
         }
 
-        /* MODALS - Mobile Friendly */
-        #gameModal, #msgModal, #startModal {
+        /* MODALS */
+        #gameModal, #msgModal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px);
             padding: 20px;
         }
+        
+        /* START MODAL - Visible by default (Flex) */
+        #startModal {
+            display: flex; /* Changed from none to flex */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3000; justify-content: center; align-items: center; 
+            background: rgba(0,0,0,0.95); /* Darker background */
+            padding: 20px;
+        }
+
         #gameModal { background: rgba(20, 20, 40, 0.95); }
         #msgModal { background: rgba(0,0,0,0.6); z-index: 2000; }
-        #startModal { background: rgba(0,0,0,0.9); z-index: 3000; }
 
         .modal-content, .msg-box {
             background: white; color: #333; text-align: center; padding: 20px;
@@ -150,10 +159,13 @@
         
         .action-btn {
             background: var(--flag-red); color: white; border: none;
-            padding: 15px; border-radius: 50px; font-weight: bold; font-size: 1rem;
+            padding: 15px; border-radius: 50px; font-weight: bold; font-size: 1.1rem;
             margin-top: 15px; cursor: pointer; width: 100%;
             box-shadow: 0 4px 10px rgba(206,43,55,0.3);
+            animation: bounceBtn 2s infinite;
         }
+        @keyframes bounceBtn { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
         .msg-btn { 
             background: var(--flag-green); color: white; border: none; 
             padding: 12px 30px; border-radius: 50px; font-weight: bold; 
@@ -167,7 +179,6 @@
         .choice-btn:active { background: #ddd; }
         .game-btn-big { font-size: 3rem; width: 90px; height: 90px; border-radius: 50%; border: none; background: var(--flag-red); color: white; margin-top: 20px; }
 
-        /* Media Query for very small screens */
         @media (max-height: 650px) {
             #map-stage { height: 70vh; min-height: 450px; }
             .city-node { transform: translate(-50%, -50%) scale(0.9); }
@@ -254,20 +265,25 @@
         };
 
         // --- INIT: CHECK STATUS ---
-        window.onload = function() {
+        // Χρησιμοποιούμε DOMContentLoaded για να τρέξει ο κώδικας αμέσως
+        document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const isEvaluated = urlParams.get('evaluated');
+            const startModal = document.getElementById('startModal');
+            const milan = document.getElementById('city-1');
 
             if (isEvaluated === 'true') {
-                document.getElementById('startModal').style.display = 'none';
-                vehicle.style.display = 'block'; // Show car
-                const milan = document.getElementById('city-1');
+                // Αν έχεις αξιολογηθεί, ΚΡΥΨΕ το modal
+                startModal.style.display = 'none';
+                
+                vehicle.style.display = 'block'; // Εμφάνισε αμάξι
                 milan.classList.remove('locked');
                 milan.classList.add('active');
             } else {
-                document.getElementById('startModal').style.display = 'flex';
+                // Αν ΟΧΙ, βεβαιώσου ότι το modal φαίνεται
+                startModal.style.display = 'flex';
             }
-        };
+        });
 
         function goToEvaluation() {
             window.location.href = 'timoria.html';
@@ -291,7 +307,6 @@
             if (level === 1) {
                 title.innerText = "Μιλάνο: Traffic!";
                 instr.innerText = "Πάτα Αριστερά, Κέντρο ή Δεξιά για να αποφύγεις τα εμπόδια.";
-                // Μικρότερο canvas για κινητά
                 area.innerHTML = '<canvas id="gameCanvas" width="280" height="320"></canvas>';
                 runCarGame(level);
             } 
@@ -359,7 +374,6 @@
                     nextDiv.classList.remove('locked');
                     nextDiv.classList.add('active');
                     currentLevel = nextLevel;
-                    // Auto scroll to next city slightly
                     nextDiv.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"});
                 }, 2000);
 
@@ -377,7 +391,6 @@
             const ctx = canvas.getContext('2d');
             
             // Lane positions (Canvas width 280)
-            // Left: 50, Center: 140, Right: 230
             const lanes = [50, 140, 230];
             let currentLaneIndex = 1; // Start in Center
             let carX = lanes[1]; 
@@ -400,11 +413,10 @@
 
                 // Car
                 ctx.font = "35px Arial"; 
-                // Smooth transition for car
-                ctx.fillText("🚗", carX - 17, 290); // Adjust X to center emoji
+                ctx.fillText("🚗", carX - 17, 290); 
 
                 // Spawn Obstacles (Reduced Rate)
-                if (Math.random() < 0.02) { // Less traffic
+                if (Math.random() < 0.02) { 
                     const randomLane = Math.floor(Math.random() * 3);
                     obstacles.push({x: lanes[randomLane], y: -40});
                 }
@@ -415,7 +427,6 @@
                     
                     // Collision
                     if (obs.y > 250 && obs.y < 300) {
-                        // Check if car is in the same lane (approximate X)
                         if (Math.abs(obs.x - carX) < 10) {
                             running = false; 
                             showMsg("💥 Crash!", "Πρόσεχε! Πάμε πάλι;", () => setupGame(level));
@@ -434,20 +445,15 @@
 
             function handleInput(e) {
                 if(!running) return;
-                e.preventDefault(); // Prevent scrolling on touch
+                e.preventDefault(); 
                 
                 const rect = canvas.getBoundingClientRect();
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clickX = clientX - rect.left;
                 
-                // Determine lane based on click position
-                if (clickX < 93) {
-                    currentLaneIndex = 0; // Left
-                } else if (clickX < 186) {
-                    currentLaneIndex = 1; // Center
-                } else {
-                    currentLaneIndex = 2; // Right
-                }
+                if (clickX < 93) currentLaneIndex = 0; 
+                else if (clickX < 186) currentLaneIndex = 1; 
+                else currentLaneIndex = 2; 
                 carX = lanes[currentLaneIndex];
             }
 
@@ -461,4 +467,4 @@
             
             btn.onclick = () => { 
                 if (tooEarly) return; 
-                if (ready
+                if (ready) winLevel(
