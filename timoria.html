@@ -68,15 +68,16 @@
         .btn {
             background: white; color: black; border: none; padding: 15px 30px;
             font-size: 1rem; font-weight: bold; border-radius: 50px; cursor: pointer;
-            width: 100%; margin-top: 10px; transition: transform 0.05s;
+            width: 100%; margin-top: 10px; transition: transform 0.1s;
             box-shadow: 0 5px 15px rgba(255,255,255,0.1);
         }
         .btn:active { transform: scale(0.95); }
+        .btn:disabled { background: #555; color: #888; cursor: wait; transform: none; }
         .btn-red { background: var(--accent-red); color: white; }
         .btn-green { background: var(--flag-green); color: white; }
         .quiz-btn { background: #333; color: white; border: 1px solid #555; text-align: left; }
         
-        /* MASH BUTTON STYLES */
+        /* MASH BUTTON */
         .mash-btn {
             width: 150px; height: 150px; border-radius: 50%;
             background: radial-gradient(circle, #ff5555, #990000);
@@ -84,7 +85,7 @@
             box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
             margin: 20px auto; display: flex; justify-content: center; align-items: center;
             cursor: pointer; user-select: none; -webkit-touch-callout: none;
-            touch-action: manipulation; /* Prevents double-tap zoom */
+            touch-action: manipulation;
         }
         .mash-btn:active { transform: scale(0.9); background: radial-gradient(circle, #990000, #ff5555); }
 
@@ -107,9 +108,9 @@
         .info-text { font-style: italic; color: #ddd; margin-bottom: 20px; }
         
         textarea {
-            width: 100%; height: 100px; background: #333; color: white; 
+            width: 100%; height: 120px; background: #333; color: white; 
             border: 1px solid #555; border-radius: 10px; padding: 10px; 
-            font-family: inherit; resize: none; box-sizing: border-box;
+            font-family: inherit; resize: none; box-sizing: border-box; font-size: 1rem;
         }
 
     </style>
@@ -201,8 +202,8 @@
             </div>
             <p>Ανέβασε φωτογραφία:</p>
             <input type="file" id="photoInput" accept="image/*" style="color:white;">
-            <button class="btn btn-red" onclick="uploadPhoto()">Αποστολή</button>
-            <div id="photoStatus" style="margin-top:10px;"></div>
+            <button class="btn btn-red" id="btnUploadWrite" onclick="compressAndUpload('photoInput', '📸 Αποδεικτικό: Γραφή', finishHandwriting)">Αποστολή</button>
+            <div id="photoStatus" style="margin-top:10px; color:#aaa; font-size:0.8rem;"></div>
         </div>
     </div>
 
@@ -219,8 +220,8 @@
             <h2>ΕΝΔΙΑΜΕΣΟ: Η ΠΟΖΑ</h2>
             <p>Βγάλε μια selfie τώρα που να <strong>τραβάς τα αυτιά σου</strong>.</p>
             <input type="file" id="poseInput" accept="image/*" style="color:white; margin: 10px 0;">
-            <button class="btn btn-red" onclick="uploadPose()">Αποστολή Πόζας</button>
-            <div id="poseStatus" style="margin-top:10px;"></div>
+            <button class="btn btn-red" id="btnUploadPose" onclick="compressAndUpload('poseInput', '📸 Αποδεικτικό: Πόζα Ντροπής', finishPose)">Αποστολή Πόζας</button>
+            <div id="poseStatus" style="margin-top:10px; color:#aaa; font-size:0.8rem;"></div>
         </div>
     </div>
 
@@ -250,22 +251,20 @@
         </div>
     </div>
 
-    <div id="infoPreVoice" class="modal">
+    <div id="infoPreReflection" class="modal">
         <div class="modal-content">
             <h3>Βήμα 4</h3>
-            <p class="info-text">"Τώρα θέλω να το ακούσω. Καθάρισε τη φωνή σου και πες την αλήθεια."</p>
-            <button class="btn" onclick="startVoice()">Συνέχεια</button>
+            <p class="info-text">"Τώρα που κουράστηκες, ήρθε η ώρα για σκέψη. Θέλω να μου γράψεις τι έμαθες από όλο αυτό."</p>
+            <button class="btn" onclick="startReflection()">Συνέχεια</button>
         </div>
     </div>
 
-    <div id="voiceModal" class="modal">
+    <div id="reflectionModal" class="modal">
         <div class="modal-content">
-            <h2>ΣΤΑΔΙΟ 4: ΟΜΟΛΟΓΙΑ</h2>
-            <p>Διάβασε και στείλε φωνητικό:</p>
-            <div style="background:#333; padding:10px; border-radius:10px; margin:10px 0; font-style:italic; font-size: 0.9rem;">
-                "Αναγνωρίζω ότι ήμουν άτακτη. Υπόσχομαι να μην ξοδεύω αλόγιστα, να μην γκρινιάζω χωρίς λόγο και να εκτιμώ τα δώρα μου."
-            </div>
-            <button class="btn" id="recordBtn" onmousedown="startRecording()" onmouseup="stopRecording()" ontouchstart="startRecording()" ontouchend="stopRecording()">🎙️ Κράτα πατημένο</button>
+            <h2>ΣΤΑΔΙΟ 4: ΣΤΟΧΑΣΜΟΣ</h2>
+            <p>Γράψε αναλυτικά τι έμαθες και υποσχέσου ότι δεν θα το ξανακάνεις.</p>
+            <textarea id="reflectionInput" placeholder="Έμαθα ότι..."></textarea>
+            <button class="btn btn-red" onclick="sendReflection()">Αποστολή Στοχασμού</button>
         </div>
     </div>
 
@@ -312,7 +311,7 @@
 
     <script>
         // ==========================================
-        // ⚠️ ΣΤΟΙΧΕΙΑ BOT (ΜΗΝ ΤΑ ΣΒΗΣΕΙΣ) ⚠️
+        // ⚠️ ΣΤΟΙΧΕΙΑ BOT ⚠️
         // ==========================================
         const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE'; 
         const CHAT_ID = '7336951445';    
@@ -332,7 +331,7 @@
             dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`;
         });
         dragger.addEventListener('touchend', endDrag);
-        // Mouse for testing
+        // Mouse
         dragger.addEventListener('mousedown', () => isDragging = true);
         window.addEventListener('mousemove', (e) => { if(isDragging) { currentX = e.clientX; let delta = currentX - (screenWidth/2); dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`; }});
         window.addEventListener('mouseup', endDrag);
@@ -349,9 +348,7 @@
             }
         }
 
-        // ==========================================
-        // PATH B: EVALUATION
-        // ==========================================
+        // --- EVALUATION ---
         const evalQuestions = [
             { q: "Ήσουν φρόνιμη;", a: ["Ναι, αγγελούδι 😇", "Εχμ... ίσως; 😈"] },
             { q: "Ξόδεψες πολλά;", a: ["Όχι βέβαια", "Τα πάντα 💸"] },
@@ -391,15 +388,12 @@
             const txt = document.getElementById('analysisText');
             const bar = document.getElementById('analysisBar');
             modal.style.display = 'flex';
-
             let progress = 0;
             const steps = ["Σάρωση...", "Έλεγχος Instagram...", "Υπολογισμός εξόδων...", "Ανάλυση γκρίνιας...", "ΑΠΟΤΕΛΕΣΜΑ: ΕΝΟΧΗ ❌"];
             
             const interval = setInterval(() => {
-                progress += 20;
-                bar.style.width = progress + "%";
+                progress += 20; bar.style.width = progress + "%";
                 if(progress/20 < steps.length) txt.innerText = steps[progress/20];
-                
                 if(progress >= 100) {
                     clearInterval(interval);
                     setTimeout(() => {
@@ -410,10 +404,7 @@
             }, 1000);
         }
 
-        // ==========================================
-        // PUNISHMENT SEQUENCE
-        // ==========================================
-        
+        // --- PUNISHMENT FLOW ---
         function startReasonModal() {
             document.getElementById('punishIntroModal').style.display = 'none';
             document.getElementById('reasonModal').style.display = 'flex';
@@ -425,7 +416,6 @@
             if(text.trim().length < 5) { alert("Γράψε ολόκληρη πρόταση!"); return; }
 
             const btn = document.querySelector('#reasonModal .btn');
-            const originalText = btn.innerText;
             btn.innerText = "Αποστολή..."; btn.disabled = true;
 
             const msg = `📝 *Ομολογία Αιτίας:*\n"${text}"`;
@@ -440,10 +430,10 @@
                     document.getElementById('reasonModal').style.display = 'none';
                     document.getElementById('infoPreQuiz').style.display = 'flex';
                 } else {
-                    alert("Telegram Error: " + data.description);
-                    btn.innerText = originalText; btn.disabled = false;
+                    alert("Error: " + data.description);
+                    btn.innerText = "Δοκίμασε ξανά"; btn.disabled = false;
                 }
-            }).catch(e => { alert("Error"); btn.disabled = false; });
+            }).catch(e => { alert("Network Error"); btn.disabled = false; });
         }
 
         function startPunishQuiz() {
@@ -488,62 +478,84 @@
             document.getElementById('handwritingModal').style.display = 'flex';
         }
 
-        function uploadPhoto() {
-            const input = document.getElementById('photoInput');
-            const status = document.getElementById('photoStatus');
-            if(input.files.length === 0) { alert("Βάλε φώτο!"); return; }
-            status.innerText = "Αποστολή...";
-            
-            const formData = new FormData();
-            formData.append('chat_id', CHAT_ID);
-            formData.append('photo', input.files[0]);
-            formData.append('caption', '📸 Αποδεικτικό: Γραφή');
-
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData })
-            .then(res => res.json())
-            .then(data => {
-                if(data.ok) {
-                    status.innerText = "OK ✅";
-                    setTimeout(() => {
-                        document.getElementById('handwritingModal').style.display = 'none';
-                        document.getElementById('infoPrePose').style.display = 'flex';
-                    }, 1000);
-                } else alert("Error uploading.");
-            });
-        }
-
         function startPose() {
             document.getElementById('infoPrePose').style.display = 'none';
             document.getElementById('poseModal').style.display = 'flex';
         }
 
-        function uploadPose() {
-            const input = document.getElementById('poseInput');
-            const status = document.getElementById('poseStatus');
-            if(input.files.length === 0) { alert("Βγάλε φώτο!"); return; }
-            status.innerText = "Αποστολή...";
-            
-            const formData = new FormData();
-            formData.append('chat_id', CHAT_ID);
-            formData.append('photo', input.files[0]);
-            formData.append('caption', '📸 Αποδεικτικό: Πόζα Ντροπής');
-
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData })
-            .then(res => res.json())
-            .then(data => {
-                if(data.ok) {
-                    status.innerText = "Ελήφθη... 😂";
-                    setTimeout(() => {
-                        document.getElementById('poseModal').style.display = 'none';
-                        document.getElementById('infoPreMash').style.display = 'flex'; // Go to Mash Info
-                    }, 1500);
-                } else alert("Error");
-            });
+        function finishHandwriting() {
+            document.getElementById('handwritingModal').style.display = 'none';
+            document.getElementById('infoPrePose').style.display = 'flex';
         }
 
-        // ==========================================
-        // MASHING LOGIC (NEW)
-        // ==========================================
+        function finishPose() {
+            document.getElementById('poseModal').style.display = 'none';
+            document.getElementById('infoPreMash').style.display = 'flex';
+        }
+
+        // --- IMAGE COMPRESSOR & UPLOADER ---
+        function compressAndUpload(inputId, caption, successCallback) {
+            const input = document.getElementById(inputId);
+            const statusId = inputId === 'photoInput' ? 'photoStatus' : 'poseStatus';
+            const status = document.getElementById(statusId);
+            const btn = document.querySelector(`#${inputId}`).nextElementSibling;
+
+            if(input.files.length === 0) { alert("Βγάλε φώτο!"); return; }
+
+            const originalBtnText = btn.innerText;
+            btn.innerText = "Συμπίεση..."; btn.disabled = true;
+            status.innerText = "Επεξεργασία εικόνας...";
+
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 800; 
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    canvas.toBlob((blob) => {
+                        btn.innerText = "Αποστολή...";
+                        status.innerText = "Ανέβασμα...";
+                        
+                        const formData = new FormData();
+                        formData.append('chat_id', CHAT_ID);
+                        formData.append('photo', blob, 'image.jpg');
+                        formData.append('caption', caption);
+
+                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.ok) {
+                                status.innerText = "Εστάλη! ✅";
+                                setTimeout(successCallback, 1000);
+                            } else {
+                                alert("Telegram Error: " + data.description);
+                                btn.innerText = originalBtnText; btn.disabled = false;
+                            }
+                        })
+                        .catch(err => {
+                            alert("Upload Error");
+                            btn.innerText = originalBtnText; btn.disabled = false;
+                        });
+                    }, 'image/jpeg', 0.7);
+                }
+            }
+        }
+
+        // --- MASHING ---
         let mashScore = 0;
         const MASH_TARGET = 500;
         let lastMashTime = 0;
@@ -552,37 +564,32 @@
         function startMashing() {
             document.getElementById('infoPreMash').style.display = 'none';
             document.getElementById('mashModal').style.display = 'flex';
-            
-            mashScore = 0;
-            updateMashUI();
-            
-            // Start Decay Timer
+            mashScore = 0; updateMashUI();
             if(mashInterval) clearInterval(mashInterval);
-            mashInterval = setInterval(decayMash, 100); // Check every 100ms
+            mashInterval = setInterval(decayMash, 100);
         }
 
         function handleMash() {
-            // Prevent default zooming
             if (event.type === 'touchstart') event.preventDefault();
-            
             lastMashTime = Date.now();
             mashScore++;
             if(mashScore >= MASH_TARGET) {
                 mashScore = MASH_TARGET;
-                finishMashing();
+                clearInterval(mashInterval);
+                setTimeout(() => {
+                    document.getElementById('mashModal').style.display = 'none';
+                    document.getElementById('infoPreReflection').style.display = 'flex'; // Go to Reflection Info
+                }, 500);
             }
             updateMashUI();
-            
-            // Animation effect
             const btn = document.getElementById('mashBtn');
             btn.style.transform = "scale(0.95)";
             setTimeout(() => btn.style.transform = "scale(1)", 50);
         }
 
         function decayMash() {
-            // If idle for more than 500ms (0.5s), start dropping
             if (Date.now() - lastMashTime > 500 && mashScore > 0) {
-                mashScore = Math.max(0, mashScore - 10); // Drop 10 points per tick
+                mashScore = Math.max(0, mashScore - 10);
                 updateMashUI();
             }
         }
@@ -591,73 +598,44 @@
             document.getElementById('mashCounter').innerText = `${mashScore} / ${MASH_TARGET}`;
             const pct = (mashScore / MASH_TARGET) * 100;
             document.getElementById('mashBar').style.width = `${pct}%`;
-            
-            // Visual feedback on bar color
             const bar = document.getElementById('mashBar');
             if(mashScore > 400) bar.style.background = "#00ff00";
             else if(mashScore > 200) bar.style.background = "#ffff00";
             else bar.style.background = "linear-gradient(90deg, #ff9900, #ff0000)";
         }
 
-        function finishMashing() {
-            clearInterval(mashInterval);
-            // Send telegram notification just for fun? Optional.
-            setTimeout(() => {
-                document.getElementById('mashModal').style.display = 'none';
-                document.getElementById('infoPreVoice').style.display = 'flex';
-            }, 500);
+        // --- REFLECTION (NEW STAGE 4) ---
+        function startReflection() {
+            document.getElementById('infoPreReflection').style.display = 'none';
+            document.getElementById('reflectionModal').style.display = 'flex';
         }
 
-        // ==========================================
-        // VOICE & CORNER
-        // ==========================================
+        function sendReflection() {
+            const txt = document.getElementById('reflectionInput').value;
+            if(txt.length < 10) { alert("Γράψε κάτι παραπάνω!"); return; }
 
-        function startVoice() {
-            document.getElementById('infoPreVoice').style.display = 'none';
-            document.getElementById('voiceModal').style.display = 'flex';
-        }
+            const btn = document.querySelector('#reflectionModal .btn');
+            const originalText = btn.innerText;
+            btn.innerText = "Αποστολή..."; btn.disabled = true;
 
-        let mediaRecorder;
-        let audioChunks = [];
-
-        async function startRecording() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                mediaRecorder = new MediaRecorder(stream);
-                audioChunks = [];
-                mediaRecorder.addEventListener("dataavailable", e => audioChunks.push(e.data));
-                mediaRecorder.start();
-                document.getElementById('recordBtn').style.background = 'red';
-                document.getElementById('recordBtn').innerText = '🔴 Εγγραφή...';
-            } catch(e) { alert("Mic Error"); }
-        }
-
-        function stopRecording() {
-            if(!mediaRecorder) return;
-            mediaRecorder.stop();
-            document.getElementById('recordBtn').style.background = 'white';
-            document.getElementById('recordBtn').innerText = '⏳ Αποστολή...';
+            const msg = `🤔 *Στοχασμός / Τι έμαθε:*\n"${txt}"`;
             
-            mediaRecorder.addEventListener("stop", () => {
-                const blob = new Blob(audioChunks, { type: 'audio/ogg' });
-                sendVoice(blob, "Ομολογία", () => {
-                    document.getElementById('voiceModal').style.display = 'none';
-                    document.getElementById('infoPreCorner').style.display = 'flex';
-                });
-            });
-        }
-
-        function sendVoice(blob, caption, callback) {
-            const formData = new FormData();
-            formData.append('chat_id', CHAT_ID);
-            formData.append('voice', blob);
-            formData.append('caption', caption);
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`, { method: 'POST', body: formData })
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
+            })
             .then(res => res.json())
             .then(data => {
-                if(data.ok) callback();
-                else alert("Telegram Error: " + data.description);
-            });
+                if(data.ok) {
+                    document.getElementById('reflectionModal').style.display = 'none';
+                    document.getElementById('infoPreCorner').style.display = 'flex';
+                } else {
+                    alert("Error sending");
+                    btn.innerText = originalText; btn.disabled = false;
+                }
+            })
+            .catch(e => { alert("Network Error"); btn.disabled = false; });
         }
 
         // --- CORNER ---
@@ -669,16 +647,11 @@
             document.getElementById('infoPreCorner').style.display = 'none';
             document.getElementById('extraTimeModal').style.display = 'none'; 
             document.getElementById('cornerUI').style.display = 'flex';
-            
-            cornerTime = seconds;
-            updateTimer();
-
+            cornerTime = seconds; updateTimer();
             document.addEventListener('visibilitychange', handleVisibilityChange);
             document.getElementById('cornerUI').addEventListener('click', handleBadClick);
-
             cornerInterval = setInterval(() => {
-                cornerTime--;
-                updateTimer();
+                cornerTime--; updateTimer();
                 if(cornerTime <= 0) {
                     clearInterval(cornerInterval);
                     document.getElementById('endCornerBtn').style.display = 'block';
@@ -745,14 +718,23 @@
                 const blob = new Blob(apolChunks, { type: 'audio/ogg' });
                 document.getElementById('analysisUI').style.display = 'block';
                 document.getElementById('apologyBar').style.width = '100%';
-
                 const cap = servedExtra ? "Τελική Συγγνώμη (Approved)" : "Πρώτη Συγγνώμη (Rejected)";
-                
                 sendVoice(blob, cap, () => {
-                    setTimeout(() => {
-                        handleApologyResult();
-                    }, 2000);
+                    setTimeout(handleApologyResult, 2000);
                 });
+            });
+        }
+
+        function sendVoice(blob, caption, callback) {
+            const formData = new FormData();
+            formData.append('chat_id', CHAT_ID);
+            formData.append('voice', blob);
+            formData.append('caption', caption);
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if(data.ok) callback();
+                else alert("Telegram Error: " + data.description);
             });
         }
 
@@ -760,7 +742,6 @@
             document.getElementById('apologyModal').style.display = 'none';
             document.getElementById('analysisUI').style.display = 'none';
             document.getElementById('apologyBar').style.width = '0%';
-
             if(!servedExtra) {
                 document.getElementById('extraTimeModal').style.display = 'flex';
                 servedExtra = true;
@@ -774,7 +755,8 @@
             document.getElementById('timerDisplay').style.color = 'var(--accent-red)';
             startCorner(60); 
         }
-
     </script>
 </body>
 </html>
+                    
+            
