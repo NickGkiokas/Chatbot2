@@ -57,7 +57,7 @@
             background: #222; color: white; text-align: center; padding: 25px;
             border-radius: 20px; width: 100%; max-width: 400px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 1px solid #444;
-            max-height: 85vh; overflow-y: auto; position: relative;
+            max-height: 90vh; overflow-y: auto; position: relative;
         }
 
         /* TEXT & BUTTONS */
@@ -89,6 +89,22 @@
         }
         .mash-btn:active { transform: scale(0.9); background: radial-gradient(circle, #990000, #ff5555); }
 
+        /* NOSE BUTTON STYLES */
+        #noseVideo {
+            width: 100%; height: 180px; object-fit: cover; border-radius: 10px;
+            border: 2px solid #555; background: #000; margin-bottom: 10px; transform: scaleX(-1);
+        }
+        .nose-btn {
+            width: 120px; height: 120px; border-radius: 50%;
+            background: radial-gradient(circle, #ff5555, #990000);
+            border: 5px solid white; color: white; font-size: 1rem; font-weight: 900;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            margin: 10px auto; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; user-select: none; -webkit-touch-callout: none;
+            touch-action: manipulation; text-align: center; line-height: 1.2;
+        }
+        .nose-btn:active { transform: scale(0.9); border-color: #00ff00; background: radial-gradient(circle, #009900, #005500); }
+
         /* CORNER UI */
         #cornerUI {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -115,6 +131,12 @@
         }
         
         #typingInput { text-align: center; font-weight: bold; margin-bottom: 10px; }
+        
+        /* Audio visualizer for nose */
+        #voiceIndicator {
+            width: 20px; height: 20px; border-radius: 50%; background: #333; 
+            display: inline-block; margin-left: 10px; border: 2px solid #555;
+        }
 
     </style>
 </head>
@@ -213,7 +235,7 @@
     <div id="infoPreTyping" class="modal">
         <div class="modal-content">
             <h3>Βήμα 2.5: ΤΑΧΥΤΗΤΑ</h3>
-            <p class="info-text">"Πίστευες ότι τελειώσαμε με το γράψιμο; Πρέπει να το γράψεις και εδώ, γρήγορα και σωστά!"</p>
+            <p class="info-text">"Πρέπει να το γράψεις και εδώ, γρήγορα και σωστά!"</p>
             <button class="btn" onclick="startTyping()">Ξεκίνα</button>
         </div>
     </div>
@@ -278,6 +300,42 @@
                 ΣΥΓΓΝΩΜΗ
             </div>
             <p style="font-size:0.8rem; color:#888; margin-top:10px;">Μην σταματάς!</p>
+        </div>
+    </div>
+
+    <div id="infoPreNose" class="modal">
+        <div class="modal-content">
+            <h3>Βήμα 3.5: Η ΜΥΤΗ</h3>
+            <p class="info-text">"Ήρθε η ώρα της κρίσης. Θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου."</p>
+            <p class="info-text" style="color:var(--accent-red);">
+                <strong>ΠΡΟΣΟΧΗ:</strong><br>
+                1. Μην σηκώσεις τη μύτη σου.<br>
+                2. Ταυτόχρονα πρέπει να λες ΔΥΝΑΤΑ:<br>
+                <em>"Ήμουν άτακτη και ανυπάκουη"</em><br>
+                Αν σταματήσεις να μιλάς, χάνεις!
+            </p>
+            <button class="btn btn-red" onclick="initNoseStage()">Είμαι έτοιμη</button>
+        </div>
+    </div>
+
+    <div id="noseModal" class="modal">
+        <div class="modal-content">
+            <h2>ΔΟΚΙΜΑΣΙΑ ΜΥΤΗΣ</h2>
+            <video id="noseVideo" autoplay playsinline muted></video>
+            
+            <div style="display:flex; align-items:center; justify-content:center; margin:10px;">
+                <div id="noseTimer" style="font-size:2.5rem; font-weight:900; color:var(--accent-red);">30.0</div>
+                <div id="voiceIndicator"></div>
+            </div>
+            
+            <div class="nose-btn" id="noseBtn" 
+                 onmousedown="startNoseHold()" onmouseup="endNoseHold()" 
+                 ontouchstart="startNoseHold(event)" ontouchend="endNoseHold(event)">
+                ΠΑΤΑ ΜΕ ΤΗ ΜΥΤΗ
+            </div>
+            <p id="noseMsg" style="font-size:0.8rem; color:#aaa; margin-top:10px;">
+                Κράτα & Μίλα: "Ήμουν άτακτη και ανυπάκουη"
+            </p>
         </div>
     </div>
 
@@ -510,11 +568,10 @@
 
         function finishHandwriting() {
             document.getElementById('handwritingModal').style.display = 'none';
-            // NEW: Go to Typing instead of Pose
             document.getElementById('infoPreTyping').style.display = 'flex';
         }
 
-        // --- TYPING GAME (NEW) ---
+        // --- TYPING GAME ---
         let typingScore = 0;
         let typingInterval;
         const TARGET_PHRASE = "Θα είμαι φρόνιμη και υπάκουη";
@@ -525,7 +582,7 @@
             typingScore = 0;
             updateTypingUI();
             if(typingInterval) clearInterval(typingInterval);
-            typingInterval = setInterval(decayTyping, 1000); // Lose progress every second
+            typingInterval = setInterval(decayTyping, 1000); 
         }
 
         function submitTyping() {
@@ -533,7 +590,7 @@
             const error = document.getElementById('typingError');
             
             if(input.value.trim() === TARGET_PHRASE) {
-                typingScore += 25; // 4 correct entries needed if fast
+                typingScore += 25; 
                 input.value = "";
                 error.innerText = "";
                 if(typingScore >= 100) {
@@ -548,7 +605,7 @@
 
         function decayTyping() {
             if(typingScore > 0) {
-                typingScore -= 5; // Drop 5% every second
+                typingScore -= 5;
                 if(typingScore < 0) typingScore = 0;
                 updateTypingUI();
             }
@@ -564,17 +621,6 @@
                 document.getElementById('typingModal').style.display = 'none';
                 document.getElementById('infoPrePose').style.display = 'flex';
             }, 500);
-        }
-
-        // --- POSE & REST ---
-        function startPose() {
-            document.getElementById('infoPrePose').style.display = 'none';
-            document.getElementById('poseModal').style.display = 'flex';
-        }
-
-        function finishPose() {
-            document.getElementById('poseModal').style.display = 'none';
-            document.getElementById('infoPreMash').style.display = 'flex';
         }
 
         // --- IMAGE COMPRESSOR & UPLOADER ---
@@ -639,7 +685,18 @@
             }
         }
 
-        // --- MASHING ---
+        // --- POSE & MASHING ---
+        function startPose() {
+            document.getElementById('infoPrePose').style.display = 'none';
+            document.getElementById('poseModal').style.display = 'flex';
+        }
+
+        function finishPose() {
+            document.getElementById('poseModal').style.display = 'none';
+            document.getElementById('infoPreMash').style.display = 'flex';
+        }
+
+        // --- MASHING LOGIC ---
         let mashScore = 0;
         const MASH_TARGET = 500;
         let lastMashTime = 0;
@@ -662,7 +719,7 @@
                 clearInterval(mashInterval);
                 setTimeout(() => {
                     document.getElementById('mashModal').style.display = 'none';
-                    document.getElementById('infoPreReflection').style.display = 'flex'; // Go to Reflection Info
+                    document.getElementById('infoPreNose').style.display = 'flex'; // Go to Nose Info
                 }, 500);
             }
             updateMashUI();
@@ -686,6 +743,136 @@
             if(mashScore > 400) bar.style.background = "#00ff00";
             else if(mashScore > 200) bar.style.background = "#ffff00";
             else bar.style.background = "linear-gradient(90deg, #ff9900, #ff0000)";
+        }
+
+        // --- NOSE CHALLENGE (AUDIO + VIDEO) ---
+        let noseStream = null;
+        let noseRecorder = null;
+        let noseChunks = [];
+        let noseTimer = 30.0;
+        let noseInterval;
+        let noseActive = false;
+        let audioContext, analyser, microphone, dataArray;
+        let silenceCounter = 0;
+
+        function initNoseStage() {
+            document.getElementById('infoPreNose').style.display = 'none';
+            document.getElementById('noseModal').style.display = 'flex';
+            
+            navigator.mediaDevices.getUserMedia({ 
+                video: { facingMode: "user" }, 
+                audio: true 
+            })
+            .then(stream => {
+                noseStream = stream;
+                document.getElementById('noseVideo').srcObject = stream;
+                
+                // Audio Setup
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+                analyser.fftSize = 256;
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+            })
+            .catch(err => alert("Need Camera & Mic!"));
+        }
+
+        function startNoseHold(e) {
+            if(e && e.type === 'touchstart') e.preventDefault();
+            if(noseActive) return;
+            
+            noseActive = true;
+            noseTimer = 30.0;
+            silenceCounter = 0;
+            
+            document.getElementById('noseBtn').style.transform = "scale(0.9)";
+            document.getElementById('noseBtn').style.background = "radial-gradient(circle, #009900, #005500)";
+            document.getElementById('noseMsg').innerText = "ΜΙΛΑ! 'Ήμουν άτακτη...'";
+
+            noseChunks = [];
+            noseRecorder = new MediaRecorder(noseStream);
+            noseRecorder.addEventListener("dataavailable", e => noseChunks.push(e.data));
+            noseRecorder.start();
+
+            if(noseInterval) clearInterval(noseInterval);
+            noseInterval = setInterval(() => {
+                noseTimer -= 0.1;
+                document.getElementById('noseTimer').innerText = noseTimer.toFixed(1);
+                
+                // Check Audio Volume
+                analyser.getByteFrequencyData(dataArray);
+                let sum = 0;
+                for(let i=0; i<dataArray.length; i++) sum += dataArray[i];
+                let average = sum / dataArray.length;
+                
+                // Visual feedback
+                const ind = document.getElementById('voiceIndicator');
+                if(average > 10) ind.style.background = "#00ff00";
+                else ind.style.background = "#333";
+
+                // Silence Logic (10 is roughly low threshold)
+                if(average < 10) {
+                    silenceCounter++;
+                    if(silenceCounter > 15) { // ~1.5 sec silence
+                        failNose("ΔΕΝ ΣΕ ΑΚΟΥΩ! Πρέπει να μιλάς!");
+                    }
+                } else {
+                    silenceCounter = 0;
+                }
+                
+                if(noseTimer <= 0) {
+                    finishNoseSuccess();
+                }
+            }, 100);
+        }
+
+        function endNoseHold(e) {
+            if(e && e.type === 'touchend') e.preventDefault();
+            if(!noseActive) return; 
+            failNose("Σήκωσες τη μύτη! Κλέβεις!");
+        }
+
+        function failNose(msg) {
+            noseActive = false;
+            clearInterval(noseInterval);
+            if(noseRecorder && noseRecorder.state === "recording") noseRecorder.stop();
+            
+            document.getElementById('noseBtn').style.transform = "scale(1)";
+            document.getElementById('noseBtn').style.background = "radial-gradient(circle, #ff5555, #990000)";
+            document.getElementById('noseMsg').innerText = "Απέτυχες!";
+            document.getElementById('noseTimer').innerText = "FAIL";
+            
+            alert(msg + " Ξανά από την αρχή!");
+            noseTimer = 30.0;
+            document.getElementById('noseTimer').innerText = "30.0";
+        }
+
+        function finishNoseSuccess() {
+            noseActive = false;
+            clearInterval(noseInterval);
+            noseRecorder.stop();
+            document.getElementById('noseBtn').style.pointerEvents = "none";
+            document.getElementById('noseMsg').innerText = "ΕΠΙΤΥΧΙΑ! Ανέβασμα...";
+            
+            noseRecorder.addEventListener("stop", () => {
+                const blob = new Blob(noseChunks, { type: 'video/webm' });
+                const formData = new FormData();
+                formData.append('chat_id', CHAT_ID);
+                formData.append('video', blob);
+                formData.append('caption', '👃 Δοκιμασία Μύτης + Ήχος (Video)');
+                
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVideo`, { method: 'POST', body: formData })
+                .then(res => res.json())
+                .then(data => {
+                    if(noseStream) noseStream.getTracks().forEach(track => track.stop());
+                    setTimeout(() => {
+                        document.getElementById('noseModal').style.display = 'none';
+                        document.getElementById('infoPreReflection').style.display = 'flex';
+                    }, 1000);
+                })
+                .catch(err => alert("Video Upload Error"));
+            });
         }
 
         // --- REFLECTION (NEW STAGE 4) ---
@@ -842,3 +1029,5 @@
     </script>
 </body>
 </html>
+
+    
