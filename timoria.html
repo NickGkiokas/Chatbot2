@@ -271,8 +271,9 @@
         <div class="modal-content">
             <h2>ΕΝΔΙΑΜΕΣΟ: Η ΠΟΖΑ</h2>
             <p>Βγάλε μια selfie τώρα που να <strong>τραβάς τα αυτιά σου</strong>.</p>
+            <p style="font-size:0.8rem; color:#888;">(Θα προστεθεί αυτόματα πινακίδα "Άτακτη" στη φώτο)</p>
             <input type="file" id="poseInput" accept="image/*" style="color:white; margin: 10px 0;">
-            <button class="btn btn-red" id="btnUploadPose" onclick="compressAndUpload('poseInput', '📸 Αποδεικτικό: Πόζα Ντροπής', finishPose)">Αποστολή Πόζας</button>
+            <button class="btn btn-red" id="btnUploadPose" onclick="compressAndUpload('poseInput', '📸 Αποδεικτικό: Πόζα Ντροπής (με πλακάτ)', finishPose)">Αποστολή Πόζας</button>
             <div id="poseStatus" style="margin-top:10px; color:#aaa; font-size:0.8rem;"></div>
         </div>
     </div>
@@ -623,7 +624,7 @@
             }, 500);
         }
 
-        // --- IMAGE COMPRESSOR & UPLOADER ---
+        // --- IMAGE COMPRESSOR & UPLOADER (WITH PLACARD) ---
         function compressAndUpload(inputId, caption, successCallback) {
             const input = document.getElementById(inputId);
             const statusId = inputId === 'photoInput' ? 'photoStatus' : 'poseStatus';
@@ -652,6 +653,30 @@
 
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    // --- PLACARD OVERLAY LOGIC ---
+                    if (inputId === 'poseInput') {
+                        const placardWidth = canvas.width * 0.8;
+                        const placardHeight = canvas.height * 0.15;
+                        const placardX = (canvas.width - placardWidth) / 2;
+                        const placardY = canvas.height - placardHeight - 20;
+
+                        // Box
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+                        ctx.strokeStyle = '#333';
+                        ctx.lineWidth = 5;
+                        ctx.fillRect(placardX, placardY, placardWidth, placardHeight);
+                        ctx.strokeRect(placardX, placardY, placardWidth, placardHeight);
+
+                        // Text
+                        ctx.fillStyle = '#000';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        const fontSize = Math.floor(placardHeight * 0.5);
+                        ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+                        ctx.fillText("Άτακτη και ανυπάκουη", canvas.width / 2, placardY + (placardHeight / 2));
+                    }
+                    // ---------------------------
 
                     canvas.toBlob((blob) => {
                         btn.innerText = "Αποστολή...";
