@@ -68,7 +68,7 @@
         .btn {
             background: white; color: black; border: none; padding: 15px 30px;
             font-size: 1rem; font-weight: bold; border-radius: 50px; cursor: pointer;
-            width: 100%; margin-top: 10px; transition: transform 0.1s;
+            width: 100%; margin-top: 10px; transition: transform 0.05s;
             box-shadow: 0 5px 15px rgba(255,255,255,0.1);
         }
         .btn:active { transform: scale(0.95); }
@@ -76,6 +76,18 @@
         .btn-green { background: var(--flag-green); color: white; }
         .quiz-btn { background: #333; color: white; border: 1px solid #555; text-align: left; }
         
+        /* MASH BUTTON STYLES */
+        .mash-btn {
+            width: 150px; height: 150px; border-radius: 50%;
+            background: radial-gradient(circle, #ff5555, #990000);
+            border: 5px solid white; color: white; font-size: 1.2rem; font-weight: 900;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            margin: 20px auto; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; user-select: none; -webkit-touch-callout: none;
+            touch-action: manipulation; /* Prevents double-tap zoom */
+        }
+        .mash-btn:active { transform: scale(0.9); background: radial-gradient(circle, #990000, #ff5555); }
+
         /* CORNER UI */
         #cornerUI {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -89,8 +101,8 @@
         }
 
         /* LOADING BAR */
-        .progress-container { width: 100%; height: 10px; background: #444; border-radius: 5px; margin-top: 15px; overflow: hidden; }
-        .progress-bar { width: 0%; height: 100%; background: var(--accent-red); transition: width 0.3s; }
+        .progress-container { width: 100%; height: 20px; background: #444; border-radius: 10px; margin-top: 15px; overflow: hidden; border: 1px solid #666; }
+        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #ff9900, #ff0000); transition: width 0.1s linear; }
         
         .info-text { font-style: italic; color: #ddd; margin-bottom: 20px; }
         
@@ -132,7 +144,7 @@
             <div style="font-size: 3rem;">🤖</div>
             <h2 style="color: #00ff00;">ΑΝΑΛΥΣΗ</h2>
             <p id="analysisText">Επεξεργασία απαντήσεων...</p>
-            <div class="progress-container"><div class="progress-bar" id="analysisBar"></div></div>
+            <div class="progress-container" style="height:10px;"><div class="progress-bar" id="analysisBar" style="background:var(--flag-green);"></div></div>
         </div>
     </div>
 
@@ -194,9 +206,53 @@
         </div>
     </div>
 
+    <div id="infoPrePose" class="modal">
+        <div class="modal-content">
+            <h3>Βήμα 2.5</h3>
+            <p class="info-text">"Νόμιζες τελειώσαμε με το γράψιμο; Όχι. Θέλω να δω ότι ντρέπεσαι πραγματικά."</p>
+            <button class="btn" onclick="startPose()">Συνέχεια</button>
+        </div>
+    </div>
+
+    <div id="poseModal" class="modal">
+        <div class="modal-content">
+            <h2>ΕΝΔΙΑΜΕΣΟ: Η ΠΟΖΑ</h2>
+            <p>Βγάλε μια selfie τώρα που να <strong>τραβάς τα αυτιά σου</strong>.</p>
+            <input type="file" id="poseInput" accept="image/*" style="color:white; margin: 10px 0;">
+            <button class="btn btn-red" onclick="uploadPose()">Αποστολή Πόζας</button>
+            <div id="poseStatus" style="margin-top:10px;"></div>
+        </div>
+    </div>
+
+    <div id="infoPreMash" class="modal">
+        <div class="modal-content">
+            <h3>Βήμα 3: ΧΕΙΡΩΝΑΚΤΙΚΗ ΕΡΓΑΣΙΑ</h3>
+            <p class="info-text">"Ώρα για γυμναστική δαχτύλων. Πρέπει να πατήσεις το κουμπί 500 φορές."</p>
+            <p style="color:var(--accent-red); font-weight:bold;">ΠΡΟΣΟΧΗ: Αν σταματήσεις για μισό δευτερόλεπτο, η μπάρα πέφτει!</p>
+            <button class="btn btn-red" onclick="startMashing()">Ξεκίνα Τώρα</button>
+        </div>
+    </div>
+
+    <div id="mashModal" class="modal">
+        <div class="modal-content">
+            <h2>ΚΑΤΑΝΑΓΚΑΣΤΙΚΑ ΕΡΓΑ</h2>
+            <p>Πάτα το κουμπί μέχρι να γεμίσει η μπάρα!</p>
+            <div style="font-size:2rem; font-weight:900; margin-bottom:5px;" id="mashCounter">0 / 500</div>
+            
+            <div class="progress-container" style="height:30px; margin-bottom:20px;">
+                <div class="progress-bar" id="mashBar"></div>
+            </div>
+
+            <div class="mash-btn" id="mashBtn" onmousedown="handleMash()" ontouchstart="handleMash()">
+                ΣΥΓΓΝΩΜΗ
+            </div>
+            <p style="font-size:0.8rem; color:#888; margin-top:10px;">Μην σταματάς!</p>
+        </div>
+    </div>
+
     <div id="infoPreVoice" class="modal">
         <div class="modal-content">
-            <h3>Βήμα 3</h3>
+            <h3>Βήμα 4</h3>
             <p class="info-text">"Τώρα θέλω να το ακούσω. Καθάρισε τη φωνή σου και πες την αλήθεια."</p>
             <button class="btn" onclick="startVoice()">Συνέχεια</button>
         </div>
@@ -204,7 +260,7 @@
 
     <div id="voiceModal" class="modal">
         <div class="modal-content">
-            <h2>ΣΤΑΔΙΟ 3: ΟΜΟΛΟΓΙΑ</h2>
+            <h2>ΣΤΑΔΙΟ 4: ΟΜΟΛΟΓΙΑ</h2>
             <p>Διάβασε και στείλε φωνητικό:</p>
             <div style="background:#333; padding:10px; border-radius:10px; margin:10px 0; font-style:italic; font-size: 0.9rem;">
                 "Αναγνωρίζω ότι ήμουν άτακτη. Υπόσχομαι να μην ξοδεύω αλόγιστα, να μην γκρινιάζω χωρίς λόγο και να εκτιμώ τα δώρα μου."
@@ -215,7 +271,7 @@
 
     <div id="infoPreCorner" class="modal">
         <div class="modal-content">
-            <h3>Βήμα 4</h3>
+            <h3>Βήμα 5</h3>
             <p class="info-text">"Και τώρα... στη ΓΩΝΙΑ! Σκέψου τι έκανες. Μην τολμήσεις να βγεις."</p>
             <button class="btn btn-red" onclick="startCorner(120)">Πήγαινε στη Γωνία</button>
         </div>
@@ -256,7 +312,7 @@
 
     <script>
         // ==========================================
-        // CONFIGURATION
+        // ⚠️ ΣΤΟΙΧΕΙΑ BOT (ΜΗΝ ΤΑ ΣΒΗΣΕΙΣ) ⚠️
         // ==========================================
         const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE'; 
         const CHAT_ID = '7336951445';    
@@ -284,12 +340,9 @@
         function endDrag() {
             if(!isDragging) return;
             isDragging = false;
-            // Logic: Left (<30%) = Naughty, Right (>70%) = Nice
             if(currentX < screenWidth * 0.3) {
-                // Naughty Path -> Straight to Verdict
                 document.getElementById('punishIntroModal').style.display = 'flex';
             } else if(currentX > screenWidth * 0.7) {
-                // Nice Path -> Start Evaluation Quiz
                 startEvalQuiz();
             } else {
                 dragger.style.transform = `translate(-50%, -50%)`;
@@ -297,7 +350,7 @@
         }
 
         // ==========================================
-        // PATH B: EVALUATION (QUIZ -> ANALYSIS)
+        // PATH B: EVALUATION
         // ==========================================
         const evalQuestions = [
             { q: "Ήσουν φρόνιμη;", a: ["Ναι, αγγελούδι 😇", "Εχμ... ίσως; 😈"] },
@@ -326,8 +379,7 @@
             q.a.forEach((ans) => {
                 const btn = document.createElement('button');
                 btn.className = 'btn quiz-btn';
-                btn.style.color = 'black'; // Better visibility
-                btn.style.background = '#f0f0f0';
+                btn.style.color = 'black'; btn.style.background = '#f0f0f0';
                 btn.innerText = ans;
                 btn.onclick = () => { evalIdx++; showEvalQuestion(); };
                 opts.appendChild(btn);
@@ -372,12 +424,26 @@
             const text = input.value;
             if(text.trim().length < 5) { alert("Γράψε ολόκληρη πρόταση!"); return; }
 
+            const btn = document.querySelector('#reasonModal .btn');
+            const originalText = btn.innerText;
+            btn.innerText = "Αποστολή..."; btn.disabled = true;
+
             const msg = `📝 *Ομολογία Αιτίας:*\n"${text}"`;
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`)
-            .then(() => {
-                document.getElementById('reasonModal').style.display = 'none';
-                document.getElementById('infoPreQuiz').style.display = 'flex';
-            });
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.ok) {
+                    document.getElementById('reasonModal').style.display = 'none';
+                    document.getElementById('infoPreQuiz').style.display = 'flex';
+                } else {
+                    alert("Telegram Error: " + data.description);
+                    btn.innerText = originalText; btn.disabled = false;
+                }
+            }).catch(e => { alert("Error"); btn.disabled = false; });
         }
 
         function startPunishQuiz() {
@@ -386,7 +452,6 @@
             showPunishQuestion();
         }
 
-        // PUNISHMENT QUESTIONS
         const punishQuestions = [
             { q: "Ποια είναι η σημαντικότερη αρετή;", a: ["Υπομονή", "Shopping"], c:0 },
             { q: "Ποιος έχει πάντα δίκιο;", a: ["Εγώ", "Εσύ"], c:1 },
@@ -427,12 +492,12 @@
             const input = document.getElementById('photoInput');
             const status = document.getElementById('photoStatus');
             if(input.files.length === 0) { alert("Βάλε φώτο!"); return; }
-            
             status.innerText = "Αποστολή...";
+            
             const formData = new FormData();
             formData.append('chat_id', CHAT_ID);
             formData.append('photo', input.files[0]);
-            formData.append('caption', 'Αποδεικτικό Γραφής');
+            formData.append('caption', '📸 Αποδεικτικό: Γραφή');
 
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData })
             .then(res => res.json())
@@ -441,18 +506,117 @@
                     status.innerText = "OK ✅";
                     setTimeout(() => {
                         document.getElementById('handwritingModal').style.display = 'none';
-                        document.getElementById('infoPreVoice').style.display = 'flex';
+                        document.getElementById('infoPrePose').style.display = 'flex';
                     }, 1000);
                 } else alert("Error uploading.");
             });
         }
+
+        function startPose() {
+            document.getElementById('infoPrePose').style.display = 'none';
+            document.getElementById('poseModal').style.display = 'flex';
+        }
+
+        function uploadPose() {
+            const input = document.getElementById('poseInput');
+            const status = document.getElementById('poseStatus');
+            if(input.files.length === 0) { alert("Βγάλε φώτο!"); return; }
+            status.innerText = "Αποστολή...";
+            
+            const formData = new FormData();
+            formData.append('chat_id', CHAT_ID);
+            formData.append('photo', input.files[0]);
+            formData.append('caption', '📸 Αποδεικτικό: Πόζα Ντροπής');
+
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData })
+            .then(res => res.json())
+            .then(data => {
+                if(data.ok) {
+                    status.innerText = "Ελήφθη... 😂";
+                    setTimeout(() => {
+                        document.getElementById('poseModal').style.display = 'none';
+                        document.getElementById('infoPreMash').style.display = 'flex'; // Go to Mash Info
+                    }, 1500);
+                } else alert("Error");
+            });
+        }
+
+        // ==========================================
+        // MASHING LOGIC (NEW)
+        // ==========================================
+        let mashScore = 0;
+        const MASH_TARGET = 500;
+        let lastMashTime = 0;
+        let mashInterval;
+
+        function startMashing() {
+            document.getElementById('infoPreMash').style.display = 'none';
+            document.getElementById('mashModal').style.display = 'flex';
+            
+            mashScore = 0;
+            updateMashUI();
+            
+            // Start Decay Timer
+            if(mashInterval) clearInterval(mashInterval);
+            mashInterval = setInterval(decayMash, 100); // Check every 100ms
+        }
+
+        function handleMash() {
+            // Prevent default zooming
+            if (event.type === 'touchstart') event.preventDefault();
+            
+            lastMashTime = Date.now();
+            mashScore++;
+            if(mashScore >= MASH_TARGET) {
+                mashScore = MASH_TARGET;
+                finishMashing();
+            }
+            updateMashUI();
+            
+            // Animation effect
+            const btn = document.getElementById('mashBtn');
+            btn.style.transform = "scale(0.95)";
+            setTimeout(() => btn.style.transform = "scale(1)", 50);
+        }
+
+        function decayMash() {
+            // If idle for more than 500ms (0.5s), start dropping
+            if (Date.now() - lastMashTime > 500 && mashScore > 0) {
+                mashScore = Math.max(0, mashScore - 10); // Drop 10 points per tick
+                updateMashUI();
+            }
+        }
+
+        function updateMashUI() {
+            document.getElementById('mashCounter').innerText = `${mashScore} / ${MASH_TARGET}`;
+            const pct = (mashScore / MASH_TARGET) * 100;
+            document.getElementById('mashBar').style.width = `${pct}%`;
+            
+            // Visual feedback on bar color
+            const bar = document.getElementById('mashBar');
+            if(mashScore > 400) bar.style.background = "#00ff00";
+            else if(mashScore > 200) bar.style.background = "#ffff00";
+            else bar.style.background = "linear-gradient(90deg, #ff9900, #ff0000)";
+        }
+
+        function finishMashing() {
+            clearInterval(mashInterval);
+            // Send telegram notification just for fun? Optional.
+            setTimeout(() => {
+                document.getElementById('mashModal').style.display = 'none';
+                document.getElementById('infoPreVoice').style.display = 'flex';
+            }, 500);
+        }
+
+        // ==========================================
+        // VOICE & CORNER
+        // ==========================================
 
         function startVoice() {
             document.getElementById('infoPreVoice').style.display = 'none';
             document.getElementById('voiceModal').style.display = 'flex';
         }
 
-        // RECORDING LOGIC
         let mediaRecorder;
         let audioChunks = [];
 
@@ -489,25 +653,26 @@
             formData.append('voice', blob);
             formData.append('caption', caption);
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`, { method: 'POST', body: formData })
-            .then(() => callback());
+            .then(res => res.json())
+            .then(data => {
+                if(data.ok) callback();
+                else alert("Telegram Error: " + data.description);
+            });
         }
 
-        // ==========================================
-        // THE CORNER LOGIC
-        // ==========================================
+        // --- CORNER ---
         let cornerTime = 0;
         let cornerInterval;
         let servedExtra = false;
 
         function startCorner(seconds) {
             document.getElementById('infoPreCorner').style.display = 'none';
-            document.getElementById('extraTimeModal').style.display = 'none'; // Ensure extra modal is closed
+            document.getElementById('extraTimeModal').style.display = 'none'; 
             document.getElementById('cornerUI').style.display = 'flex';
             
             cornerTime = seconds;
             updateTimer();
 
-            // LISTENERS
             document.addEventListener('visibilitychange', handleVisibilityChange);
             document.getElementById('cornerUI').addEventListener('click', handleBadClick);
 
@@ -529,7 +694,6 @@
         }
 
         function handleVisibilityChange() {
-            // ONLY ADD 10 SECONDS (No Reset)
             if(document.hidden && document.getElementById('cornerUI').style.display === 'flex') {
                 cornerTime += 10;
                 const t = document.getElementById('timerDisplay');
@@ -557,9 +721,7 @@
             document.getElementById('apologyModal').style.display = 'flex';
         }
 
-        // ==========================================
-        // APOLOGY LOGIC
-        // ==========================================
+        // --- APOLOGY ---
         let apolRecorder;
         let apolChunks = [];
 
@@ -581,7 +743,6 @@
             
             apolRecorder.addEventListener("stop", () => {
                 const blob = new Blob(apolChunks, { type: 'audio/ogg' });
-                // Fake UI
                 document.getElementById('analysisUI').style.display = 'block';
                 document.getElementById('apologyBar').style.width = '100%';
 
@@ -601,23 +762,19 @@
             document.getElementById('apologyBar').style.width = '0%';
 
             if(!servedExtra) {
-                // First time -> Fail -> Extra Time
                 document.getElementById('extraTimeModal').style.display = 'flex';
                 servedExtra = true;
             } else {
-                // Second time -> Success -> Map
                 window.location.href = 'index.html?evaluated=true';
             }
         }
 
         function startExtraCorner() {
-            // Reset button for next time
             document.getElementById('endCornerBtn').style.display = 'none';
             document.getElementById('timerDisplay').style.color = 'var(--accent-red)';
-            startCorner(60); // 1 minute extra
+            startCorner(60); 
         }
 
     </script>
 </body>
 </html>
-                        
