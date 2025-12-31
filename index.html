@@ -77,6 +77,18 @@
         .btn-green { background: var(--flag-green); color: white; }
         .quiz-btn { background: #333; color: white; border: 1px solid #555; text-align: left; }
         
+        /* MASH BUTTON */
+        .mash-btn {
+            width: 150px; height: 150px; border-radius: 50%;
+            background: radial-gradient(circle, #ff5555, #990000);
+            border: 5px solid white; color: white; font-size: 1.2rem; font-weight: 900;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            margin: 20px auto; display: flex; justify-content: center; align-items: center;
+            cursor: pointer; user-select: none; -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+        .mash-btn:active { transform: scale(0.9); background: radial-gradient(circle, #990000, #ff5555); }
+
         /* NOSE BUTTON STYLES */
         #noseVideo {
             width: 100%; height: 180px; object-fit: cover; border-radius: 10px;
@@ -129,6 +141,16 @@
     </style>
 </head>
 <body>
+
+    <div id="checkInModal" class="modal" style="display:flex; z-index: 5000;">
+        <div class="modal-content">
+            <div style="font-size: 4rem;">🛂</div>
+            <h2>CHECK-IN</h2>
+            <p>Ώρα για αξιολόγηση και έλεγχο διαβατηρίων.</p>
+            <p style="color:#aaa;">Ελπίζω να ήσουν καλό κορίτσι...</p>
+            <button class="btn btn-green" onclick="closeCheckIn()">Ξεκίνα</button>
+        </div>
+    </div>
 
     <h1>ΚΡΙΣΗ & ΤΙΜΩΡΙΑ ⚖️</h1>
 
@@ -201,7 +223,7 @@
     <div id="infoPreTyping" class="modal">
         <div class="modal-content">
             <h3>Βήμα 2: ΤΑΧΥΤΗΤΑ</h3>
-            <p class="info-text">"Πρέπει να γράψεις τη φράση γρήγορα και σωστά πριν αδειάσει η μπάρα!"</p>
+            <p class="info-text">"Πρέπει να το γράψεις και εδώ, γρήγορα και σωστά!"</p>
             <button class="btn" onclick="startTyping()">Ξεκίνα</button>
         </div>
     </div>
@@ -221,7 +243,7 @@
             <input type="text" id="typingInput" placeholder="Γράψε εδώ..." autocomplete="off">
             <button class="btn btn-red" onclick="submitTyping()">Υποβολή</button>
             <div id="typingError" style="color:var(--accent-red); margin-top:10px; font-weight:bold; min-height:20px;"></div>
-            <p style="font-size:0.8rem; color:#888;">Η μπάρα πέφτει (πολύ αργά)...</p>
+            <p style="font-size:0.8rem; color:#888;">Βιάσου! Η μπάρα πέφτει!</p>
         </div>
     </div>
 
@@ -355,6 +377,20 @@
         let startX, currentX;
         const screenWidth = window.innerWidth;
 
+        // INITIAL CHECK IN
+        function closeCheckIn() {
+            document.getElementById('checkInModal').style.display = 'none';
+        }
+
+        // --- HELPER FOR NOTIFICATIONS ---
+        function sendTelegramNotification(text) {
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+            });
+        }
+
         // --- DRAG LOGIC ---
         dragger.addEventListener('touchstart', (e) => { e.preventDefault(); isDragging = true; startX = e.touches[0].clientX; });
         dragger.addEventListener('touchmove', (e) => { 
@@ -364,7 +400,6 @@
             dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`;
         });
         dragger.addEventListener('touchend', endDrag);
-        // Mouse
         dragger.addEventListener('mousedown', () => isDragging = true);
         window.addEventListener('mousemove', (e) => { if(isDragging) { currentX = e.clientX; let delta = currentX - (screenWidth/2); dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`; }});
         window.addEventListener('mouseup', endDrag);
@@ -390,6 +425,7 @@
             { q: "Μου πήρες δώρο;", a: ["Το καλύτερο 🎁", "Θα δούμε"] }
         ];
         let evalIdx = 0;
+        let evalAnswers = [];
 
         function startEvalQuiz() {
             document.getElementById('evalQuizModal').style.display = 'flex';
@@ -399,6 +435,7 @@
         function showEvalQuestion() {
             if(evalIdx >= evalQuestions.length) {
                 document.getElementById('evalQuizModal').style.display = 'none';
+                sendTelegramNotification("📝 Απαντήσεις Αξιολόγησης:\n" + evalAnswers.join("\n"));
                 startAnalysis();
                 return;
             }
@@ -411,7 +448,10 @@
                 btn.className = 'btn quiz-btn';
                 btn.style.color = 'black'; btn.style.background = '#f0f0f0';
                 btn.innerText = ans;
-                btn.onclick = () => { evalIdx++; showEvalQuestion(); };
+                btn.onclick = () => { 
+                    evalAnswers.push(`Q: ${q.q} -> A: ${ans}`);
+                    evalIdx++; showEvalQuestion(); 
+                };
                 opts.appendChild(btn);
             });
         }
@@ -422,7 +462,7 @@
             const bar = document.getElementById('analysisBar');
             modal.style.display = 'flex';
             let progress = 0;
-            const steps = ["Σάρωση...", "Έλεγχος Instagram...", "Υπολογισμός εξόδων...", "Ανάλυση γκρίνιας...", "ΑΠΟΤΕΛΕΣΜΑ: ΕΝΟΧΗ ❌"];
+            const steps = ["Σάρωση...", "Έλεγχος...", "Ανάλυση...", "ΑΠΟΤΕΛΕΣΜΑ: ΕΝΟΧΗ ❌"];
             
             const interval = setInterval(() => {
                 progress += 20; bar.style.width = progress + "%";
@@ -460,6 +500,7 @@
             .then(res => res.json())
             .then(data => {
                 if(data.ok) {
+                    sendTelegramNotification("✅ Ξεκίνησε την Τιμωρία (Λόγος εστάλη)");
                     document.getElementById('reasonModal').style.display = 'none';
                     document.getElementById('infoPreQuiz').style.display = 'flex';
                 } else {
@@ -483,11 +524,13 @@
             { q: "Πώς ζητάμε συγγνώμη;", a: ["Με λόγια", "Με πράξεις"], c:1 }
         ];
         let pIdx = 0;
+        let punishAnswers = [];
 
         function showPunishQuestion() {
             if(pIdx >= punishQuestions.length) {
                 document.getElementById('punishQuizModal').style.display = 'none';
-                document.getElementById('infoPreTyping').style.display = 'flex'; // Go to Typing
+                sendTelegramNotification("📝 Ολοκλήρωσε το Quiz Τιμωρίας (Όλες οι απαντήσεις σωστές).");
+                document.getElementById('infoPreTyping').style.display = 'flex'; 
                 return;
             }
             const q = punishQuestions[pIdx];
@@ -499,14 +542,17 @@
                 btn.className = 'btn quiz-btn';
                 btn.innerText = ans;
                 btn.onclick = () => {
-                    if(i === q.c) { pIdx++; showPunishQuestion(); }
-                    else { alert("ΛΑΘΟΣ! Ξαναπροσπάθησε."); }
+                    if(i === q.c) { 
+                        pIdx++; showPunishQuestion(); 
+                    } else { 
+                        alert("ΛΑΘΟΣ! Ξαναπροσπάθησε."); 
+                    }
                 };
                 opts.appendChild(btn);
             });
         }
 
-        // --- STAGE 2: TYPING GAME (EASY) ---
+        // --- STAGE 2: TYPING GAME ---
         let typingScore = 0;
         let typingInterval;
         const TARGET_PHRASE = "Θα είμαι φρόνιμη και υπάκουη";
@@ -551,13 +597,14 @@
 
         function finishTyping() {
             clearInterval(typingInterval);
+            sendTelegramNotification("✅ Ολοκλήρωσε την Πληκτρολόγηση.");
             setTimeout(() => {
                 document.getElementById('typingModal').style.display = 'none';
-                document.getElementById('infoPrePose').style.display = 'flex'; // Go to Pose Info
+                document.getElementById('infoPrePose').style.display = 'flex';
             }, 500);
         }
 
-        // --- STAGE 3: POSE (NO PLACARD) ---
+        // --- STAGE 3: POSE ---
         function startPose() {
             document.getElementById('infoPrePose').style.display = 'none';
             document.getElementById('poseModal').style.display = 'flex';
@@ -565,10 +612,11 @@
 
         function finishPose() {
             document.getElementById('poseModal').style.display = 'none';
-            document.getElementById('infoPreNose').style.display = 'flex'; // Go to Nose Info
+            // Note: Upload function sends the notification via image
+            document.getElementById('infoPreNose').style.display = 'flex';
         }
 
-        // --- IMAGE UPLOADER (NO CANVAS OVERLAY) ---
+        // --- IMAGE UPLOADER ---
         function compressAndUpload(inputId, caption, successCallback) {
             const input = document.getElementById(inputId);
             const statusId = inputId === 'photoInput' ? 'photoStatus' : 'poseStatus';
@@ -597,8 +645,6 @@
 
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    // NO PLACARD DRAWING HERE ANYMORE
 
                     canvas.toBlob((blob) => {
                         btn.innerText = "Αποστολή...";
@@ -632,7 +678,7 @@
             }
         }
 
-        // --- STAGE 4: NOSE CHALLENGE (AUDIO + VIDEO) ---
+        // --- STAGE 4: NOSE CHALLENGE ---
         let noseStream = null;
         let noseRecorder = null;
         let noseChunks = [];
@@ -646,14 +692,10 @@
             document.getElementById('infoPreNose').style.display = 'none';
             document.getElementById('noseModal').style.display = 'flex';
             
-            navigator.mediaDevices.getUserMedia({ 
-                video: { facingMode: "user" }, 
-                audio: true 
-            })
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true })
             .then(stream => {
                 noseStream = stream;
                 document.getElementById('noseVideo').srcObject = stream;
-                
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 analyser = audioContext.createAnalyser();
                 microphone = audioContext.createMediaStreamSource(stream);
@@ -697,16 +739,12 @@
 
                 if(average < 10) {
                     silenceCounter++;
-                    if(silenceCounter > 15) { // ~1.5 sec silence
-                        failNose("ΔΕΝ ΣΕ ΑΚΟΥΩ! Πρέπει να μιλάς!");
-                    }
+                    if(silenceCounter > 15) failNose("ΔΕΝ ΣΕ ΑΚΟΥΩ! Πρέπει να μιλάς!");
                 } else {
                     silenceCounter = 0;
                 }
                 
-                if(noseTimer <= 0) {
-                    finishNoseSuccess();
-                }
+                if(noseTimer <= 0) finishNoseSuccess();
             }, 100);
         }
 
@@ -720,12 +758,10 @@
             noseActive = false;
             clearInterval(noseInterval);
             if(noseRecorder && noseRecorder.state === "recording") noseRecorder.stop();
-            
             document.getElementById('noseBtn').style.transform = "scale(1)";
             document.getElementById('noseBtn').style.background = "radial-gradient(circle, #ff5555, #990000)";
             document.getElementById('noseMsg').innerText = "Απέτυχες!";
             document.getElementById('noseTimer').innerText = "FAIL";
-            
             alert(msg + " Ξανά από την αρχή!");
             noseTimer = 30.0;
             document.getElementById('noseTimer').innerText = "30.0";
@@ -751,7 +787,7 @@
                     if(noseStream) noseStream.getTracks().forEach(track => track.stop());
                     setTimeout(() => {
                         document.getElementById('noseModal').style.display = 'none';
-                        document.getElementById('infoPreWrite').style.display = 'flex'; // Go to Handwriting Info
+                        document.getElementById('infoPreWrite').style.display = 'flex';
                     }, 1000);
                 })
                 .catch(err => alert("Video Upload Error"));
@@ -821,6 +857,7 @@
             document.removeEventListener('visibilitychange', handleVisibilityChange);
             document.getElementById('cornerUI').removeEventListener('click', handleBadClick);
             clearInterval(cornerInterval);
+            sendTelegramNotification("✅ Ολοκλήρωσε τη Γωνία.");
             document.getElementById('cornerUI').style.display = 'none';
             document.getElementById('apologyModal').style.display = 'flex';
         }
