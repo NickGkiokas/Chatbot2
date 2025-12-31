@@ -201,7 +201,7 @@
 
         <div id="city-1" class="city-node locked" style="top: 15%; left: 20%;" onclick="handleCityClick(1)">
             <div class="marker-icon">1</div>
-            <div class="city-info"><span class="stage-label">Σταση 1</span><span class="city-name">Μιλάνο 👠</span></div>
+            <div class="city-info"><span class="stage-label">Σταση 1</span><span class="city-name">Μιλάνο 🤌🏻</span></div>
         </div>
 
         <div id="city-2" class="city-node locked" style="top: 32%; left: 80%;" onclick="handleCityClick(2)">
@@ -321,29 +321,43 @@
             }
             else if (level === 3) {
                 title.innerText = "Μόντενα: Warm Up";
-                instr.innerText = "Πάτα το κουμπί γρήγορα 10 φορές!";
+                instr.innerText = "Πάτα το κουμπί γρήγορα 10 φορές για να εμφανιστούν τέλειες κάλτσες και να ζεστάνεις τις πατούσες σου!";
                 area.innerHTML = `<button class="game-btn-big" id="warmBtn">❄️</button>`;
                 runWarmUpGame(level);
             }
             else if (level === 4) {
                 title.innerText = "Φλωρεντία: Befana";
-                instr.innerText = "Η μάγισσα πετάει... Πιάσε το δώρο!";
+                instr.innerText = "Στη Φλωρεντία συνάντησα μια μυστηριώδη μάγισσα... Πάτα για να δεις τι μου έδωσε για σένα!";
                 area.innerHTML = `
                     <div style="font-size:70px; margin:20px 0; animation: float 2s infinite ease-in-out;">🧙‍♀️</div>
                     <style>@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-20px);} }</style>
                     <button class="msg-btn" onclick="winLevel(4)" style="width:100%;">Πιάσε το!</button>
                 `;
             }
-            else if (level === 5) {
-                title.innerText = "Μπολόνια: Quiz";
-                instr.innerText = "Ποιο είναι το μυστικό της Ιταλίας;";
+           else if (level === 5) {
+                title.innerText = "Μπολόνια: San Luca";
                 area.innerHTML = `
-                    <button class="choice-btn" onclick="showMsg('Λάθος!', 'Πολύ άγχος...', null)">Δουλειά</button>
-                    <button class="choice-btn" onclick="winLevel(5)" style="background:var(--flag-green); color:white;">Pasta & Amore</button>
-                    <button class="choice-btn" onclick="showMsg('Όχι...', 'Αμερικανιά!', null)">Καφές Φίλτρου</button>
+                    <div style="
+                        background: #fff9c4; 
+                        color: #333; 
+                        padding: 15px; 
+                        border-radius: 5px; 
+                        border: 1px dashed #999; 
+                        text-align: left; 
+                        font-family: 'Georgia', serif; 
+                        font-style: italic; 
+                        line-height: 1.5; 
+                        font-size: 0.9rem; 
+                        margin-bottom: 15px;">
+                        
+                        <p>Ένιωσα μια ιδιαίτερη ενέργεια σε αυτή την εκκκλησία και αυτό το μέρος.</p>
+                        <p> Και ξέρω ότι κι εσύ τα αισθάνεσαι ιδιαίτερα αυτά και τους δίνεις αξία.</p>
+                        <p>Πήρα το βραχιόλι του Οκτωβρίου λόγω των γενεθλίων σου, αλλά και επειδή έχει ωραίο χρώμα και γράφει κάτι σημαντικό.</p>
+                        <p style="text-align: right; margin-top: 10px;">❤️</p>
+                    </div>
+                    <button class="action-btn" onclick="winLevel(5)">Συνέχεια</button>
                 `;
             }
-        }
 
         // --- WIN LOGIC ---
         function winLevel(level) {
