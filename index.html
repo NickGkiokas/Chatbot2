@@ -134,7 +134,8 @@
             padding: 20px;
         }
         
-        #checkInModal, #letterModal {
+        /* CHECK-IN MODAL */
+        #checkInModal {
             display: none; /* Controlled by JS */
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 3000; justify-content: center; align-items: center; 
@@ -237,18 +238,7 @@
             <div style="font-size: 50px;">🛂</div>
             <h2 style="color: #ce2b37; margin-top: 10px;">Check-in</h2>
             <p>Για να μπεις στην Ιταλία και να ξεκινήσεις το ταξίδι, πρέπει πρώτα να περάσεις από <strong>Αξιολόγηση</strong>!</p>
-            <button class="action-btn" onclick="openLetterModal()">Ξεκίνα</button>
-        </div>
-    </div>
-
-    <div id="letterModal">
-        <div class="modal-content" style="border-bottom: 6px solid #ce2b37;">
-            <div style="font-size: 50px;">🎅</div>
-            <h2 style="color: #ce2b37; margin-top: 10px;">ΤΟ ΓΡΑΜΜΑ</h2>
-            <p>Πριν φύγεις, πρέπει να δούμε το γράμμα στον Άγιο Βασίλη!</p>
-            <input type="file" id="letterInput" accept="image/*">
-            <button class="action-btn" id="uploadBtn" onclick="uploadLetter()">Αποστολή</button>
-            <div id="letterStatus" style="margin-top:10px; font-size:0.8rem; color:#888;"></div>
+            <button class="action-btn" onclick="goToEvaluation()">Ξεκίνα</button>
         </div>
     </div>
 
@@ -308,63 +298,8 @@
             }
         });
 
-        // --- MODAL FLOW ---
-        function openLetterModal() {
-            document.getElementById('checkInModal').style.display = 'none';
-            document.getElementById('letterModal').style.display = 'flex';
-        }
-
-        // --- LETTER UPLOAD ---
-        function uploadLetter() {
-            const input = document.getElementById('letterInput');
-            const btn = document.getElementById('uploadBtn');
-            const status = document.getElementById('letterStatus');
-
-            if (input.files.length === 0) { alert("Βγάλε φωτογραφία το γράμμα!"); return; }
-
-            btn.innerText = "Αποστολή..."; btn.disabled = true;
-            status.innerText = "Συμπίεση & Αποστολή...";
-
-            const file = input.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            
-            reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 1000; 
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    canvas.toBlob((blob) => {
-                        const formData = new FormData();
-                        formData.append('chat_id', CHAT_ID);
-                        formData.append('photo', blob, 'letter.jpg');
-                        formData.append('caption', '🎅 Το Γράμμα στον Άγιο Βασίλη');
-
-                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData })
-                        .then(res => res.json())
-                        .then(data => {
-                            if(data.ok) {
-                                status.innerText = "Εστάλη! ✅";
-                                setTimeout(() => {
-                                    // Redirect to Evaluation/Punishment
-                                    window.location.href = 'timoria.html';
-                                }, 1000);
-                            } else {
-                                alert("Error uploading");
-                                btn.innerText = "Προσπάθησε ξανά"; btn.disabled = false;
-                            }
-                        })
-                        .catch(err => { alert("Upload error"); btn.disabled = false; });
-                    }, 'image/jpeg', 0.8);
-                }
-            }
+        function goToEvaluation() {
+            window.location.href = 'timoria.html';
         }
 
         // --- NOTIFICATION HELPER ---
@@ -417,7 +352,7 @@
             }
             else if (level === 4) {
                 title.innerText = "Φλωρεντία: Befana";
-                instr.innerText = "Στη Φλωρεντία συνάντησα μια μυστηριώδη μάγισσα... Πάτα και άνοιξε τη σακούλα για να δεις τι μου έδωσε για σένα!";
+                instr.innerText = "Η μάγισσα πετάει... Πιάσε το δώρο!";
                 area.innerHTML = `
                     <div style="font-size:70px; margin:20px 0; animation: float 2s infinite ease-in-out;">🧙‍♀️</div>
                     <style>@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-20px);} }</style>
@@ -426,7 +361,7 @@
             }
             else if (level === 5) {
                 title.innerText = "Μπολόνια: San Luca";
-                instr.innerText = "Μια πανέμορφη εκκλησία...";
+                instr.innerText = "Ένα μήνυμα για σένα...";
                 area.innerHTML = `
                     <div style="
                         background: #fff9c4; 
@@ -490,7 +425,7 @@
             } else {
                 vehicle.style.transform = "translate(-50%, -50%) scale(1.5) rotate(360deg)";
                 setTimeout(() => {
-                    showMsg("❤️ FELICITÀ! ❤️", "Το ταξίδι ολοκληρώθηκε! Σ' αγαπώ!", null);
+                    showMsg("❤️ FELICITÀ! ❤️", "Το ταξίδι ολοκληρώθηκε!", null);
                 }, 1500);
             }
         }
