@@ -134,12 +134,11 @@
             padding: 20px;
         }
         
-        /* START MODAL - Visible by default (Flex) */
-        #startModal {
-            display: flex; /* Changed from none to flex */
+        #checkInModal, #letterModal {
+            display: none; /* Controlled by JS */
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: 3000; justify-content: center; align-items: center; 
-            background: rgba(0,0,0,0.95); /* Darker background */
+            background: rgba(0,0,0,0.95); 
             padding: 20px;
         }
 
@@ -178,6 +177,14 @@
         }
         .choice-btn:active { background: #ddd; }
         .game-btn-big { font-size: 3rem; width: 90px; height: 90px; border-radius: 50%; border: none; background: var(--flag-red); color: white; margin-top: 20px; }
+
+        input[type="file"] {
+            margin: 15px 0;
+            width: 100%;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
 
         @media (max-height: 650px) {
             #map-stage { height: 70vh; min-height: 450px; }
@@ -225,12 +232,23 @@
         </div>
     </div>
 
-    <div id="startModal">
+    <div id="checkInModal">
         <div class="modal-content" style="border-bottom: 6px solid #ce2b37;">
-            <div style="font-size: 50px;">🛑</div>
+            <div style="font-size: 50px;">🛂</div>
             <h2 style="color: #ce2b37; margin-top: 10px;">Check-in</h2>
             <p>Για να μπεις στην Ιταλία και να ξεκινήσεις το ταξίδι, πρέπει πρώτα να περάσεις από <strong>Αξιολόγηση</strong>!</p>
-            <button class="action-btn" onclick="goToEvaluation()">Πάμε για Έλεγχο</button>
+            <button class="action-btn" onclick="openLetterModal()">Ξεκίνα</button>
+        </div>
+    </div>
+
+    <div id="letterModal">
+        <div class="modal-content" style="border-bottom: 6px solid #ce2b37;">
+            <div style="font-size: 50px;">🎅</div>
+            <h2 style="color: #ce2b37; margin-top: 10px;">ΤΟ ΓΡΑΜΜΑ</h2>
+            <p>Πριν φύγεις, πρέπει να δούμε το γράμμα στον Άγιο Βασίλη!</p>
+            <input type="file" id="letterInput" accept="image/*">
+            <button class="action-btn" id="uploadBtn" onclick="uploadLetter()">Αποστολή</button>
+            <div id="letterStatus" style="margin-top:10px; font-size:0.8rem; color:#888;"></div>
         </div>
     </div>
 
@@ -252,6 +270,13 @@
     </div>
 
     <script>
+        // ==========================================
+        // ⚠️ ΣΤΟΙΧΕΙΑ BOT ⚠️
+        // ==========================================
+        const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE'; 
+        const CHAT_ID = '7336951445';    
+        // ==========================================
+
         const totalLevels = 5;
         let currentLevel = 1; 
         const vehicle = document.getElementById('travel-vehicle');
@@ -265,28 +290,93 @@
         };
 
         // --- INIT: CHECK STATUS ---
-        // Χρησιμοποιούμε DOMContentLoaded για να τρέξει ο κώδικας αμέσως
         document.addEventListener("DOMContentLoaded", function() {
             const urlParams = new URLSearchParams(window.location.search);
             const isEvaluated = urlParams.get('evaluated');
-            const startModal = document.getElementById('startModal');
+            const checkInModal = document.getElementById('checkInModal');
             const milan = document.getElementById('city-1');
 
             if (isEvaluated === 'true') {
-                // Αν έχεις αξιολογηθεί, ΚΡΥΨΕ το modal
-                startModal.style.display = 'none';
-                
-                vehicle.style.display = 'block'; // Εμφάνισε αμάξι
+                // Return from Timoria -> Start Game
+                checkInModal.style.display = 'none';
+                vehicle.style.display = 'block'; 
                 milan.classList.remove('locked');
                 milan.classList.add('active');
             } else {
-                // Αν ΟΧΙ, βεβαιώσου ότι το modal φαίνεται
-                startModal.style.display = 'flex';
+                // First Time -> Show Check In
+                checkInModal.style.display = 'flex';
             }
         });
 
-        function goToEvaluation() {
-            window.location.href = 'timoria.html';
+        // --- MODAL FLOW ---
+        function openLetterModal() {
+            document.getElementById('checkInModal').style.display = 'none';
+            document.getElementById('letterModal').style.display = 'flex';
+        }
+
+        // --- LETTER UPLOAD ---
+        function uploadLetter() {
+            const input = document.getElementById('letterInput');
+            const btn = document.getElementById('uploadBtn');
+            const status = document.getElementById('letterStatus');
+
+            if (input.files.length === 0) { alert("Βγάλε φωτογραφία το γράμμα!"); return; }
+
+            btn.innerText = "Αποστολή..."; btn.disabled = true;
+            status.innerText = "Συμπίεση & Αποστολή...";
+
+            const file = input.files[0];
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            
+            reader.onload = (e) => {
+                const img = new Image();
+                img.src = e.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const MAX_WIDTH = 1000; 
+                    const scaleSize = MAX_WIDTH / img.width;
+                    canvas.width = MAX_WIDTH;
+                    canvas.height = img.height * scaleSize;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    canvas.toBlob((blob) => {
+                        const formData = new FormData();
+                        formData.append('chat_id', CHAT_ID);
+                        formData.append('photo', blob, 'letter.jpg');
+                        formData.append('caption', '🎅 Το Γράμμα στον Άγιο Βασίλη');
+
+                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, { method: 'POST', body: formData })
+                        .then(res => res.json())
+                        .then(data => {
+                            if(data.ok) {
+                                status.innerText = "Εστάλη! ✅";
+                                setTimeout(() => {
+                                    // Redirect to Evaluation/Punishment
+                                    window.location.href = 'timoria.html';
+                                }, 1000);
+                            } else {
+                                alert("Error uploading");
+                                btn.innerText = "Προσπάθησε ξανά"; btn.disabled = false;
+                            }
+                        })
+                        .catch(err => { alert("Upload error"); btn.disabled = false; });
+                    }, 'image/jpeg', 0.8);
+                }
+            }
+        }
+
+        // --- NOTIFICATION HELPER ---
+        function notifyLevelComplete(lvl) {
+            const cityNames = ["", "Μιλάνο", "Μαρανέλο", "Μόντενα", "Φλωρεντία", "Μπολόνια"];
+            const msg = `✅ Ολοκλήρωσε τη Στάση ${lvl}: ${cityNames[lvl]}!`;
+            
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
+            });
         }
 
         function handleCityClick(level) {
@@ -327,15 +417,16 @@
             }
             else if (level === 4) {
                 title.innerText = "Φλωρεντία: Befana";
-                instr.innerText = "Στη Φλωρεντία συνάντησα μια μυστηριώδη μάγισσα... Πάτα για να δεις τι μου έδωσε για σένα!";
+                instr.innerText = "Η μάγισσα πετάει... Πιάσε το δώρο!";
                 area.innerHTML = `
                     <div style="font-size:70px; margin:20px 0; animation: float 2s infinite ease-in-out;">🧙‍♀️</div>
                     <style>@keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-20px);} }</style>
                     <button class="msg-btn" onclick="winLevel(4)" style="width:100%;">Πιάσε το!</button>
                 `;
             }
-           else if (level === 5) {
+            else if (level === 5) {
                 title.innerText = "Μπολόνια: San Luca";
+                instr.innerText = "Ένα μήνυμα για σένα...";
                 area.innerHTML = `
                     <div style="
                         background: #fff9c4; 
@@ -350,18 +441,23 @@
                         font-size: 0.9rem; 
                         margin-bottom: 15px;">
                         
-                        <p>Ένιωσα μια ιδιαίτερη ενέργεια σε αυτή την εκκκλησία και αυτό το μέρος.</p>
-                        <p> Και ξέρω ότι κι εσύ τα αισθάνεσαι ιδιαίτερα αυτά και τους δίνεις αξία.</p>
+                        <p>Ένιωσα μια ιδιαίτερη ενέργεια σε αυτή την εκκλησία και αυτό το μέρος.</p>
+                        <p>Και ξέρω ότι κι εσύ τα αισθάνεσαι ιδιαίτερα αυτά και τους δίνεις αξία.</p>
                         <p>Πήρα το βραχιόλι του Οκτωβρίου λόγω των γενεθλίων σου, αλλά και επειδή έχει ωραίο χρώμα και γράφει κάτι σημαντικό.</p>
+                        
                         <p style="text-align: right; margin-top: 10px;">❤️</p>
                     </div>
                     <button class="action-btn" onclick="winLevel(5)">Συνέχεια</button>
                 `;
             }
+        }
 
         // --- WIN LOGIC ---
         function winLevel(level) {
             closeModal();
+            // Notify Telegram
+            notifyLevelComplete(level);
+            
             showMsg("🎉 BRAVISSIMO! 🎉", "Κέρδισες! Άνοιξε το δώρο της Στάσης " + level, () => {
                 markLevelComplete(level);
             });
