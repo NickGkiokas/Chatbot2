@@ -267,7 +267,7 @@
     <div id="infoPreNose" class="modal">
         <div class="modal-content">
             <h3>Βήμα 4: ΠΕΙΘΑΡΧΙΑ</h3>
-            <p class="info-text">Θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου και θα λες " Συγγνώμη που ήμουν άτακτη και ανυπάκουη"."</p>
+            <p class="info-text">Θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου για 15 δεύτερα και θα λες " Συγγνώμη που ήμουν άτακτη και ανυπάκουη"."</p>
             <p class="info-text" style="color:var(--accent-red);">
                 <strong>ΠΡΟΣΟΧΗ:</strong><br>
                 1. Μην σηκώσεις τη μύτη σου.<br>
@@ -284,7 +284,7 @@
             <video id="noseVideo" autoplay playsinline muted></video>
             
             <div style="display:flex; align-items:center; justify-content:center; margin:10px;">
-                <div id="noseTimer" style="font-size:2.5rem; font-weight:900; color:var(--accent-red);">30.0</div>
+                <div id="noseTimer" style="font-size:2.5rem; font-weight:900; color:var(--accent-red);">15.0</div>
                 <div id="voiceIndicator"></div>
             </div>
             
@@ -325,7 +325,7 @@
         <div class="modal-content">
             <h3>Βήμα 6</h3>
             <p class="info-text">"Και τώρα... έφυγες στη γωνία! Σκέψου τι έκανες και τι πρέπει να κάνεις από δω και πέρα. Μην βγεις και μην πατάς τίποτα αν δε λήξει ο χρόνος."</p>
-            <button class="btn btn-red" onclick="startCorner(2)">Πάω στη Γωνία</button>
+            <button class="btn btn-red" onclick="startCorner(120)">Πάω στη Γωνία</button>
         </div>
     </div>
 
@@ -489,11 +489,11 @@
 
         // --- EVALUATION ---
         const evalQuestions = [
-            { q: "Ήσουν φρόνιμη;", a: ["Ναι, αγγελούδι 😇", "Εχμ... ίσως; 😈"] },
-            { q: "Ξόδεψες πολλά;", a: ["Όχι βέβαια", "Τα πάντα 💸"] },
-            { q: "Ποιος είναι ο πιο ωραίος;", a: ["Εσύ ❤️", "Ο Brad Pitt"] },
-            { q: "Έφαγες γλυκά;", a: ["Μπα...", "Όλα! 🍫"] },
-            { q: "Μου πήρες δώρο;", a: ["Το καλύτερο 🎁", "Θα δούμε"] }
+            { q: "Ήσουν φρόνιμη;", a: ["Ναι, αγγελούδι 😇", "Εμ... ίσως..."] },
+            { q: "Ενημέρωνες πάντα;", a: ["Βέβαια!", "Ε όχι και πάντα..."] },
+            { q: "ΕΙΣΑΙ ΕΤΟΙΜΗ ΓΙΑ ΠΡΩΤΟΧΡΟΝΙΑ;", a: ["ΝΑΙ", "ΕΝΝΟΕΙΤΑΙ"] },
+            { q: "Έφαγες γλυκά;", a: ["Μπα...", "Όλα!"] },
+            { q: "Λες αλήθεια;", a: ["Πάντα!", "Θα δούμε..."] }
         ];
         let evalIdx = 0;
         let evalAnswers = [];
@@ -588,11 +588,11 @@
         }
 
         const punishQuestions = [
-            { q: "Ποια είναι η σημαντικότερη αρετή;", a: ["Υπομονή", "Shopping"], c:0 },
+            { q: "Γιατί δεν ήσουν φρόνιμη;", a: ["Δε ξέρω συγγνώμη", "Γιατί έτσι"], c:0 },
             { q: "Ποιος έχει πάντα δίκιο;", a: ["Εγώ", "Εσύ"], c:1 },
-            { q: "Τι θα κάνεις φέτος;", a: ["Θα είμαι καλή", "Σκανταλιές"], c:0 },
+            { q: "Τι θα κάνεις τη νέα χρονιά;", a: ["Θα είμαι καλή", "Θα είμαι άτακτη"], c:0 },
             { q: "Αξίζεις δώρα;", a: ["Ναι!", "Θα προσπαθήσω"], c:1 },
-            { q: "Πώς ζητάμε συγγνώμη;", a: ["Με λόγια", "Με πράξεις"], c:1 }
+            { q: "ΓΑΜΩ ΤΗ ΜΠΟΛΟΝΙΑ", a: ["ΝΑΙ", "CAZZO"], c:1 }
         ];
         let pIdx = 0;
 
@@ -751,7 +751,7 @@
         let noseStream = null;
         let noseRecorder = null;
         let noseChunks = [];
-        let noseTimer = 30.0;
+        let noseTimer = 15.0;
         let noseInterval;
         let noseActive = false;
         let audioContext, analyser, microphone, dataArray;
@@ -780,7 +780,7 @@
             if(noseActive) return;
             
             noseActive = true;
-            noseTimer = 30.0;
+            noseTimer = 15.0;
             silenceCounter = 0;
             
             document.getElementById('noseBtn').style.transform = "scale(0.9)";
@@ -832,8 +832,8 @@
             document.getElementById('noseMsg').innerText = "Απέτυχες!";
             document.getElementById('noseTimer').innerText = "FAIL";
             alert(msg + " Ξανά από την αρχή!");
-            noseTimer = 30.0;
-            document.getElementById('noseTimer').innerText = "30.0";
+            noseTimer = 15.0;
+            document.getElementById('noseTimer').innerText = "15.0";
         }
 
         function finishNoseSuccess() {
@@ -990,7 +990,7 @@
         function startExtraCorner() {
             document.getElementById('endCornerBtn').style.display = 'none';
             document.getElementById('timerDisplay').style.color = 'var(--accent-red)';
-            startCorner(2); 
+            startCorner(60); 
         }
 
         function finishPunishment() {
