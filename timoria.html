@@ -134,8 +134,8 @@
         <div class="modal-content">
             <div style="font-size: 4rem;">🛂</div>
             <h2>CHECK-IN</h2>
-            <p>Ώρα για αξιολόγηση και έλεγχο διαβατηρίων.</p>
-            <p style="color:#aaa;">Ελπίζω να ήσουν καλό κορίτσι...</p>
+            <p>Ώρα για αξιολόγηση πριν ξεκινήσεις το ταξίδι.</p>
+            <p style="color:#aaa;">Καλή τύχη...</p>
             <button class="btn btn-green" onclick="closeCheckIn()">Ξεκίνα</button>
         </div>
     </div>
@@ -144,23 +144,23 @@
         <div class="modal-content">
             <div style="font-size: 4rem;">🎅</div>
             <h2>ΤΟ ΓΡΑΜΜΑ</h2>
-            <p>Πριν ξεκινήσουμε, πρέπει να καταθέσεις το γράμμα που έγραψες στον Άγιο Βασίλη.</p>
+            <p>Πριν ξεκινήσουμε, γράψε γράμμα στον Άγιο Βασίλη και ανέβασέ το εδώ (πάρε το χαρτί από το κόκκινο φακελάκι και γράψε με το ειδικό μολύβι, αλλιώς δεν έχει δώρο!)</p>
             <input type="file" id="letterInput" accept="image/*" style="margin: 15px 0; width: 90%;">
             <button id="letterBtn" class="btn btn-red" onclick="uploadLetter()">Αποστολή Γράμματος</button>
             <div id="letterStatus" style="margin-top:10px; color:#888;"></div>
         </div>
     </div>
 
-    <h1>ΚΡΙΣΗ & ΤΙΜΩΡΙΑ ⚖️</h1>
+    <h1> ΠΟΥ ΠΙΣΤΕΥΕΙΣ ΟΤΙ ΘΑ ΜΠΕΙΣ; ΣΥΡΕ ΤΟ ΟΝΟΜΑ ΣΟΥ</h1>
 
     <div class="container" id="dragGame">
         <div class="zone naughty" id="zone-naughty">
             <div class="icon">😈</div>
-            <div class="zone-title">NAUGHTY</div>
+            <div class="zone-title">ΑΤΑΚΤΗ</div>
         </div>
         <div class="zone nice" id="zone-nice">
             <div class="icon">😇</div>
-            <div class="zone-title">NICE</div>
+            <div class="zone-title">ΚΑΛΗ</div>
         </div>
     </div>
     <div id="draggable-name">ΣΑΡΑ</div>
@@ -176,7 +176,7 @@
 
     <div id="analysisModal" class="modal">
         <div class="modal-content">
-            <div style="font-size: 3rem;">🤖</div>
+            <div style="font-size: 3rem;"></div>
             <h2 style="color: #00ff00;">ΑΝΑΛΥΣΗ</h2>
             <p id="analysisText">Επεξεργασία απαντήσεων...</p>
             <div class="progress-container" style="height:10px;"><div class="progress-bar" id="analysisBar" style="background:var(--flag-green);"></div></div>
@@ -187,8 +187,8 @@
     <div id="punishIntroModal" class="modal">
         <div class="modal-content">
             <div style="font-size: 4rem;">🚨</div>
-            <h2>ΕΧΕΙΣ ΚΡΙΘΕΙ ΕΝΟΧΗ!</h2>
-            <p>Το σύστημα εντόπισε πολλαπλές παραβάσεις. Δεν μπορείς να συνεχίσεις το ταξίδι αν δεν εκτίσεις την ποινή σου.</p>
+            <h2>ΕΧΕΙΣ ΚΡΙΘΕΙ ΑΤΑΚΤΗ!</h2>
+            <p>Το σύστημα εντόπισε πολλαπλές παραβάσεις. Δεν μπορείς να συνεχίσεις το ταξίδι και μπαίνεις τιμωρία. ΛΟΓΟΣ ΤΙΜΩΡΙΑΣ: Άτακτη, ανυπάκουη, βγήκε πολύ.</p>
             <button class="btn btn-red" onclick="startReasonModal()">Αποδοχή Τιμωρίας</button>
         </div>
     </div>
@@ -196,7 +196,7 @@
     <div id="reasonModal" class="modal">
         <div class="modal-content">
             <h2>ΟΜΟΛΟΓΙΑ</h2>
-            <p>Πριν ξεκινήσουμε, γράψε τον λόγο που τιμωρείσαι.</p>
+            <p>Πριν ξεκινήσουμε, γράψε τον λόγο που τιμωρείσαι (τον έμαθες πριν).</p>
             <p style="font-size:0.8rem; color:#888; margin-bottom:5px;">(Γράψε: "Μπαίνω τιμωρία γιατί...")</p>
             <textarea id="reasonInput" placeholder="Γράψε εδώ τον λόγο..."></textarea>
             <button class="btn btn-red" onclick="sendReason()">Αποστολή & Έναρξη</button>
@@ -222,7 +222,7 @@
     <div id="infoPreTyping" class="modal">
         <div class="modal-content">
             <h3>Βήμα 2: ΤΑΧΥΤΗΤΑ</h3>
-            <p class="info-text">"Πρέπει να το γράψεις και εδώ, γρήγορα και σωστά!"</p>
+            <p class="info-text">"Γράψε τη φράση για να τη μάθεις, γρήγορα και σωστά για να γεμίσει η μπάρα!"</p>
             <button class="btn" onclick="startTyping()">Ξεκίνα</button>
         </div>
     </div>
@@ -249,15 +249,15 @@
     <div id="infoPrePose" class="modal">
         <div class="modal-content">
             <h3>Βήμα 3</h3>
-            <p class="info-text">"Τώρα θέλω να δω ότι ντρέπεσαι πραγματικά. Πάρε το πιο ταπεινό σου ύφος."</p>
+            <p class="info-text">"Για να δούμε σε τι φάση είμαστε. Στείλε φωτογραφία με ταπεινό ύφος για να δείξεις ότι έμαθες."</p>
             <button class="btn" onclick="startPose()">Συνέχεια</button>
         </div>
     </div>
 
     <div id="poseModal" class="modal">
         <div class="modal-content">
-            <h2>ΕΝΔΙΑΜΕΣΟ: ΤΑΠΕΙΝΩΣΗ</h2>
-            <p>Βγάλε μια selfie με το πιο <strong>ταπεινό, μετανιωμένο ύφος</strong> που έχεις.</p>
+            <h2>ΕΝΔΙΑΜΕΣΟ: ΤΑΠΕΙΝΟΤΗΤΑ</h2>
+            <p>Βγάλε μια selfie με <strong>ταπεινό, μετανιωμένο ύφος</strong>.</p>
             <input type="file" id="poseInput" accept="image/*" style="color:white; margin: 10px 0;">
             <button class="btn btn-red" id="btnUploadPose" onclick="compressAndUpload('poseInput', '📸 Αποδεικτικό: Ταπεινό Ύφος', finishPose)">Αποστολή Φώτο</button>
             <div id="poseStatus" style="margin-top:10px; color:#aaa; font-size:0.8rem;"></div>
@@ -266,14 +266,13 @@
 
     <div id="infoPreNose" class="modal">
         <div class="modal-content">
-            <h3>Βήμα 4: Η ΜΥΤΗ</h3>
-            <p class="info-text">"Ήρθε η ώρα της κρίσης. Θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου."</p>
+            <h3>Βήμα 4: ΠΕΙΘΑΡΧΙΑ</h3>
+            <p class="info-text">Θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου και θα λες " Συγγνώμη που ήμουν άτακτη και ανυπάκουη"."</p>
             <p class="info-text" style="color:var(--accent-red);">
                 <strong>ΠΡΟΣΟΧΗ:</strong><br>
                 1. Μην σηκώσεις τη μύτη σου.<br>
-                2. Ταυτόχρονα πρέπει να λες ΔΥΝΑΤΑ:<br>
-                <em>"Ήμουν άτακτη και ανυπάκουη"</em><br>
-                Αν σταματήσεις να μιλάς, χάνεις!
+                2. Ταυτόχρονα πρέπει να λες τη φράση<br>
+                Αν σταματήσεις να μιλάς ή δε βάλεις τη μύτη, αρχίζεις από την αρχή!
             </p>
             <button class="btn btn-red" onclick="initNoseStage()">Είμαι έτοιμη</button>
         </div>
@@ -303,7 +302,7 @@
     <div id="infoPreWrite" class="modal">
         <div class="modal-content">
             <h3>Βήμα 5</h3>
-            <p class="info-text">"Ώρα για εξάσκηση. Πάρε χαρτί και στυλό ΤΩΡΑ!"</p>
+            <p class="info-text">"Συνεχίζουμε. Πάρε το δεύτερο χαρτί από τον κόκκινο φάκελο και το ειδικό μολύβι. Θα γράψεις στο χέρι "Θα είμαι καλό κορίτσι τη νέα χρονιά", αλλά στα ιταλικά γιατί τα πιάνεις καλύτερα!"</p>
             <button class="btn" onclick="startHandwriting()">Συνέχεια</button>
         </div>
     </div>
@@ -315,7 +314,7 @@
             <div style="background:#333; padding:10px; border-radius:10px; margin:10px 0; color:#00ff00; font-family:monospace;">
                 "Sarò una brava ragazza quest'anno"
             </div>
-            <p>Ανέβασε φωτογραφία:</p>
+            <p>Ανέβασε φωτογραφία το χαρτί με τη φράση γραμμένη 10 φορές:</p>
             <input type="file" id="photoInput" accept="image/*" style="color:white;">
             <button class="btn btn-red" id="btnUploadWrite" onclick="compressAndUpload('photoInput', '📸 Αποδεικτικό: Γραφή', finishHandwriting)">Αποστολή</button>
             <div id="photoStatus" style="margin-top:10px; color:#aaa; font-size:0.8rem;"></div>
@@ -325,8 +324,8 @@
     <div id="infoPreCorner" class="modal">
         <div class="modal-content">
             <h3>Βήμα 6</h3>
-            <p class="info-text">"Και τώρα... στη ΓΩΝΙΑ! Σκέψου τι έκανες. Μην τολμήσεις να βγεις."</p>
-            <button class="btn btn-red" onclick="startCorner(2)">Πήγαινε στη Γωνία</button>
+            <p class="info-text">"Και τώρα... έφυγες στη γωνία! Σκέψου τι έκανες και τι πρέπει να κάνεις από δω και πέρα. Μην βγεις και μην πατάς τίποτα αν δε λήξει ο χρόνος."</p>
+            <button class="btn btn-red" onclick="startCorner(2)">Πάω στη Γωνία</button>
         </div>
     </div>
 
@@ -335,7 +334,7 @@
         <h2 style="color:var(--accent-red); margin:10px;">Η ΓΩΝΙΑ</h2>
         <div id="timerDisplay">02:00</div>
         <p style="color:#666; font-size:0.9rem; text-align:center; padding:0 20px;">
-            Μην κλείσεις την οθόνη.<br>Αν βγεις από εδώ, προστίθεται χρόνος (+10s).
+            Μην κλείσεις την οθόνη.<br>Αν βγεις από εδώ, προστίθεται χρόνος (+10s). Πάτα μόνο το κουμπί κάτω αν πάει να σβήσει η οθόνη
         </p>
         <button class="keep-awake-btn" onclick="pokeCorner()">Touch me</button>
         <button id="endCornerBtn" class="btn btn-green" style="display:none; width: 200px; margin-top: 30px;" onclick="finishCorner()">Έμαθα το μάθημά μου</button>
@@ -344,8 +343,8 @@
     <div id="apologyModal" class="modal">
         <div class="modal-content">
             <h2>ΤΕΛΙΚΟΣ ΕΛΕΓΧΟΣ</h2>
-            <p>Ζήτα ευγενικά να βγεις. Στείλε ταπεινό φωνητικό.</p>
-            <button class="btn" id="apologyRecBtn" onmousedown="startApologyRec()" onmouseup="stopApologyRec()" ontouchstart="startApologyRec()" ontouchend="stopApologyRec()">🎙️ Συγγνώμη</button>
+            <p>Στείλε φωνητικό να δείξεις ότι έμαθες και ζήτα ευγενικά να βγεις από την τιμωρία. Θα αξιολογηθεί αν ήταν αρκετά ειλικρινές.</p>
+            <button class="btn" id="apologyRecBtn" onmousedown="startApologyRec()" onmouseup="stopApologyRec()" ontouchstart="startApologyRec()" ontouchend="stopApologyRec()">🎙️ Κράτα πατημένο και άσε στο τέλος</button>
             <div id="analysisUI" style="display:none; margin-top:20px;">
                 <p style="color:#00ff00; font-family:monospace; font-size:0.8rem;">Ανάλυση ειλικρίνειας...</p>
                 <div class="progress-container"><div class="progress-bar" id="apologyBar"></div></div>
@@ -356,9 +355,9 @@
     <div id="extraTimeModal" class="modal">
         <div class="modal-content">
             <div style="font-size:3rem;">🤨</div>
-            <h2>ΔΕΝ ΠΕΙΣΤΗΚΑΜΕ</h2>
-            <p>Ο τόνος της φωνής σου έδειξε <strong>ειρωνεία</strong>.</p>
-            <p>Θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία.</p>
+            <h2>ΔΕΝ ΕΠΕΙΣΕΣ</h2>
+            <p>Ο τόνος της φωνής σου έδειξε <strong>ειρωνεία και υφάκι</strong>.</p>
+            <p>Θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία. Φρόντισε αυτή τη φορά να ακουστείς πιο ταπεινή!</p>
             <button class="btn btn-red" onclick="startExtraCorner()">Πίσω στη Γωνία</button>
         </div>
     </div>
