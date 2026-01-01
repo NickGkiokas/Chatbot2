@@ -203,7 +203,7 @@
     <div id="poseModal" class="modal">
         <div class="modal-content">
             <h2>ΕΝΔΙΑΜΕΣΟ: ΤΑΠΕΙΝΩΣΗ</h2>
-            <p>Βγάλε μια selfie με <strong>ταπεινό, μετανιωμένο ύφος</strong>.</p>
+            <p>Βγάλε μια selfie με <strong>ταπεινό, μετανιωμένο ύφος (μην εντοπιστεί υφάκι!)</strong>.</p>
             <input type="file" id="poseInput" accept="image/*" style="color:white; margin: 10px 0;">
             <button class="btn btn-red" id="btnUploadPose" onclick="compressAndUpload('poseInput', '📸 Αποδεικτικό: Ταπεινό Ύφος', finishPose)">Αποστολή Φώτο</button>
             <div id="poseStatus" style="margin-top:10px; color:#aaa; font-size:0.8rem;"></div>
@@ -323,7 +323,7 @@
             <div style="font-size:3rem;">🤨</div>
             <h2>ΔΕΝ ΕΠΕΙΣΕΣ</h2>
             <p>Ο τόνος της φωνής σου έδειξε <strong>ειρωνεία και υφάκι</strong>.</p>
-            <p>Θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία. Φρόντισε αυτή τη φορά να ακουστείς πιο ταπεινή!</p>
+            <p>Άρα θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία για να κοπούν τελείως αυτά. Φρόντισε αυτή τη φορά να ακουστείς πιο ταπεινή!</p>
             <button class="btn btn-red" onclick="startExtraCorner()">Πίσω στη Γωνία</button>
         </div>
     </div>
@@ -752,7 +752,7 @@
         function endNoseHold(e) {
             if(e && e.type === 'touchend') e.preventDefault();
             if(!noseActive) return; 
-            failNose("Σήκωσες τη μύτη! Κλέβεις!");
+            failNose("Σήκωσες τη μύτη! Ξεκινάς από την αρχή!");
         }
 
         function failNose(msg) {
