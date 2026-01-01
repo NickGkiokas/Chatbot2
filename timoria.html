@@ -476,7 +476,7 @@
             const btn = document.querySelector('#reasonModal .btn');
             btn.innerText = "Αποστολή..."; btn.disabled = true;
 
-            const msg = `📝 *Ομολογία Αιτίας:*\n"${text}"`;
+            const msg = `📝 *Ο Μπόμπος έμαθε ότι μπαίνει τιμωρία και αναφέρει τον λόγο:*\n"${text}"`;
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
