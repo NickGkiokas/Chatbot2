@@ -130,39 +130,6 @@
 </head>
 <body>
 
-    <h1> ΠΟΥ ΠΙΣΤΕΥΕΙΣ ΟΤΙ ΗΣΟΥΝ; ΣΥΡΕ ΤΟ ΟΝΟΜΑ ΣΟΥ</h1>
-
-    <div class="container" id="dragGame">
-        <div class="zone naughty" id="zone-naughty">
-            <div class="icon">😈</div>
-            <div class="zone-title">ΑΤΑΚΤΗ</div>
-        </div>
-        <div class="zone nice" id="zone-nice">
-            <div class="icon">😇</div>
-            <div class="zone-title">ΚΑΛΗ</div>
-        </div>
-    </div>
-    <div id="draggable-name">ΣΑΡΑ</div>
-
-
-    <div id="evalQuizModal" class="modal">
-        <div class="modal-content">
-            <h2 style="color:var(--flag-green);">ΑΞΙΟΛΟΓΗΣΗ</h2>
-            <div id="evalQuestion" style="font-weight:bold; font-size:1.1rem; margin-bottom:15px; color:#fff;"></div>
-            <div id="evalOptions"></div>
-        </div>
-    </div>
-
-    <div id="analysisModal" class="modal">
-        <div class="modal-content">
-            <div style="font-size: 3rem;">🤖</div>
-            <h2 style="color: #00ff00;">ΑΝΑΛΥΣΗ</h2>
-            <p id="analysisText">Επεξεργασία απαντήσεων...</p>
-            <div class="progress-container" style="height:10px;"><div class="progress-bar" id="analysisBar" style="background:var(--flag-green);"></div></div>
-        </div>
-    </div>
-
-
     <div id="punishIntroModal" class="modal">
         <div class="modal-content">
             <div style="font-size: 4rem;">🚨</div>
@@ -246,13 +213,13 @@
     <div id="infoPreNose" class="modal">
         <div class="modal-content">
             <h3>Βήμα 4: ΠΕΙΘΑΡΧΙΑ</h3>
-            <p class="info-text">"Για τιμωρία θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου για 15 δευτερόλεπτα και θα λες Συγγνώμη που ήμουν άτακτη και ανυπάκουη."</p>
+            <p class="info-text">"Για τιμωρία θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου και θα λες Συγγνώμη που ήμουν άτακτη και ανυπάκουη."</p>
             <p class="info-text" style="color:var(--accent-red);">
                 <strong>ΠΡΟΣΟΧΗ:</strong><br>
                 1. Μην σηκώσεις τη μύτη σου.<br>
                 2. Ταυτόχρονα πρέπει να λες ΔΥΝΑΤΑ:<br>
                 <em>"Συγγνώμη που ήμουν άτακτη και ανυπάκουη"</em><br>
-                Αν σταματήσεις να μιλάς ή δε βάλεις τη μύτη, αρχίζεις από την αρχή!
+                Αν σταματήσεις να μιλάς, χάνεις!
             </p>
             <button class="btn btn-red" onclick="initNoseStage()">Είμαι έτοιμη</button>
         </div>
@@ -282,7 +249,7 @@
     <div id="infoPreWrite" class="modal">
         <div class="modal-content">
             <h3>Βήμα 5</h3>
-            <p class="info-text">"Συνεχίζουμε. Πάρε χριστουγεννιάτικο χαρτί από τον κόκκινο φάκελο και το ειδικό μολύβι. Θα γράψεις στο χέρι "Θα είμαι καλό κορίτσι τη νέα χρονιά", αλλά στα ιταλικά γιατί τα πιάνεις καλύτερα!"</p>
+            <p class="info-text">"Συνεχίζουμε. Πρέπει να γράψεις την πρόταση <strong>Sarò una brava ragazza quest'anno</strong>."</p>
             <button class="btn" onclick="startHandwriting()">Συνέχεια</button>
         </div>
     </div>
@@ -290,13 +257,32 @@
     <div id="handwritingModal" class="modal">
         <div class="modal-content">
             <h2>ΣΤΑΔΙΟ 5: ΓΡΑΦΗ</h2>
-            <p>Γράψε <strong>10 φορές</strong>:</p>
-            <div style="background:#333; padding:10px; border-radius:10px; margin:10px 0; color:#00ff00; font-family:monospace;">
-                "Sarò una brava ragazza quest'anno"
+            
+            <div id="writeChoice">
+                <p>Διάλεξε την ποινή σου:</p>
+                <button class="btn" onclick="chooseHand()">✍️ 5 φορές στο χέρι (στο χριστουγεννιάτικο χαρτί με το ειδικό σου μολύβι)</button>
+                <button class="btn" onclick="chooseDigital()">📱 10 φορές στο κινητό</button>
             </div>
-            <p>Ανέβασε φωτογραφία:</p>
-            <input type="file" id="photoInput" accept="image/*" style="color:white;">
-            <button class="btn btn-red" id="btnUploadWrite" onclick="compressAndUpload('photoInput', '📸 Αποδεικτικό: Γραφή', finishHandwriting)">Αποστολή</button>
+
+            <div id="writeHand" style="display:none;">
+                <p>Πάρε χριστουγεννιάτικο χαρτί και γράψε <strong>5 φορές</strong>:</p>
+                <div style="background:#333; padding:10px; border-radius:10px; margin:10px 0; color:#00ff00; font-family:monospace;">
+                    "Sarò una brava ragazza quest'anno"
+                </div>
+                <p>Ανέβασε φωτογραφία:</p>
+                <input type="file" id="photoInput" accept="image/*" style="color:white;">
+                <button class="btn btn-red" id="btnUploadWrite" onclick="compressAndUpload('photoInput', '📸 Αποδεικτικό: Γραφή (Χέρι)', finishHandwriting)">Αποστολή</button>
+            </div>
+
+            <div id="writeDigital" style="display:none;">
+                <p>Γράψε (χωρίς να κλέψεις!) <strong>10 φορές</strong>:</p>
+                <div style="background:#333; padding:5px; border-radius:10px; margin-bottom:10px; color:#00ff00; font-family:monospace; font-size:0.8rem;">
+                    Sarò una brava ragazza quest'anno
+                </div>
+                <textarea id="digitalInput" rows="10" placeholder="1. Sarò... 2. Sarò..."></textarea>
+                <button class="btn btn-red" onclick="submitDigital()">Αποστολή</button>
+            </div>
+
             <div id="photoStatus" style="margin-top:10px; color:#aaa; font-size:0.8rem;"></div>
         </div>
     </div>
@@ -314,7 +300,7 @@
         <h2 style="color:var(--accent-red); margin:10px;">ΤΙΜΩΡΙΑ ΣΤΗ ΓΩΝΙΑ</h2>
         <div id="timerDisplay">02:00</div>
         <p style="color:#666; font-size:0.9rem; text-align:center; padding:0 20px;">
-            Μην κλείσεις την οθόνη.<br>Αν βγεις από εδώ, προστίθεται χρόνος (+10s). Πάτα μόνο το κουμπί κάτω ΑΝ πάει να σβήσει η οθόνη, και το κουμπί που θα ανοίξει όταν τελειώσει ο χρόνος.
+            Μην κλείσεις την οθόνη.<br>Αν βγεις από εδώ, προστίθεται χρόνος (+10s). Πάτα μόνο το κουμπί κάτω αν πάει να σβήσει η οθόνη
         </p>
         <button class="keep-awake-btn" onclick="pokeCorner()">Touch me</button>
         <button id="endCornerBtn" class="btn btn-green" style="display:none; width: 200px; margin-top: 30px;" onclick="finishCorner()">Έμαθα το μάθημά μου</button>
@@ -323,7 +309,7 @@
     <div id="apologyModal" class="modal">
         <div class="modal-content">
             <h2>ΤΕΛΙΚΟΣ ΕΛΕΓΧΟΣ</h2>
-            <p>Στείλε φωνητικό να δείξεις ότι έμαθες και ζήτα ευγενικά να βγεις από την τιμωρία στη γωνία. Θα αξιολογηθεί αν ακούστηκες αρκετά ειλικρινής και φρόνιμη.</p>
+            <p>Στείλε φωνητικό να δείξεις ότι έμαθες και ζήτα ευγενικά να βγεις από την τιμωρία. Θα αξιολογηθεί αν ήταν αρκετά ειλικρινές.</p>
             <button class="btn" id="apologyRecBtn" onmousedown="startApologyRec()" onmouseup="stopApologyRec()" ontouchstart="startApologyRec()" ontouchend="stopApologyRec()">🎙️ Κράτα πατημένο και άσε στο τέλος</button>
             <div id="analysisUI" style="display:none; margin-top:20px;">
                 <p style="color:#00ff00; font-family:monospace; font-size:0.8rem;">Ανάλυση ειλικρίνειας...</p>
@@ -346,8 +332,40 @@
         <div class="modal-content">
             <div style="font-size: 3rem;">🎉</div>
             <h2 style="color:var(--flag-green);">ΕΤΣΙ ΜΠΡΑΒΟ!</h2>
-            <p>Τώρα μπορείς να αποχωρήσεις και να ξεκινήσεις τη νέα χρονιά σαν καλό κορίτσι!</p>
+            <p>Τώρα μπορείς να ξεκινήσεις τη νέα χρονιά σαν καλό κορίτσι!</p>
             <button class="btn btn-green" onclick="finishPunishment()">OK</button>
+        </div>
+    </div>
+
+    <h1>ΠΟΥ ΠΙΣΤΕΥΕΙΣ ΗΣΟΥΝ; ΣΥΡΕ ΤΟ ΟΝΟΜΑ ΣΟΥ⚖️</h1>
+
+    <div class="container" id="dragGame">
+        <div class="zone naughty" id="zone-naughty">
+            <div class="icon">😈</div>
+            <div class="zone-title">ΑΤΑΚΤΗ</div>
+        </div>
+        <div class="zone nice" id="zone-nice">
+            <div class="icon">😇</div>
+            <div class="zone-title">ΚΑΛΗ</div>
+        </div>
+    </div>
+    <div id="draggable-name">ΣΑΡΑ</div>
+
+
+    <div id="evalQuizModal" class="modal">
+        <div class="modal-content">
+            <h2 style="color:var(--flag-green);">ΑΞΙΟΛΟΓΗΣΗ</h2>
+            <div id="evalQuestion" style="font-weight:bold; font-size:1.1rem; margin-bottom:15px; color:#fff;"></div>
+            <div id="evalOptions"></div>
+        </div>
+    </div>
+
+    <div id="analysisModal" class="modal">
+        <div class="modal-content">
+            <div style="font-size: 3rem;">🤖</div>
+            <h2 style="color: #00ff00;">ΑΝΑΛΥΣΗ</h2>
+            <p id="analysisText">Επεξεργασία απαντήσεων...</p>
+            <div class="progress-container" style="height:10px;"><div class="progress-bar" id="analysisBar" style="background:var(--flag-green);"></div></div>
         </div>
     </div>
 
@@ -382,7 +400,6 @@
             dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`;
         });
         dragger.addEventListener('touchend', endDrag);
-        // Mouse for testing
         dragger.addEventListener('mousedown', () => isDragging = true);
         window.addEventListener('mousemove', (e) => { if(isDragging) { currentX = e.clientX; let delta = currentX - (screenWidth/2); dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`; }});
         window.addEventListener('mouseup', endDrag);
@@ -391,10 +408,8 @@
             if(!isDragging) return;
             isDragging = false;
             if(currentX < screenWidth * 0.3) {
-                // Naughty Path -> Straight to Verdict
                 document.getElementById('punishIntroModal').style.display = 'flex';
             } else if(currentX > screenWidth * 0.7) {
-                // Nice Path -> Start Evaluation Quiz
                 startEvalQuiz();
             } else {
                 dragger.style.transform = `translate(-50%, -50%)`;
@@ -403,11 +418,11 @@
 
         // --- EVALUATION ---
         const evalQuestions = [
-            { q: "Ήσουν φρόνιμη αυτή τη χρονιά;", a: ["Ναι, αγγελούδι 😇", "Εμ... ίσως..."] },
-            { q: "Ενημέρωνες και άκουγες πάντα;", a: ["Βέβαια!", "Ε όχι και πάντα..."] },
-            { q: "ΘΑ ΕΧΟΥΜΕ ΤΕΛΕΙΟ 2026;", a: ["ΝΑΙ", "ΕΝΝΟΕΙΤΑΙ"] },
+            { q: "Ήσουν φρόνιμη;", a: ["Ναι, αγγελούδι 😇", "Εμ... ίσως..."] },
+            { q: "Ενημέρωνες πάντα;", a: ["Βέβαια!", "Ε όχι και πάντα..."] },
+            { q: "ΕΙΣΑΙ ΕΤΟΙΜΗ ΓΙΑ ΠΡΩΤΟΧΡΟΝΙΑ;", a: ["ΝΑΙ", "ΕΝΝΟΕΙΤΑΙ"] },
             { q: "Έφαγες γλυκά;", a: ["Μπα...", "Όλα!"] },
-            { q: "Λες αλήθεια;", a: ["Πάντα!", "Είμαι και λίγο ψεύτρα κάτι φορές..."] }
+            { q: "Λες αλήθεια;", a: ["Πάντα!", "Θα δούμε..."] }
         ];
         let evalIdx = 0;
         let evalAnswers = [];
@@ -476,7 +491,7 @@
             const btn = document.querySelector('#reasonModal .btn');
             btn.innerText = "Αποστολή..."; btn.disabled = true;
 
-            const msg = `📝 *Ο Μπόμπος έμαθε ότι μπαίνει τιμωρία και αναφέρει τον λόγο:*\n"${text}"`;
+            const msg = `📝 *Ομολογία Αιτίας:*\n"${text}"`;
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -505,8 +520,8 @@
             { q: "Γιατί δεν ήσουν φρόνιμη;", a: ["Δε ξέρω συγγνώμη", "Γιατί έτσι"], c:0 },
             { q: "Ποιος έχει πάντα δίκιο;", a: ["Εγώ", "Εσείς"], c:1 },
             { q: "Τι θα κάνεις τη νέα χρονιά;", a: ["Θα είμαι καλή!", "Θα είμαι άτακτη!"], c:0 },
-            { q: "Πρέπει να ακούς πάντα και να λες:", a: ["Αϊ ρε", "Μάλιστα ό,τι πείτε!🫡"], c:1 },
-            { q: "ΓΑΜΩ ΤΗ ΜΠΟΛΟΝΙΑ ΕΝΑ ΓΚΟΛ ΡΕ", a: ["ΝΑΙ", "CAZZO"], c:1 }
+            { q: "Πρέπει να ακούς και να λες", a: ["Αϊ ρε", "Μάλιστα ό,τι πείτε!🫡"], c:1 },
+            { q: "ΓΑΜΩ ΤΗ ΜΠΟΛΟΝΙΑ", a: ["ΝΑΙ", "CAZZO"], c:1 }
         ];
         let pIdx = 0;
 
@@ -734,7 +749,7 @@
         function endNoseHold(e) {
             if(e && e.type === 'touchend') e.preventDefault();
             if(!noseActive) return; 
-            failNose("Σήκωσες τη μύτη! Κλέβεις!");
+            failNose("Σήκωσες τη μύτη! Ξεκινάς από την αρχή!");
         }
 
         function failNose(msg) {
@@ -762,7 +777,7 @@
                 const formData = new FormData();
                 formData.append('chat_id', CHAT_ID);
                 formData.append('video', blob);
-                formData.append('caption', 'Ο Μπόμπος έκανε την τιμωρία με τη μύτη:');
+                formData.append('caption', '👃 Δοκιμασία Μύτης + Ήχος (Video)');
                 
                 fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVideo`, { method: 'POST', body: formData })
                 .then(res => res.json())
@@ -781,6 +796,35 @@
         function startHandwriting() {
             document.getElementById('infoPreWrite').style.display = 'none';
             document.getElementById('handwritingModal').style.display = 'flex';
+            // Start with Choice
+            document.getElementById('writeChoice').style.display = 'block';
+            document.getElementById('writeHand').style.display = 'none';
+            document.getElementById('writeDigital').style.display = 'none';
+        }
+
+        function chooseHand() {
+            document.getElementById('writeChoice').style.display = 'none';
+            document.getElementById('writeHand').style.display = 'block';
+        }
+
+        function chooseDigital() {
+            document.getElementById('writeChoice').style.display = 'none';
+            document.getElementById('writeDigital').style.display = 'block';
+        }
+
+        function submitDigital() {
+            const text = document.getElementById('digitalInput').value;
+            // Basic length check (phrase ~30 chars * 10 = 300) - lenient check > 100
+            if(text.length < 100) { alert("Δεν το έγραψες 10 φορές! Μην κλέβεις!"); return; }
+            
+            const msg = `📝 *Τιμωρία Γραφής (Κινητό):*\n${text}`;
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
+            }).then(() => {
+                finishHandwriting();
+            });
         }
 
         function finishHandwriting() {
