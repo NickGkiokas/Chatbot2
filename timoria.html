@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Το Μεγάλο Ιταλικό Ταξίδι 🇮🇹</title>
+    <title>Η Μεγάλη Τιμωρία 📜</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -130,27 +130,6 @@
 </head>
 <body>
 
-    <div id="checkInModal" class="modal" style="display:flex; z-index: 5000;">
-        <div class="modal-content">
-            <div style="font-size: 4rem;">🛂</div>
-            <h2>CHECK-IN</h2>
-            <p>Ώρα για αξιολόγηση πριν ξεκινήσεις το ταξίδι.</p>
-            <p style="color:#aaa;">Καλή τύχη...</p>
-            <button class="btn btn-green" onclick="closeCheckIn()">Ξεκίνα</button>
-        </div>
-    </div>
-
-    <div id="letterModal" class="modal" style="z-index: 4900;">
-        <div class="modal-content">
-            <div style="font-size: 4rem;">🎅</div>
-            <h2>ΤΟ ΓΡΑΜΜΑ</h2>
-            <p>Πριν ξεκινήσουμε, γράψε γράμμα στον Άγιο Βασίλη να του πεις για τα δώρα που πήρες και ανέβασέ το εδώ (πάρε το χαρτί από το κόκκινο φακελάκι και γράψε με το ειδικό μολύβι, αλλιώς δεν έχει δώρο!)</p>
-            <input type="file" id="letterInput" accept="image/*" style="margin: 15px 0; width: 90%;">
-            <button id="letterBtn" class="btn btn-red" onclick="uploadLetter()">Αποστολή Γράμματος</button>
-            <div id="letterStatus" style="margin-top:10px; color:#888;"></div>
-        </div>
-    </div>
-
     <h1> ΠΟΥ ΠΙΣΤΕΥΕΙΣ ΟΤΙ ΘΑ ΜΠΕΙΣ; ΣΥΡΕ ΤΟ ΟΝΟΜΑ ΣΟΥ</h1>
 
     <div class="container" id="dragGame">
@@ -176,7 +155,7 @@
 
     <div id="analysisModal" class="modal">
         <div class="modal-content">
-            <div style="font-size: 3rem;"></div>
+            <div style="font-size: 3rem;">🤖</div>
             <h2 style="color: #00ff00;">ΑΝΑΛΥΣΗ</h2>
             <p id="analysisText">Επεξεργασία απαντήσεων...</p>
             <div class="progress-container" style="height:10px;"><div class="progress-bar" id="analysisBar" style="background:var(--flag-green);"></div></div>
@@ -256,7 +235,7 @@
 
     <div id="poseModal" class="modal">
         <div class="modal-content">
-            <h2>ΕΝΔΙΑΜΕΣΟ: ΤΑΠΕΙΝΟΤΗΤΑ</h2>
+            <h2>ΕΝΔΙΑΜΕΣΟ: ΤΑΠΕΙΝΩΣΗ</h2>
             <p>Βγάλε μια selfie με <strong>ταπεινό, μετανιωμένο ύφος</strong>.</p>
             <input type="file" id="poseInput" accept="image/*" style="color:white; margin: 10px 0;">
             <button class="btn btn-red" id="btnUploadPose" onclick="compressAndUpload('poseInput', '📸 Αποδεικτικό: Ταπεινό Ύφος', finishPose)">Αποστολή Φώτο</button>
@@ -267,12 +246,13 @@
     <div id="infoPreNose" class="modal">
         <div class="modal-content">
             <h3>Βήμα 4: ΠΕΙΘΑΡΧΙΑ</h3>
-            <p class="info-text">Θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου για 15 δεύτερα και θα λες " Συγγνώμη που ήμουν άτακτη και ανυπάκουη"."</p>
+            <p class="info-text">"Ήρθε η ώρα της κρίσης. Θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου."</p>
             <p class="info-text" style="color:var(--accent-red);">
                 <strong>ΠΡΟΣΟΧΗ:</strong><br>
                 1. Μην σηκώσεις τη μύτη σου.<br>
-                2. Ταυτόχρονα πρέπει να λες τη φράση<br>
-                Αν σταματήσεις να μιλάς ή δε βάλεις τη μύτη, αρχίζεις από την αρχή!
+                2. Ταυτόχρονα πρέπει να λες ΔΥΝΑΤΑ:<br>
+                <em>"Συγγνώμη που ήμουν άτακτη και ανυπάκουη"</em><br>
+                Αν σταματήσεις να μιλάς, χάνεις!
             </p>
             <button class="btn btn-red" onclick="initNoseStage()">Είμαι έτοιμη</button>
         </div>
@@ -294,7 +274,7 @@
                 ΠΑΤΑ ΜΕ ΤΗ ΜΥΤΗ
             </div>
             <p id="noseMsg" style="font-size:0.8rem; color:#aaa; margin-top:10px;">
-                Κράτα & Μίλα: "Ήμουν άτακτη και ανυπάκουη"
+                Κράτα & Μίλα: "Συγγνώμη που ήμουν άτακτη και ανυπάκουη"
             </p>
         </div>
     </div>
@@ -314,7 +294,7 @@
             <div style="background:#333; padding:10px; border-radius:10px; margin:10px 0; color:#00ff00; font-family:monospace;">
                 "Sarò una brava ragazza quest'anno"
             </div>
-            <p>Ανέβασε φωτογραφία το χαρτί με τη φράση γραμμένη 10 φορές:</p>
+            <p>Ανέβασε φωτογραφία:</p>
             <input type="file" id="photoInput" accept="image/*" style="color:white;">
             <button class="btn btn-red" id="btnUploadWrite" onclick="compressAndUpload('photoInput', '📸 Αποδεικτικό: Γραφή', finishHandwriting)">Αποστολή</button>
             <div id="photoStatus" style="margin-top:10px; color:#aaa; font-size:0.8rem;"></div>
@@ -384,13 +364,6 @@
         let startX, currentX;
         const screenWidth = window.innerWidth;
 
-        // INITIAL CHECK IN
-        function closeCheckIn() {
-            document.getElementById('checkInModal').style.display = 'none';
-            // Open Letter Modal
-            document.getElementById('letterModal').style.display = 'flex';
-        }
-
         // --- HELPER FOR NOTIFICATIONS ---
         function sendTelegramNotification(text) {
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -398,68 +371,6 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ chat_id: CHAT_ID, text: text })
             });
-        }
-
-        // --- UPLOAD LETTER FUNCTION ---
-        function uploadLetter() {
-            const input = document.getElementById('letterInput');
-            if(input.files.length === 0) { alert("Βγάλε φωτογραφία το γράμμα!"); return; }
-
-            const btn = document.getElementById('letterBtn');
-            const status = document.getElementById('letterStatus');
-            const originalText = btn.innerText;
-            
-            btn.innerText = "Αποστολή..."; btn.disabled = true;
-            status.innerText = "Συμπίεση...";
-
-            const file = input.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            
-            reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 1000; 
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    canvas.toBlob((blob) => {
-                        status.innerText = "Ανέβασμα...";
-                        const formData = new FormData();
-                        formData.append('chat_id', CHAT_ID);
-                        formData.append('photo', blob, 'letter.jpg');
-                        formData.append('caption', '🎅 Το Γράμμα στον Άγιο Βασίλη');
-
-                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if(data.ok) {
-                                status.innerText = "Εστάλη! ✅";
-                                sendTelegramNotification("📩 Ανέβασε το Γράμμα στον Άγιο Βασίλη.");
-                                setTimeout(() => {
-                                    document.getElementById('letterModal').style.display = 'none';
-                                    // Now ready to drag name
-                                }, 1000);
-                            } else {
-                                alert("Telegram Error: " + data.description);
-                                btn.innerText = originalText; btn.disabled = false;
-                            }
-                        })
-                        .catch(err => {
-                            alert("Upload Error");
-                            btn.innerText = originalText; btn.disabled = false;
-                        });
-                    }, 'image/jpeg', 0.8);
-                }
-            }
         }
 
         // --- DRAG LOGIC ---
@@ -471,6 +382,7 @@
             dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`;
         });
         dragger.addEventListener('touchend', endDrag);
+        // Mouse for testing
         dragger.addEventListener('mousedown', () => isDragging = true);
         window.addEventListener('mousemove', (e) => { if(isDragging) { currentX = e.clientX; let delta = currentX - (screenWidth/2); dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`; }});
         window.addEventListener('mouseup', endDrag);
@@ -479,8 +391,10 @@
             if(!isDragging) return;
             isDragging = false;
             if(currentX < screenWidth * 0.3) {
+                // Naughty Path -> Straight to Verdict
                 document.getElementById('punishIntroModal').style.display = 'flex';
             } else if(currentX > screenWidth * 0.7) {
+                // Nice Path -> Start Evaluation Quiz
                 startEvalQuiz();
             } else {
                 dragger.style.transform = `translate(-50%, -50%)`;
