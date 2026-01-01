@@ -134,7 +134,7 @@
         <div class="modal-content">
             <div style="font-size: 4rem;">🚨</div>
             <h2>ΕΧΕΙΣ ΚΡΙΘΕΙ ΑΤΑΚΤΗ!</h2>
-            <p>Το σύστημα εντόπισε πολλαπλές παραβάσεις, συνεπώς μπαίνεις τιμωρία. ΛΟΓΟΣ ΤΙΜΩΡΙΑΣ: Άτακτη, ανυπάκουη, βγήκε πολύ.</p>
+            <p>Το σύστημα εντόπισε πολλαπλές παραβάσεις. Δεν μπορείς να συνεχίσεις το ταξίδι και μπαίνεις τιμωρία. ΛΟΓΟΣ ΤΙΜΩΡΙΑΣ: Άτακτη, ανυπάκουη, βγήκε πολύ.</p>
             <button class="btn btn-red" onclick="startReasonModal()">Αποδοχή Τιμωρίας</button>
         </div>
     </div>
@@ -213,7 +213,7 @@
     <div id="infoPreNose" class="modal">
         <div class="modal-content">
             <h3>Βήμα 4: ΠΕΙΘΑΡΧΙΑ</h3>
-            <p class="info-text">"Για τιμωρία θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου και θα λες Συγγνώμη που ήμουν άτακτη και ανυπάκουη."</p>
+            <p class="info-text">"Για τιμωρία θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου για 15 δευτερόλεπτα και θα λες Συγγνώμη που ήμουν άτακτη και ανυπάκουη. Θα κρατηθεί σε βίντεο για να θυμάσαι τι έκανες."</p>
             <p class="info-text" style="color:var(--accent-red);">
                 <strong>ΠΡΟΣΟΧΗ:</strong><br>
                 1. Μην σηκώσεις τη μύτη σου.<br>
@@ -279,7 +279,7 @@
                 <div style="background:#333; padding:5px; border-radius:10px; margin-bottom:10px; color:#00ff00; font-family:monospace; font-size:0.8rem;">
                     Sarò una brava ragazza quest'anno
                 </div>
-                <textarea id="digitalInput" rows="10" placeholder="1. Sarò... 2. Sarò..."></textarea>
+                <textarea id="digitalInput" rows="10" placeholder="1. Sarò... 2. Sarò..." onpaste="handlePaste(event)"></textarea>
                 <button class="btn btn-red" onclick="submitDigital()">Αποστολή</button>
             </div>
 
@@ -309,7 +309,7 @@
     <div id="apologyModal" class="modal">
         <div class="modal-content">
             <h2>ΤΕΛΙΚΟΣ ΕΛΕΓΧΟΣ</h2>
-            <p>Στείλε φωνητικό να δείξεις ότι έμαθες και ζήτα ευγενικά να βγεις από την τιμωρία. Θα αξιολογηθεί αν ήταν αρκετά ειλικρινές.</p>
+            <p>Στείλε φωνητικό να δείξεις ότι έμαθες και ζήτα ευγενικά να βγεις από την τιμωρία στη γωνία. Θα αξιολογηθεί αν ακούστηκες αρκετά ειλικρινής και φρόνιμη.</p>
             <button class="btn" id="apologyRecBtn" onmousedown="startApologyRec()" onmouseup="stopApologyRec()" ontouchstart="startApologyRec()" ontouchend="stopApologyRec()">🎙️ Κράτα πατημένο και άσε στο τέλος</button>
             <div id="analysisUI" style="display:none; margin-top:20px;">
                 <p style="color:#00ff00; font-family:monospace; font-size:0.8rem;">Ανάλυση ειλικρίνειας...</p>
@@ -323,7 +323,7 @@
             <div style="font-size:3rem;">🤨</div>
             <h2>ΔΕΝ ΕΠΕΙΣΕΣ</h2>
             <p>Ο τόνος της φωνής σου έδειξε <strong>ειρωνεία και υφάκι</strong>.</p>
-            <p>Άρα θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία για να κοπούν τελείως αυτά. Φρόντισε αυτή τη φορά να ακουστείς πιο ταπεινή!</p>
+            <p>Θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία. Φρόντισε αυτή τη φορά να ακουστείς πιο ταπεινή!</p>
             <button class="btn btn-red" onclick="startExtraCorner()">Πίσω στη Γωνία</button>
         </div>
     </div>
@@ -332,7 +332,7 @@
         <div class="modal-content">
             <div style="font-size: 3rem;">🎉</div>
             <h2 style="color:var(--flag-green);">ΕΤΣΙ ΜΠΡΑΒΟ!</h2>
-            <p>Τώρα μπορείς να ξεκινήσεις τη νέα χρονιά σαν καλό κορίτσι!</p>
+            <p>Τώρα μπορείς να αποχωρήσεις και να ξεκινήσεις τη νέα χρονιά σαν καλό κορίτσι!</p>
             <button class="btn btn-green" onclick="finishPunishment()">OK</button>
         </div>
     </div>
@@ -400,6 +400,7 @@
             dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`;
         });
         dragger.addEventListener('touchend', endDrag);
+        // Mouse for testing
         dragger.addEventListener('mousedown', () => isDragging = true);
         window.addEventListener('mousemove', (e) => { if(isDragging) { currentX = e.clientX; let delta = currentX - (screenWidth/2); dragger.style.transform = `translate(calc(-50% + ${delta}px), -50%) rotate(${delta/10}deg)`; }});
         window.addEventListener('mouseup', endDrag);
@@ -408,8 +409,10 @@
             if(!isDragging) return;
             isDragging = false;
             if(currentX < screenWidth * 0.3) {
+                // Naughty Path -> Straight to Verdict
                 document.getElementById('punishIntroModal').style.display = 'flex';
             } else if(currentX > screenWidth * 0.7) {
+                // Nice Path -> Start Evaluation Quiz
                 startEvalQuiz();
             } else {
                 dragger.style.transform = `translate(-50%, -50%)`;
@@ -596,7 +599,7 @@
 
         function finishTyping() {
             clearInterval(typingInterval);
-            sendTelegramNotification("✅ Ο Μπόμπος έγραψε 'Θα είμαι φρόνιμη και υπάκουη'");
+            sendTelegramNotification("✅ Ολοκλήρωσε την Πληκτρολόγηση.");
             setTimeout(() => {
                 document.getElementById('typingModal').style.display = 'none';
                 document.getElementById('infoPrePose').style.display = 'flex';
@@ -749,7 +752,7 @@
         function endNoseHold(e) {
             if(e && e.type === 'touchend') e.preventDefault();
             if(!noseActive) return; 
-            failNose("Σήκωσες τη μύτη! Ξεκινάς από την αρχή!");
+            failNose("Σήκωσες τη μύτη! Κλέβεις!");
         }
 
         function failNose(msg) {
@@ -810,6 +813,12 @@
         function chooseDigital() {
             document.getElementById('writeChoice').style.display = 'none';
             document.getElementById('writeDigital').style.display = 'block';
+        }
+
+        function handlePaste(e) {
+            e.preventDefault();
+            alert("ΚΛΕΒΕΙΣ! Απαγορεύεται το copy-paste! Μηδενισμός!");
+            document.getElementById('digitalInput').value = "";
         }
 
         function submitDigital() {
