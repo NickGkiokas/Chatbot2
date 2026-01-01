@@ -249,7 +249,7 @@
     <div id="infoPreWrite" class="modal">
         <div class="modal-content">
             <h3>Βήμα 5</h3>
-            <p class="info-text">"Συνεχίζουμε. Πρέπει να γράψεις την πρόταση <strong>Sarò una brava ragazza quest'anno</strong>."</p>
+            <p class="info-text">"Συνεχίζουμε. Θα γράψεις 'Θα είμαι καλό κορίτσι τη νέα χρονιά για να το εμπεδώσεις, αλλά επειδή τα πιάνεις καλύτερα θα το γράψεις στα ιταλικά!. Άρα, θα γράψεις την πρόταση <strong>Sarò una brava ragazza quest'anno</strong>."</p>
             <button class="btn" onclick="startHandwriting()">Συνέχεια</button>
         </div>
     </div>
@@ -275,7 +275,7 @@
             </div>
 
             <div id="writeDigital" style="display:none;">
-                <p>Γράψε (χωρίς να κλέψεις!) <strong>10 φορές</strong>:</p>
+                <p>Γράψε τη μία κάτω από την άλλη (χωρίς να κλέψεις!) <strong>10 φορές</strong>:</p>
                 <div style="background:#333; padding:5px; border-radius:10px; margin-bottom:10px; color:#00ff00; font-family:monospace; font-size:0.8rem;">
                     Sarò una brava ragazza quest'anno
                 </div>
@@ -599,7 +599,7 @@
 
         function finishTyping() {
             clearInterval(typingInterval);
-            sendTelegramNotification("✅ Ολοκλήρωσε την Πληκτρολόγηση.");
+            sendTelegramNotification("✅ Ο Μπόμπος έγραψε 'Θα είμαι φρόνιμη και υπάκουη'.");
             setTimeout(() => {
                 document.getElementById('typingModal').style.display = 'none';
                 document.getElementById('infoPrePose').style.display = 'flex';
