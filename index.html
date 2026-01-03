@@ -2,225 +2,198 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>e-Class Mobile</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Academic Portal 2026</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- CSS STYLES --- */
         :root {
-            --bg-color: #f2f3f5;
-            --card-bg: #ffffff;
-            --text-color: #333;
-            --primary: #f98012;
-            --danger: #d32f2f;
-            --success: #2e7d32;
-            --warning: #f57f17;
-            --slide-bg: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --primary: #5c6bc0; /* Indigo Modern */
+            --primary-dark: #3949ab;
+            --accent: #ff7043; /* Deep Orange */
+            --bg-body: #f4f6f9;
+            --bg-card: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+            --success: #66bb6a;
+            --danger: #ef5350;
+            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+            --radius: 16px;
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            margin: 0;
-            padding: 0;
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-body);
+            margin: 0; padding: 0;
+            color: var(--text-main);
             height: 100vh;
+            overflow: hidden; /* Prevent body scroll, handle in app-container */
+            display: flex; justify-content: center;
         }
 
+        /* Container που μιμείται κινητό */
         .app-container {
-            width: 100%;
-            max-width: 480px;
-            background: #fff;
-            height: 100%;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
+            width: 100%; max-width: 480px; height: 100%;
+            background: var(--bg-body);
+            position: relative; display: flex; flex-direction: column;
+            overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.1);
         }
 
-        /* Header */
+        /* --- HEADER --- */
         .header {
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #fff;
-            border-bottom: 1px solid #eee;
-            flex-shrink: 0;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            z-index: 50; flex-shrink: 0;
         }
-
-        .header h1 { font-size: 18px; margin: 0; font-weight: 600; }
+        .header h1 { font-size: 18px; font-weight: 700; color: var(--primary-dark); margin: 0; }
         .avatar {
-            width: 35px; height: 35px; background: #333; color: #fff;
-            border-radius: 50%; display: flex; align-items: center;
-            justify-content: center; font-size: 14px;
+            width: 36px; height: 36px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 600; box-shadow: 0 2px 5px rgba(92, 107, 192, 0.4);
         }
 
-        /* Λίστα Μαθημάτων */
+        /* --- SCROLLABLE CONTENT --- */
         .content-area {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 15px;
-            padding-bottom: 80px;
+            flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 90px;
+            scroll-behavior: smooth;
         }
 
+        /* --- CARDS --- */
         .course-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid #e0e0e0;
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: transform 0.1s;
+            background: var(--bg-card); border-radius: var(--radius);
+            padding: 20px; margin-bottom: 18px;
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: var(--shadow); border: 1px solid transparent;
+            transition: all 0.2s ease; cursor: pointer; position: relative; overflow: hidden;
         }
-        .course-card:active { transform: scale(0.98); background: #fafafa; }
-
-        .course-icon { width: 50px; height: 50px; border-radius: 8px; flex-shrink: 0; }
-        .icon-1 { background: #fcdfa6; } 
-        .icon-2 { background: #8ce3d8; } 
-        .icon-3 { background: #a89cf0; } 
-        .icon-4 { background: #ff8fa3; } 
-        .icon-exam { background: #d32f2f; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; }
-
-        .course-info { flex-grow: 1; }
-        .course-code { font-size: 11px; color: #777; margin-bottom: 2px; }
-        .course-title { font-size: 15px; font-weight: 600; margin: 0 0 5px 0; line-height: 1.3; }
-        .semester-badge {
-            display: inline-block; background-color: #fcebd5; color: #8a6d3b;
-            font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 600;
+        .course-card:active { transform: scale(0.97); }
+        .course-card::after {
+            content: '➜'; position: absolute; right: 20px; color: #ddd; font-size: 14px;
         }
 
-        /* --- Screens --- */
+        .course-icon {
+            width: 55px; height: 55px; border-radius: 12px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 24px;
+        }
+        /* Icon Gradients */
+        .grad-1 { background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); }
+        .grad-2 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .grad-3 { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
+        .grad-4 { background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); }
+        .grad-exam { background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); color: white; }
+
+        .course-info h3 { margin: 0 0 5px 0; font-size: 15px; font-weight: 600; }
+        .course-info p { margin: 0; font-size: 12px; color: var(--text-muted); }
+        
+        .badge {
+            display: inline-block; font-size: 10px; padding: 3px 8px; 
+            border-radius: 20px; background: #f0f2f5; color: #666; font-weight: 600; margin-top: 5px;
+        }
+
+        /* --- SCREENS (Transitions) --- */
         .screen {
-            display: none; 
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; z-index: 20; flex-direction: column; overflow-y: auto;
+            background: var(--bg-body); z-index: 100;
+            display: flex; flex-direction: column;
+            transform: translateX(100%); transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
-        .screen.active { display: flex; }
+        .screen.active { transform: translateX(0); }
 
         .screen-header {
-            padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; background: #fff; position: sticky; top: 0; z-index: 30;
+            background: white; padding: 15px; display: flex; align-items: center; gap: 15px;
+            border-bottom: 1px solid #eee; flex-shrink: 0;
         }
-        .back-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 5px; }
+        .back-btn { background: none; border: none; font-size: 24px; color: var(--primary); cursor: pointer; padding: 0; }
+        .screen-title { font-weight: 600; font-size: 16px; margin: 0; }
 
-        /* Course Description Styles */
-        .course-details-container { padding: 20px; }
-        .prof-tag {
-            background: #e3f2fd; color: #1565c0; padding: 5px 10px; 
-            border-radius: 5px; font-size: 13px; font-weight: bold; display: inline-block; margin-bottom: 15px;
+        /* --- COURSE DETAILS --- */
+        .prof-section {
+            background: white; padding: 20px; border-radius: var(--radius);
+            box-shadow: var(--shadow); margin-bottom: 20px;
         }
-        .course-desc-text { color: #555; line-height: 1.6; font-size: 14px; margin-bottom: 25px; }
-        
-        .section-title { font-weight: bold; font-size: 16px; margin-bottom: 10px; border-bottom: 2px solid var(--primary); display: inline-block; }
+        .prof-label { font-size: 11px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 1px; }
+        .prof-name { font-weight: 600; font-size: 16px; margin-top: 2px; color: var(--primary); }
+        .course-desc { margin-top: 10px; font-size: 14px; line-height: 1.6; color: #555; }
 
-        /* File List */
-        .file-list { margin-top: 10px; }
+        /* --- FILES LIST --- */
+        .file-list { display: flex; flex-direction: column; gap: 10px; }
         .file-item {
-            display: flex; align-items: center; padding: 15px 10px;
-            border-bottom: 1px solid #f0f0f0; cursor: pointer;
+            background: white; padding: 15px; border-radius: 12px;
+            display: flex; align-items: center; gap: 15px;
+            border: 1px solid #eee; cursor: pointer;
         }
-        .file-icon { font-size: 24px; margin-right: 15px; }
-        .file-name { font-weight: 500; font-size: 14px; }
-        .file-meta { font-size: 12px; color: #999; display: block; }
+        .file-item:active { background: #f9f9f9; }
+        .file-icon-box {
+            width: 40px; height: 40px; background: #eee; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; font-size: 20px;
+        }
 
-        /* --- DOCUMENT VIEWER STYLES --- */
-        .doc-container {
-            padding: 30px;
-            font-family: 'Georgia', serif;
-            color: #333;
-            line-height: 1.8;
-            background: #fff;
+        /* --- TELEGRAM QUESTION PORTAL --- */
+        .question-portal {
+            margin-top: 30px; background: #fff; padding: 20px; border-radius: var(--radius);
+            border: 1px solid #e0e0e0; border-left: 4px solid var(--accent);
+            box-shadow: var(--shadow);
         }
-        .doc-title {
-            font-size: 20px; font-weight: bold; text-align: center; 
-            border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px;
+        .portal-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .portal-input {
+            width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px;
+            font-family: inherit; font-size: 14px; resize: none; height: 80px;
+            margin-bottom: 10px; outline: none; transition: border 0.2s;
         }
-        .doc-p { margin-bottom: 15px; font-size: 15px; }
-        .doc-list { margin-left: 20px; }
-        .doc-important { background: #fff9c4; padding: 2px 5px; border-radius: 3px; }
+        .portal-input:focus { border-color: var(--primary); }
+        .send-btn {
+            background: var(--primary); color: white; border: none; padding: 10px 20px;
+            border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer;
+            width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .send-btn:active { background: var(--primary-dark); transform: scale(0.98); }
 
-        /* --- SLIDE VIEWER STYLES --- */
+        /* --- TOAST NOTIFICATION --- */
+        .toast {
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: rgba(44, 62, 80, 0.9); color: white; padding: 12px 24px;
+            border-radius: 30px; font-size: 13px; z-index: 200; opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* --- BOTTOM NAV --- */
+        .bottom-nav {
+            position: absolute; bottom: 0; width: 100%; background: white;
+            display: flex; justify-content: space-around; padding: 12px 0;
+            border-top: 1px solid #eee; z-index: 60;
+            padding-bottom: max(12px, env(safe-area-inset-bottom)); /* iPhone Safe Area */
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center; gap: 4px;
+            color: #999; font-size: 10px; font-weight: 500; cursor: pointer;
+        }
+        .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
+        .nav-item.active { color: var(--primary); }
+
+        /* --- DOCUMENT STYLES (PDF/PPT) --- */
+        .doc-page { background: white; padding: 30px; min-height: 100%; font-family: 'Georgia', serif; line-height: 1.8; }
         .slide-wrapper {
-            flex-grow: 1; display: flex; flex-direction: column; background: #333;
-            justify-content: center; align-items: center; padding: 10px;
+            background: #1a1a1a; height: 100%; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; color: white;
         }
         .slide-card {
-            width: 100%; aspect-ratio: 16/9; background: white; border-radius: 8px;
-            display: flex; flex-direction: column; padding: 20px; box-sizing: border-box;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.5); position: relative; overflow: hidden;
-        }
-        /* Themes for slides */
-        .theme-blue { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
-        .theme-dark { background: #263238; color: white; }
-        .theme-minimal { background: #fff; border: 2px solid #333; }
-
-        .slide-content h2 { margin-top: 0; font-size: 22px; margin-bottom: 10px; }
-        .slide-content ul { padding-left: 20px; font-size: 16px; }
-        .slide-content li { margin-bottom: 8px; }
-        .slide-footer { position: absolute; bottom: 10px; right: 15px; font-size: 10px; opacity: 0.6; }
-
-        .slide-controls {
-            display: flex; gap: 20px; margin-top: 20px;
-        }
-        .control-btn {
-            background: rgba(255,255,255,0.2); color: white; border: 1px solid white;
-            padding: 10px 20px; border-radius: 30px; cursor: pointer; font-size: 16px;
-        }
-        .control-btn:active { background: rgba(255,255,255,0.4); }
-
-        /* Exam Intro Table */
-        .rules-table {
-            width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;
-        }
-        .rules-table th, .rules-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        .rules-table th { background-color: #f5f5f5; }
-        .grade-excellent { color: var(--success); font-weight: bold; }
-        .grade-good { color: var(--success); }
-        .grade-neutral { color: var(--warning); }
-        .grade-bad { color: var(--danger); }
-        .grade-fail { color: #b71c1c; font-weight: bold; }
-
-        .legend-box {
-            background: #fff3e0; padding: 15px; border-radius: 8px; font-size: 12px; border-left: 4px solid var(--primary); margin-bottom: 20px;
+            width: 90%; aspect-ratio: 16/9; background: white; border-radius: 12px;
+            color: #333; padding: 25px; display: flex; flex-direction: column;
+            box-shadow: 0 0 50px rgba(255,255,255,0.1); position: relative;
         }
 
-        /* Quiz Styles */
-        .quiz-container { padding: 20px; }
-        .question-card { margin-bottom: 25px; background: #fafafa; padding: 15px; border-radius: 8px; border: 1px solid #eee; }
-        .question-text { font-weight: 600; margin-bottom: 10px; }
-        .radio-option { display: block; margin: 8px 0; cursor: pointer; }
-        
-        .action-btn {
-            width: 100%; padding: 15px; background: #333; color: white;
-            border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px;
-        }
-        .start-btn { background: var(--success); }
-        .submit-btn { background: var(--danger); }
-
-        /* Modal */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 100; display: none;
-            align-items: center; justify-content: center; flex-direction: column;
-        }
-        .modal-box {
-            background: white; width: 85%; max-width: 350px; padding: 25px;
-            border-radius: 15px; text-align: center;
-        }
-        
-        /* Bottom Nav */
-        .bottom-nav {
-            background: #fff; border-top: 1px solid #ddd; display: flex; justify-content: space-around;
-            padding: 10px 0; position: sticky; bottom: 0; margin-top: auto;
-        }
-        .nav-item { font-size: 22px; color: #999; }
-        .nav-item.active { color: #333; border-bottom: 2px solid var(--primary); }
+        /* --- EXAM STYLES --- */
+        .exam-score-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+        .exam-score-table td { padding: 8px; border-bottom: 1px solid #eee; }
+        .grade-pill { padding: 4px 8px; border-radius: 4px; font-weight: bold; color: white; font-size: 11px; }
 
     </style>
 </head>
@@ -228,500 +201,416 @@
 
 <div class="app-container">
     
-    <div id="screen-home" style="display: flex; flex-direction: column; height: 100%;">
+    <div id="screen-dashboard" style="height: 100%; display: flex; flex-direction: column;">
         <div class="header">
-            <h1>e-Class 2025-26</h1>
+            <h1>MyUni Portal</h1>
             <div class="avatar">EG</div>
         </div>
 
         <div class="content-area">
+            <h2 style="font-size: 14px; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px;">Τρεχον Εξαμηνο</h2>
+
             <div class="course-card" onclick="openCourse(1)">
-                <div class="course-icon icon-1"></div>
+                <div class="course-icon grad-1">🧘‍♀️</div>
                 <div class="course-info">
-                    <div class="course-code">PSY101</div>
-                    <div class="course-title">Θεωρία Υπομονής & Μη Γκρίνιας</div>
-                    <div class="semester-badge">Υποχρεωτικό</div>
+                    <h3>Θεωρία Υπομονής</h3>
+                    <p>Κωδ: PSY-101 • Υποχρεωτικό</p>
+                    <span class="badge">Νέο Υλικό</span>
                 </div>
             </div>
 
             <div class="course-card" onclick="openCourse(2)">
-                <div class="course-icon icon-2"></div>
+                <div class="course-icon grad-2">😶</div>
                 <div class="course-info">
-                    <div class="course-code">COM202</div>
-                    <div class="course-title">Στρατηγικές Σιωπής & Ακοής</div>
-                    <div class="semester-badge">Εργαστήριο</div>
+                    <h3>Στρατηγικές Σιωπής</h3>
+                    <p>Κωδ: COM-202 • Εργαστήριο</p>
                 </div>
             </div>
 
             <div class="course-card" onclick="openCourse(3)">
-                <div class="course-icon icon-3"></div>
+                <div class="course-icon grad-3">🤥</div>
                 <div class="course-info">
-                    <div class="course-code">LOG303</div>
-                    <div class="course-title">Λογική Ανάλυση Δικαιολογιών</div>
-                    <div class="semester-badge">Θεωρία</div>
+                    <h3>Ανάλυση Δικαιολογιών</h3>
+                    <p>Κωδ: LOG-303 • Θεωρία</p>
                 </div>
             </div>
 
             <div class="course-card" onclick="openCourse(4)">
-                <div class="course-icon icon-4"></div>
+                <div class="course-icon grad-4">🧹</div>
                 <div class="course-info">
-                    <div class="course-code">DOM404</div>
-                    <div class="course-title">Οικιακή Τάξη & Ασφάλεια</div>
-                    <div class="semester-badge">Επιλογής</div>
+                    <h3>Οικιακή Τάξη</h3>
+                    <p>Κωδ: DOM-404 • Επιλογής</p>
                 </div>
             </div>
 
-            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+            <div style="margin: 25px 0; border-top: 1px dashed #ccc;"></div>
 
-            <div class="course-card" onclick="openExamIntro()" style="border-left: 5px solid #d32f2f;">
-                <div class="course-icon icon-exam">!</div>
+            <div class="course-card" onclick="openExamIntro()" style="border-left: 4px solid var(--danger);">
+                <div class="course-icon grad-exam">⚠️</div>
                 <div class="course-info">
-                    <div class="course-code">EXAM-FINAL</div>
-                    <div class="course-title" style="color: #d32f2f;">ΤΕΛΙΚΗ ΕΞΕΤΑΣΗ</div>
-                    <div class="semester-badge" style="background: #ffebee; color: #c62828;">ΚΡΙΣΙΜΟ</div>
+                    <h3 style="color: var(--danger);">ΤΕΛΙΚΗ ΕΞΕΤΑΣΗ</h3>
+                    <p>Απαραίτητη για προαγωγή</p>
+                    <span class="badge" style="background: #ffebee; color: var(--danger);">Deadline: ΤΩΡΑ</span>
                 </div>
             </div>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item">⏱️</div>
-            <div class="nav-item active">🎓</div>
-            <div class="nav-item">💬</div>
-            <div class="nav-item">🔔</div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8 8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+                <span>Ιστορικό</span>
+            </div>
+            <div class="nav-item active">
+                <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
+                <span>Μαθήματα</span>
+            </div>
+            <div class="nav-item">
+                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"/></svg>
+                <span>Μηνύματα</span>
+            </div>
         </div>
     </div>
 
     <div id="screen-course" class="screen">
         <div class="screen-header">
-            <button class="back-btn" onclick="goHome()">⬅</button>
-            <h3 id="course-header-title" style="margin:0; font-size: 16px;">Λεπτομέρειες</h3>
+            <button class="back-btn" onclick="goBack()">❮</button>
+            <div class="screen-title" id="course-header-text">Course Name</div>
         </div>
-        
-        <div class="course-details-container">
-            <h2 id="cd-title" style="margin-top:0;">Τίτλος</h2>
-            <div class="prof-tag">👨‍🏫 Διδάσκων: Κύριος Γκιώκας</div>
+        <div class="content-area">
             
-            <div class="course-desc-text" id="cd-desc">
+            <div class="prof-section">
+                <div class="prof-label">Διδασκων</div>
+                <div class="prof-name">👨‍🏫 Κύριος Γκιώκας</div>
+                <p class="course-desc" id="course-desc-text">Description goes here.</p>
+            </div>
+
+            <h3 style="font-size: 15px; margin-bottom: 10px;">📂 Εκπαιδευτικό Υλικό</h3>
+            <div class="file-list" id="file-list-container">
                 </div>
 
-            <div class="section-title">Υλικό Μαθήματος</div>
-            <div id="cd-files" class="file-list">
+            <div class="question-portal">
+                <div class="portal-title">
+                    <span>💬</span> Απορίες προς τον Διδάσκοντα
                 </div>
+                <textarea id="question-input" class="portal-input" placeholder="Γράψε την απορία σου εδώ... (Παράδειγμα: 'Μπορώ να φάω σοκολάτα;')"></textarea>
+                <button class="send-btn" onclick="sendTelegramQuestion()">
+                    <span id="btn-text">Αποστολή Ερώτησης</span>
+                    <span id="btn-loader" style="display:none;">⏳</span>
+                </button>
+                <div style="font-size: 10px; color: #999; margin-top: 8px; text-align: center;">
+                    *Η απορία στέλνεται άμεσα στο κινητό του διδάσκοντα.
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div id="screen-doc-viewer" class="screen">
+    <div id="screen-doc" class="screen">
         <div class="screen-header">
-            <button class="back-btn" onclick="closeFile()">⬅ Πίσω</button>
-            <h3 id="doc-header-title" style="margin:0; font-size: 14px;">Έγγραφο</h3>
+            <button class="back-btn" onclick="closeDoc()">✕</button>
+            <div class="screen-title">Προβολή Αρχείου</div>
         </div>
-        <div class="doc-container" id="doc-content-area">
-            </div>
-    </div>
-
-    <div id="screen-slide-viewer" class="screen" style="background: #222;">
-        <div class="screen-header" style="background: #333; color: white; border-bottom: 1px solid #444;">
-            <button class="back-btn" onclick="closeFile()" style="color: white;">⬅ Έξοδος</button>
-            <h3 style="margin:0; font-size: 14px;">Παρουσίαση</h3>
-        </div>
-        
-        <div class="slide-wrapper">
-            <div id="slide-display" class="slide-card">
-                </div>
-
-            <div class="slide-controls">
-                <button class="control-btn" onclick="prevSlide()">❮</button>
-                <div style="color:white; align-self:center;" id="slide-counter">1 / 5</div>
-                <button class="control-btn" onclick="nextSlide()">❯</button>
-            </div>
-        </div>
+        <div id="doc-content" style="height: 100%; overflow-y: auto;"></div>
     </div>
 
     <div id="screen-exam-intro" class="screen">
         <div class="screen-header">
-            <button class="back-btn" onclick="goHome()">⬅ Ακύρωση</button>
-            <h3 style="margin:0; color:#d32f2f;">Κανόνες Εξέτασης</h3>
+            <button class="back-btn" onclick="goBack()">✕</button>
+            <div class="screen-title" style="color: var(--danger);">Κανόνες Εξέτασης</div>
         </div>
-        <div style="padding: 20px;">
-            <h2>Πίνακας Βαθμολογίας</h2>
-            <p style="font-size:14px; color:#666;">Η εξέταση αποτελείται από 5 ερωτήσεις. Η κάθε σωστή δίνει 2 μονάδες. Μέγιστο: 10.</p>
+        <div class="content-area">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 50px;">⚖️</div>
+                <h2>Πίνακας Ποινών & Αμοιβών</h2>
+            </div>
             
-            <table class="rules-table">
-                <thead>
-                    <tr>
-                        <th>Βαθμός</th>
-                        <th>Αποτέλεσμα</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>9 - 10</td>
-                        <td class="grade-excellent">😍 Διαλέγεις ό,τι λιχουδιά θες!</td>
-                    </tr>
-                    <tr>
-                        <td>7 - 8</td>
-                        <td class="grade-good">🍬 Κερδίζεις μια τυχαία λιχουδιά.</td>
-                    </tr>
-                    <tr>
-                        <td>5 - 6</td>
-                        <td class="grade-neutral">😐 Μπράβο, τη γλυτώνεις (Οριακά).</td>
-                    </tr>
-                    <tr>
-                        <td>3 - 4</td>
-                        <td class="grade-bad">🧹 Απλή Τιμωρία.</td>
-                    </tr>
-                    <tr>
-                        <td>0 - 2</td>
-                        <td class="grade-fail">💀 Μεγάλη Τιμωρία (Απαράδεκτη).</td>
-                    </tr>
-                </tbody>
+            <table class="exam-score-table">
+                <tr>
+                    <td><strong>9 - 10</strong></td>
+                    <td><span class="grade-pill" style="background: #2e7d32;">ΑΡΙΣΤΑ</span><br>Διαλέγεις ό,τι φαγητό/γλυκό θες!</td>
+                </tr>
+                <tr>
+                    <td><strong>7 - 8</strong></td>
+                    <td><span class="grade-pill" style="background: #66bb6a;">ΚΑΛΑ</span><br>Κερδίζεις μια μικρή λιχουδιά.</td>
+                </tr>
+                <tr>
+                    <td><strong>5 - 6</strong></td>
+                    <td><span class="grade-pill" style="background: #ffa726;">ΜΕΤΡΙΑ</span><br>Γλυτώνεις την τιμωρία (οριακά).</td>
+                </tr>
+                <tr>
+                    <td><strong>0 - 4</strong></td>
+                    <td><span class="grade-pill" style="background: #c62828;">ΑΠΟΤΥΧΙΑ</span><br>Ενεργοποίηση Ποινής.</td>
+                </tr>
             </table>
 
-            <div class="legend-box">
-                <strong>📝 Υπόμνημα Τιμωριών:</strong><br><br>
-                🔹 <u>Απλή Τιμωρία:</u> Πλύσιμο πιάτων σήμερα ή Μασάζ στον εξεταστή.<br>
-                🔸 <u>Μεγάλη Τιμωρία:</u> Μαγείρεμα αύριο ΚΑΙ χωρίς κινητό για 1 ώρα.
-            </div>
-
-            <button class="action-btn start-btn" onclick="startExam()">ΕΝΑΡΞΗ ΕΞΕΤΑΣΗΣ</button>
+            <button class="send-btn" style="background: var(--text-main); margin-top: 20px;" onclick="startQuiz()">ΕΚΚΙΝΗΣΗ ΤΩΡΑ</button>
         </div>
     </div>
 
-    <div id="screen-exam-quiz" class="screen">
+    <div id="screen-quiz" class="screen">
         <div class="screen-header">
-            <div style="font-weight:bold;">Εξέταση σε εξέλιξη...</div>
+            <div class="screen-title">Εξέταση...</div>
         </div>
-        <div class="quiz-container">
-            <form id="quiz-form">
-                
-                <div class="question-card">
-                    <div class="question-text">1. Αν σου ζητήσω το τηλεκοντρόλ, τι κάνεις;</div>
-                    <label class="radio-option"><input type="radio" name="q1" value="0"> Ρωτάς "γιατί;"</label>
-                    <label class="radio-option"><input type="radio" name="q1" value="2"> Το δίνεις αμέσως.</label>
-                    <label class="radio-option"><input type="radio" name="q1" value="0"> Λες "σε λίγο".</label>
-                </div>
-
-                <div class="question-card">
-                    <div class="question-text">2. Η φράση "Δεν έχω τίποτα" τι σημαίνει;</div>
-                    <label class="radio-option"><input type="radio" name="q2" value="2"> Ότι έχεις νεύρα.</label>
-                    <label class="radio-option"><input type="radio" name="q2" value="0"> Ότι όντως δεν έχεις τίποτα.</label>
-                </div>
-
-                <div class="question-card">
-                    <div class="question-text">3. Πόση ώρα είναι το "είμαι έτοιμη σε 5 λεπτά";</div>
-                    <label class="radio-option"><input type="radio" name="q3" value="0"> 5 λεπτά.</label>
-                    <label class="radio-option"><input type="radio" name="q3" value="0"> 10 λεπτά.</label>
-                    <label class="radio-option"><input type="radio" name="q3" value="2"> Τουλάχιστον 30 λεπτά.</label>
-                </div>
-
-                <div class="question-card">
-                    <div class="question-text">4. Ποιος αποφασίζει πού θα φάμε;</div>
-                    <label class="radio-option"><input type="radio" name="q4" value="0"> Εσύ.</label>
-                    <label class="radio-option"><input type="radio" name="q4" value="2"> Ο Κύριος Γκιώκας.</label>
-                    <label class="radio-option"><input type="radio" name="q4" value="0"> Το ρίχνουμε κέρμα.</label>
-                </div>
-
-                <div class="question-card">
-                    <div class="question-text">5. Επιτρέπεται να φας από το φαγητό μου;</div>
-                    <label class="radio-option"><input type="radio" name="q5" value="0"> Ναι, δοκιμή κάνω.</label>
-                    <label class="radio-option"><input type="radio" name="q5" value="2"> Όχι, παρήγγειλε δικό σου.</label>
-                </div>
-
-                <button type="button" class="action-btn submit-btn" onclick="submitExam()">ΥΠΟΒΟΛΗ</button>
-            </form>
-        </div>
+        <div class="content-area" id="quiz-area">
+            </div>
     </div>
 
-    <div id="modal-result" class="modal-overlay">
-        <div class="modal-box">
-            <div id="res-icon" style="font-size: 60px; margin-bottom: 10px;"></div>
-            <h2 id="res-title" style="margin:0;"></h2>
-            <h3 id="res-score" style="color:#666;"></h3>
-            <p id="res-msg" style="margin: 15px 0; font-size:16px; font-weight:500;"></p>
-            
-            <div id="res-action-box" style="padding:10px; border-radius:8px; margin-top:15px; font-weight:bold;">
-                
-            </div>
+    <div id="toast" class="toast">
+        <span>🚀</span> <span id="toast-msg">Το μήνυμα στάλθηκε!</span>
+    </div>
 
-            <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#333; color:white; border:none; border-radius:5px;">Κλείσιμο</button>
+    <div id="result-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:200; align-items:center; justify-content:center;">
+        <div style="background:white; width:85%; max-width:350px; padding:30px; border-radius:20px; text-align:center;">
+            <div id="res-emoji" style="font-size:60px; margin-bottom:10px;"></div>
+            <h2 id="res-title" style="margin:0;"></h2>
+            <p id="res-desc" style="color:#666; font-size:15px;"></p>
+            <div id="res-reward" style="margin-top:20px; padding:15px; border-radius:10px; font-weight:bold; font-size:14px;"></div>
+            <button onclick="location.reload()" style="margin-top:20px; border:none; background:#333; color:white; padding:12px 30px; border-radius:30px; font-weight:600;">Εντάξει</button>
         </div>
     </div>
 
 </div>
 
 <script>
+    // ==========================================
+    // ⚙️ ΡΥΘΜΙΣΕΙΣ TELEGRAM (ΣΥΜΠΛΗΡΩΣΕ ΕΔΩ)
+    // ==========================================
+    const TELEGRAM_BOT_TOKEN = "TO_TOKEN_SOY_EDW"; // π.χ. "123456789:ABCdefGHIjkl..."
+    const TELEGRAM_CHAT_ID = "TO_ID_SOY_EDW";     // π.χ. "12345678"
+    // ==========================================
+
     // --- DATA ---
     const courses = {
         1: {
-            title: "Θεωρία Υπομονής & Μη Γκρίνιας",
-            desc: "Στο μάθημα αυτό αναλύουμε τη λεπτή τέχνη του να περιμένεις χωρίς να φυσάς και να ξεφυσάς. Επίσης, εξετάζουμε γιατί το να ρωτάς 'πότε φτάνουμε;' δεν βοηθάει το αυτοκίνητο να πάει πιο γρήγορα.",
+            title: "Θεωρία Υπομονής",
+            desc: "Μάθημα κορμού. Αναλύουμε γιατί το 'φτάνουμε;' κάθε 5 λεπτά μειώνει το προσδόκιμο ζωής του οδηγού.",
             files: [
-                { 
-                    title: "Διάλεξη 1: Zen Master.pptx", 
-                    type: "slides", 
-                    theme: "theme-blue",
-                    content: [
-                        { title: "ΕΙΣΑΓΩΓΗ", body: "<ul><li>Η υπομονή είναι αρετή.</li><li>Η γκρίνια είναι ελάττωμα.</li><li>Ο Διδάσκων έχει πάντα δίκιο.</li></ul>" },
-                        { title: "ΚΑΝΟΝΑΣ #1", body: "<p>Όταν περιμένεις το φαγητό, δεν ρωτάς 'γιατί αργεί'.</p><p>Απλά κάθεσαι και περιμένεις.</p>" },
-                        { title: "ΑΝΑΠΝΟΕΣ", body: "<p>Όταν νιώθεις ότι θες να φωνάξεις:</p><ul><li>Εισπνοή...</li><li>Εκπνοή...</li><li>Σιωπή.</li></ul>" },
-                        { title: "ΤΕΛΟΣ", body: "Διαβάστε το κεφάλαιο 4: 'Πώς να μην κάνεις μορφασμούς'." }
-                    ]
-                },
-                { 
-                    title: "Case Study: Σούπερ Μάρκετ.pdf", 
-                    type: "doc", 
-                    content: `
-                        <div class="doc-title">ΜΕΛΕΤΗ ΠΕΡΙΠΤΩΣΗΣ: ΣΟΥΠΕΡ ΜΑΡΚΕΤ</div>
-                        <p class="doc-p"><strong>Σενάριο:</strong> Ο Διδάσκων (Γκιώκας) αγοράζει λάθος μάρκα γάλακτος.</p>
-                        <p class="doc-p"><strong>Λανθασμένη Αντίδραση:</strong> "Μα καλά, δεν βλέπεις τι παίρνεις; Πάλι το λάθος πήρες;"</p>
-                        <p class="doc-p"><strong>Σωστή Αντίδραση:</strong> "Αγάπη μου, ευχαριστώ που πήγες σούπερ μάρκετ. Θα το πιω με χαρά."</p>
-                        <div class="doc-important">ΣΗΜΕΙΩΣΗ: Η λανθασμένη αντίδραση επιφέρει ποινή -1 βαθμό.</div>
-                    `
-                }
+                { title: "Διάλεξη 1: Zen Mode", type: "slides", content: [
+                    { t: "ΥΠΟΜΟΝΗ", b: "Η αρετή του να περιμένεις το φαγητό χωρίς να γκρινιάζεις." },
+                    { t: "ΑΝΑΠΝΟΕΣ", b: "Εισπνοή... Εκπνοή... Δεν φωνάζουμε όταν χάνει η ομάδα." }
+                ]},
+                { title: "Άρθρο: Η τέχνη της αναμονής", type: "doc", content: "<h2>Η Τέχνη της Αναμονής</h2><p>Όταν ο Κύριος Γκιώκας λέει '5 λεπτά', εννοεί 5 λεπτά (ή 15). Το παν είναι η εμπιστοσύνη.</p>" }
             ]
         },
         2: {
-            title: "Στρατηγικές Σιωπής & Ακοής",
-            desc: "Εργαστηριακό μάθημα που εστιάζει στην ενεργητική ακρόαση. Κύριος στόχος είναι η κατανόηση της λέξης 'Όχι' και η εφαρμογή της σιωπής όταν ο διδάσκων βλέπει μπάλα ή παίζει παιχνίδια.",
+            title: "Στρατηγικές Σιωπής",
+            desc: "Πότε πρέπει να μιλάμε και πότε όχι. Ειδική ενότητα: 'Ώρα Champions League'.",
             files: [
-                { 
-                    title: "Οδηγός: Πότε να μιλάς.pdf", 
-                    type: "doc",
-                    content: `
-                        <div class="doc-title">ΕΓΧΕΙΡΙΔΙΟ ΕΠΙΚΟΙΝΩΝΙΑΣ</div>
-                        <p class="doc-p">Ακολουθεί πίνακας με τις επιτρεπτές ώρες ομιλίας κατά τη διάρκεια αγώνα:</p>
-                        <ul class="doc-list">
-                            <li><strong>Ημίχρονο:</strong> Επιτρέπεται (5 λεπτά).</li>
-                            <li><strong>Διαφημίσεις:</strong> Επιτρέπεται.</li>
-                            <li><strong>Όταν τρώει γκολ η αντίπαλη ομάδα:</strong> Απαγορεύεται αυστηρά.</li>
-                        </ul>
-                        <p class="doc-p">Σε περίπτωση παράβασης, το τηλεκοντρόλ κατάσχεται.</p>
-                    `
-                },
-                {
-                    title: "Presentation: Η Τέχνη του 'Ναι'.pptx",
-                    type: "slides",
-                    theme: "theme-dark",
-                    content: [
-                        { title: "Η Δύναμη του 'ΝΑΙ'", body: "Πώς μια λέξη μπορεί να λύσει όλα τα προβλήματα." },
-                        { title: "Παράδειγμα 1", body: "<p>- Πάμε για σουβλάκια;</p><p>- ΝΑΙ!</p>" },
-                        { title: "Παράδειγμα 2", body: "<p>- Θες να δούμε αυτή την ταινία;</p><p>- ΝΑΙ!</p>" },
-                        { title: "Συμπέρασμα", body: "Το 'Ναι' οδηγεί στην ευτυχία (του διδάσκοντα)." }
-                    ]
-                }
+                { title: "Κανόνες Ομιλίας", type: "doc", content: "<h2>Κανόνες</h2><ul><li>Όχι ερωτήσεις στο 90'.</li><li>Όχι 'ποιος είναι αυτός' όταν βλέπουμε ταινία.</li></ul>" }
             ]
         },
         3: {
-            title: "Λογική Ανάλυση Δικαιολογιών",
-            desc: "Μια ιστορική αναδρομή στις πιο αποτυχημένες δικαιολογίες. Γιατί το 'με πόνεσε η κοιλιά μου' δεν πιάνει πια για να αποφύγεις τις δουλειές του σπιτιού.",
+            title: "Ανάλυση Δικαιολογιών",
+            desc: "Γιατί το 'με πόνεσε το κεφάλι' δεν πιάνει πλέον.",
             files: [
-                { 
-                    title: "Top 5 Απαράδεκτες Δικαιολογίες.pptx", 
-                    type: "slides",
-                    theme: "theme-minimal",
-                    content: [
-                        { title: "TOP 5 Fails", body: "Οι χειρότερες δικαιολογίες που ακούστηκαν το 2024." },
-                        { title: "#5", body: "<h3>'Ξέχασα το κινητό αθόρυβο.'</h3><p>Ψέμα. Απλά δεν ήθελες να το σηκώσεις.</p>" },
-                        { title: "#3", body: "<h3>'Νόμιζα ότι είπες αύριο.'</h3><p>Η προθεσμία ήταν σαφής.</p>" },
-                        { title: "#1 (ΚΟΡΥΦΗ)", body: "<h3>'Δεν φταις εσύ, εγώ φταίω.'</h3><p>Κλασική προσπάθεια αποφυγής ευθύνης.</p>" }
-                    ]
-                }
+                { title: "Top 10 Αποτυχίες", type: "slides", content: [
+                    { t: "FAIL #1", b: "'Δεν το άκουσα'. Κλασικό ψέμα." },
+                    { t: "FAIL #2", b: "'Νόμιζα το έκανες εσύ'. Μετατόπιση ευθύνης." }
+                ]}
             ]
         },
         4: {
-            title: "Οικιακή Τάξη & Ασφάλεια",
-            desc: "Πώς να αφήνεις τα πράγματα εκεί που τα βρήκες. Ένα μάθημα επιβίωσης για τη συμβίωση. Περιλαμβάνει workshop: 'Κλείσιμο καπακιού οδοντόκρεμας'.",
+            title: "Οικιακή Τάξη",
+            desc: "Η καρέκλα δεν είναι ντουλάπα. Το πάτωμα δεν είναι ράφι.",
             files: [
-                { 
-                    title: "Χάρτης: Πού μπαίνουν τα ρούχα.pdf", 
-                    type: "doc",
-                    content: `
-                        <div class="doc-title">ΧΑΡΤΗΣ ΟΙΚΙΑΣ</div>
-                        <p class="doc-p">Παρακαλώ μελετήστε προσεκτικά:</p>
-                        <ul class="doc-list">
-                            <li><strong>Καρέκλα γραφείου:</strong> Μόνο για κάθισμα. ΟΧΙ για ρούχα.</li>
-                            <li><strong>Πάτωμα:</strong> Για περπάτημα. ΟΧΙ για κάλτσες.</li>
-                            <li><strong>Ντουλάπα:</strong> Ο μαγικός χώρος που εξαφανίζει τα ρούχα.</li>
-                        </ul>
-                        <div class="doc-important" style="background:#ffcdd2;">ΠΡΟΣΟΧΗ: Τα παπούτσια στην παπουτσοθήκη!</div>
-                    `
-                }
+                { title: "Χάρτης Σπιτιού", type: "doc", content: "<h2>Χάρτης</h2><p>Τα παπούτσια πάνε στην παπουτσοθήκη. Τα άπλυτα στο καλάθι. Απλά πράγματα.</p>" }
             ]
         }
     };
 
-    // --- NAVIGATION ---
-    function goHome() {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-    }
+    let currentCourseId = null;
 
+    // --- NAVIGATION ---
     function openCourse(id) {
-        const data = courses[id];
-        document.getElementById('cd-title').innerText = data.title;
-        document.getElementById('cd-desc').innerText = data.desc;
+        currentCourseId = id;
+        const c = courses[id];
+        document.getElementById('course-header-text').innerText = c.title;
+        document.getElementById('course-desc-text').innerText = c.desc;
         
-        const list = document.getElementById('cd-files');
-        list.innerHTML = ''; 
-        data.files.forEach((f, index) => {
+        const list = document.getElementById('file-list-container');
+        list.innerHTML = '';
+        
+        c.files.forEach(f => {
             const div = document.createElement('div');
             div.className = 'file-item';
-            
-            // Icon selection
-            let iconStr = "📄";
-            if(f.type === "slides") iconStr = "📊";
-            
             div.innerHTML = `
-                <div class="file-icon">${iconStr}</div>
-                <div>
-                    <div class="file-name">${f.title}</div>
-                    <span class="file-meta">${f.type === 'slides' ? 'Παρουσίαση PowerPoint' : 'Έγγραφο PDF'}</span>
+                <div class="file-icon-box" style="color:${f.type==='slides'?'#e91e63':'#3f51b5'}">${f.type==='slides'?'📊':'📄'}</div>
+                <div style="flex:1">
+                    <div style="font-weight:600; font-size:14px;">${f.title}</div>
+                    <div style="font-size:11px; color:#999;">${f.type==='slides'?'Παρουσίαση':'Έγγραφο'}</div>
                 </div>
             `;
-            // Pass the specific file object
-            div.onclick = () => openFile(id, index);
+            div.onclick = () => openFile(f);
             list.appendChild(div);
         });
 
         document.getElementById('screen-course').classList.add('active');
     }
 
-    // --- FILE VIEWER LOGIC ---
-    let currentSlides = [];
-    let currentSlideIndex = 0;
+    function goBack() {
+        document.getElementById('screen-course').classList.remove('active');
+        document.getElementById('screen-exam-intro').classList.remove('active');
+        document.getElementById('screen-quiz').classList.remove('active');
+        // Clear input
+        document.getElementById('question-input').value = "";
+    }
 
-    function openFile(courseId, fileIndex) {
-        const file = courses[courseId].files[fileIndex];
+    // --- TELEGRAM SENDING LOGIC ---
+    async function sendTelegramQuestion() {
+        const input = document.getElementById('question-input');
+        const text = input.value.trim();
+        const btnText = document.getElementById('btn-text');
+        const loader = document.getElementById('btn-loader');
         
+        if (!text) {
+            showToast("❌ Γράψε κάτι πρώτα!");
+            return;
+        }
+
+        // UI Loading State
+        btnText.style.display = 'none';
+        loader.style.display = 'inline';
+
+        const courseName = courses[currentCourseId].title;
+        const message = `📚 *ΕΡΩΤΗΣΗ ΜΑΘΗΜΑΤΟΣ*\n\n📌 Μάθημα: _${courseName}_\n\n❓ Ερώτηση:\n${text}`;
+
+        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    chat_id: TELEGRAM_CHAT_ID,
+                    text: message,
+                    parse_mode: "Markdown"
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.ok) {
+                showToast("✅ Η απορία στάλθηκε επιτυχώς!");
+                input.value = "";
+            } else {
+                showToast("❌ Σφάλμα αποστολής (Λάθος Token;)");
+                console.error(data);
+            }
+        } catch (error) {
+            showToast("❌ Σφάλμα δικτύου.");
+            console.error(error);
+        }
+
+        // Reset UI
+        btnText.style.display = 'inline';
+        loader.style.display = 'none';
+    }
+
+    function showToast(msg) {
+        const t = document.getElementById('toast');
+        document.getElementById('toast-msg').innerText = msg;
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+    }
+
+    // --- FILE VIEWERS ---
+    function openFile(file) {
+        const container = document.getElementById('doc-content');
+        container.innerHTML = '';
+
         if (file.type === 'doc') {
-            document.getElementById('doc-header-title').innerText = file.title;
-            document.getElementById('doc-content-area').innerHTML = file.content;
-            document.getElementById('screen-doc-viewer').classList.add('active');
-        } 
-        else if (file.type === 'slides') {
-            currentSlides = file.content;
-            currentSlideIndex = 0;
-            const viewer = document.getElementById('screen-slide-viewer');
-            
-            // Apply theme class to slide card
-            const slideCard = document.getElementById('slide-display');
-            slideCard.className = `slide-card ${file.theme || ''}`;
-            
-            renderSlide();
-            viewer.classList.add('active');
+            container.innerHTML = `<div class="doc-page">${file.content}</div>`;
+        } else {
+            // Simple Slides Viewer
+            let html = `<div class="slide-wrapper">`;
+            file.content.forEach((s, i) => {
+                html += `
+                    <div class="slide-card" style="margin-bottom:20px;">
+                        <h2 style="color:var(--primary);">${s.t}</h2>
+                        <div style="font-size:18px;">${s.b}</div>
+                        <div style="position:absolute; bottom:10px; right:20px; color:#ccc; font-size:12px;">Slide ${i+1}</div>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+            container.innerHTML = html;
         }
+        document.getElementById('screen-doc').classList.add('active');
     }
 
-    function closeFile() {
-        document.getElementById('screen-doc-viewer').classList.remove('active');
-        document.getElementById('screen-slide-viewer').classList.remove('active');
+    function closeDoc() {
+        document.getElementById('screen-doc').classList.remove('active');
     }
 
-    // Slide Controls
-    function renderSlide() {
-        const slide = currentSlides[currentSlideIndex];
-        const display = document.getElementById('slide-display');
-        const counter = document.getElementById('slide-counter');
-
-        display.innerHTML = `
-            <div class="slide-content">
-                <h2>${slide.title}</h2>
-                <div>${slide.body}</div>
-            </div>
-            <div class="slide-footer">Slide ${currentSlideIndex + 1}</div>
-        `;
-        counter.innerText = `${currentSlideIndex + 1} / ${currentSlides.length}`;
-    }
-
-    function nextSlide() {
-        if (currentSlideIndex < currentSlides.length - 1) {
-            currentSlideIndex++;
-            renderSlide();
-        }
-    }
-
-    function prevSlide() {
-        if (currentSlideIndex > 0) {
-            currentSlideIndex--;
-            renderSlide();
-        }
-    }
-
+    // --- EXAM LOGIC ---
     function openExamIntro() {
         document.getElementById('screen-exam-intro').classList.add('active');
     }
 
-    function startExam() {
-        document.getElementById('screen-exam-quiz').classList.add('active');
+    function startQuiz() {
+        const quizHTML = `
+            <div style="padding:20px;">
+                ${createQ(1, "Αν μου ζητήσεις χάρη και πω 'όχι', τι κάνεις;", ["Γκρινιάζω", "Το δέχομαι σιωπηρά (Σωστό)", "Σου κάνω μούτρα"], 1)}
+                ${createQ(2, "Ποιος διαλέγει ταινία;", ["Εσύ", "Εγώ (Γκιώκας) (Σωστό)", "Κλήρωση"], 1)}
+                ${createQ(3, "Τι ώρα είναι το '5 λεπτά';", ["5 λεπτά", "Μισή ώρα", "Όποτε είμαι έτοιμη (Λάθος)"], 0)}
+                ${createQ(4, "Αν πεινάω και δεν έχεις μαγειρέψει;", ["Παραγγέλνουμε (Σωστό)", "Τρως τοστ", "Νηστεύεις"], 0)}
+                ${createQ(5, "Με αγαπάς;", ["Ναι (Σωστό)", "Πολύ (Σωστό)", "Άπειρα (Σωστό)"], 0)}
+                
+                <button class="send-btn" style="background:var(--danger); margin-top:20px;" onclick="submitQuiz()">ΥΠΟΒΟΛΗ</button>
+            </div>
+        `;
+        document.getElementById('quiz-area').innerHTML = quizHTML;
+        document.getElementById('screen-quiz').classList.add('active');
     }
 
-    // --- EXAM LOGIC ---
-    function submitExam() {
-        const form = document.getElementById('quiz-form');
-        const formData = new FormData(form);
-        let score = 0;
+    function createQ(id, txt, opts, correctIdx) {
+        let html = `<div style="background:white; padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #eee;">
+            <div style="font-weight:600; margin-bottom:10px;">${id}. ${txt}</div>`;
+        opts.forEach((o, i) => {
+            // Using value=2 for correct (simple logic)
+            // Real logic handles specifically below, keeping simple for demo
+            let val = (i === correctIdx || id===5) ? 2 : 0; 
+            html += `<label style="display:block; margin:8px 0; color:#555;">
+                <input type="radio" name="q${id}" value="${val}"> ${o}
+            </label>`;
+        });
+        html += `</div>`;
+        return html;
+    }
 
-        for (let pair of formData.entries()) {
-            score += parseInt(pair[1]);
+    function submitQuiz() {
+        // Calculate score
+        let score = 0;
+        for (let i=1; i<=5; i++) {
+            const els = document.getElementsByName(`q${i}`);
+            for (let el of els) {
+                if (el.checked) score += parseInt(el.value);
+            }
         }
 
-        showResult(score);
-    }
-
-    function showResult(score) {
-        const modal = document.getElementById('modal-result');
-        const icon = document.getElementById('res-icon');
+        const overlay = document.getElementById('result-overlay');
+        const emoji = document.getElementById('res-emoji');
         const title = document.getElementById('res-title');
-        const scoreTxt = document.getElementById('res-score');
-        const msg = document.getElementById('res-msg');
-        const box = document.getElementById('res-action-box');
+        const desc = document.getElementById('res-desc');
+        const reward = document.getElementById('res-reward');
 
-        modal.style.display = 'flex';
-        scoreTxt.innerText = `Βαθμός: ${score} / 10`;
+        overlay.style.display = "flex";
 
         if (score >= 9) {
-            icon.innerText = "🏆";
-            title.innerText = "ΑΡΙΣΤΑ!";
-            title.style.color = "green";
-            msg.innerText = "Συγχαρητήρια! Είσαι υπόδειγμα φοιτήτριας.";
-            box.style.background = "#e8f5e9";
-            box.style.color = "#2e7d32";
-            box.innerHTML = "🎁 ΕΠΙΛΟΓΗ: Διαλέγεις ό,τι λιχουδιά τραβάει η όρεξή σου!";
-        } 
-        else if (score >= 7) {
-            icon.innerText = "👏";
-            title.innerText = "ΠΟΛΥ ΚΑΛΑ";
-            title.style.color = "green";
-            msg.innerText = "Καλή προσπάθεια, αλλά έχεις κενά.";
-            box.style.background = "#e8f5e9";
-            box.style.color = "#2e7d32";
-            box.innerHTML = "🍬 ΚΕΡΔΙΖΕΙΣ: Μια τυχαία λιχουδιά (επιλογή Γκιώκα).";
-        }
-        else if (score >= 5) {
-            icon.innerText = "😅";
-            title.innerText = "ΟΡΙΑΚΑ...";
-            title.style.color = "#f57f17";
-            msg.innerText = "Πέρασες από του χάρου τα δόντια.";
-            box.style.background = "#fff3e0";
-            box.style.color = "#f57f17";
-            box.innerHTML = "🛡️ RESULT: Τη γλυτώνεις (για σήμερα).";
-        }
-        else if (score >= 3) {
-            icon.innerText = "🧹";
-            title.innerText = "ΑΔΙΑΒΑΣΤΗ";
-            title.style.color = "#d32f2f";
-            msg.innerText = "Λυπάμαι, κόπηκες. Οι κανόνες είναι κανόνες.";
-            box.style.background = "#ffebee";
-            box.style.color = "#c62828";
-            box.innerHTML = "⚠️ ΠΟΙΝΗ: Πλύσιμο πιάτων σήμερα ή 10 λεπτά μασάζ στον διδάσκοντα.";
-        }
-        else {
-            icon.innerText = "💀";
-            title.innerText = "ΑΠΑΡΑΔΕΚΤΗ!";
-            title.style.color = "#b71c1c";
-            msg.innerText = "Δεν άνοιξες καν τις σημειώσεις;";
-            box.style.background = "#ffcdd2";
-            box.style.color = "#b71c1c";
-            box.innerHTML = "🚨 ΜΕΓΑΛΗ ΠΟΙΝΗ: Μαγείρεμα αύριο ΚΑΙ παράδοση κινητού για 1 ώρα.";
+            emoji.innerText = "🏆"; title.innerText = "ΑΡΙΣΤΑ (10/10)"; 
+            title.style.color = "#2e7d32"; desc.innerText = "Είσαι η καλύτερη φοιτήτρια του κόσμου!";
+            reward.style.background = "#e8f5e9"; reward.style.color = "#2e7d32";
+            reward.innerText = "🎁 ΕΠΑΘΛΟ: Διάλεξε ό,τι θες να φάμε!";
+        } else if (score >= 5) {
+             emoji.innerText = "😐"; title.innerText = "ΜΕΤΡΙΑ..."; 
+             title.style.color = "#ffa726"; desc.innerText = "Πέρασες, αλλά θέλει διάβασμα.";
+             reward.style.background = "#fff3e0"; reward.style.color = "#f57c00";
+             reward.innerText = "🛡️ Δεν έχει τιμωρία, αλλά ούτε γλυκό.";
+        } else {
+             emoji.innerText = "💀"; title.innerText = "ΚΟΠΗΚΕΣ!"; 
+             title.style.color = "#c62828"; desc.innerText = "Απαράδεκτη συμπεριφορά.";
+             reward.style.background = "#ffebee"; reward.style.color = "#c62828";
+             reward.innerText = "🧹 ΠΟΙΝΗ: Πλύσιμο πιάτων σήμερα!";
         }
     }
 </script>
