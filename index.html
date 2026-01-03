@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moodle Mobile</title>
+    <title>e-Learning Moodle</title>
     <style>
-        /* CSS: Το στυλ για να μοιάζει με Moodle App */
+        /* --- CSS STYLES --- */
         :root {
             --bg-color: #f2f3f5;
             --card-bg: #ffffff;
             --text-color: #333;
-            --badge-bg: #fcebd5;
-            --badge-text: #8a6d3b;
-            --primary: #f98012; /* Το πορτοκαλί του moodle */
+            --primary: #f98012;
+            --danger: #d32f2f;
         }
 
         body {
@@ -26,7 +25,6 @@
             height: 100vh;
         }
 
-        /* Container που μιμείται την οθόνη κινητού */
         .app-container {
             width: 100%;
             max-width: 480px;
@@ -35,6 +33,8 @@
             overflow-y: auto;
             position: relative;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
         }
 
         /* Header */
@@ -44,33 +44,23 @@
             justify-content: space-between;
             align-items: center;
             background: #fff;
-            position: sticky;
-            top: 0;
-            z-index: 10;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
         }
 
-        .header h1 {
-            font-size: 18px;
-            margin: 0;
-            font-weight: 500;
-        }
-
+        .header h1 { font-size: 18px; margin: 0; font-weight: 600; }
         .avatar {
-            width: 35px;
-            height: 35px;
-            background: #e0e0e0;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            color: #666;
+            width: 35px; height: 35px; background: #e0e0e0;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 14px; color: #666;
         }
 
         /* Λίστα Μαθημάτων */
-        .course-list {
-            padding: 10px;
-            padding-bottom: 80px; /* Χώρος για το κάτω μενού */
+        .content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            padding-bottom: 80px;
         }
 
         .course-card {
@@ -78,379 +68,363 @@
             border-radius: 12px;
             padding: 15px;
             margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             border: 1px solid #e0e0e0;
             display: flex;
             align-items: flex-start;
             gap: 15px;
             cursor: pointer;
-            transition: transform 0.1s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
+        
+        .course-card:active { transform: scale(0.98); background-color: #fafafa; }
 
-        .course-card:active {
-            transform: scale(0.98);
-        }
+        .course-icon { width: 50px; height: 50px; border-radius: 8px; flex-shrink: 0; }
+        .icon-1 { background: #fcdfa6; } /* Yellow */
+        .icon-2 { background: #8ce3d8; } /* Teal */
+        .icon-3 { background: #a89cf0; } /* Purple */
+        .icon-4 { background: #ff8fa3; } /* Pink */
+        .icon-exam { background: #ff5252; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 24px; }
 
-        .course-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            flex-shrink: 0;
-        }
-        /* Χρώματα εικονιδίων όπως στη φώτο */
-        .icon-yellow { background: #fcdfa6; }
-        .icon-teal { background: #8ce3d8; }
-        .icon-purple { background: #a89cf0; }
-        .icon-pink { background: #ff8fa3; }
-
-        .course-info {
-            flex-grow: 1;
-        }
-
-        .course-code {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 4px;
-        }
-
-        .course-title {
-            font-size: 16px;
-            font-weight: 500;
-            margin: 0 0 8px 0;
-            line-height: 1.3;
-        }
-
+        .course-info { flex-grow: 1; }
+        .course-code { font-size: 11px; color: #777; margin-bottom: 2px; }
+        .course-title { font-size: 15px; font-weight: 600; margin: 0 0 5px 0; line-height: 1.3; }
+        
         .semester-badge {
-            display: inline-block;
-            background-color: var(--badge-bg);
-            color: var(--badge-text);
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 600;
+            display: inline-block; background-color: #fcebd5; color: #8a6d3b;
+            font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 600;
         }
+        .exam-badge { background-color: #ffebee; color: #c62828; }
 
-        .menu-dots {
-            color: #333;
-            font-weight: bold;
-            font-size: 20px;
-            margin-top: -5px;
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            background: #fff;
-            border-top: 1px solid #ddd;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            max-width: 480px;
-        }
-
-        .nav-item {
-            text-align: center;
-            color: #666;
-            font-size: 24px;
-            position: relative;
-        }
-
-        .nav-item.active {
-            color: #333;
-            border-bottom: 2px solid var(--primary);
-        }
-
-        .badge-count {
-            position: absolute;
-            top: -2px;
-            right: -5px;
-            background: #ff6b00;
-            color: white;
-            font-size: 10px;
-            padding: 2px 5px;
-            border-radius: 10px;
-        }
-
-        /* Οθόνη Μαθήματος & Εξέτασης (Κρυμμένα αρχικά) */
+        /* Οθόνες (Screens) */
         .screen {
-            display: none;
-            padding: 20px;
+            display: none; /* Κρυμμένες */
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; z-index: 20; flex-direction: column;
+        }
+        .screen.active { display: flex; }
+
+        .screen-header {
+            padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; background: #fff;
+        }
+        .back-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 5px; }
+        
+        /* Λίστα Αρχείων */
+        .file-list { padding: 0; list-style: none; margin: 0; overflow-y: auto; }
+        .file-item {
+            display: flex; align-items: center; padding: 15px;
+            border-bottom: 1px solid #f0f0f0; cursor: pointer;
+        }
+        .file-item:active { background: #f9f9f9; }
+        .file-icon { font-size: 24px; margin-right: 15px; }
+        .file-info div:first-child { font-weight: 500; font-size: 14px; }
+        .file-info div:last-child { font-size: 12px; color: #888; margin-top: 2px; }
+
+        /* Προβολή Αρχείου (Document Viewer) */
+        .doc-content {
+            padding: 25px;
+            font-family: 'Courier New', Courier, monospace;
+            line-height: 1.6;
+            font-size: 14px;
             background: #fff;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            box-sizing: border-box;
-            z-index: 20;
-            overflow-y: auto;
-        }
-
-        .active-screen {
-            display: block;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            font-size: 16px;
             color: #333;
-            cursor: pointer;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
+            overflow-y: auto;
+            height: 100%;
+        }
+        .doc-watermark {
+            color: rgba(0,0,0,0.05); font-size: 40px; font-weight: bold;
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg);
+            pointer-events: none;
         }
 
-        .resource {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eee;
-            gap: 10px;
+        /* Εξέταση Styles */
+        .quiz-container { padding: 20px; overflow-y: auto; }
+        .question-card { margin-bottom: 25px; }
+        .question-text { font-weight: 600; margin-bottom: 10px; font-size: 16px; }
+        .radio-option {
+            display: block; padding: 10px; margin-bottom: 5px;
+            border: 1px solid #ddd; border-radius: 8px; cursor: pointer;
         }
+        .radio-option input { margin-right: 10px; }
         
-        .resource-icon { width: 30px; }
-
-        .exam-btn {
-            display: block;
-            width: 100%;
-            padding: 15px;
-            background: #d32f2f;
-            color: white;
-            text-align: center;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-top: 30px;
-            cursor: pointer;
-            font-weight: bold;
+        .submit-btn {
+            width: 100%; padding: 15px; background: var(--danger); color: white;
+            border: none; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 20px;
         }
 
-        /* Quiz Styles */
-        .question { margin-bottom: 20px; }
-        .question p { font-weight: bold; }
-        .options label { display: block; margin: 5px 0; }
-        
-        .alert-modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,0,0,0.8);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            flex-direction: column;
+        /* Bottom Nav */
+        .bottom-nav {
+            background: #fff; border-top: 1px solid #ddd; display: flex; justify-content: space-around;
+            padding: 10px 0; position: sticky; bottom: 0;
         }
-        .alert-box {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            text-align: center;
-            width: 80%;
-        }
-        .fail-text { color: red; font-size: 22px; font-weight: bold; }
-        .pass-text { color: green; font-size: 22px; font-weight: bold; }
+        .nav-item { font-size: 22px; color: #999; }
+        .nav-item.active { color: #333; border-bottom: 2px solid var(--primary); }
 
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 100; display: none;
+            align-items: center; justify-content: center; flex-direction: column;
+        }
+        .modal-box {
+            background: white; width: 80%; max-width: 350px; padding: 25px;
+            border-radius: 15px; text-align: center;
+        }
     </style>
 </head>
 <body>
 
 <div class="app-container">
-    <div id="home-screen">
+    
+    <div id="screen-home" style="display: flex; flex-direction: column; height: 100%;">
         <div class="header">
             <h1>Ακαδημαϊκό Έτος 2025-26</h1>
-            <div class="avatar">ΝΓ</div>
+            <div class="avatar">ΕΣΥ</div>
         </div>
 
-        <div class="course-list">
+        <div class="content-area">
+            
             <div class="course-card" onclick="openCourse(1)">
-                <div class="course-icon icon-yellow"></div>
+                <div class="course-icon icon-1"></div>
                 <div class="course-info">
                     <div class="course-code">101a</div>
-                    <div class="course-title">Εισαγωγή στην Υπομονή (Θεωρία)</div>
-                    <div class="semester-badge">1ο Εξάμηνο ΠΕΙΘΑΡΧΙΑΣ</div>
+                    <div class="course-title">Θεωρία Υπομονής & Μη Γκρίνιας</div>
+                    <div class="semester-badge">5ο Εξάμηνο</div>
                 </div>
-                <div class="menu-dots">⋮</div>
+                <div>⋮</div>
             </div>
 
             <div class="course-card" onclick="openCourse(2)">
-                <div class="course-icon icon-teal"></div>
+                <div class="course-icon icon-2"></div>
                 <div class="course-info">
-                    <div class="course-code">204b</div>
-                    <div class="course-title">Στρατηγικές Σιωπής & Ακοής</div>
-                    <div class="semester-badge">Χειμερινό Εξάμηνο</div>
+                    <div class="course-code">202b</div>
+                    <div class="course-title">Εφαρμοσμένη Σιωπή</div>
+                    <div class="semester-badge">Εργαστήριο</div>
                 </div>
-                <div class="menu-dots">⋮</div>
+                <div>⋮</div>
             </div>
 
             <div class="course-card" onclick="openCourse(3)">
-                <div class="course-icon icon-purple"></div>
+                <div class="course-icon icon-3"></div>
                 <div class="course-info">
-                    <div class="course-code">3353a</div>
-                    <div class="course-title">Λογική Σχεδίαση Δικαιολογιών (Εργαστήριο)</div>
-                    <div class="semester-badge">Υποχρεωτικό</div>
+                    <div class="course-code">303c</div>
+                    <div class="course-title">Διαχείριση Δικαιολογιών</div>
+                    <div class="semester-badge">Θεωρία</div>
                 </div>
-                <div class="menu-dots">⋮</div>
+                <div>⋮</div>
             </div>
 
             <div class="course-card" onclick="openCourse(4)">
-                <div class="course-icon icon-pink"></div>
+                <div class="course-icon icon-4"></div>
                 <div class="course-info">
-                    <div class="course-code">666x</div>
-                    <div class="course-title">Προχωρημένη Υπακοή & Συνέπειες</div>
-                    <div class="semester-badge">ΤΕΛΙΚΗ ΕΞΕΤΑΣΗ</div>
+                    <div class="course-code">404d</div>
+                    <div class="course-title">Οικιακή Τάξη & Ασφάλεια</div>
+                    <div class="semester-badge">Προαιρετικό</div>
                 </div>
-                <div class="menu-dots">⋮</div>
+                <div>⋮</div>
             </div>
+
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+            <div class="course-card" onclick="openExam()" style="border-left: 5px solid red;">
+                <div class="course-icon icon-exam">!</div>
+                <div class="course-info">
+                    <div class="course-code">FINAL-EXAM</div>
+                    <div class="course-title" style="color: #d32f2f;">ΤΕΛΙΚΗ ΕΞΕΤΑΣΗ ΠΕΙΘΑΡΧΙΑΣ</div>
+                    <div class="semester-badge exam-badge">ΥΠΟΧΡΕΩΤΙΚΟ</div>
+                </div>
+                <div>⋮</div>
+            </div>
+
         </div>
 
         <div class="bottom-nav">
             <div class="nav-item">⏱️</div>
             <div class="nav-item active">🎓</div>
             <div class="nav-item">💬</div>
-            <div class="nav-item">🔔<span class="badge-count">72</span></div>
-            <div class="nav-item">•••</div>
+            <div class="nav-item">🔔</div>
         </div>
     </div>
 
-    <div id="course-screen" class="screen">
-        <button class="back-btn" onclick="goBack()">⬅ Πίσω στα μαθήματα</button>
-        <h2 id="course-header-title">Τίτλος Μαθήματος</h2>
-        <p style="color: #666; font-size: 14px;">Υλικό Μαθήματος</p>
-        
-        <div class="resource">
-            <span style="font-size: 24px;">📄</span>
-            <div>
-                <div style="font-weight: 500;">Διαφάνειες Διάλεξης 1.pdf</div>
-                <div style="font-size: 12px; color: #888;">File • 2.4MB</div>
-            </div>
+    <div id="screen-course" class="screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="goHome()">⬅</button>
+            <h3 id="course-header-title" style="margin:0; font-size: 16px;">Μάθημα</h3>
         </div>
-        <div class="resource">
-            <span style="font-size: 24px;">📊</span>
-            <div>
-                <div style="font-weight: 500;">Σημειώσεις Κανονισμών.pptx</div>
-                <div style="font-size: 12px; color: #888;">File • 5.1MB</div>
+        <div id="file-list-container" class="file-list">
             </div>
-        </div>
-        <div class="resource">
-            <span style="font-size: 24px;">⚠️</span>
-            <div>
-                <div style="font-weight: 500;">Λίστα Ποινών (ΠΡΟΣΟΧΗ).pdf</div>
-                <div style="font-size: 12px; color: #888;">File • 105KB</div>
-            </div>
-        </div>
-
-        <button class="exam-btn" onclick="startExam()">ΕΝΑΡΞΗ ΕΞΕΤΑΣΗΣ (Υποχρεωτική)</button>
     </div>
 
-    <div id="exam-screen" class="screen">
-        <h2 style="color: #d32f2f;">Τελική Εξέταση Πειθαρχίας</h2>
-        <p>Απάντησε σωστά αλλιώς υπάρχουν κυρώσεις.</p>
-        <hr>
-        
-        <form id="quiz-form">
-            <div class="question">
-                <p>1. Όταν σου λέω "όχι", τι σημαίνει;</p>
-                <div class="options">
-                    <label><input type="radio" name="q1" value="wrong"> Ίσως αργότερα</label>
-                    <label><input type="radio" name="q1" value="correct"> Σημαίνει ΟΧΙ.</label>
-                    <label><input type="radio" name="q1" value="wrong"> Θα το συζητήσουμε</label>
-                </div>
+    <div id="screen-file" class="screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="closeFile()">⬅ Πίσω</button>
+            <h3 id="file-header-title" style="margin:0; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">Έγγραφο</h3>
+        </div>
+        <div class="doc-content" id="doc-body">
             </div>
-
-            <div class="question">
-                <p>2. Ποιος έχει πάντα δίκιο;</p>
-                <div class="options">
-                    <label><input type="radio" name="q2" value="wrong"> Η Δημοκρατία</label>
-                    <label><input type="radio" name="q2" value="correct"> Εγώ (ο εξεταστής)</label>
-                    <label><input type="radio" name="q2" value="wrong"> Κανείς</label>
-                </div>
-            </div>
-
-             <div class="question">
-                <p>3. Τι συμβαίνει αν δεν διαβάσεις τις σημειώσεις;</p>
-                <div class="options">
-                    <label><input type="radio" name="q3" value="correct"> Τιμωρία</label>
-                    <label><input type="radio" name="q3" value="wrong"> Τίποτα</label>
-                </div>
-            </div>
-
-            <button type="button" class="exam-btn" style="background-color: #333;" onclick="submitExam()">Υποβολή</button>
-        </form>
+        <div class="doc-watermark">CONFIDENTIAL</div>
     </div>
 
-    <div id="result-modal" class="alert-modal">
-        <div class="alert-box">
-            <div id="result-icon" style="font-size: 50px; margin-bottom: 10px;">❌</div>
-            <div id="result-title" class="fail-text">ΑΠΟΤΥΧΙΑ!</div>
-            <p id="result-msg">Δεν διάβασες τις σημειώσεις!</p>
-            <p style="font-weight: bold; margin-top: 15px;">ΠΟΙΝΗ:</p>
-            <div style="background: #ffebee; padding: 10px; border: 1px dashed red; color: red;">
-                Πρέπει να κεράσεις φαγητό σήμερα! 🍔
+    <div id="screen-exam" class="screen">
+        <div class="screen-header">
+            <button class="back-btn" onclick="goHome()">⬅ Ακύρωση</button>
+            <h3 style="margin:0; color: #d32f2f;">Εξέταση</h3>
+        </div>
+        <div class="quiz-container">
+            <p style="background:#ffebee; padding:10px; border-radius:5px; color:#c62828; font-size:13px;">
+                ⚠️ Προσοχή: Η αποτυχία στην εξέταση επιφέρει άμεση ποινή. Διάβασε προσεκτικά.
+            </p>
+            
+            <form id="quiz-form">
+                <div class="question-card">
+                    <div class="question-text">1. Ποια είναι η σωστή απάντηση όταν σου ζητηθεί χάρη;</div>
+                    <label class="radio-option"><input type="radio" name="q1" value="w"> Θα δω...</label>
+                    <label class="radio-option"><input type="radio" name="q1" value="c"> Ναι, αμέσως!</label>
+                    <label class="radio-option"><input type="radio" name="q1" value="w"> Μπα, βαριέμαι.</label>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-text">2. Στο μάθημα "Σιωπή", πότε επιτρέπεται να διακόπτεις;</div>
+                    <label class="radio-option"><input type="radio" name="q2" value="w"> Όταν έχω δίκιο.</label>
+                    <label class="radio-option"><input type="radio" name="q2" value="c"> Ποτέ.</label>
+                    <label class="radio-option"><input type="radio" name="q2" value="w"> Μόνο στις διαφημίσεις.</label>
+                </div>
+
+                <div class="question-card">
+                    <div class="question-text">3. Τι προβλέπει ο κανονισμός για τις δικαιολογίες;</div>
+                    <label class="radio-option"><input type="radio" name="q3" value="c"> Απαγορεύονται αυστηρά.</label>
+                    <label class="radio-option"><input type="radio" name="q3" value="w"> Επιτρέπονται αν είναι καλές.</label>
+                </div>
+
+                <button type="button" class="submit-btn" onclick="submitExam()">ΥΠΟΒΟΛΗ & ΕΛΕΓΧΟΣ</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="modal-result" class="modal-overlay">
+        <div class="modal-box">
+            <div id="res-icon" style="font-size: 60px; margin-bottom: 10px;">🚫</div>
+            <h2 id="res-title" style="margin:0; color:red;">ΑΠΟΤΥΧΙΑ</h2>
+            <p id="res-msg" style="margin: 15px 0;">Δεν μελέτησες σωστά τα αρχεία!</p>
+            
+            <div id="punishment-box" style="background:#f5f5f5; padding:10px; border:1px dashed #333; margin-top:15px;">
+                <strong>ΠΟΙΝΗ:</strong><br>
+                <span id="punishment-text">Πρέπει να πλύνεις τα πιάτα για 3 μέρες! 🧼</span>
             </div>
-            <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; border:none; background: #333; color: white; border-radius: 5px;">Εντάξει...</button>
+
+            <button onclick="location.reload()" style="margin-top:20px; padding:10px 20px; background:#333; color:white; border:none; borderRadius:5px;">Κλείσιμο</button>
         </div>
     </div>
 
 </div>
 
 <script>
+    // --- ΔΕΔΟΜΕΝΑ ΜΑΘΗΜΑΤΩΝ & ΑΡΧΕΙΩΝ ---
+    const courses = {
+        1: {
+            title: "Θεωρία Υπομονής",
+            files: [
+                { title: "Διάλεξη 1: Εισαγωγή.pdf", type: "pdf", content: "ΜΑΘΗΜΑ 1:\n\nΗ υπομονή είναι αρετή.\n\nΌταν περιμένεις κάτι, δεν ρωτάς 'πότε θα γίνει'.\nΑπλά περιμένεις.\n\nΚαι περιμένεις...\nΚαι χαμογελάς." },
+                { title: "Κανόνες Γκρίνιας.pptx", type: "ppt", content: "ΚΑΝΟΝΕΣ ΓΚΡΙΝΙΑΣ:\n\n1. Απαγορεύεται.\n2. Αν έχεις παράπονο, γράψτο σε χαρτί και πέτα το.\n3. Η γκρίνια προκαλεί πρόστιμα." }
+            ]
+        },
+        2: {
+            title: "Εφαρμοσμένη Σιωπή",
+            files: [
+                { title: "Τεχνικές Σιωπής.pdf", type: "pdf", content: "ΤΕΧΝΙΚΕΣ ΣΙΩΠΗΣ:\n\nΗ τέχνη του να μην μιλάς όταν δεν πρέπει.\n\nTip #1: Πάρε ανάσα.\nTip #2: Μέτρα ως το 100.\nTip #3: Μην πεις την εξυπνάδα που σκέφτηκες." }
+            ]
+        },
+        3: {
+            title: "Διαχείριση Δικαιολογιών",
+            files: [
+                { title: "Λίστα Απαγορευμένων Δικαιολογιών.doc", type: "doc", content: "TOP 5 ΑΠΑΓΟΡΕΥΜΕΝΕΣ ΔΙΚΑΙΟΛΟΓΙΕΣ:\n\n1. 'Δεν το άκουσα.'\n2. 'Ξέχασα το κινητό αθόρυβο.'\n3. 'Νόμιζα ότι είπες αύριο.'\n4. 'Πονούσε το κεφάλι μου.'\n5. 'Έπεσε το ίντερνετ.'" }
+            ]
+        },
+        4: {
+            title: "Οικιακή Τάξη",
+            files: [
+                { title: "Οδηγός Τακτοποίησης.pdf", type: "pdf", content: "ΟΔΗΓΟΣ:\n\n- Τα ρούχα δεν πάνε στην καρέκλα.\n- Τα ποτήρια πάνε στο πλυντήριο.\n- Τα παπούτσια στην παπουτσοθήκη." }
+            ]
+        }
+    };
+
+    // --- NAVIGATION FUNCTIONS ---
+
+    function goHome() {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    }
+
     function openCourse(id) {
-        // Εμφάνιση οθόνης μαθήματος
-        document.getElementById('home-screen').style.display = 'none';
-        document.getElementById('course-screen').style.display = 'block';
-        
-        let title = "";
-        if(id === 1) title = "Εισαγωγή στην Υπομονή";
-        if(id === 2) title = "Στρατηγικές Σιωπής";
-        if(id === 3) title = "Λογική Σχεδίαση Δικαιολογιών";
-        if(id === 4) title = "Προχωρημένη Υπακοή & Συνέπειες";
-        
-        document.getElementById('course-header-title').innerText = title;
+        const course = courses[id];
+        document.getElementById('course-header-title').innerText = course.title;
+        const list = document.getElementById('file-list-container');
+        list.innerHTML = ''; // Clear previous
+
+        course.files.forEach((file, index) => {
+            let icon = '📄';
+            if(file.type === 'ppt') icon = '📊';
+            if(file.type === 'doc') icon = '📝';
+
+            const item = document.createElement('div');
+            item.className = 'file-item';
+            item.innerHTML = `
+                <div class="file-icon">${icon}</div>
+                <div class="file-info">
+                    <div>${file.title}</div>
+                    <div>Πατήστε για προβολή</div>
+                </div>
+            `;
+            // Όταν πατάει το αρχείο, ανοίγει το viewer με το συγκεκριμένο content
+            item.onclick = () => openFile(file.title, file.content);
+            list.appendChild(item);
+        });
+
+        document.getElementById('screen-course').classList.add('active');
     }
 
-    function goBack() {
-        document.getElementById('home-screen').style.display = 'block';
-        document.getElementById('course-screen').style.display = 'none';
-        document.getElementById('exam-screen').style.display = 'none';
+    function openFile(title, content) {
+        document.getElementById('file-header-title').innerText = title;
+        document.getElementById('doc-body').innerText = content;
+        document.getElementById('screen-file').classList.add('active');
     }
 
-    function startExam() {
-        document.getElementById('course-screen').style.display = 'none';
-        document.getElementById('exam-screen').style.display = 'block';
+    function closeFile() {
+        document.getElementById('screen-file').classList.remove('active');
+    }
+
+    function openExam() {
+        document.getElementById('screen-exam').classList.add('active');
     }
 
     function submitExam() {
         const form = document.getElementById('quiz-form');
         const formData = new FormData(form);
-        
         let score = 0;
-        // Έλεγχος απαντήσεων (correct = σωστό)
-        if(formData.get('q1') === 'correct') score++;
-        if(formData.get('q2') === 'correct') score++;
-        if(formData.get('q3') === 'correct') score++;
 
-        const modal = document.getElementById('result-modal');
-        const title = document.getElementById('result-title');
-        const msg = document.getElementById('result-msg');
-        const icon = document.getElementById('result-icon');
+        // Έλεγχος (c = correct)
+        if(formData.get('q1') === 'c') score++;
+        if(formData.get('q2') === 'c') score++;
+        if(formData.get('q3') === 'c') score++;
+
+        const modal = document.getElementById('modal-result');
+        const title = document.getElementById('res-title');
+        const msg = document.getElementById('res-msg');
+        const icon = document.getElementById('res-icon');
+        const punishBox = document.getElementById('punishment-box');
 
         modal.style.display = 'flex';
 
-        if (score === 3) {
-            // Επιτυχία (σπάνιο σενάριο για πλάκα)
-            title.className = 'pass-text';
-            title.innerText = 'ΠΕΡΑΣΕΣ...';
-            msg.innerText = 'Γλίτωσες την τιμωρία, για σήμερα.';
-            icon.innerText = '✅';
+        if(score === 3) {
+            title.innerText = "ΕΠΙΤΥΧΙΑ!";
+            title.style.color = "green";
+            msg.innerText = "Μπράβο, διάβασες τις σημειώσεις.";
+            icon.innerText = "🏆";
+            punishBox.style.display = "none";
         } else {
-            // Αποτυχία (Το Default σενάριο)
-            title.className = 'fail-text';
-            title.innerText = 'ΚΟΠΗΚΕΣ!';
-            msg.innerText = 'Βαθμός: ' + score + '/3. Απαράδεκτο.';
-            icon.innerText = '🚫';
+            title.innerText = "ΑΠΟΤΥΧΙΑ!";
+            title.style.color = "red";
+            msg.innerText = `Έπιασες ${score}/3. Αυτό είναι απαράδεκτο.`;
+            icon.innerText = "🤬";
+            punishBox.style.display = "block";
         }
     }
 </script>
