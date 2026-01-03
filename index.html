@@ -9,9 +9,9 @@
     
     <style>
         :root {
-            --primary: #5c6bc0; /* Indigo Modern */
+            --primary: #5c6bc0;
             --primary-dark: #3949ab;
-            --accent: #ff7043; /* Deep Orange */
+            --accent: #ff7043;
             --bg-body: #f4f6f9;
             --bg-card: #ffffff;
             --text-main: #2c3e50;
@@ -30,11 +30,10 @@
             margin: 0; padding: 0;
             color: var(--text-main);
             height: 100vh;
-            overflow: hidden; /* Prevent body scroll, handle in app-container */
+            overflow: hidden;
             display: flex; justify-content: center;
         }
 
-        /* Container που μιμείται κινητό */
         .app-container {
             width: 100%; max-width: 480px; height: 100%;
             background: var(--bg-body);
@@ -58,7 +57,7 @@
             font-size: 14px; font-weight: 600; box-shadow: 0 2px 5px rgba(92, 107, 192, 0.4);
         }
 
-        /* --- SCROLLABLE CONTENT --- */
+        /* --- CONTENT --- */
         .content-area {
             flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 90px;
             scroll-behavior: smooth;
@@ -73,15 +72,12 @@
             transition: all 0.2s ease; cursor: pointer; position: relative; overflow: hidden;
         }
         .course-card:active { transform: scale(0.97); }
-        .course-card::after {
-            content: '➜'; position: absolute; right: 20px; color: #ddd; font-size: 14px;
-        }
+        .course-card::after { content: '➜'; position: absolute; right: 20px; color: #ddd; font-size: 14px; }
 
         .course-icon {
             width: 55px; height: 55px; border-radius: 12px; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center; font-size: 24px;
         }
-        /* Icon Gradients */
         .grad-1 { background: linear-gradient(135deg, #FF9A9E 0%, #FECFEF 100%); }
         .grad-2 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
         .grad-3 { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
@@ -90,13 +86,9 @@
 
         .course-info h3 { margin: 0 0 5px 0; font-size: 15px; font-weight: 600; }
         .course-info p { margin: 0; font-size: 12px; color: var(--text-muted); }
-        
-        .badge {
-            display: inline-block; font-size: 10px; padding: 3px 8px; 
-            border-radius: 20px; background: #f0f2f5; color: #666; font-weight: 600; margin-top: 5px;
-        }
+        .badge { display: inline-block; font-size: 10px; padding: 3px 8px; border-radius: 20px; background: #f0f2f5; color: #666; font-weight: 600; margin-top: 5px; }
 
-        /* --- SCREENS (Transitions) --- */
+        /* --- SCREENS --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-body); z-index: 100;
@@ -121,7 +113,6 @@
         .prof-name { font-weight: 600; font-size: 16px; margin-top: 2px; color: var(--primary); }
         .course-desc { margin-top: 10px; font-size: 14px; line-height: 1.6; color: #555; }
 
-        /* --- FILES LIST --- */
         .file-list { display: flex; flex-direction: column; gap: 10px; }
         .file-item {
             background: white; padding: 15px; border-radius: 12px;
@@ -134,13 +125,11 @@
             display: flex; align-items: center; justify-content: center; font-size: 20px;
         }
 
-        /* --- TELEGRAM QUESTION PORTAL --- */
+        /* --- TELEGRAM PORTAL --- */
         .question-portal {
             margin-top: 30px; background: #fff; padding: 20px; border-radius: var(--radius);
-            border: 1px solid #e0e0e0; border-left: 4px solid var(--accent);
-            box-shadow: var(--shadow);
+            border: 1px solid #e0e0e0; border-left: 4px solid var(--accent); box-shadow: var(--shadow);
         }
-        .portal-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
         .portal-input {
             width: 100%; border: 1px solid #ddd; border-radius: 10px; padding: 12px;
             font-family: inherit; font-size: 14px; resize: none; height: 80px;
@@ -154,47 +143,56 @@
         }
         .send-btn:active { background: var(--primary-dark); transform: scale(0.98); }
 
-        /* --- TOAST NOTIFICATION --- */
         .toast {
             position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(100px);
             background: rgba(44, 62, 80, 0.9); color: white; padding: 12px 24px;
             border-radius: 30px; font-size: 13px; z-index: 200; opacity: 0;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; align-items: center; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: all 0.4s; display: flex; align-items: center; gap: 10px;
         }
         .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        /* --- BOTTOM NAV --- */
         .bottom-nav {
             position: absolute; bottom: 0; width: 100%; background: white;
             display: flex; justify-content: space-around; padding: 12px 0;
             border-top: 1px solid #eee; z-index: 60;
-            padding-bottom: max(12px, env(safe-area-inset-bottom)); /* iPhone Safe Area */
+            padding-bottom: max(12px, env(safe-area-inset-bottom));
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
-            color: #999; font-size: 10px; font-weight: 500; cursor: pointer;
-        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 4px; color: #999; font-size: 10px; font-weight: 500; cursor: pointer; }
         .nav-item svg { width: 24px; height: 24px; fill: currentColor; }
         .nav-item.active { color: var(--primary); }
 
-        /* --- DOCUMENT STYLES (PDF/PPT) --- */
+        /* --- DOC & SLIDE VIEWER --- */
         .doc-page { background: white; padding: 30px; min-height: 100%; font-family: 'Georgia', serif; line-height: 1.8; }
-        .slide-wrapper {
-            background: #1a1a1a; height: 100%; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; color: white;
+        
+        /* SLIDES SPECIFIC */
+        .slide-viewer-container {
+            flex: 1; display: flex; flex-direction: column; background: #263238; color: white;
+            justify-content: center; align-items: center; padding: 20px; position: relative;
         }
         .slide-card {
-            width: 90%; aspect-ratio: 16/9; background: white; border-radius: 12px;
-            color: #333; padding: 25px; display: flex; flex-direction: column;
-            box-shadow: 0 0 50px rgba(255,255,255,0.1); position: relative;
+            width: 100%; aspect-ratio: 4/3; background: white; color: #333; border-radius: 12px;
+            padding: 30px; display: flex; flex-direction: column; justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center;
+            transition: transform 0.3s;
         }
+        .slide-title { font-size: 22px; color: var(--primary); font-weight: bold; margin-bottom: 15px; }
+        .slide-body { font-size: 16px; line-height: 1.5; color: #555; }
+        
+        .slide-controls {
+            display: flex; gap: 30px; margin-top: 30px; align-items: center;
+        }
+        .ctrl-btn {
+            width: 50px; height: 50px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1); color: white; font-size: 20px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .ctrl-btn:active { background: rgba(255,255,255,0.3); transform: scale(0.9); }
+        .slide-counter { font-size: 14px; opacity: 0.7; letter-spacing: 1px; }
 
-        /* --- EXAM STYLES --- */
+        /* --- EXAM --- */
         .exam-score-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
         .exam-score-table td { padding: 8px; border-bottom: 1px solid #eee; }
         .grade-pill { padding: 4px 8px; border-radius: 4px; font-weight: bold; color: white; font-size: 11px; }
-
     </style>
 </head>
 <body>
@@ -256,18 +254,9 @@
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8 8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
-                <span>Ιστορικό</span>
-            </div>
-            <div class="nav-item active">
-                <svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg>
-                <span>Μαθήματα</span>
-            </div>
-            <div class="nav-item">
-                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"/></svg>
-                <span>Μηνύματα</span>
-            </div>
+            <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8 8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg><span>Ιστορικό</span></div>
+            <div class="nav-item active"><svg viewBox="0 0 24 24"><path d="M5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82zM12 3L1 9l11 6 9-4.91V17h2V9L12 3z"/></svg><span>Μαθήματα</span></div>
+            <div class="nav-item"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"/></svg><span>Μηνύματα</span></div>
         </div>
     </div>
 
@@ -277,41 +266,26 @@
             <div class="screen-title" id="course-header-text">Course Name</div>
         </div>
         <div class="content-area">
-            
             <div class="prof-section">
                 <div class="prof-label">Διδασκων</div>
                 <div class="prof-name">👨‍🏫 Κύριος Γκιώκας</div>
-                <p class="course-desc" id="course-desc-text">Description goes here.</p>
+                <p class="course-desc" id="course-desc-text">Description.</p>
             </div>
-
             <h3 style="font-size: 15px; margin-bottom: 10px;">📂 Εκπαιδευτικό Υλικό</h3>
-            <div class="file-list" id="file-list-container">
-                </div>
-
+            <div class="file-list" id="file-list-container"></div>
+            
             <div class="question-portal">
-                <div class="portal-title">
-                    <span>💬</span> Απορίες προς τον Διδάσκοντα
-                </div>
-                <textarea id="question-input" class="portal-input" placeholder="Γράψε την απορία σου εδώ... (Παράδειγμα: 'Μπορώ να φάω σοκολάτα;')"></textarea>
+                <div class="portal-title" style="font-weight:700; margin-bottom:10px;">💬 Απορίες προς τον Διδάσκοντα</div>
+                <textarea id="question-input" class="portal-input" placeholder="Γράψε την απορία σου εδώ..."></textarea>
                 <button class="send-btn" onclick="sendTelegramQuestion()">
-                    <span id="btn-text">Αποστολή Ερώτησης</span>
-                    <span id="btn-loader" style="display:none;">⏳</span>
+                    <span id="btn-text">Αποστολή Ερώτησης</span><span id="btn-loader" style="display:none;">⏳</span>
                 </button>
-                <div style="font-size: 10px; color: #999; margin-top: 8px; text-align: center;">
-                    *Η απορία στέλνεται άμεσα στο κινητό του διδάσκοντα.
-                </div>
             </div>
-
         </div>
     </div>
 
     <div id="screen-doc" class="screen">
-        <div class="screen-header">
-            <button class="back-btn" onclick="closeDoc()">✕</button>
-            <div class="screen-title">Προβολή Αρχείου</div>
         </div>
-        <div id="doc-content" style="height: 100%; overflow-y: auto;"></div>
-    </div>
 
     <div id="screen-exam-intro" class="screen">
         <div class="screen-header">
@@ -338,8 +312,12 @@
                     <td><span class="grade-pill" style="background: #ffa726;">ΜΕΤΡΙΑ</span><br>Γλυτώνεις την τιμωρία (οριακά).</td>
                 </tr>
                 <tr>
-                    <td><strong>0 - 4</strong></td>
-                    <td><span class="grade-pill" style="background: #c62828;">ΑΠΟΤΥΧΙΑ</span><br>Ενεργοποίηση Ποινής.</td>
+                    <td><strong>3 - 4</strong></td>
+                    <td><span class="grade-pill" style="background: #ff5722;">ΑΠΟΤΥΧΙΑ</span><br>Απλή Τιμωρία.</td>
+                </tr>
+                <tr>
+                    <td><strong>0 - 2</strong></td>
+                    <td><span class="grade-pill" style="background: #b71c1c;">ΑΠΑΡΑΔΕΚΤΗ</span><br>Μεγάλη Τιμωρία.</td>
                 </tr>
             </table>
 
@@ -348,16 +326,11 @@
     </div>
 
     <div id="screen-quiz" class="screen">
-        <div class="screen-header">
-            <div class="screen-title">Εξέταση...</div>
-        </div>
-        <div class="content-area" id="quiz-area">
-            </div>
+        <div class="screen-header"><div class="screen-title">Εξέταση...</div></div>
+        <div class="content-area" id="quiz-area"></div>
     </div>
 
-    <div id="toast" class="toast">
-        <span>🚀</span> <span id="toast-msg">Το μήνυμα στάλθηκε!</span>
-    </div>
+    <div id="toast" class="toast"><span>🚀</span> <span id="toast-msg">Το μήνυμα στάλθηκε!</span></div>
 
     <div id="result-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:200; align-items:center; justify-content:center;">
         <div style="background:white; width:85%; max-width:350px; padding:30px; border-radius:20px; text-align:center;">
@@ -373,13 +346,12 @@
 
 <script>
     // ==========================================
-    // ⚙️ ΡΥΘΜΙΣΕΙΣ TELEGRAM (ΣΥΜΠΛΗΡΩΣΕ ΕΔΩ)
+    // ⚙️ TELEGRAM SETTINGS
     // ==========================================
-    const TELEGRAM_BOT_TOKEN = "TO_TOKEN_SOY_EDW"; // π.χ. "123456789:ABCdefGHIjkl..."
-    const TELEGRAM_CHAT_ID = "TO_ID_SOY_EDW";     // π.χ. "12345678"
+    const TELEGRAM_BOT_TOKEN = "TO_TOKEN_SOY_EDW"; 
+    const TELEGRAM_CHAT_ID = "TO_ID_SOY_EDW";
     // ==========================================
 
-    // --- DATA ---
     const courses = {
         1: {
             title: "Θεωρία Υπομονής",
@@ -387,7 +359,8 @@
             files: [
                 { title: "Διάλεξη 1: Zen Mode", type: "slides", content: [
                     { t: "ΥΠΟΜΟΝΗ", b: "Η αρετή του να περιμένεις το φαγητό χωρίς να γκρινιάζεις." },
-                    { t: "ΑΝΑΠΝΟΕΣ", b: "Εισπνοή... Εκπνοή... Δεν φωνάζουμε όταν χάνει η ομάδα." }
+                    { t: "ΑΝΑΠΝΟΕΣ", b: "Εισπνοή... Εκπνοή... Δεν φωνάζουμε όταν χάνει η ομάδα." },
+                    { t: "ΣΥΜΠΕΡΑΣΜΑ", b: "Η γκρίνια φέρνει ρυτίδες. Η υπομονή φέρνει δώρα." }
                 ]},
                 { title: "Άρθρο: Η τέχνη της αναμονής", type: "doc", content: "<h2>Η Τέχνη της Αναμονής</h2><p>Όταν ο Κύριος Γκιώκας λέει '5 λεπτά', εννοεί 5 λεπτά (ή 15). Το παν είναι η εμπιστοσύνη.</p>" }
             ]
@@ -396,7 +369,11 @@
             title: "Στρατηγικές Σιωπής",
             desc: "Πότε πρέπει να μιλάμε και πότε όχι. Ειδική ενότητα: 'Ώρα Champions League'.",
             files: [
-                { title: "Κανόνες Ομιλίας", type: "doc", content: "<h2>Κανόνες</h2><ul><li>Όχι ερωτήσεις στο 90'.</li><li>Όχι 'ποιος είναι αυτός' όταν βλέπουμε ταινία.</li></ul>" }
+                { title: "Κανόνες Ομιλίας", type: "doc", content: "<h2>Κανόνες</h2><ul><li>Όχι ερωτήσεις στο 90'.</li><li>Όχι 'ποιος είναι αυτός' όταν βλέπουμε ταινία.</li></ul>" },
+                { title: "Η δύναμη του ΝΑΙ", type: "slides", content: [
+                    { t: "ΜΑΓΙΚΗ ΛΕΞΗ", b: "Η λέξη 'Ναι' λύνει το 99% των προβλημάτων." },
+                    { t: "ΠΑΡΑΔΕΙΓΜΑ", b: "- Πάμε για σουβλάκια; <br>- ΝΑΙ!" }
+                ]}
             ]
         },
         3: {
@@ -405,7 +382,8 @@
             files: [
                 { title: "Top 10 Αποτυχίες", type: "slides", content: [
                     { t: "FAIL #1", b: "'Δεν το άκουσα'. Κλασικό ψέμα." },
-                    { t: "FAIL #2", b: "'Νόμιζα το έκανες εσύ'. Μετατόπιση ευθύνης." }
+                    { t: "FAIL #2", b: "'Νόμιζα το έκανες εσύ'. Μετατόπιση ευθύνης." },
+                    { t: "FAIL #3", b: "'Ξέχασα το κινητό αθόρυβο'." }
                 ]}
             ]
         },
@@ -419,31 +397,23 @@
     };
 
     let currentCourseId = null;
+    let currentSlides = [];
+    let currentSlideIdx = 0;
 
-    // --- NAVIGATION ---
     function openCourse(id) {
         currentCourseId = id;
         const c = courses[id];
         document.getElementById('course-header-text').innerText = c.title;
         document.getElementById('course-desc-text').innerText = c.desc;
-        
         const list = document.getElementById('file-list-container');
         list.innerHTML = '';
-        
         c.files.forEach(f => {
             const div = document.createElement('div');
             div.className = 'file-item';
-            div.innerHTML = `
-                <div class="file-icon-box" style="color:${f.type==='slides'?'#e91e63':'#3f51b5'}">${f.type==='slides'?'📊':'📄'}</div>
-                <div style="flex:1">
-                    <div style="font-weight:600; font-size:14px;">${f.title}</div>
-                    <div style="font-size:11px; color:#999;">${f.type==='slides'?'Παρουσίαση':'Έγγραφο'}</div>
-                </div>
-            `;
+            div.innerHTML = `<div class="file-icon-box" style="color:${f.type==='slides'?'#e91e63':'#3f51b5'}">${f.type==='slides'?'📊':'📄'}</div><div style="flex:1"><div style="font-weight:600; font-size:14px;">${f.title}</div><div style="font-size:11px; color:#999;">${f.type==='slides'?'Παρουσίαση':'Έγγραφο'}</div></div>`;
             div.onclick = () => openFile(f);
             list.appendChild(div);
         });
-
         document.getElementById('screen-course').classList.add('active');
     }
 
@@ -451,101 +421,82 @@
         document.getElementById('screen-course').classList.remove('active');
         document.getElementById('screen-exam-intro').classList.remove('active');
         document.getElementById('screen-quiz').classList.remove('active');
-        // Clear input
         document.getElementById('question-input').value = "";
     }
 
-    // --- TELEGRAM SENDING LOGIC ---
+    // --- TELEGRAM ---
     async function sendTelegramQuestion() {
         const input = document.getElementById('question-input');
         const text = input.value.trim();
         const btnText = document.getElementById('btn-text');
         const loader = document.getElementById('btn-loader');
         
-        if (!text) {
-            showToast("❌ Γράψε κάτι πρώτα!");
-            return;
-        }
-
-        // UI Loading State
-        btnText.style.display = 'none';
-        loader.style.display = 'inline';
-
-        const courseName = courses[currentCourseId].title;
-        const message = `📚 *ΕΡΩΤΗΣΗ ΜΑΘΗΜΑΤΟΣ*\n\n📌 Μάθημα: _${courseName}_\n\n❓ Ερώτηση:\n${text}`;
-
-        const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+        if (!text) { showToast("❌ Γράψε κάτι πρώτα!"); return; }
+        btnText.style.display = 'none'; loader.style.display = 'inline';
+        const msg = `📚 *ΕΡΩΤΗΣΗ ΜΑΘΗΜΑΤΟΣ*\n📌 _${courses[currentCourseId].title}_\n❓:\n${text}`;
         
         try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    chat_id: TELEGRAM_CHAT_ID,
-                    text: message,
-                    parse_mode: "Markdown"
-                })
+            await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg, parse_mode: "Markdown" })
             });
-
-            const data = await response.json();
-
-            if (data.ok) {
-                showToast("✅ Η απορία στάλθηκε επιτυχώς!");
-                input.value = "";
-            } else {
-                showToast("❌ Σφάλμα αποστολής (Λάθος Token;)");
-                console.error(data);
-            }
-        } catch (error) {
-            showToast("❌ Σφάλμα δικτύου.");
-            console.error(error);
-        }
-
-        // Reset UI
-        btnText.style.display = 'inline';
-        loader.style.display = 'none';
+            showToast("✅ Η απορία στάλθηκε!"); input.value = "";
+        } catch (e) { showToast("❌ Σφάλμα."); }
+        btnText.style.display = 'inline'; loader.style.display = 'none';
     }
 
     function showToast(msg) {
-        const t = document.getElementById('toast');
-        document.getElementById('toast-msg').innerText = msg;
-        t.classList.add('show');
-        setTimeout(() => t.classList.remove('show'), 3000);
+        const t = document.getElementById('toast'); document.getElementById('toast-msg').innerText = msg;
+        t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 3000);
     }
 
-    // --- FILE VIEWERS ---
+    // --- VIEWERS ---
     function openFile(file) {
-        const container = document.getElementById('doc-content');
-        container.innerHTML = '';
+        const container = document.getElementById('screen-doc');
+        container.innerHTML = ''; // Clear
 
         if (file.type === 'doc') {
-            container.innerHTML = `<div class="doc-page">${file.content}</div>`;
+            container.innerHTML = `
+                <div class="screen-header"><button class="back-btn" onclick="closeDoc()">✕</button><div class="screen-title">Έγγραφο</div></div>
+                <div style="height:100%; overflow-y:auto;"><div class="doc-page">${file.content}</div></div>
+            `;
         } else {
-            // Simple Slides Viewer
-            let html = `<div class="slide-wrapper">`;
-            file.content.forEach((s, i) => {
-                html += `
-                    <div class="slide-card" style="margin-bottom:20px;">
-                        <h2 style="color:var(--primary);">${s.t}</h2>
-                        <div style="font-size:18px;">${s.b}</div>
-                        <div style="position:absolute; bottom:10px; right:20px; color:#ccc; font-size:12px;">Slide ${i+1}</div>
+            // SLIDES WITH BUTTONS
+            currentSlides = file.content;
+            currentSlideIdx = 0;
+            container.innerHTML = `
+                <div class="screen-header" style="background:#263238; border-bottom:1px solid #37474f; color:white;">
+                    <button class="back-btn" onclick="closeDoc()" style="color:white;">✕</button>
+                    <div class="screen-title">Παρουσίαση</div>
+                </div>
+                <div class="slide-viewer-container">
+                    <div id="slide-display" class="slide-card">
+                        </div>
+                    <div class="slide-controls">
+                        <button class="ctrl-btn" onclick="prevSlide()">❮</button>
+                        <span class="slide-counter" id="slide-counter">1 / ${currentSlides.length}</span>
+                        <button class="ctrl-btn" onclick="nextSlide()">❯</button>
                     </div>
-                `;
-            });
-            html += `</div>`;
-            container.innerHTML = html;
+                </div>
+            `;
+            renderSlide();
         }
-        document.getElementById('screen-doc').classList.add('active');
+        container.classList.add('active');
     }
 
-    function closeDoc() {
-        document.getElementById('screen-doc').classList.remove('active');
+    function renderSlide() {
+        const s = currentSlides[currentSlideIdx];
+        const display = document.getElementById('slide-display');
+        display.innerHTML = `<div class="slide-title">${s.t}</div><div class="slide-body">${s.b}</div>`;
+        document.getElementById('slide-counter').innerText = `${currentSlideIdx+1} / ${currentSlides.length}`;
     }
 
-    // --- EXAM LOGIC ---
-    function openExamIntro() {
-        document.getElementById('screen-exam-intro').classList.add('active');
-    }
+    function nextSlide() { if(currentSlideIdx < currentSlides.length-1) { currentSlideIdx++; renderSlide(); }}
+    function prevSlide() { if(currentSlideIdx > 0) { currentSlideIdx--; renderSlide(); }}
+    function closeDoc() { document.getElementById('screen-doc').classList.remove('active'); }
+
+    // --- EXAM ---
+    function openExamIntro() { document.getElementById('screen-exam-intro').classList.add('active'); }
 
     function startQuiz() {
         const quizHTML = `
@@ -555,37 +506,26 @@
                 ${createQ(3, "Τι ώρα είναι το '5 λεπτά';", ["5 λεπτά", "Μισή ώρα", "Όποτε είμαι έτοιμη (Λάθος)"], 0)}
                 ${createQ(4, "Αν πεινάω και δεν έχεις μαγειρέψει;", ["Παραγγέλνουμε (Σωστό)", "Τρως τοστ", "Νηστεύεις"], 0)}
                 ${createQ(5, "Με αγαπάς;", ["Ναι (Σωστό)", "Πολύ (Σωστό)", "Άπειρα (Σωστό)"], 0)}
-                
                 <button class="send-btn" style="background:var(--danger); margin-top:20px;" onclick="submitQuiz()">ΥΠΟΒΟΛΗ</button>
-            </div>
-        `;
+            </div>`;
         document.getElementById('quiz-area').innerHTML = quizHTML;
         document.getElementById('screen-quiz').classList.add('active');
     }
 
     function createQ(id, txt, opts, correctIdx) {
-        let html = `<div style="background:white; padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #eee;">
-            <div style="font-weight:600; margin-bottom:10px;">${id}. ${txt}</div>`;
-        opts.forEach((o, i) => {
-            // Using value=2 for correct (simple logic)
-            // Real logic handles specifically below, keeping simple for demo
+        let html = `<div style="background:white; padding:15px; border-radius:12px; margin-bottom:15px; border:1px solid #eee;"><div style="font-weight:600; margin-bottom:10px;">${id}. ${txt}</div>`;
+        opts.forEach((o, i) => { 
             let val = (i === correctIdx || id===5) ? 2 : 0; 
-            html += `<label style="display:block; margin:8px 0; color:#555;">
-                <input type="radio" name="q${id}" value="${val}"> ${o}
-            </label>`;
+            html += `<label style="display:block; margin:8px 0; color:#555;"><input type="radio" name="q${id}" value="${val}"> ${o}</label>`;
         });
-        html += `</div>`;
-        return html;
+        return html + `</div>`;
     }
 
     function submitQuiz() {
-        // Calculate score
         let score = 0;
         for (let i=1; i<=5; i++) {
             const els = document.getElementsByName(`q${i}`);
-            for (let el of els) {
-                if (el.checked) score += parseInt(el.value);
-            }
+            for (let el of els) { if (el.checked) score += parseInt(el.value); }
         }
 
         const overlay = document.getElementById('result-overlay');
@@ -597,23 +537,32 @@
         overlay.style.display = "flex";
 
         if (score >= 9) {
-            emoji.innerText = "🏆"; title.innerText = "ΑΡΙΣΤΑ (10/10)"; 
-            title.style.color = "#2e7d32"; desc.innerText = "Είσαι η καλύτερη φοιτήτρια του κόσμου!";
+            emoji.innerText = "🏆"; title.innerText = "ΑΡΙΣΤΑ (9-10)"; title.style.color = "#2e7d32";
+            desc.innerText = "Είσαι η καλύτερη φοιτήτρια του κόσμου!";
             reward.style.background = "#e8f5e9"; reward.style.color = "#2e7d32";
             reward.innerText = "🎁 ΕΠΑΘΛΟ: Διάλεξε ό,τι θες να φάμε!";
+        } else if (score >= 7) {
+            emoji.innerText = "👏"; title.innerText = "ΚΑΛΑ (7-8)"; title.style.color = "#66bb6a";
+            desc.innerText = "Καλή προσπάθεια.";
+            reward.style.background = "#e8f5e9"; reward.style.color = "#2e7d32";
+            reward.innerText = "🍬 ΚΕΡΔΙΖΕΙΣ: Μια μικρή λιχουδιά.";
         } else if (score >= 5) {
-             emoji.innerText = "😐"; title.innerText = "ΜΕΤΡΙΑ..."; 
-             title.style.color = "#ffa726"; desc.innerText = "Πέρασες, αλλά θέλει διάβασμα.";
-             reward.style.background = "#fff3e0"; reward.style.color = "#f57c00";
-             reward.innerText = "🛡️ Δεν έχει τιμωρία, αλλά ούτε γλυκό.";
+            emoji.innerText = "😐"; title.innerText = "ΜΕΤΡΙΑ (5-6)"; title.style.color = "#ffa726";
+            desc.innerText = "Οριακά πέρασες.";
+            reward.style.background = "#fff3e0"; reward.style.color = "#f57c00";
+            reward.innerText = "🛡️ Καμία τιμωρία, κανένα γλυκό.";
+        } else if (score >= 3) {
+            emoji.innerText = "🧹"; title.innerText = "ΑΠΟΤΥΧΙΑ (3-4)"; title.style.color = "#ff5722";
+            desc.innerText = "Δεν διάβασες τις σημειώσεις.";
+            reward.style.background = "#fbe9e7"; reward.style.color = "#d84315";
+            reward.innerText = "⚠️ ΑΠΛΗ ΤΙΜΩΡΙΑ: Πλύσιμο πιάτων σήμερα!";
         } else {
-             emoji.innerText = "💀"; title.innerText = "ΚΟΠΗΚΕΣ!"; 
-             title.style.color = "#c62828"; desc.innerText = "Απαράδεκτη συμπεριφορά.";
-             reward.style.background = "#ffebee"; reward.style.color = "#c62828";
-             reward.innerText = "🧹 ΠΟΙΝΗ: Πλύσιμο πιάτων σήμερα!";
+            emoji.innerText = "💀"; title.innerText = "ΑΠΑΡΑΔΕΚΤΗ (0-2)"; title.style.color = "#b71c1c";
+            desc.innerText = "Ντροπή και αίσχος.";
+            reward.style.background = "#ffebee"; reward.style.color = "#c62828";
+            reward.innerText = "🚨 ΜΕΓΑΛΗ ΤΙΜΩΡΙΑ: Μαγείρεμα αύριο ΚΑΙ χωρίς κινητό για 1 ώρα.";
         }
     }
 </script>
-
 </body>
 </html>
