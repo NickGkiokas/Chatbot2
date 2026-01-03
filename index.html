@@ -2,422 +2,458 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Η Μεγάλη Τιμωρία 📜</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moodle Mobile</title>
     <style>
+        /* CSS: Το στυλ για να μοιάζει με Moodle App */
         :root {
-            --bg-color: #1a1a1a;
-            --accent-red: #ff3333;
-            --text-color: #f0f0f0;
-            --flag-green: #009246;
+            --bg-color: #f2f3f5;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --badge-bg: #fcebd5;
+            --badge-text: #8a6d3b;
+            --primary: #f98012; /* Το πορτοκαλί του moodle */
         }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            margin: 0; padding: 0; height: 100vh; overflow: hidden;
-            background: var(--bg-color); color: var(--text-color);
-            display: flex; flex-direction: column; user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            height: 100vh;
         }
 
-        h1 {
-            text-align: center; margin: 15px 0; z-index: 10; font-size: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            position: absolute; width: 100%; top: 0; pointer-events: none;
+        /* Container που μιμείται την οθόνη κινητού */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            background: #fff;
+            height: 100%;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
-        /* MODALS */
-        .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 200;
-            justify-content: center; align-items: center; padding: 20px; box-sizing: border-box;
+        /* Header */
+        .header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
-        .modal-content {
-            background: #222; color: white; text-align: center; padding: 25px;
-            border-radius: 20px; width: 100%; max-width: 400px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8); border: 1px solid #444;
-            max-height: 85vh; overflow-y: auto; position: relative;
+        .header h1 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: 500;
         }
 
-        /* TEXT & BUTTONS */
-        h2 { color: var(--accent-red); margin-top: 0; font-size: 1.5rem; }
-        h3 { color: #aaa; font-size: 1.1rem; margin-bottom: 15px; }
-        p { line-height: 1.6; color: #ccc; font-size: 0.95rem; margin-bottom: 20px; }
-
-        .btn {
-            background: white; color: black; border: none; padding: 15px 30px;
-            font-size: 1rem; font-weight: bold; border-radius: 50px; cursor: pointer;
-            width: 100%; margin-top: 10px; transition: transform 0.1s;
-            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+        .avatar {
+            width: 35px;
+            height: 35px;
+            background: #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #666;
         }
-        .btn:active { transform: scale(0.95); }
-        .btn:disabled { background: #555; color: #888; cursor: wait; transform: none; }
-        .btn-red { background: var(--accent-red); color: white; }
-        .btn-green { background: var(--flag-green); color: white; }
+
+        /* Λίστα Μαθημάτων */
+        .course-list {
+            padding: 10px;
+            padding-bottom: 80px; /* Χώρος για το κάτω μενού */
+        }
+
+        .course-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .course-card:active {
+            transform: scale(0.98);
+        }
+
+        .course-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+        /* Χρώματα εικονιδίων όπως στη φώτο */
+        .icon-yellow { background: #fcdfa6; }
+        .icon-teal { background: #8ce3d8; }
+        .icon-purple { background: #a89cf0; }
+        .icon-pink { background: #ff8fa3; }
+
+        .course-info {
+            flex-grow: 1;
+        }
+
+        .course-code {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+        }
+
+        .course-title {
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0 0 8px 0;
+            line-height: 1.3;
+        }
+
+        .semester-badge {
+            display: inline-block;
+            background-color: var(--badge-bg);
+            color: var(--badge-text);
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .menu-dots {
+            color: #333;
+            font-weight: bold;
+            font-size: 20px;
+            margin-top: -5px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            border-top: 1px solid #ddd;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            max-width: 480px;
+        }
+
+        .nav-item {
+            text-align: center;
+            color: #666;
+            font-size: 24px;
+            position: relative;
+        }
+
+        .nav-item.active {
+            color: #333;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .badge-count {
+            position: absolute;
+            top: -2px;
+            right: -5px;
+            background: #ff6b00;
+            color: white;
+            font-size: 10px;
+            padding: 2px 5px;
+            border-radius: 10px;
+        }
+
+        /* Οθόνη Μαθήματος & Εξέτασης (Κρυμμένα αρχικά) */
+        .screen {
+            display: none;
+            padding: 20px;
+            background: #fff;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 20;
+            overflow-y: auto;
+        }
+
+        .active-screen {
+            display: block;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 16px;
+            color: #333;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .resource {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            gap: 10px;
+        }
         
-        /* CORNER UI */
-        #cornerUI {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; z-index: 500; flex-direction: column;
-            justify-content: center; align-items: center; color: white;
-        }
-        #timerDisplay { font-size: 5rem; font-weight: 900; font-family: monospace; color: var(--accent-red); transition: color 0.3s; }
-        .keep-awake-btn {
-            margin-top: 50px; padding: 20px; border-radius: 50%; width: 100px; height: 100px;
-            background: #333; border: 2px solid #555; color: #888; font-size: 0.8rem;
+        .resource-icon { width: 30px; }
+
+        .exam-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #d32f2f;
+            color: white;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 30px;
+            cursor: pointer;
+            font-weight: bold;
         }
 
-        /* LOADING BAR */
-        .progress-container { width: 100%; height: 20px; background: #444; border-radius: 10px; margin-top: 15px; overflow: hidden; border: 1px solid #666; }
-        .progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #ff9900, #ff0000); transition: width 0.1s linear; }
+        /* Quiz Styles */
+        .question { margin-bottom: 20px; }
+        .question p { font-weight: bold; }
+        .options label { display: block; margin: 5px 0; }
         
-        .info-text { font-style: italic; color: #ddd; margin-bottom: 20px; }
-        
-        /* INPUTS */
-        textarea, input[type="text"] {
-            width: 100%; background: #333; color: white; 
-            border: 1px solid #555; border-radius: 10px; padding: 10px; 
-            font-family: inherit; resize: none; box-sizing: border-box; font-size: 1rem;
+        .alert-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            flex-direction: column;
         }
-        
+        .alert-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            width: 80%;
+        }
+        .fail-text { color: red; font-size: 22px; font-weight: bold; }
+        .pass-text { color: green; font-size: 22px; font-weight: bold; }
+
     </style>
 </head>
 <body>
 
-    <h1>Η ΤΙΜΩΡΙΑ ⚖️</h1>
-
-    <div id="thankYouModal" class="modal" style="display: flex;">
-        <div class="modal-content">
-            <div style="font-size: 3rem;">🎁</div>
-            <h2>ΤΙ ΛΕΜΕ ΠΟΥ ΜΕΙΩΘΗΚΕ Η ΤΙΜΩΡΙΑ;;</h2>
-            <p>Γράψε την απάντηση για να ξεκινήσεις.</p>
-            <textarea id="thankYouInput" placeholder="..."></textarea>
-            <button class="btn btn-green" onclick="submitThankYou()">Αποστολή</button>
+<div class="app-container">
+    <div id="home-screen">
+        <div class="header">
+            <h1>Ακαδημαϊκό Έτος 2025-26</h1>
+            <div class="avatar">ΝΓ</div>
         </div>
-    </div>
 
-    <div id="infoPreWrite" class="modal">
-        <div class="modal-content">
-            <h3>Βήμα 2</h3>
-            <p class="info-text">"Συνεχίζουμε. Θα γράψεις 'Θα είμαι καλό κορίτσι τη νέα χρονιά' για να το εμπεδώσεις, αλλά επειδή τα πιάνεις καλύτερα θα το γράψεις στα ιταλικά! Άρα, πρέπει να γράψεις την πρόταση <strong>Sarò una brava ragazza quest'anno</strong>."</p>
-            <button class="btn" onclick="startHandwriting()">Συνέχεια</button>
-        </div>
-    </div>
-
-    <div id="handwritingModal" class="modal">
-        <div class="modal-content">
-            <h2>ΣΤΑΔΙΟ 2: ΓΡΑΦΗ</h2>
-            
-            <div id="writeChoice">
-                <p>Διάλεξε την ποινή σου:</p>
-                <button class="btn" onclick="chooseHand()">✍️ 5 φορές στο χέρι (στο χριστουγεννιάτικο χαρτί με το ειδικό σου μολύβι)</button>
-                <button class="btn" onclick="chooseDigital()">📱 10 φορές στο κινητό</button>
-            </div>
-
-            <div id="writeHand" style="display:none;">
-                <p>Πάρε χριστουγεννιάτικο χαρτί και γράψε <strong>5 φορές</strong>:</p>
-                <div style="background:#333; padding:10px; border-radius:10px; margin:10px 0; color:#00ff00; font-family:monospace;">
-                    "Sarò una brava ragazza quest'anno"
+        <div class="course-list">
+            <div class="course-card" onclick="openCourse(1)">
+                <div class="course-icon icon-yellow"></div>
+                <div class="course-info">
+                    <div class="course-code">101a</div>
+                    <div class="course-title">Εισαγωγή στην Υπομονή (Θεωρία)</div>
+                    <div class="semester-badge">1ο Εξάμηνο ΠΕΙΘΑΡΧΙΑΣ</div>
                 </div>
-                <p>Ανέβασε φωτογραφία:</p>
-                <input type="file" id="photoInput" accept="image/*" style="color:white;">
-                <button class="btn btn-red" id="btnUploadWrite" onclick="compressAndUpload('photoInput', '📸 Αποδεικτικό: Γραφή (Χέρι)', finishHandwriting)">Αποστολή</button>
+                <div class="menu-dots">⋮</div>
             </div>
 
-            <div id="writeDigital" style="display:none;">
-                <p>Γράψε τη μία κάτω από την άλλη (χωρίς να κλέψεις!) <strong>10 φορές</strong>:</p>
-                <div style="background:#333; padding:5px; border-radius:10px; margin-bottom:10px; color:#00ff00; font-family:monospace; font-size:0.8rem;">
-                    Sarò una brava ragazza quest'anno
+            <div class="course-card" onclick="openCourse(2)">
+                <div class="course-icon icon-teal"></div>
+                <div class="course-info">
+                    <div class="course-code">204b</div>
+                    <div class="course-title">Στρατηγικές Σιωπής & Ακοής</div>
+                    <div class="semester-badge">Χειμερινό Εξάμηνο</div>
                 </div>
-                <textarea id="digitalInput" rows="10" placeholder="Το γράφεις μία, μετά από κάτω κλπ" onpaste="handlePaste(event)"></textarea>
-                <button class="btn btn-red" onclick="submitDigital()">Αποστολή</button>
+                <div class="menu-dots">⋮</div>
             </div>
 
-            <div id="photoStatus" style="margin-top:10px; color:#aaa; font-size:0.8rem;"></div>
+            <div class="course-card" onclick="openCourse(3)">
+                <div class="course-icon icon-purple"></div>
+                <div class="course-info">
+                    <div class="course-code">3353a</div>
+                    <div class="course-title">Λογική Σχεδίαση Δικαιολογιών (Εργαστήριο)</div>
+                    <div class="semester-badge">Υποχρεωτικό</div>
+                </div>
+                <div class="menu-dots">⋮</div>
+            </div>
+
+            <div class="course-card" onclick="openCourse(4)">
+                <div class="course-icon icon-pink"></div>
+                <div class="course-info">
+                    <div class="course-code">666x</div>
+                    <div class="course-title">Προχωρημένη Υπακοή & Συνέπειες</div>
+                    <div class="semester-badge">ΤΕΛΙΚΗ ΕΞΕΤΑΣΗ</div>
+                </div>
+                <div class="menu-dots">⋮</div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item">⏱️</div>
+            <div class="nav-item active">🎓</div>
+            <div class="nav-item">💬</div>
+            <div class="nav-item">🔔<span class="badge-count">72</span></div>
+            <div class="nav-item">•••</div>
         </div>
     </div>
 
-    <div id="infoPreCorner" class="modal">
-        <div class="modal-content">
-            <h3>Βήμα 3</h3>
-            <p class="info-text">"Και τώρα... έφυγες στη γωνία! Σκέψου τι έκανες και τι πρέπει να κάνεις από δω και πέρα. Μην βγεις και μην πατάς τίποτα αν δε λήξει ο χρόνος."</p>
-            <button class="btn btn-red" onclick="startCorner(120)">Πάω στη Γωνία</button>
+    <div id="course-screen" class="screen">
+        <button class="back-btn" onclick="goBack()">⬅ Πίσω στα μαθήματα</button>
+        <h2 id="course-header-title">Τίτλος Μαθήματος</h2>
+        <p style="color: #666; font-size: 14px;">Υλικό Μαθήματος</p>
+        
+        <div class="resource">
+            <span style="font-size: 24px;">📄</span>
+            <div>
+                <div style="font-weight: 500;">Διαφάνειες Διάλεξης 1.pdf</div>
+                <div style="font-size: 12px; color: #888;">File • 2.4MB</div>
+            </div>
+        </div>
+        <div class="resource">
+            <span style="font-size: 24px;">📊</span>
+            <div>
+                <div style="font-weight: 500;">Σημειώσεις Κανονισμών.pptx</div>
+                <div style="font-size: 12px; color: #888;">File • 5.1MB</div>
+            </div>
+        </div>
+        <div class="resource">
+            <span style="font-size: 24px;">⚠️</span>
+            <div>
+                <div style="font-weight: 500;">Λίστα Ποινών (ΠΡΟΣΟΧΗ).pdf</div>
+                <div style="font-size: 12px; color: #888;">File • 105KB</div>
+            </div>
+        </div>
+
+        <button class="exam-btn" onclick="startExam()">ΕΝΑΡΞΗ ΕΞΕΤΑΣΗΣ (Υποχρεωτική)</button>
+    </div>
+
+    <div id="exam-screen" class="screen">
+        <h2 style="color: #d32f2f;">Τελική Εξέταση Πειθαρχίας</h2>
+        <p>Απάντησε σωστά αλλιώς υπάρχουν κυρώσεις.</p>
+        <hr>
+        
+        <form id="quiz-form">
+            <div class="question">
+                <p>1. Όταν σου λέω "όχι", τι σημαίνει;</p>
+                <div class="options">
+                    <label><input type="radio" name="q1" value="wrong"> Ίσως αργότερα</label>
+                    <label><input type="radio" name="q1" value="correct"> Σημαίνει ΟΧΙ.</label>
+                    <label><input type="radio" name="q1" value="wrong"> Θα το συζητήσουμε</label>
+                </div>
+            </div>
+
+            <div class="question">
+                <p>2. Ποιος έχει πάντα δίκιο;</p>
+                <div class="options">
+                    <label><input type="radio" name="q2" value="wrong"> Η Δημοκρατία</label>
+                    <label><input type="radio" name="q2" value="correct"> Εγώ (ο εξεταστής)</label>
+                    <label><input type="radio" name="q2" value="wrong"> Κανείς</label>
+                </div>
+            </div>
+
+             <div class="question">
+                <p>3. Τι συμβαίνει αν δεν διαβάσεις τις σημειώσεις;</p>
+                <div class="options">
+                    <label><input type="radio" name="q3" value="correct"> Τιμωρία</label>
+                    <label><input type="radio" name="q3" value="wrong"> Τίποτα</label>
+                </div>
+            </div>
+
+            <button type="button" class="exam-btn" style="background-color: #333;" onclick="submitExam()">Υποβολή</button>
+        </form>
+    </div>
+
+    <div id="result-modal" class="alert-modal">
+        <div class="alert-box">
+            <div id="result-icon" style="font-size: 50px; margin-bottom: 10px;">❌</div>
+            <div id="result-title" class="fail-text">ΑΠΟΤΥΧΙΑ!</div>
+            <p id="result-msg">Δεν διάβασες τις σημειώσεις!</p>
+            <p style="font-weight: bold; margin-top: 15px;">ΠΟΙΝΗ:</p>
+            <div style="background: #ffebee; padding: 10px; border: 1px dashed red; color: red;">
+                Πρέπει να κεράσεις φαγητό σήμερα! 🍔
+            </div>
+            <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; border:none; background: #333; color: white; border-radius: 5px;">Εντάξει...</button>
         </div>
     </div>
 
-    <div id="cornerUI">
-        <div style="font-size:3rem;">🧱</div>
-        <h2 style="color:var(--accent-red); margin:10px;">ΤΙΜΩΡΙΑ ΣΤΗ ΓΩΝΙΑ</h2>
-        <div id="timerDisplay">02:00</div>
-        <p style="color:#666; font-size:0.9rem; text-align:center; padding:0 20px;">
-            Μην κλείσεις την οθόνη.<br>Αν βγεις από εδώ, προστίθεται χρόνος (+10s). Πάτα μόνο το κουμπί κάτω αν πάει να σβήσει η οθόνη
-        </p>
-        <button class="keep-awake-btn" onclick="pokeCorner()">Touch me</button>
-        <button id="endCornerBtn" class="btn btn-green" style="display:none; width: 200px; margin-top: 30px;" onclick="finishCorner()">Έμαθα το μάθημά μου</button>
-    </div>
+</div>
 
-    <div id="apologyModal" class="modal">
-        <div class="modal-content">
-            <h2>ΤΕΛΙΚΟΣ ΕΛΕΓΧΟΣ</h2>
-            <p>Γράψε μια ειλικρινή συγγνώμη και ζήτα ευγενικά να βγεις από την τιμωρία. Θα αξιολογηθεί το κείμενό σου.</p>
-            <textarea id="apologyInput" placeholder="Γράψε εδώ..." rows="4"></textarea>
-            <button class="btn btn-green" onclick="submitApology()">Υποβολή</button>
-        </div>
-    </div>
+<script>
+    function openCourse(id) {
+        // Εμφάνιση οθόνης μαθήματος
+        document.getElementById('home-screen').style.display = 'none';
+        document.getElementById('course-screen').style.display = 'block';
+        
+        let title = "";
+        if(id === 1) title = "Εισαγωγή στην Υπομονή";
+        if(id === 2) title = "Στρατηγικές Σιωπής";
+        if(id === 3) title = "Λογική Σχεδίαση Δικαιολογιών";
+        if(id === 4) title = "Προχωρημένη Υπακοή & Συνέπειες";
+        
+        document.getElementById('course-header-title').innerText = title;
+    }
 
-    <div id="extraTimeModal" class="modal">
-        <div class="modal-content">
-            <div style="font-size:3rem;">🤨</div>
-            <h2>ΔΕΝ ΕΠΕΙΣΕΣ</h2>
-            <p>Από τα γραφόμενά σου, <strong>δεν φαίνεσαι αρκετά ταπεινή</strong>.</p>
-            <p>Θα κάτσεις άλλο <strong>1 λεπτό</strong> στη γωνία. Φρόντισε αυτή τη φορά να γράψεις κάτι καλύτερο!</p>
-            <button class="btn btn-red" onclick="startExtraCorner()">Πίσω στη Γωνία</button>
-        </div>
-    </div>
+    function goBack() {
+        document.getElementById('home-screen').style.display = 'block';
+        document.getElementById('course-screen').style.display = 'none';
+        document.getElementById('exam-screen').style.display = 'none';
+    }
 
-    <div id="successModal" class="modal">
-        <div class="modal-content">
-            <div style="font-size: 3rem;">🎉</div>
-            <h2 style="color:var(--flag-green);">ΕΤΣΙ ΜΠΡΑΒΟ!</h2>
-            <p>Τώρα μπορείς να αποχωρήσεις και να ξεκινήσεις τη νέα χρονιά σαν καλό κορίτσι!</p>
-            <button class="btn btn-green">OK</button>
-        </div>
-    </div>
+    function startExam() {
+        document.getElementById('course-screen').style.display = 'none';
+        document.getElementById('exam-screen').style.display = 'block';
+    }
 
-    <script>
-        // ==========================================
-        // ⚠️ ΣΤΟΙΧΕΙΑ BOT ⚠️
-        // ==========================================
-        const BOT_TOKEN = '7932574102:AAFQvlNoBw2AWpRuHO7DWlBnRWyA1DhOGuE'; 
-        const CHAT_ID = '7336951445';    
-        // ==========================================
+    function submitExam() {
+        const form = document.getElementById('quiz-form');
+        const formData = new FormData(form);
+        
+        let score = 0;
+        // Έλεγχος απαντήσεων (correct = σωστό)
+        if(formData.get('q1') === 'correct') score++;
+        if(formData.get('q2') === 'correct') score++;
+        if(formData.get('q3') === 'correct') score++;
 
-        // --- HELPER FOR NOTIFICATIONS ---
-        function sendTelegramNotification(text) {
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: text })
-            });
+        const modal = document.getElementById('result-modal');
+        const title = document.getElementById('result-title');
+        const msg = document.getElementById('result-msg');
+        const icon = document.getElementById('result-icon');
+
+        modal.style.display = 'flex';
+
+        if (score === 3) {
+            // Επιτυχία (σπάνιο σενάριο για πλάκα)
+            title.className = 'pass-text';
+            title.innerText = 'ΠΕΡΑΣΕΣ...';
+            msg.innerText = 'Γλίτωσες την τιμωρία, για σήμερα.';
+            icon.innerText = '✅';
+        } else {
+            // Αποτυχία (Το Default σενάριο)
+            title.className = 'fail-text';
+            title.innerText = 'ΚΟΠΗΚΕΣ!';
+            msg.innerText = 'Βαθμός: ' + score + '/3. Απαράδεκτο.';
+            icon.innerText = '🚫';
         }
+    }
+</script>
 
-        // --- STEP 1: THANK YOU ---
-        function submitThankYou() {
-            const txt = document.getElementById('thankYouInput').value;
-            if(txt.length < 2) { alert("Γράψε κάτι!"); return; }
-            
-            const msg = `🙏 *Απάντηση 'Τι λέμε':*\n"${txt}"`;
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
-            }).then(() => {
-                document.getElementById('thankYouModal').style.display = 'none';
-                document.getElementById('infoPreWrite').style.display = 'flex';
-            });
-        }
-
-        // --- IMAGE UPLOADER ---
-        function compressAndUpload(inputId, caption, successCallback) {
-            const input = document.getElementById(inputId);
-            const statusId = inputId === 'photoInput' ? 'photoStatus' : 'poseStatus';
-            const status = document.getElementById(statusId);
-            const btn = document.querySelector(`#${inputId}`).nextElementSibling;
-
-            if(input.files.length === 0) { alert("Βγάλε φώτο!"); return; }
-
-            const originalBtnText = btn.innerText;
-            btn.innerText = "Συμπίεση..."; btn.disabled = true;
-            status.innerText = "Επεξεργασία εικόνας...";
-
-            const file = input.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            
-            reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const MAX_WIDTH = 800; 
-                    const scaleSize = MAX_WIDTH / img.width;
-                    canvas.width = MAX_WIDTH;
-                    canvas.height = img.height * scaleSize;
-
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    canvas.toBlob((blob) => {
-                        btn.innerText = "Αποστολή...";
-                        status.innerText = "Ανέβασμα...";
-                        
-                        const formData = new FormData();
-                        formData.append('chat_id', CHAT_ID);
-                        formData.append('photo', blob, 'image.jpg');
-                        formData.append('caption', caption);
-
-                        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
-                            method: 'POST',
-                            body: formData
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if(data.ok) {
-                                status.innerText = "Εστάλη! ✅";
-                                setTimeout(successCallback, 1000);
-                            } else {
-                                alert("Telegram Error: " + data.description);
-                                btn.innerText = originalBtnText; btn.disabled = false;
-                            }
-                        })
-                        .catch(err => {
-                            alert("Upload Error");
-                            btn.innerText = originalBtnText; btn.disabled = false;
-                        });
-                    }, 'image/jpeg', 0.7);
-                }
-            }
-        }
-
-        // --- STAGE 2: HANDWRITING ---
-        function startHandwriting() {
-            document.getElementById('infoPreWrite').style.display = 'none';
-            document.getElementById('handwritingModal').style.display = 'flex';
-            // Start with Choice
-            document.getElementById('writeChoice').style.display = 'block';
-            document.getElementById('writeHand').style.display = 'none';
-            document.getElementById('writeDigital').style.display = 'none';
-        }
-
-        function chooseHand() {
-            document.getElementById('writeChoice').style.display = 'none';
-            document.getElementById('writeHand').style.display = 'block';
-        }
-
-        function chooseDigital() {
-            document.getElementById('writeChoice').style.display = 'none';
-            document.getElementById('writeDigital').style.display = 'block';
-        }
-
-        function handlePaste(e) {
-            e.preventDefault();
-            alert("ΚΛΕΒΕΙΣ! Απαγορεύεται το copy-paste! Μηδενισμός!");
-            document.getElementById('digitalInput').value = "";
-        }
-
-        function submitDigital() {
-            const text = document.getElementById('digitalInput').value;
-            if(text.length < 100) { alert("Δεν το έγραψες 10 φορές! Μην κλέβεις!"); return; }
-            
-            const msg = `📝 *Τιμωρία Γραφής (Κινητό):*\n${text}`;
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
-            }).then(() => {
-                finishHandwriting();
-            });
-        }
-
-        function finishHandwriting() {
-            document.getElementById('handwritingModal').style.display = 'none';
-            document.getElementById('infoPreCorner').style.display = 'flex';
-        }
-
-        // --- CORNER ---
-        let cornerTime = 0;
-        let cornerInterval;
-        let servedExtra = false;
-
-        function startCorner(seconds) {
-            document.getElementById('infoPreCorner').style.display = 'none';
-            document.getElementById('extraTimeModal').style.display = 'none'; 
-            document.getElementById('cornerUI').style.display = 'flex';
-            cornerTime = seconds; updateTimer();
-            document.addEventListener('visibilitychange', handleVisibilityChange);
-            document.getElementById('cornerUI').addEventListener('click', handleBadClick);
-            cornerInterval = setInterval(() => {
-                cornerTime--; updateTimer();
-                if(cornerTime <= 0) {
-                    clearInterval(cornerInterval);
-                    document.getElementById('endCornerBtn').style.display = 'block';
-                    document.getElementById('timerDisplay').style.color = '#00ff00';
-                }
-            }, 1000);
-        }
-
-        function updateTimer() {
-            const m = Math.floor(cornerTime / 60).toString().padStart(2, '0');
-            const s = (cornerTime % 60).toString().padStart(2, '0');
-            document.getElementById('timerDisplay').innerText = `${m}:${s}`;
-        }
-
-        function handleVisibilityChange() {
-            if(document.hidden && document.getElementById('cornerUI').style.display === 'flex') {
-                cornerTime += 10;
-                const t = document.getElementById('timerDisplay');
-                t.style.color = 'red';
-                setTimeout(() => t.style.color = 'var(--accent-red)', 1000);
-            }
-        }
-
-        function handleBadClick(e) {
-            if(e.target.id === 'cornerUI') {
-                cornerTime += 10;
-                const t = document.getElementById('timerDisplay');
-                t.style.color = 'red';
-                setTimeout(() => t.style.color = 'var(--accent-red)', 200);
-            }
-        }
-
-        function pokeCorner() { /* Dummy */ }
-
-        function finishCorner() {
-            document.removeEventListener('visibilitychange', handleVisibilityChange);
-            document.getElementById('cornerUI').removeEventListener('click', handleBadClick);
-            clearInterval(cornerInterval);
-            sendTelegramNotification("✅ Ο Μπόμπος έκατσε τιμωρία στη Γωνία.");
-            document.getElementById('cornerUI').style.display = 'none';
-            document.getElementById('apologyModal').style.display = 'flex';
-        }
-
-        // --- APOLOGY (TEXT) ---
-        function submitApology() {
-            const txt = document.getElementById('apologyInput').value;
-            if(txt.length < 5) { alert("Γράψε κάτι παραπάνω!"); return; }
-
-            const cap = servedExtra ? "Τελική Συγγνώμη (Δεκτή)" : "Πρώτη Συγγνώμη (Απορρίφθηκε)";
-            const msg = `🥺 *${cap}:*\n"${txt}"`;
-
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: CHAT_ID, text: msg, parse_mode: 'Markdown' })
-            }).then(() => {
-                 document.getElementById('apologyModal').style.display = 'none';
-                 // Clean input for next time
-                 document.getElementById('apologyInput').value = "";
-                 
-                 if(!servedExtra) {
-                    document.getElementById('extraTimeModal').style.display = 'flex';
-                    servedExtra = true;
-                 } else {
-                    document.getElementById('successModal').style.display = 'flex';
-                 }
-            });
-        }
-
-        function startExtraCorner() {
-            document.getElementById('endCornerBtn').style.display = 'none';
-            document.getElementById('timerDisplay').style.color = 'var(--accent-red)';
-            startCorner(60); 
-        }
-
-        function finishPunishment() {
-            window.location.href = 'index.html?evaluated=true';
-        }
-    </script>
 </body>
 </html>
