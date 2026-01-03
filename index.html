@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moodle e-Learning</title>
+    <title>e-Class Mobile</title>
     <style>
         /* --- CSS STYLES --- */
         :root {
@@ -14,6 +14,7 @@
             --danger: #d32f2f;
             --success: #2e7d32;
             --warning: #f57f17;
+            --slide-bg: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
         }
 
         body {
@@ -104,7 +105,7 @@
         .screen.active { display: flex; }
 
         .screen-header {
-            padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; background: #fff; position: sticky; top: 0;
+            padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; gap: 10px; background: #fff; position: sticky; top: 0; z-index: 30;
         }
         .back-btn { background: none; border: none; font-size: 20px; cursor: pointer; padding: 5px; }
 
@@ -126,6 +127,52 @@
         }
         .file-icon { font-size: 24px; margin-right: 15px; }
         .file-name { font-weight: 500; font-size: 14px; }
+        .file-meta { font-size: 12px; color: #999; display: block; }
+
+        /* --- DOCUMENT VIEWER STYLES --- */
+        .doc-container {
+            padding: 30px;
+            font-family: 'Georgia', serif;
+            color: #333;
+            line-height: 1.8;
+            background: #fff;
+        }
+        .doc-title {
+            font-size: 20px; font-weight: bold; text-align: center; 
+            border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px;
+        }
+        .doc-p { margin-bottom: 15px; font-size: 15px; }
+        .doc-list { margin-left: 20px; }
+        .doc-important { background: #fff9c4; padding: 2px 5px; border-radius: 3px; }
+
+        /* --- SLIDE VIEWER STYLES --- */
+        .slide-wrapper {
+            flex-grow: 1; display: flex; flex-direction: column; background: #333;
+            justify-content: center; align-items: center; padding: 10px;
+        }
+        .slide-card {
+            width: 100%; aspect-ratio: 16/9; background: white; border-radius: 8px;
+            display: flex; flex-direction: column; padding: 20px; box-sizing: border-box;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5); position: relative; overflow: hidden;
+        }
+        /* Themes for slides */
+        .theme-blue { background: linear-gradient(135deg, #e3f2fd, #bbdefb); }
+        .theme-dark { background: #263238; color: white; }
+        .theme-minimal { background: #fff; border: 2px solid #333; }
+
+        .slide-content h2 { margin-top: 0; font-size: 22px; margin-bottom: 10px; }
+        .slide-content ul { padding-left: 20px; font-size: 16px; }
+        .slide-content li { margin-bottom: 8px; }
+        .slide-footer { position: absolute; bottom: 10px; right: 15px; font-size: 10px; opacity: 0.6; }
+
+        .slide-controls {
+            display: flex; gap: 20px; margin-top: 20px;
+        }
+        .control-btn {
+            background: rgba(255,255,255,0.2); color: white; border: 1px solid white;
+            padding: 10px 20px; border-radius: 30px; cursor: pointer; font-size: 16px;
+        }
+        .control-btn:active { background: rgba(255,255,255,0.4); }
 
         /* Exam Intro Table */
         .rules-table {
@@ -183,7 +230,7 @@
     
     <div id="screen-home" style="display: flex; flex-direction: column; height: 100%;">
         <div class="header">
-            <h1>e-Learning 2025-26</h1>
+            <h1>e-Class 2025-26</h1>
             <div class="avatar">EG</div>
         </div>
 
@@ -263,12 +310,31 @@
         </div>
     </div>
 
-    <div id="screen-file" class="screen">
+    <div id="screen-doc-viewer" class="screen">
         <div class="screen-header">
             <button class="back-btn" onclick="closeFile()">⬅ Πίσω</button>
-            <h3 id="file-header-title" style="margin:0; font-size: 14px;">Έγγραφο</h3>
+            <h3 id="doc-header-title" style="margin:0; font-size: 14px;">Έγγραφο</h3>
         </div>
-        <div style="padding:20px; font-family:'Courier New'; line-height:1.6;" id="doc-body"></div>
+        <div class="doc-container" id="doc-content-area">
+            </div>
+    </div>
+
+    <div id="screen-slide-viewer" class="screen" style="background: #222;">
+        <div class="screen-header" style="background: #333; color: white; border-bottom: 1px solid #444;">
+            <button class="back-btn" onclick="closeFile()" style="color: white;">⬅ Έξοδος</button>
+            <h3 style="margin:0; font-size: 14px;">Παρουσίαση</h3>
+        </div>
+        
+        <div class="slide-wrapper">
+            <div id="slide-display" class="slide-card">
+                </div>
+
+            <div class="slide-controls">
+                <button class="control-btn" onclick="prevSlide()">❮</button>
+                <div style="color:white; align-self:center;" id="slide-counter">1 / 5</div>
+                <button class="control-btn" onclick="nextSlide()">❯</button>
+            </div>
+        </div>
     </div>
 
     <div id="screen-exam-intro" class="screen">
@@ -390,29 +456,96 @@
             title: "Θεωρία Υπομονής & Μη Γκρίνιας",
             desc: "Στο μάθημα αυτό αναλύουμε τη λεπτή τέχνη του να περιμένεις χωρίς να φυσάς και να ξεφυσάς. Επίσης, εξετάζουμε γιατί το να ρωτάς 'πότε φτάνουμε;' δεν βοηθάει το αυτοκίνητο να πάει πιο γρήγορα.",
             files: [
-                { title: "Διάλεξη 1: Zen Master.pdf", content: "Ανάπνεε βαθιά. Η γκρίνια δημιουργεί ρυτίδες. Ο Κύριος Γκιώκας αγαπάει την ηρεμία." },
-                { title: "Case Study: Το Σούπερ Μάρκετ.pptx", content: "Όταν ο Γκιώκας διαλέγει λάθος μάρκα γάλα, δεν φωνάζουμε. Τον αγαπάμε και πίνουμε το γάλα." }
+                { 
+                    title: "Διάλεξη 1: Zen Master.pptx", 
+                    type: "slides", 
+                    theme: "theme-blue",
+                    content: [
+                        { title: "ΕΙΣΑΓΩΓΗ", body: "<ul><li>Η υπομονή είναι αρετή.</li><li>Η γκρίνια είναι ελάττωμα.</li><li>Ο Διδάσκων έχει πάντα δίκιο.</li></ul>" },
+                        { title: "ΚΑΝΟΝΑΣ #1", body: "<p>Όταν περιμένεις το φαγητό, δεν ρωτάς 'γιατί αργεί'.</p><p>Απλά κάθεσαι και περιμένεις.</p>" },
+                        { title: "ΑΝΑΠΝΟΕΣ", body: "<p>Όταν νιώθεις ότι θες να φωνάξεις:</p><ul><li>Εισπνοή...</li><li>Εκπνοή...</li><li>Σιωπή.</li></ul>" },
+                        { title: "ΤΕΛΟΣ", body: "Διαβάστε το κεφάλαιο 4: 'Πώς να μην κάνεις μορφασμούς'." }
+                    ]
+                },
+                { 
+                    title: "Case Study: Σούπερ Μάρκετ.pdf", 
+                    type: "doc", 
+                    content: `
+                        <div class="doc-title">ΜΕΛΕΤΗ ΠΕΡΙΠΤΩΣΗΣ: ΣΟΥΠΕΡ ΜΑΡΚΕΤ</div>
+                        <p class="doc-p"><strong>Σενάριο:</strong> Ο Διδάσκων (Γκιώκας) αγοράζει λάθος μάρκα γάλακτος.</p>
+                        <p class="doc-p"><strong>Λανθασμένη Αντίδραση:</strong> "Μα καλά, δεν βλέπεις τι παίρνεις; Πάλι το λάθος πήρες;"</p>
+                        <p class="doc-p"><strong>Σωστή Αντίδραση:</strong> "Αγάπη μου, ευχαριστώ που πήγες σούπερ μάρκετ. Θα το πιω με χαρά."</p>
+                        <div class="doc-important">ΣΗΜΕΙΩΣΗ: Η λανθασμένη αντίδραση επιφέρει ποινή -1 βαθμό.</div>
+                    `
+                }
             ]
         },
         2: {
             title: "Στρατηγικές Σιωπής & Ακοής",
             desc: "Εργαστηριακό μάθημα που εστιάζει στην ενεργητική ακρόαση. Κύριος στόχος είναι η κατανόηση της λέξης 'Όχι' και η εφαρμογή της σιωπής όταν ο διδάσκων βλέπει μπάλα ή παίζει παιχνίδια.",
             files: [
-                { title: "Οδηγός: Πότε να μιλάς.pdf", content: "Κανόνας 1: Στις διαφημίσεις.\nΚανόνας 2: Όταν φέρνεις φαγητό.\nΚανόνας 3: Όταν λες 'έχεις δίκιο'." }
+                { 
+                    title: "Οδηγός: Πότε να μιλάς.pdf", 
+                    type: "doc",
+                    content: `
+                        <div class="doc-title">ΕΓΧΕΙΡΙΔΙΟ ΕΠΙΚΟΙΝΩΝΙΑΣ</div>
+                        <p class="doc-p">Ακολουθεί πίνακας με τις επιτρεπτές ώρες ομιλίας κατά τη διάρκεια αγώνα:</p>
+                        <ul class="doc-list">
+                            <li><strong>Ημίχρονο:</strong> Επιτρέπεται (5 λεπτά).</li>
+                            <li><strong>Διαφημίσεις:</strong> Επιτρέπεται.</li>
+                            <li><strong>Όταν τρώει γκολ η αντίπαλη ομάδα:</strong> Απαγορεύεται αυστηρά.</li>
+                        </ul>
+                        <p class="doc-p">Σε περίπτωση παράβασης, το τηλεκοντρόλ κατάσχεται.</p>
+                    `
+                },
+                {
+                    title: "Presentation: Η Τέχνη του 'Ναι'.pptx",
+                    type: "slides",
+                    theme: "theme-dark",
+                    content: [
+                        { title: "Η Δύναμη του 'ΝΑΙ'", body: "Πώς μια λέξη μπορεί να λύσει όλα τα προβλήματα." },
+                        { title: "Παράδειγμα 1", body: "<p>- Πάμε για σουβλάκια;</p><p>- ΝΑΙ!</p>" },
+                        { title: "Παράδειγμα 2", body: "<p>- Θες να δούμε αυτή την ταινία;</p><p>- ΝΑΙ!</p>" },
+                        { title: "Συμπέρασμα", body: "Το 'Ναι' οδηγεί στην ευτυχία (του διδάσκοντα)." }
+                    ]
+                }
             ]
         },
         3: {
             title: "Λογική Ανάλυση Δικαιολογιών",
             desc: "Μια ιστορική αναδρομή στις πιο αποτυχημένες δικαιολογίες. Γιατί το 'με πόνεσε η κοιλιά μου' δεν πιάνει πια για να αποφύγεις τις δουλειές του σπιτιού.",
             files: [
-                { title: "Top 10 Απαράδεκτες Δικαιολογίες.doc", content: "1. Ξέχασα.\n2. Δεν το είδα.\n3. Νόμιζα το έκανες εσύ.\n\nΑυτά κόβονται με βαθμό 0." }
+                { 
+                    title: "Top 5 Απαράδεκτες Δικαιολογίες.pptx", 
+                    type: "slides",
+                    theme: "theme-minimal",
+                    content: [
+                        { title: "TOP 5 Fails", body: "Οι χειρότερες δικαιολογίες που ακούστηκαν το 2024." },
+                        { title: "#5", body: "<h3>'Ξέχασα το κινητό αθόρυβο.'</h3><p>Ψέμα. Απλά δεν ήθελες να το σηκώσεις.</p>" },
+                        { title: "#3", body: "<h3>'Νόμιζα ότι είπες αύριο.'</h3><p>Η προθεσμία ήταν σαφής.</p>" },
+                        { title: "#1 (ΚΟΡΥΦΗ)", body: "<h3>'Δεν φταις εσύ, εγώ φταίω.'</h3><p>Κλασική προσπάθεια αποφυγής ευθύνης.</p>" }
+                    ]
+                }
             ]
         },
         4: {
             title: "Οικιακή Τάξη & Ασφάλεια",
             desc: "Πώς να αφήνεις τα πράγματα εκεί που τα βρήκες. Ένα μάθημα επιβίωσης για τη συμβίωση. Περιλαμβάνει workshop: 'Κλείσιμο καπακιού οδοντόκρεμας'.",
             files: [
-                { title: "Χάρτης: Πού μπαίνουν τα ρούχα.pdf", content: "Όχι στην καρέκλα.\nΌχι στο πάτωμα.\nΣΤΗΝ ΝΤΟΥΛΑΠΑ." }
+                { 
+                    title: "Χάρτης: Πού μπαίνουν τα ρούχα.pdf", 
+                    type: "doc",
+                    content: `
+                        <div class="doc-title">ΧΑΡΤΗΣ ΟΙΚΙΑΣ</div>
+                        <p class="doc-p">Παρακαλώ μελετήστε προσεκτικά:</p>
+                        <ul class="doc-list">
+                            <li><strong>Καρέκλα γραφείου:</strong> Μόνο για κάθισμα. ΟΧΙ για ρούχα.</li>
+                            <li><strong>Πάτωμα:</strong> Για περπάτημα. ΟΧΙ για κάλτσες.</li>
+                            <li><strong>Ντουλάπα:</strong> Ο μαγικός χώρος που εξαφανίζει τα ρούχα.</li>
+                        </ul>
+                        <div class="doc-important" style="background:#ffcdd2;">ΠΡΟΣΟΧΗ: Τα παπούτσια στην παπουτσοθήκη!</div>
+                    `
+                }
             ]
         }
     };
@@ -429,25 +562,88 @@
         
         const list = document.getElementById('cd-files');
         list.innerHTML = ''; 
-        data.files.forEach(f => {
+        data.files.forEach((f, index) => {
             const div = document.createElement('div');
             div.className = 'file-item';
-            div.innerHTML = `<div class="file-icon">📄</div><div class="file-name">${f.title}</div>`;
-            div.onclick = () => openFile(f.title, f.content);
+            
+            // Icon selection
+            let iconStr = "📄";
+            if(f.type === "slides") iconStr = "📊";
+            
+            div.innerHTML = `
+                <div class="file-icon">${iconStr}</div>
+                <div>
+                    <div class="file-name">${f.title}</div>
+                    <span class="file-meta">${f.type === 'slides' ? 'Παρουσίαση PowerPoint' : 'Έγγραφο PDF'}</span>
+                </div>
+            `;
+            // Pass the specific file object
+            div.onclick = () => openFile(id, index);
             list.appendChild(div);
         });
 
         document.getElementById('screen-course').classList.add('active');
     }
 
-    function openFile(title, content) {
-        document.getElementById('file-header-title').innerText = title;
-        document.getElementById('doc-body').innerText = content;
-        document.getElementById('screen-file').classList.add('active');
+    // --- FILE VIEWER LOGIC ---
+    let currentSlides = [];
+    let currentSlideIndex = 0;
+
+    function openFile(courseId, fileIndex) {
+        const file = courses[courseId].files[fileIndex];
+        
+        if (file.type === 'doc') {
+            document.getElementById('doc-header-title').innerText = file.title;
+            document.getElementById('doc-content-area').innerHTML = file.content;
+            document.getElementById('screen-doc-viewer').classList.add('active');
+        } 
+        else if (file.type === 'slides') {
+            currentSlides = file.content;
+            currentSlideIndex = 0;
+            const viewer = document.getElementById('screen-slide-viewer');
+            
+            // Apply theme class to slide card
+            const slideCard = document.getElementById('slide-display');
+            slideCard.className = `slide-card ${file.theme || ''}`;
+            
+            renderSlide();
+            viewer.classList.add('active');
+        }
     }
 
     function closeFile() {
-        document.getElementById('screen-file').classList.remove('active');
+        document.getElementById('screen-doc-viewer').classList.remove('active');
+        document.getElementById('screen-slide-viewer').classList.remove('active');
+    }
+
+    // Slide Controls
+    function renderSlide() {
+        const slide = currentSlides[currentSlideIndex];
+        const display = document.getElementById('slide-display');
+        const counter = document.getElementById('slide-counter');
+
+        display.innerHTML = `
+            <div class="slide-content">
+                <h2>${slide.title}</h2>
+                <div>${slide.body}</div>
+            </div>
+            <div class="slide-footer">Slide ${currentSlideIndex + 1}</div>
+        `;
+        counter.innerText = `${currentSlideIndex + 1} / ${currentSlides.length}`;
+    }
+
+    function nextSlide() {
+        if (currentSlideIndex < currentSlides.length - 1) {
+            currentSlideIndex++;
+            renderSlide();
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlideIndex > 0) {
+            currentSlideIndex--;
+            renderSlide();
+        }
     }
 
     function openExamIntro() {
@@ -464,7 +660,6 @@
         const formData = new FormData(form);
         let score = 0;
 
-        // Sum up values (each correct answer value is "2")
         for (let pair of formData.entries()) {
             score += parseInt(pair[1]);
         }
@@ -483,7 +678,6 @@
         modal.style.display = 'flex';
         scoreTxt.innerText = `Βαθμός: ${score} / 10`;
 
-        // Logic based on rules
         if (score >= 9) {
             icon.innerText = "🏆";
             title.innerText = "ΑΡΙΣΤΑ!";
