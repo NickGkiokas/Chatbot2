@@ -397,7 +397,7 @@
                 <div class="screen-header"><button class="back-btn" onclick="closeViewer()">✕</button><b>Εργαστήριο</b></div>
                 <div class="practical-wrapper">
                     <h2>Πρακτική Εφαρμογή: Τιμωρία στη Γωνία</h2>
-                    <p>Πάτα Έναρξη και κάτσε 1 λεπτό ήσυχα σαν να είσαι τιμωρία στη Γωνία, για να δεις πρακτικά πώς είναι και πώς θα νιώθεις.</p>
+                    <p>Πάτα Έναρξη και κάτσε 1 λεπτό ήσυχα σαν να είσαι Τιμωρία στη Γωνία, για να δεις πρακτικά πώς είναι και πώς θα νιώθεις.</p>
                     <div id="prac-timer" class="big-timer-display">01:00</div>
                     <button class="prac-btn btn-start" onclick="startPracticalTimer(this)">ΕΝΑΡΞΗ</button>
                 </div>
@@ -416,22 +416,34 @@
         }
     }
 
-    function startPracticalTimer(btn) {
+   function startPracticalTimer(btn) {
         btn.style.display = 'none';
-        notifyTelegram("Η Μαθήτρια Σάρα ξεκίνησε το Εργαστήριο Τιμωρίας ⏳");
-        let seconds = 60;
+        notifyTelegram("Η Σάρα ξεκίνησε την Πρακτική Τιμωρία (Timer) ⏳");
+        
+        let seconds = 60; // Ο χρόνος της τιμωρίας
         const display = document.getElementById('prac-timer');
+        
         practicalInterval = setInterval(() => {
             seconds--;
             display.innerText = `00:${seconds < 10 ? '0'+seconds : seconds}`;
+            
             if(seconds <= 0) {
                 clearInterval(practicalInterval);
                 display.innerText = "ΤΕΛΟΣ";
                 display.style.color = "#00e676";
-                notifyTelegram("Η Μαθήτρια Σάρα ολοκλήρωσε το Εργαστήριο Τιμωρίας.");
+                notifyTelegram("Η Σάρα ολοκλήρωσε την Πρακτική Τιμωρία ✅");
+                
+                // Μαρκάρισμα ως ολοκληρωμένο
                 if(!viewedFiles.has("f5b")) {
-                    viewedFiles.add("f5b"); updateProgress();
+                    viewedFiles.add("f5b"); 
+                    updateProgress();
                 }
+
+                // Αυτόματη επιστροφή και ανανέωση λίστας μετά από 1.5 δευτερόλεπτο
+                setTimeout(() => {
+                    closeViewer();  // Κλείνει το παράθυρο του timer
+                    openCourse(3);  // Ανανιώνει το μάθημα 3 για να φανεί το τικ ✅
+                }, 1500);
             }
         }, 1000);
     }
