@@ -202,7 +202,7 @@
             <div id="file-list"></div>
 
             <div class="portal">
-                <div style="font-weight:bold; font-size:14px;">💬 Απορίες (Telegram)</div>
+                <div style="font-weight:bold; font-size:14px;">💬 Απορίες προς Διδάσκοντα</div>
                 <textarea id="tg-msg" placeholder="Στείλε την απορία σου..."></textarea>
                 <button class="send-btn" onclick="sendTelegram()">Αποστολή</button>
             </div>
@@ -482,19 +482,19 @@
         ov.style.display = 'flex';
         
         if(score >= 9) {
-            ic.innerText = "🏆"; ti.innerText = "ΑΡΙΣΤΑ (9-10)"; ti.style.color = "green";
+            ic.innerText = "🏆"; ti.innerText = "ΑΡΙΣΤΑ (9.5/10)"; ti.style.color = "green";
             ms.innerText = "Είσαι τέλεια."; pe.innerText = "🎁 Διάλεξε φαγητό!"; pe.style.background = "#e8f5e9"; pe.style.color = "green";
         } else if(score >= 7) {
-            ic.innerText = "👍"; ti.innerText = "ΚΑΛΑ (7-8)"; ti.style.color = "green";
+            ic.innerText = "👍"; ti.innerText = "ΚΑΛΑ (7.5/10)"; ti.style.color = "green";
             ms.innerText = "Οκ, καλά πήγε."; pe.innerText = "🍬 Κερδίζεις λιχουδιά."; pe.style.background = "#e8f5e9"; pe.style.color = "green";
         } else if(score >= 5) {
-            ic.innerText = "😐"; ti.innerText = "ΜΕΤΡΙΑ (5-6)"; ti.style.color = "orange";
+            ic.innerText = "😐"; ti.innerText = "ΜΕΤΡΙΑ (5.5/10)"; ti.style.color = "orange";
             ms.innerText = "Τη γλυτώνεις."; pe.innerText = "🛡️ Καμία τιμωρία."; pe.style.background = "#fff3e0"; pe.style.color = "#ef6c00";
         } else if(score >= 3) {
-            ic.innerText = "🧹"; ti.innerText = "ΑΠΟΤΥΧΙΑ (3-4)"; ti.style.color = "#ff5722";
+            ic.innerText = "🧹"; ti.innerText = "ΑΠΟΤΥΧΙΑ (3.5/10)"; ti.style.color = "#ff5722";
             ms.innerText = "Δεν διάβασες."; pe.innerText = "⚠️ Απλή Τιμωρία."; pe.style.background = "#fbe9e7"; pe.style.color = "#d84315";
         } else {
-            ic.innerText = "💀"; ti.innerText = "ΑΠΑΡΑΔΕΚΤΗ (0-2)"; ti.style.color = "red";
+            ic.innerText = "💀"; ti.innerText = "ΑΠΑΡΑΔΕΚΤΗ (1/10)"; ti.style.color = "red";
             ms.innerText = "Μηδένισες."; pe.innerText = "🚨 ΜΕΓΑΛΗ ΤΙΜΩΡΙΑ."; pe.style.background = "#ffebee"; pe.style.color = "#c62828";
         }
     }
@@ -506,7 +506,7 @@
         try {
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method:'POST', headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({chat_id:TG_CHAT, text:`Ερώτηση: ${t}`})
+                body:JSON.stringify({chat_id:TG_CHAT, text:`Απορία Μαθήτριας: ${t}`})
             });
             showToast("Στάλθηκε!"); document.getElementById('tg-msg').value="";
         } catch(e){ showToast("Error (Check Token)"); }
