@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Σχολείο Μπόμπων</title>
+    <title>University Portal 2026</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -68,11 +68,12 @@
         /* --- SCREENS --- */
         .screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 100; transform: translateX(100%); transition: transform 0.3s; display: flex; flex-direction: column; }
         .screen.active { transform: translateX(0); }
-        .screen-header { background: white; padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; }
+        .screen-header { background: white; padding: 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eee; flex-shrink: 0; }
         .back-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--primary); }
 
         /* --- DOC VIEWER --- */
-        .doc-content { padding: 25px; font-family: 'Georgia', serif; line-height: 1.6; background: white; min-height: 100%; }
+        .doc-wrapper { flex: 1; overflow-y: auto; background: white; }
+        .doc-content { padding: 25px; font-family: 'Georgia', serif; line-height: 1.6; min-height: 100%; }
         
         /* SLIDES */
         .slide-container { background: #263238; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; position: relative; }
@@ -85,6 +86,13 @@
             font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.3); cursor: pointer; backdrop-filter: blur(5px);
             display: flex; align-items: center; gap: 8px;
         }
+
+        /* --- PRACTICAL TIMER --- */
+        .practical-wrapper { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: #37474f; color: white; text-align: center; padding: 30px; }
+        .big-timer-display { font-size: 80px; font-weight: bold; margin: 30px 0; font-family: monospace; }
+        .prac-btn { padding: 15px 40px; border-radius: 30px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-start { background: #00e676; color: #004d40; }
+        .btn-start:active { transform: scale(0.95); }
 
         /* --- EXAM TABLE --- */
         .exam-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; text-align: left; }
@@ -135,7 +143,7 @@
             <button class="login-btn" onclick="login()">ΕΙΣΟΔΟΣ</button>
             <div id="login-error" class="error-msg">Λάθος όνομα ή κωδικός!</div>
         </div>
-        <div style="margin-top: 20px; font-size: 12px; opacity: 0.6;">Powered by Moodle</div>
+        <div style="margin-top: 20px; font-size: 12px; opacity: 0.6;">Secure System v5.0</div>
     </div>
 
     <div id="screen-home" style="display: flex; flex-direction: column; height: 100%;">
@@ -153,7 +161,7 @@
                 <div class="progress-bar-bg">
                     <div class="progress-bar-fill" id="progress-fill"></div>
                 </div>
-                <div style="font-size:11px; color:#666; margin-top:5px;">Πρέπει να διαβάσεις όλα σου τα μαθήματα!</div>
+                <div style="font-size:11px; color:#666; margin-top:5px;">*Πρέπει να διαβάσεις όλα σου τα μαθήματα.</div>
             </div>
 
             <div class="course-card" onclick="openCourse(1)">
@@ -176,7 +184,7 @@
                 <div class="icon c-3">🙄</div>
                 <div>
                     <div style="font-weight:600;">Κανόνες Τιμωρίας & Στοιχεία Ελέγχου για το Υφάκι</div>
-                    <div style="font-size:12px; color:#777;">Εργαστήριο • 1 Αρχείο</div>
+                    <div style="font-size:12px; color:#777;">Εργαστήριο • 2 Αρχεία</div>
                 </div>
             </div>
 
@@ -208,7 +216,7 @@
         </div>
         <div class="content-area">
             <div style="background:#e8eaf6; color:#3949ab; padding:8px 12px; border-radius:8px; display:inline-block; font-size:13px; font-weight:600; margin-bottom:15px;">
-                👨‍🏫 Διδάσκων: Κύριος Νικόλαος Γκιώκας
+                👨‍🏫 Διδάσκων: Κύριος Γκιώκας
             </div>
             <p id="c-desc" style="font-size:14px; color:#555; margin-bottom:20px;"></p>
             <div style="font-weight:bold; margin-bottom:10px;">Υλικό προς μελέτη:</div>
@@ -216,7 +224,7 @@
 
             <div class="portal">
                 <div style="font-weight:bold; font-size:14px;">💬 Απορίες προς τον Διδάσκοντα</div>
-                <textarea id="tg-msg" placeholder="Στείλε την απορία σου στον κύριο Γκιώκα..."></textarea>
+                <textarea id="tg-msg" placeholder="Στείλε την απορία σου..."></textarea>
                 <button class="send-btn" onclick="sendTelegram()">Αποστολή</button>
             </div>
         </div>
@@ -233,15 +241,15 @@
             </div>
             
             <table class="exam-table">
-                <tr><td><strong>9 - 10</strong></td><td><span class="grade-pill" style="background: #2e7d32;">ΑΡΙΣΤΗ</span><br>Διαλέγεις ό,τι λιχουδιά θες!</td></tr>
-                <tr><td><strong>7 - 8</strong></td><td><span class="grade-pill" style="background: #66bb6a;">ΚΑΛΗ</span><br>Κερδίζεις μια τυχαία λιχουδιά!</td></tr>
+                <tr><td><strong>9 - 10</strong></td><td><span class="grade-pill" style="background: #2e7d32;">ΑΡΙΣΤΑ</span><br>Διαλέγεις ό,τι φαγητό θες!</td></tr>
+                <tr><td><strong>7 - 8</strong></td><td><span class="grade-pill" style="background: #66bb6a;">ΚΑΛΑ</span><br>Κερδίζεις μια λιχουδιά.</td></tr>
                 <tr><td><strong>5 - 6</strong></td><td><span class="grade-pill" style="background: #ffa726;">ΜΕΤΡΙΑ</span><br>Γλυτώνεις (οριακά).</td></tr>
-                <tr><td><strong>3 - 4</strong></td><td><span class="grade-pill" style="background: #ff5722;">ΑΔΙΑΒΑΣΤΗ</span><br>Απλή Τιμωρία.</td></tr>
+                <tr><td><strong>3 - 4</strong></td><td><span class="grade-pill" style="background: #ff5722;">ΑΠΟΤΥΧΙΑ</span><br>Απλή Τιμωρία.</td></tr>
                 <tr><td><strong>0 - 2</strong></td><td><span class="grade-pill" style="background: #b71c1c;">ΑΠΑΡΑΔΕΚΤΗ</span><br>Μεγάλη Τιμωρία.</td></tr>
             </table>
 
             <div style="background:#ffebee; padding:15px; margin:20px 0; border-radius:10px; font-size:13px; text-align:left; color:#c62828;">
-                <strong>⚠️ ΠΡΟΣΟΧΗ:</strong><br>Η έξοδος από την εφαρμογή κατά τη διάρκεια της εξέτασης απαγορεύεται με οποιοδήποτε τρόπο (Θα θεωρηθεί ότι κλέβεις και θα μηδενιστείς).
+                <strong>⚠️ ΠΡΟΣΟΧΗ:</strong><br>Η έξοδος από την εφαρμογή κατά τη διάρκεια της εξέτασης θα εντοπιστεί από το σύστημα (Anti-Cheat).
             </div>
             <button class="send-btn" style="background:#333; padding:15px; font-size:16px;" onclick="startExam()">ΕΝΑΡΞΗ ΕΞΕΤΑΣΗΣ</button>
         </div>
@@ -264,11 +272,12 @@
 
     <div id="overlay-cheat" class="overlay" style="background:rgba(200,0,0,0.95);">
         <div class="alert-box">
-            <div style="font-size:50px;">👁️</div>
-            <h2 style="color:#d32f2f;">ΣΕ ΠΙΑΣΑΜΕ!</h2>
-            <p>Προσπάθησες να βγεις από την εξέταση για να αντιγράψεις;</p>
-            <p style="font-weight:bold;">Η εξέταση ακυρώνεται.</p>
-            <button class="send-btn" style="margin-top:20px; background:#333;" onclick="location.reload()">Συγγνώμη...</button>
+            <div style="font-size:50px;">⚠️</div>
+            <h2 style="color:#d32f2f;">ΕΝΤΟΠΙΣΤΗΚΕ ΕΞΟΔΟΣ!</h2>
+            <p>Προσπάθησες να βγεις από την εξέταση.</p>
+            <p style="font-weight:bold; margin-top:10px;">Ο τελικός βαθμός σου θα μειωθεί.</p>
+            <p style="font-size:12px; color:#666;">Παρακαλώ μην το ξανακάνεις.</p>
+            <button class="send-btn" style="margin-top:20px; background:#333;" onclick="resumeExam()">ΣΥΝΕΧΕΙΑ (Με ποινή)</button>
         </div>
     </div>
 
@@ -301,11 +310,12 @@
             {id: "f2", title: "Άρθρο: Τα 3 βασικά στοιχεία Υπακοής", type: "doc", content: "Η υπακοή είναι: αρετή, ένδειξη ότι ο Μπόμπος κατανοεί τη θέση του και απαραίτητη αν ο Μπόμπος θέλει δώρα κι όχι τιμωρία!"}
         ]},
         2: { title: "ΤΦΜ (Τεχνικές Φρόνιμου Μπόμπου)", desc: "Σε αυτό το μάθημα, ο Μπόμπος μαθαίνει πώς να είναι φρόνιμος, αν θέλει να παίρνει δώρα και λιχουδιές και να μη μπαίνει τιμωρία.", files: [
-            {id: "f3", title: "Τι σημαίνει είμαι φρόνιμη;", type: "doc", content: "Είμαι φρόνιμη σημαίνει: Τηρώ τους κανόνες (βλέπε Εισαγωγή στην Υπακοή), ενημερώνω, προσέχω και γυρνάω στην ώρα μου, δεν τριγυρνάω κρυφά και επικίνδυνα. Μάλιστα, ένας πλήρως υπάκουος Μπόμπος απολαμβάνει σπουδαία προνόμια, όπως απεριοριστές λιχουδιές, πολλά δωράκια-έκπληξη και πολλές έξτρα άδειες μέσα στον μήνα!"},
+            {id: "f3", title: "Τι σημαίνει είμαι φρόνιμη;", type: "doc", content: "Είμαι φρόνιμη σημαίνει: Τηρώ τους κανόνες (βλέπε Εισαγωγή στην Υπακοή), ενημερώνω, προσέχω και γυρνάω στην ώρα μου, δεν τριγυρνάω κρυφά και επικίνδυνα. Μάλιστα, ένας πλήρως υπάκουος Μπόμπος απολαμβάνει σπουδαία προνόμια, όπως απεριόριστες λιχουδιές, πολλά δωράκια-έκπληξη και πολλές έξτρα άδειες μέσα στον μήνα!"},
             {id: "f4", title: "Τεχνικές για έναν Φρόνιμο Μπόμπο", type: "slide", content: [{t:"ΤΕΧΝΙΚΗ 1: ΕΝΗΜΕΡΩΣΗ", b:"Όταν είμαι κάπου λέω: Είμαι έξω, είμαι καλά και προσέχω! Θα στείλω όταν γυρίσω!"},{t:"ΤΕΧΝΙΚΗ 2: ΥΠΑΚΟΗ", b:"Εφαρμογή όσων διδάχθηκαν στο μάθημα Εισαγωγή στην Υπακοή"},{t:"ΤΕΧΝΙΚΗ 3: ΕΥΓΕΝΕΙΑ", b:"Όμορφες καλημέρες/καληνύχτες, άμεσες απαντήσεις/ενημερώσεις, Ευχαριστώ/Παρακαλώ (και στην περίπτωση που γίνεται κάποιο αίτημα λέμε ΣΑΣ Ευχαριστώ/ ΣΑΣ Παρακαλώ) κλπ."}]}
         ]},
         3: { title: "Κανόνες Τιμωρίας & Στοιχεία Ελέγχου για το Υφάκι", desc: "Τι κάνω όταν μπαίνω τιμωρία; Πώς δείχνω ότι έμαθα το μάθημά μου; Τι γίνεται αν έχω υφάκι; Είναι μερικές από τις ερωτήσεις που θα μάθει να απαντάει ο Μπόμπος μετά από αυτό το εργαστήριο.", files: [
-            {id: "f5", title: "Οδηγός Τιμωρίας 2026", type: "doc", content: "Όταν μπαίνει τιμωρία, ο Μπόμπος δεν πρέπει να γκρινιάζει. Αντιθέτως, θα λέει 'Μάλιστα, το αξίζω!' και θα ολοκληρώνει την τιμωρία του όμορφα κι ωραία, όποια κι αν είναι αυτή (Γράψιμο φράσεων, απαγόρευση λιχουδιών / εξόδου, τιμωρία στη γωνία κλπ. Μετά την τιμωρία, ο Μπόμπος δείχνει ότι έμαθέ το μάθημά του, με φράσεις όπως: 'Έμαθα το μάθημά μου', 'Θα είμαι φρόνιμη και υπάκουη' (βλέπε προηγόυμενα μαθήματα), 'Δε θα το ξανακάνω', 'Θα είμαι καλό κορίτσι!' κλπ, όλα με ταπεινό, εννοείται, ύφος. Σε περίπτωση που δεν πείσει, ξαναμπαίνει αυτομάτως τιμωρία, μέχρι να μάθει. Εάν κιόλας στην όλη διαδικασία εντοπιστεί υφάκι, η νέα τιμωρία γίνεται αυτομάτως πιο αυστηρή, ώστε να κοπούν αυτά (πχ διπλάσιο γράψιμο φράσεων, διπλάσιος καιρός χωρίς λιχουδιά / έξοδο, διπλάσια ώρα στη γωνία κλπ, ώσπου να μπει τάξη. Αντιθέτως, εάν δείξει αμέσως μεταμέλεια και καλό πρόσωπο, ο Μπόμπος κερδίζει μια επιβράβευση-έκπληξη, για να έχει κίνητρο και να θυμάται ότι η καλή συμπεριφορά σε βάζει μπόνους!"}
+            {id: "f5", title: "Οδηγός Τιμωρίας 2026", type: "doc", content: "Όταν μπαίνει τιμωρία, ο Μπόμπος δεν πρέπει να γκρινιάζει. Αντιθέτως, θα λέει 'Μάλιστα, το αξίζω!' και θα ολοκληρώνει την τιμωρία του όμορφα κι ωραία, όποια κι αν είναι αυτή (Γράψιμο φράσεων, απαγόρευση λιχουδιών / εξόδου, τιμωρία στη γωνία κλπ. Μετά την τιμωρία, ο Μπόμπος δείχνει ότι έμαθέ το μάθημά του, με φράσεις όπως: 'Έμαθα το μάθημά μου', 'Θα είμαι φρόνιμη και υπάκουη' (βλέπε προηγόυμενα μαθήματα), 'Δε θα το ξανακάνω', 'Θα είμαι καλό κορίτσι!' κλπ, όλα με ταπεινό, εννοείται, ύφος. Σε περίπτωση που δεν πείσει, ξαναμπαίνει αυτομάτως τιμωρία, μέχρι να μάθει. Εάν κιόλας στην όλη διαδικασία εντοπιστεί υφάκι, η νέα τιμωρία γίνεται αυτομάτως πιο αυστηρή, ώστε να κοπούν αυτά (πχ διπλάσιο γράψιμο φράσεων, διπλάσιος καιρός χωρίς λιχουδιά / έξοδο, διπλάσια ώρα στη γωνία κλπ, ώσπου να μπει τάξη. Αντιθέτως, εάν δείξει αμέσως μεταμέλεια και καλό πρόσωπο, ο Μπόμπος κερδίζει μια επιβράβευση-έκπληξη, για να έχει κίνητρο και να θυμάται ότι η καλή συμπεριφορά σε βάζει μπόνους!"},
+            {id: "f5b", title: "Εφαρμογή: Πρακτική Τιμωρία", type: "timer", content: 60}
         ]},
         4: { title: "Προχωρημένα Θέματα Άτακτων Μπόμπων", desc: "Προχωρημένοι τρόποι αντιμετώπισης, ώστε ο Μπόμπος να γνωρίζει τι θα γίνει σε περίπτωση που δεν κάτσει ήσυχα αμέσως και παραμείνει άτακτος", files: [
             {id: "f6", title: "Πώς θα μπει ο Μπόμπος στη θέση του; Τα 5 σίγουρα βήματα.", type: "slide", content: [{t:"ΒΗΜΑ 1", b:"Ο Μπόμπος προειδοποιείται για το ότι ακόμη δεν κάθεται φρόνιμα."},{t:"ΒΗΜΑ 2", b:"Σε περίπτωση που ούτε τώρα ακούσει, προχωράμε σε επιβολή ποινών, όπως γράψιμο φράσεων για εμπέδωση ('Συγγνώμη δε θα το ξανακάνω', 'Θα κάθομαι φρόνιμη' κλπ)."}, {t:"ΒΗΜΑ 3", b:"Εάν ούτε το γράψιμο φέρει τάξη, επιβάλουμε αυστηρότερες ποινές, όπως τιμωρία στη γωνία (ενδεχομένως με χειροπέδες για πειθαρχία), για να σκεφτεί όσα έκανε και να εμπεδώσει όσα έγραψε."},{t:"ΒΗΜΑ 4", b:"Εάν ΑΚΟΜΗ δεν έμαθε, ενημερώνουμε τον Μπόμπο πως απαγορεύεται η έξοδος για τις επόμενες ημέρες."},{t:"ΒΗΜΑ 5", b:"Εάν δεν πειστεί για την απαγόρευση και δεν την τηρήσει, αντιμιλώντας και λέγοντας πράγματα όπως 'Άι ρε', 'Αχχαχαχ τι λες μωρέ' κλπ, τότε η απαγόρευση εξόδου εφαρμόζεται με κλείδωμα στο κλουβί. Έτσι θα κάτσει ήσυχα όπως και να χει!"}]}
@@ -314,17 +324,18 @@
 
     // --- STATE ---
     let viewedFiles = new Set();
-    const totalFiles = 6; 
+    const totalFiles = 7; 
     let currentSlides = [];
     let slideIdx = 0;
     let examInterval;
+    let practicalInterval;
 
     // --- INTERNAL TELEGRAM NOTIFIER ---
     function notifyTelegram(msg) {
         fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({chat_id: TG_CHAT, text: `🔔 ${msg}`})
+            body: JSON.stringify({chat_id: TG_CHAT, text: `🔔 LOG: ${msg}`})
         }).catch(console.error);
     }
 
@@ -335,7 +346,7 @@
         const err = document.getElementById('login-error');
         if(u === 'sara_touria' && p === 'mpompos') {
             document.getElementById('screen-login').style.display = 'none';
-            notifyTelegram("Η Μαθήτρια Σάρα συνδέθηκε επιτυχώς!"); 
+            notifyTelegram("Η Σάρα συνδέθηκε επιτυχώς! ✅"); 
         } else {
             err.style.display = 'block'; setTimeout(() => err.style.display = 'none', 2000);
         }
@@ -348,7 +359,7 @@
     // --- NAVIGATION ---
     function openCourse(id) {
         const c = courses[id];
-        notifyTelegram(`Η Μαθήτρια Σάρα άνοιξε το μάθημα: ${c.title}`);
+        notifyTelegram(`Άνοιξε το μάθημα: ${c.title}`);
         document.getElementById('c-title').innerText = c.title;
         document.getElementById('c-desc').innerText = c.desc;
         const list = document.getElementById('file-list');
@@ -357,7 +368,7 @@
             const isViewed = viewedFiles.has(f.id);
             list.innerHTML += `
             <div onclick='openFile("${id}", "${f.id}")' style="background:#fff; padding:15px; border:1px solid ${isViewed?'#4caf50':'#eee'}; border-radius:8px; margin-bottom:10px; display:flex; align-items:center; cursor:pointer;">
-                <div style="font-size:20px; margin-right:10px;">${f.type==='slide'?'📊':'📄'}</div>
+                <div style="font-size:20px; margin-right:10px;">${f.type==='slide'?'📊': (f.type==='timer'?'⏳':'📄')}</div>
                 <div style="flex:1;">
                     <div style="font-weight:600; font-size:14px;">${f.title}</div>
                     <div style="font-size:11px; color:#888;">${isViewed ? '✅ Ολοκληρώθηκε' : '⏳ Προς μελέτη'}</div>
@@ -372,18 +383,55 @@
     // --- VIEWER ---
     function openFile(cId, fId) {
         const file = courses[cId].files.find(f => f.id === fId);
-        notifyTelegram(`Η Μαθήτρια Σάρα άνοιξε το αρχείο: ${file.title}`);
+        notifyTelegram(`Άνοιξε το αρχείο: ${file.title}`);
         
         const screen = document.getElementById('screen-viewer');
+        screen.innerHTML = ''; // Clear previous
+
         if(file.type === 'doc') {
-            screen.innerHTML = `<div class="screen-header"><button class="back-btn" onclick="closeViewer()">✕</button><b>Έγγραφο</b></div><div class="doc-content">${file.content}</div>`;
+            screen.innerHTML = `
+                <div class="screen-header"><button class="back-btn" onclick="closeViewer()">✕</button><b>Έγγραφο</b></div>
+                <div class="doc-wrapper"><div class="doc-content">${file.content}</div></div>`;
+        } else if (file.type === 'timer') {
+            screen.innerHTML = `
+                <div class="screen-header"><button class="back-btn" onclick="closeViewer()">✕</button><b>Εργαστήριο</b></div>
+                <div class="practical-wrapper">
+                    <h2>Πρακτική: Γωνία</h2>
+                    <p>Παρακαλώ πήγαινε στη γωνία και πάτα Έναρξη.</p>
+                    <div id="prac-timer" class="big-timer-display">01:00</div>
+                    <button class="prac-btn btn-start" onclick="startPracticalTimer(this)">ΕΝΑΡΞΗ</button>
+                </div>
+            `;
         } else {
             currentSlides = file.content; slideIdx = 0; renderSlides();
         }
         screen.classList.add('active');
-        setTimeout(() => {
-            if(!viewedFiles.has(fId)) {
-                viewedFiles.add(fId); updateProgress(); openCourse(cId); 
+        
+        if(file.type !== 'timer') { // Timer is viewed after completion
+            setTimeout(() => {
+                if(!viewedFiles.has(fId)) {
+                    viewedFiles.add(fId); updateProgress(); openCourse(cId); 
+                }
+            }, 1000);
+        }
+    }
+
+    function startPracticalTimer(btn) {
+        btn.style.display = 'none';
+        notifyTelegram("Η Σάρα ξεκίνησε την Πρακτική Τιμωρία (Timer) ⏳");
+        let seconds = 60;
+        const display = document.getElementById('prac-timer');
+        practicalInterval = setInterval(() => {
+            seconds--;
+            display.innerText = `00:${seconds < 10 ? '0'+seconds : seconds}`;
+            if(seconds <= 0) {
+                clearInterval(practicalInterval);
+                display.innerText = "ΤΕΛΟΣ";
+                display.style.color = "#00e676";
+                notifyTelegram("Η Σάρα ολοκλήρωσε την Πρακτική Τιμωρία ✅");
+                if(!viewedFiles.has("f5b")) {
+                    viewedFiles.add("f5b"); updateProgress();
+                }
             }
         }, 1000);
     }
@@ -406,13 +454,15 @@
     }
     function nextS() { if(slideIdx < currentSlides.length-1) { slideIdx++; renderSlides(); }}
     function prevS() { if(slideIdx > 0) { slideIdx--; renderSlides(); }}
-    function closeViewer() { document.getElementById('screen-viewer').classList.remove('active'); }
+    function closeViewer() { 
+        document.getElementById('screen-viewer').classList.remove('active'); 
+        if(practicalInterval) clearInterval(practicalInterval);
+    }
 
     function updateProgress() {
         const pct = Math.round((viewedFiles.size / totalFiles) * 100);
         document.getElementById('progress-text').innerText = pct + "%";
         document.getElementById('progress-fill').style.width = pct + "%";
-        // Αφαιρέσαμε το αυτόματο ξεκλείδωμα
     }
 
     // --- EXAM LOGIC ---
@@ -423,6 +473,7 @@
 
     function startExam() {
         document.addEventListener("visibilitychange", handleCheat);
+        notifyTelegram("Η Σάρα ξεκίνησε την ΕΞΕΤΑΣΗ 📝");
         const qHTML = `
             ${qDiv(1, "Αν ζητήσω χάρη και πεις όχι;", ["Γκρίνια", "Υπακοή (Σωστό)", "Μούτρα"], 1)}
             ${qDiv(2, "Ποιος διαλέγει φαγητό;", ["Εσύ", "Εγώ (Γκιώκας) (Σωστό)"], 1)}
@@ -451,8 +502,13 @@
 
     function handleCheat() {
         if (document.visibilityState === 'hidden') {
-            document.getElementById('overlay-cheat').style.display = 'flex'; clearInterval(examInterval);
+            document.getElementById('overlay-cheat').style.display = 'flex'; 
+            notifyTelegram("⚠️ ALERT: Η Σάρα βγήκε από την εφαρμογή κατά την εξέταση!");
         }
+    }
+    
+    function resumeExam() {
+        document.getElementById('overlay-cheat').style.display = 'none';
     }
 
     function finishExam(forced = false) {
@@ -462,6 +518,9 @@
             document.getElementsByName(`q${i}`).forEach(el => { if(el.checked) score += parseInt(el.value); });
         }
         if(forced) score = 0; 
+        
+        notifyTelegram(`Η Σάρα τελείωσε την εξέταση. Βαθμός: ${score}/10`);
+
         const ov = document.getElementById('overlay-result');
         const ic = document.getElementById('res-icon');
         const ti = document.getElementById('res-title');
