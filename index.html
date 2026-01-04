@@ -241,15 +241,15 @@
             </div>
             
             <table class="exam-table">
-                <tr><td><strong>9 - 10</strong></td><td><span class="grade-pill" style="background: #2e7d32;">ΑΡΙΣΤΑ</span><br>Διαλέγεις ό,τι φαγητό θες!</td></tr>
-                <tr><td><strong>7 - 8</strong></td><td><span class="grade-pill" style="background: #66bb6a;">ΚΑΛΑ</span><br>Κερδίζεις μια λιχουδιά.</td></tr>
+                <tr><td><strong>9 - 10</strong></td><td><span class="grade-pill" style="background: #2e7d32;">ΑΣΤΕΡΙ</span><br>Διαλέγεις ό,τι φαγητό θες!</td></tr>
+                <tr><td><strong>7 - 8</strong></td><td><span class="grade-pill" style="background: #66bb6a;">ΠΟΛΥ ΚΑΛΗ</span><br>Κερδίζεις μια λιχουδιά.</td></tr>
                 <tr><td><strong>5 - 6</strong></td><td><span class="grade-pill" style="background: #ffa726;">ΜΕΤΡΙΑ</span><br>Γλυτώνεις (οριακά).</td></tr>
-                <tr><td><strong>3 - 4</strong></td><td><span class="grade-pill" style="background: #ff5722;">ΑΠΟΤΥΧΙΑ</span><br>Απλή Τιμωρία.</td></tr>
+                <tr><td><strong>3 - 4</strong></td><td><span class="grade-pill" style="background: #ff5722;">ΑΔΙΑΒΑΣΤΗ</span><br>Απλή Τιμωρία.</td></tr>
                 <tr><td><strong>0 - 2</strong></td><td><span class="grade-pill" style="background: #b71c1c;">ΑΠΑΡΑΔΕΚΤΗ</span><br>Μεγάλη Τιμωρία.</td></tr>
             </table>
 
             <div style="background:#ffebee; padding:15px; margin:20px 0; border-radius:10px; font-size:13px; text-align:left; color:#c62828;">
-                <strong>⚠️ ΠΡΟΣΟΧΗ:</strong><br>Η έξοδος από την εφαρμογή κατά τη διάρκεια της εξέτασης θα εντοπιστεί από το σύστημα (Anti-Cheat).
+                <strong>⚠️ ΠΡΟΣΟΧΗ:</strong><br>Αν αλλάξεις σελίδα κατά τη διάρκεια της εξέτασης θα εντοπιστεί από το σύστημα, θα θεωρηθεί προσπάθεια για αντιγραφή και θα μειωθεί ο βαθμός σου.
             </div>
             <button class="send-btn" style="background:#333; padding:15px; font-size:16px;" onclick="startExam()">ΕΝΑΡΞΗ ΕΞΕΤΑΣΗΣ</button>
         </div>
@@ -541,19 +541,19 @@
         ov.style.display = 'flex';
         
         if(score >= 9) {
-            ic.innerText = "⭐"; ti.innerText = "ΑΡΙΣΤΗ (9.5/10)"; ti.style.color = "green";
+            ic.innerText = "⭐"; ti.innerText = `ΑΡΙΣΤΗ (${score}/10)`; ti.style.color = "green";
             ms.innerText = "Είσαι αστέρι!"; pe.innerText = "🎁 Διάλεξε ό,τι λιχουδιά θέλεις!"; pe.style.background = "#e8f5e9"; pe.style.color = "green";
         } else if(score >= 7) {
-            ic.innerText = "👏🏻"; ti.innerText = "ΠΟΛΥ ΚΑΛΗ (7.5/10)"; ti.style.color = "green";
+            ic.innerText = "👏🏻"; ti.innerText = `ΠΟΛΥ ΚΑΛΗ (${score}/10)`; ti.style.color = "green";
             ms.innerText = "Μπράβο, πολύ καλή!"; pe.innerText = "🍬 Κερδίζεις μια τυχαία λιχουδιά."; pe.style.background = "#e8f5e9"; pe.style.color = "green";
         } else if(score >= 5) {
-            ic.innerText = "😐"; ti.innerText = "ΜΕΤΡΙΑ (5.5/10)"; ti.style.color = "orange";
+            ic.innerText = "😐"; ti.innerText = `ΜΕΤΡΙΑ (${score}/10)`; ti.style.color = "orange";
             ms.innerText = "Χμ οκ, πέρασες οριακά."; pe.innerText = "🛡️ Τη γλυτώνεις."; pe.style.background = "#fff3e0"; pe.style.color = "#ef6c00";
         } else if(score >= 3) {
-            ic.innerText = "🤔"; ti.innerText = "ΑΔΙΑΒΑΣΤΗ (3.5/10)"; ti.style.color = "#ff5722";
+            ic.innerText = "🤔"; ti.innerText = `ΑΔΙΑΒΑΣΤΗ (${score}/10)`; ti.style.color = "#ff5722";
             ms.innerText = "Γιατί δεν διάβασες;"; pe.innerText = "⚠️ Απλή Τιμωρία."; pe.style.background = "#fbe9e7"; pe.style.color = "#d84315";
         } else {
-            ic.innerText = "🤨"; ti.innerText = "ΑΠΑΡΑΔΕΚΤΗ (1/10)"; ti.style.color = "red";
+            ic.innerText = "🤨"; ti.innerText = `ΑΠΑΡΑΔΕΚΤΗ (${score}/10)`; ti.style.color = "red";
             ms.innerText = "Είναι συμπεριφορά αυτή;"; pe.innerText = "🚨 ΜΕΓΑΛΗ ΤΙΜΩΡΙΑ."; pe.style.background = "#ffebee"; pe.style.color = "#c62828";
         }
     }
