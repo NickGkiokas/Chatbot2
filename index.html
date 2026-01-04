@@ -216,7 +216,7 @@
         </div>
         <div class="content-area">
             <div style="background:#e8eaf6; color:#3949ab; padding:8px 12px; border-radius:8px; display:inline-block; font-size:13px; font-weight:600; margin-bottom:15px;">
-                👨‍🏫 Διδάσκων: Κύριος Γκιώκας
+                👨‍🏫 Διδάσκων: Κύριος Νικόλαος Γκιώκας
             </div>
             <p id="c-desc" style="font-size:14px; color:#555; margin-bottom:20px;"></p>
             <div style="font-weight:bold; margin-bottom:10px;">Υλικό προς μελέτη:</div>
@@ -224,7 +224,7 @@
 
             <div class="portal">
                 <div style="font-weight:bold; font-size:14px;">💬 Απορίες προς τον Διδάσκοντα</div>
-                <textarea id="tg-msg" placeholder="Στείλε την απορία σου..."></textarea>
+                <textarea id="tg-msg" placeholder="Στείλε την απορία σου στον κύριο Γκιώκα..."></textarea>
                 <button class="send-btn" onclick="sendTelegram()">Αποστολή</button>
             </div>
         </div>
@@ -418,7 +418,7 @@
 
    function startPracticalTimer(btn) {
         btn.style.display = 'none';
-        notifyTelegram("Η Σάρα ξεκίνησε την Πρακτική Τιμωρία (Timer) ⏳");
+        notifyTelegram("Η Μαθήτρια Σάρα ξεκίνησε το Εργαστήριο Τιμωρίας.");
         
         let seconds = 60; // Ο χρόνος της τιμωρίας
         const display = document.getElementById('prac-timer');
@@ -431,7 +431,7 @@
                 clearInterval(practicalInterval);
                 display.innerText = "ΤΕΛΟΣ";
                 display.style.color = "#00e676";
-                notifyTelegram("Η Σάρα ολοκλήρωσε την Πρακτική Τιμωρία ✅");
+                notifyTelegram("Η Μαθήτρια Σάρα ολοκλήρωσε το Εργαστήριο Τιμωρίας.");
                 
                 // Μαρκάρισμα ως ολοκληρωμένο
                 if(!viewedFiles.has("f5b")) {
@@ -480,7 +480,7 @@
     // --- EXAM LOGIC ---
     function tryOpenExam() {
         showToast("🔒 Η εξέταση είναι κλειδωμένη προς το παρόν!");
-        // document.getElementById('screen-exam-intro').classList.add('active');
+        document.getElementById('screen-exam-intro').classList.add('active');
     }
 
     function startExam() {
@@ -541,20 +541,20 @@
         ov.style.display = 'flex';
         
         if(score >= 9) {
-            ic.innerText = "🏆"; ti.innerText = "ΑΡΙΣΤΑ (9.5/10)"; ti.style.color = "green";
-            ms.innerText = "Είσαι τέλεια."; pe.innerText = "🎁 Διάλεξε φαγητό!"; pe.style.background = "#e8f5e9"; pe.style.color = "green";
+            ic.innerText = "⭐"; ti.innerText = "ΑΡΙΣΤΗ (9.5/10)"; ti.style.color = "green";
+            ms.innerText = "Είσαι αστέρι!"; pe.innerText = "🎁 Διάλεξε ό,τι λιχουδιά θέλεις!"; pe.style.background = "#e8f5e9"; pe.style.color = "green";
         } else if(score >= 7) {
-            ic.innerText = "👍"; ti.innerText = "ΚΑΛΑ (7.5/10)"; ti.style.color = "green";
-            ms.innerText = "Οκ, καλά πήγε."; pe.innerText = "🍬 Κερδίζεις λιχουδιά."; pe.style.background = "#e8f5e9"; pe.style.color = "green";
+            ic.innerText = "👏🏻"; ti.innerText = "ΠΟΛΥ ΚΑΛΗ (7.5/10)"; ti.style.color = "green";
+            ms.innerText = "Μπράβο, πολύ καλή!"; pe.innerText = "🍬 Κερδίζεις μια τυχαία λιχουδιά."; pe.style.background = "#e8f5e9"; pe.style.color = "green";
         } else if(score >= 5) {
             ic.innerText = "😐"; ti.innerText = "ΜΕΤΡΙΑ (5.5/10)"; ti.style.color = "orange";
-            ms.innerText = "Τη γλυτώνεις."; pe.innerText = "🛡️ Καμία τιμωρία."; pe.style.background = "#fff3e0"; pe.style.color = "#ef6c00";
+            ms.innerText = "Χμ οκ, πέρασες οριακά."; pe.innerText = "🛡️ Τη γλυτώνεις."; pe.style.background = "#fff3e0"; pe.style.color = "#ef6c00";
         } else if(score >= 3) {
-            ic.innerText = "🧹"; ti.innerText = "ΑΠΟΤΥΧΙΑ (3.5/10)"; ti.style.color = "#ff5722";
-            ms.innerText = "Δεν διάβασες."; pe.innerText = "⚠️ Απλή Τιμωρία."; pe.style.background = "#fbe9e7"; pe.style.color = "#d84315";
+            ic.innerText = "🤔"; ti.innerText = "ΑΔΙΑΒΑΣΤΗ (3.5/10)"; ti.style.color = "#ff5722";
+            ms.innerText = "Γιατί δεν διάβασες;"; pe.innerText = "⚠️ Απλή Τιμωρία."; pe.style.background = "#fbe9e7"; pe.style.color = "#d84315";
         } else {
-            ic.innerText = "💀"; ti.innerText = "ΑΠΑΡΑΔΕΚΤΗ (1/10)"; ti.style.color = "red";
-            ms.innerText = "Μηδένισες."; pe.innerText = "🚨 ΜΕΓΑΛΗ ΤΙΜΩΡΙΑ."; pe.style.background = "#ffebee"; pe.style.color = "#c62828";
+            ic.innerText = "🤨"; ti.innerText = "ΑΠΑΡΑΔΕΚΤΗ (1/10)"; ti.style.color = "red";
+            ms.innerText = "Είναι συμπεριφορά αυτή;"; pe.innerText = "🚨 ΜΕΓΑΛΗ ΤΙΜΩΡΙΑ."; pe.style.background = "#ffebee"; pe.style.color = "#c62828";
         }
     }
 
@@ -565,7 +565,7 @@
         try {
             await fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
                 method:'POST', headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({chat_id:TG_CHAT, text:`Ερώτηση: ${t}`})
+                body:JSON.stringify({chat_id:TG_CHAT, text:`Ερώτηση από Μαθήτρια Σάρα: ${t}`})
             });
             showToast("Στάλθηκε!"); document.getElementById('tg-msg').value="";
         } catch(e){ showToast("Error (Check Token)"); }
