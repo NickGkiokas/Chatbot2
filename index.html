@@ -198,7 +198,7 @@
 
             <hr style="border:0; border-top:1px dashed #ddd; margin: 20px 0;">
 
-            <div id="exam-card" class="course-card" onclick="tryOpenExam()">
+            <div id="exam-card" class="course-card exam-locked" onclick="tryOpenExam()">
                 <div class="icon c-red">⚠️</div>
                 <div style="flex:1;">
                     <div style="font-weight:600; color:#c62828;">ΤΕΛΙΚΗ ΕΞΕΤΑΣΗ (ΑΝΟΙΓΕΙ 14/01)</div>
@@ -479,13 +479,13 @@
 
     // --- EXAM LOGIC ---
     function tryOpenExam() {
-        // showToast("🔒 Η εξέταση είναι κλειδωμένη προς το παρόν!");
-        document.getElementById('screen-exam-intro').classList.add('active');
+        showToast("🔒 Η εξέταση είναι κλειδωμένη προς το παρόν!");
+        // document.getElementById('screen-exam-intro').classList.add('active');
     }
 
     function startExam() {
         document.addEventListener("visibilitychange", handleCheat);
-        notifyTelegram("Η Μαθήτρια Σάρα ξεκίνησε την ΕΞΕΤΑΣΗ 📝");
+        notifyTelegram("Η Μαθήτρια Σάρα ξεκίνησε την Εξέταση 📝");
         const qHTML = `
             ${qDiv(1, "Αν ζητήσω χάρη και πεις όχι;", ["Γκρίνια", "Υπακοή (Σωστό)", "Μούτρα"], 1)}
             ${qDiv(2, "Ποιος διαλέγει φαγητό;", ["Εσύ", "Εγώ (Γκιώκας) (Σωστό)"], 1)}
