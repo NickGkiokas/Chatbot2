@@ -241,8 +241,8 @@
             </div>
             
             <table class="exam-table">
-                <tr><td><strong>9 - 10</strong></td><td><span class="grade-pill" style="background: #2e7d32;">ΑΣΤΕΡΙ</span><br>Διαλέγεις ό,τι φαγητό θες!</td></tr>
-                <tr><td><strong>7 - 8</strong></td><td><span class="grade-pill" style="background: #66bb6a;">ΠΟΛΥ ΚΑΛΗ</span><br>Κερδίζεις μια λιχουδιά.</td></tr>
+                <tr><td><strong>9 - 10</strong></td><td><span class="grade-pill" style="background: #2e7d32;">ΑΣΤΕΡΙ</span><br>Διαλέγεις ό,τι φαγητό/λιχουδιά θες!</td></tr>
+                <tr><td><strong>7 - 8</strong></td><td><span class="grade-pill" style="background: #66bb6a;">ΠΟΛΥ ΚΑΛΗ</span><br>Κερδίζεις μια τυχαία λιχουδιά.</td></tr>
                 <tr><td><strong>5 - 6</strong></td><td><span class="grade-pill" style="background: #ffa726;">ΜΕΤΡΙΑ</span><br>Γλυτώνεις (οριακά).</td></tr>
                 <tr><td><strong>3 - 4</strong></td><td><span class="grade-pill" style="background: #ff5722;">ΑΔΙΑΒΑΣΤΗ</span><br>Απλή Τιμωρία.</td></tr>
                 <tr><td><strong>0 - 2</strong></td><td><span class="grade-pill" style="background: #b71c1c;">ΑΠΑΡΑΔΕΚΤΗ</span><br>Μεγάλη Τιμωρία.</td></tr>
@@ -520,30 +520,31 @@
         let fullReport = "📝 **ΑΠΟΤΕΛΕΣΜΑΤΑ ΕΞΕΤΑΣΗΣ**\n\n";
 
         examData.forEach(item => {
-            fullReport += `🔹 **Ερ. ${item.id}:** ${item.q}\n`;
+            fullReport += `🔹 Ερ. ${item.id}: ${item.q}\n`;
             
             if (item.type === 'radio') {
                 const selected = document.querySelector(`input[name="q${item.id}"]:checked`);
                 if (selected) {
                     const val = parseInt(selected.value);
                     const answerText = item.o[val];
-                    fullReport += `🔸 **Απ:** ${answerText}\n`;
+                    fullReport += `🔸 Απ: ${answerText}\n`;
                     
                     if (val === item.c) {
                         score += 1; // 1 point for correct radio
                         fullReport += "✅ Σωστό\n\n";
                     } else {
+                        score -= 0.5;
                         fullReport += "❌ Λάθος\n\n";
                     }
                 } else {
-                    fullReport += "🔸 **Απ:** (Κενό)\n❌ Λάθος\n\n";
+                    fullReport += "🔸 Απ: (Κενό)\n❌ Λάθος\n\n";
                 }
             } else {
                 // Text Question
                 const textVal = document.querySelector(`textarea[name="q${item.id}"]`).value;
-                fullReport += `🔸 **Απ:** ${textVal}\n`;
+                fullReport += `🔸 Απ: ${textVal}\n`;
                 if (textVal.trim().length > 2) {
-                    score += 1; // Give point for filling it out
+                    score += 0; // Give point for filling it out
                     fullReport += "✅ Συμπληρώθηκε (Αναμονή κρίσης)\n\n";
                 } else {
                     fullReport += "❌ Κενό/Μικρό\n\n";
@@ -553,7 +554,7 @@
 
         if(forced) { score = 0; fullReport += "\n🛑 Ο ΧΡΟΝΟΣ ΕΛΗΞΕ - ΜΗΔΕΝΙΣΜΟΣ"; }
 
-        fullReport += `\n🏆 **ΤΕΛΙΚΟΣ ΒΑΘΜΟΣ: ${score}/10**`;
+        fullReport += `\n🏆 ΤΕΛΙΚΟΣ ΒΑΘΜΟΣ: ${score}/10`;
         
         // Send big report to Telegram
         notifyTelegram(fullReport);
