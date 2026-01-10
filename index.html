@@ -198,6 +198,16 @@
 
             <hr style="border:0; border-top:1px dashed #ddd; margin: 20px 0;">
 
+            <div id="overlay-locked" class="overlay">
+                <div class="alert-box">
+                    <div style="font-size:50px;">🔒</div>
+                    <h2 style="color:#d32f2f;">ΠΡΟΣΒΑΣΗ ΑΡΝΗΘΗΚΕ</h2>
+                    <p>Δεν έχεις μελετήσει όλο το υλικό!</p>
+                    <p style="font-size:13px; color:#666; margin-top:10px;">Πρέπει να ανοίξεις όλες τις διαφάνειες και τα κείμενα των μαθημάτων για να ξεκλειδώσει η εξέταση.</p>
+                    <button class="send-btn" style="margin-top:20px; background:#333;" onclick="document.getElementById('overlay-locked').style.display='none'">ΕΝΤΑΞΕΙ</button>
+                </div>
+            </div>
+
             <div id="exam-card" class="course-card" onclick="tryOpenExam()">
                 <div class="icon c-red">⚠️</div>
                 <div style="flex:1;">
@@ -455,16 +465,29 @@
     function prevS() { if(slideIdx > 0) { slideIdx--; renderSlides(); }}
     function closeViewer() { document.getElementById('screen-viewer').classList.remove('active'); }
 
-    function updateProgress() {
+   function updateProgress() {
         const pct = Math.round((viewedFiles.size / totalFiles) * 100);
         document.getElementById('progress-text').innerText = pct + "%";
         document.getElementById('progress-fill').style.width = pct + "%";
+
+        // VISUAL UNLOCK: Αν τα είδε όλα, βγάλε το γκρι και άλλαξε το λουκέτο
+        if (viewedFiles.size === totalFiles) {
+            const card = document.getElementById('exam-card');
+            const icon = document.getElementById('exam-icon');
+            card.classList.remove('exam-locked');
+            icon.innerText = "🔓";
+        }
     }
 
     // --- EXAM LOGIC (UPDATED) ---
-    function tryOpenExam() {
-        // showToast("🔒 Η εξέταση είναι κλειδωμένη!");
-        document.getElementById('screen-exam-intro').classList.add('active'); // UNCOMMENT FOR TESTING
+   function tryOpenExam() {
+        // Έλεγχος: Έχεις δει λιγότερα από τα συνολικά αρχεία;
+        if (viewedFiles.size < totalFiles) {
+            document.getElementById('overlay-locked').style.display = 'flex';
+            return;
+        }
+        // Αν τα έχει δει όλα, προχωράει κανονικά
+        document.getElementById('screen-exam-intro').classList.add('active'); 
     }
 
     function startExam() {
