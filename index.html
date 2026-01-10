@@ -483,8 +483,8 @@
    function tryOpenExam() {
         // Έλεγχος: Έχεις δει λιγότερα από τα συνολικά αρχεία;
         if (viewedFiles.size < totalFiles) {
-            document.getElementById('overlay-locked').style.display = 'flex';
             notifyTelegram("Η Μαθήτρια Σάρα πήγε να μπει στην εξέταση χωρίς να έχει διαβάσει!");
+            document.getElementById('overlay-locked').style.display = 'flex';
             return;
         }
         // Αν τα έχει δει όλα, προχωράει κανονικά
