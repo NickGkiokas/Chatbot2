@@ -530,22 +530,28 @@
                     const answerText = item.o[val];
                     fullReport += `🔸 Απ: ${answerText}\n`;
                     if (val === item.c) {
-                        score += 1; // 1 point for correct radio
+                        score += 1;
                         fullReport += "✅ Σωστό\n\n";
                     } else {
                         score -= 0.5;
                         fullReport += "❌ Λάθος\n\n";
-                    } 
-                else {
-                    fullReport += "🔸 Απ: (Κενό)\n";
+                    }
+                } else {
+                    fullReport += "🔸 Απ: (Κενό)\n❌ Λάθος\n\n";
                 }
             } else {
                 const textVal = document.querySelector(`textarea[name="q${item.id}"]`).value;
                 fullReport += `🔸 Απ: ${textVal}\n`;
-                if (textVal.trim().length > 2) score += 0; 
+                if (textVal.trim().length > 2) {
+                    score += 0;
+                    fullReport += "✅ Συμπληρώθηκε (Αναμονή κρίσης)\n\n";
+                } else {
+                    fullReport += "❌ Κενό/Μικρό\n\n";
+                } 
             }
         });
 
+        if(forced) fullReport += "\n🛑 Ο ΧΡΟΝΟΣ ΕΛΗΞΕ";
         fullReport += `\n🏆 (Ενδεικτικός) Βαθμός: ${score}/10`;
         notifyTelegram(fullReport);
 
